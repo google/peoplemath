@@ -37,7 +37,8 @@ func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
 }
 
 func TestPostPeriod(t *testing.T) {
-	handler := makeHandler(makeInMemStore())
+	server := Server{store: makeInMemStore()}
+	handler := server.makeHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)

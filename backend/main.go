@@ -88,7 +88,7 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 		if expected {
 			statusCode = http.StatusNotFound
 		}
-		http.Error(w, fmt.Sprintf("Team with ID '%s' expected exists=%s, found %s", teamID, expected, exists), statusCode)
+		http.Error(w, fmt.Sprintf("Team with ID '%s' expected exists=%v, found %v", teamID, expected, exists), statusCode)
 		return false
 	}
 	return true
@@ -105,7 +105,7 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 		if expected {
 			statusCode = http.StatusNotFound
 		}
-		http.Error(w, fmt.Sprintf("Period '%s' for team '%s' expected exists=%s, found %s", periodID, teamID, expected, exists), statusCode)
+		http.Error(w, fmt.Sprintf("Period '%s' for team '%s' expected exists=%v, found %v", periodID, teamID, expected, exists), statusCode)
 		return false
 	}
 	return true
