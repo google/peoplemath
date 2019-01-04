@@ -5,11 +5,16 @@
 <div *ngFor="let bucket of period.buckets">
 <h3>{{bucket.displayName}} ({{bucket.percentage}}%)</h3>
 <ul>
-    <li *ngFor="let objective of bucket.objectives">{{objective.name}} ({{objective.resourceEstimate}} {{period.unit}})</li>
+    <div *ngFor="let objective of bucket.objectives">
+        <li>{{objective.name}} ({{objective.resourceEstimate}} {{period.unit}})</li>
+        <ul *ngIf="objective.assignments">
+            <li *ngFor="let assignment of objective.assignments">{{assignment.personId}}: {{assignment.commitment}} {{period.unit}}</li>
+        </ul>
+    </div>
 </ul>
 </div>
 
 <h3>People</h3>
 <ul>
-    <li *ngFor="let person of period.people">{{person.displayName}} ({{person.id}})</li>
+    <li *ngFor="let person of period.people">{{person.displayName}} ({{person.id}}) - {{person.availability}} {{period.unit}} available</li>
 </ul>

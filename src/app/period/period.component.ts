@@ -10,7 +10,9 @@ import { Team } from '../team';
 const BUCKETS: Bucket[] = [
   { id: 'a', displayName: 'First bucket', percentage: 40, objectives: [
     { name: 'A bucket 1 thing', resourceEstimate: 6 },
-    { name: 'Another bucket 1 thing', resourceEstimate: 3 },
+    { name: 'Another bucket 1 thing', resourceEstimate: 3, assignments: [
+      { personId: 'alice', commitment: 2 },
+    ] },
   ] },
   { id: 'b', displayName: 'Second bucket', percentage: 40, objectives: [
     { name: 'A bucket 2 thing', resourceEstimate: 12 },
