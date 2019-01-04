@@ -3,6 +3,6 @@
         <span class="objective-name">{{objective.name}}</span>
         <span class="resource-estimate"> ({{objective.resourceEstimate}} {{unit}})</span>
     </span>
-    <span (click)="assign()" class="assignments">{{assignmentSummary()}}</span>
+    <span (click)="assign()" class="assignments" [class.fully-assigned]="isFullyAssigned()">{{assignmentSummary()}}</span>
     <button *ngIf="!objective.assignments.length" (click)="assign()" mat-button color="primary">Assign</button>
 </mat-list-item>

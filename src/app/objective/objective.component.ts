@@ -21,6 +21,12 @@ export class ObjectiveComponent implements OnInit {
   ngOnInit() {
   }
 
+  isFullyAssigned(): boolean {
+    let assigned = this.objective.assignments.map(a => a.commitment)
+        .reduce((sum, current) => sum + current, 0);
+    return assigned >= this.objective.resourceEstimate;
+  }
+
   assignmentSummary(): string {
     return this.objective.assignments.filter(a => a.commitment > 0)
         .map(a => a.personId + ": " + a.commitment).join(", ");

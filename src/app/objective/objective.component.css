@@ -2,3 +2,4 @@
 .resource-estimate { font-style: italic }
 .assignments { margin-left: 10px; font-weight: bold }
 .unassigned { color: grey }
+.fully-assigned { color: green }
