@@ -13,6 +13,7 @@ export class BucketComponent implements OnInit {
   @Input() unit: string;
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
+  isEditing: boolean = false;
 
   constructor() { }
 
@@ -25,5 +26,13 @@ export class BucketComponent implements OnInit {
    */
   bucketAllocation(): number {
     return this.globalResourcesAvailable * this.bucket.allocationPercentage / 100;
+  }
+
+  edit(): void {
+    this.isEditing = true;
+  }
+
+  stopEditing(): void {
+    this.isEditing = false;
   }
 }

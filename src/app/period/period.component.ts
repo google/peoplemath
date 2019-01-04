@@ -19,6 +19,7 @@ import { Assignment } from '../assignment';
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
+  isEditing: boolean = false;
 
   constructor(
     private okrStorage: OkrStorageService,
@@ -84,5 +85,13 @@ export class PeriodComponent implements OnInit {
     const periodId = this.route.snapshot.paramMap.get('period');
     this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
     this.okrStorage.getPeriod(teamId, periodId).subscribe(period => this.period = period);
+  }
+
+  edit(): void {
+    this.isEditing = true;
+  }
+
+  stopEditing(): void {
+    this.isEditing = false;
   }
 }

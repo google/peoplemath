@@ -11,10 +11,18 @@ export class AssignmentComponent implements OnInit {
   @Input() unit: string;
   @Input() objectiveResourceEstimate;
   @Input() objectiveResourcesCommitted;
+  isEditing: boolean = false;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  edit(): void {
+    this.isEditing = true;
+  }
+
+  stopEditing(): void {
+    this.isEditing = false;
+  }
 }

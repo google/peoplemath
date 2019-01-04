@@ -1,6 +1,11 @@
 <a routerLink="/teams">All teams</a>
 
-<h2><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : {{period.displayName}}</h2>
+<h2><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : 
+    <span *ngIf="!isEditing" (click)="edit()">{{period.displayName}}</span>
+    <span *ngIf="isEditing">
+        <input [(ngModel)]="period.displayName"/>
+        <button (click)="stopEditing()">OK</button>
+    </span></h2>
 
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"

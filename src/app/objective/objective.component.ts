@@ -9,10 +9,18 @@ import { Objective } from '../objective';
 export class ObjectiveComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
+  isEditing: boolean = false;
   
   constructor() { }
 
   ngOnInit() {
   }
 
+  edit(): void {
+    this.isEditing = true;
+  }
+
+  stopEditing(): void {
+    this.isEditing = false;
+  }
 }

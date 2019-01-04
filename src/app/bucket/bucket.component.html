@@ -1,4 +1,12 @@
-<h3>{{bucket.displayName}} <span [class.error]="totalAllocationPercentage > 100">(<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)</span></h3>
+<h3>{{bucket.displayName}} 
+    <span [class.error]="totalAllocationPercentage > 100"> 
+        <span *ngIf="!isEditing" (click)="edit()">({{bucket.allocationPercentage}}%)</span>
+        <span *ngIf="isEditing">
+            (<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)
+            <button (click)="stopEditing()">OK</button>
+        </span>
+    </span>
+</h3>
 <p><b [class.error]="bucket.resourcesCommitted() > bucketAllocation()">
     {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}} committed
 </b></p>

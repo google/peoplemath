@@ -1,4 +1,11 @@
-<li>{{objective.name}} (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})</li>
+<li>
+    <span *ngIf="!isEditing" (click)="edit()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
+    <span *ngIf="isEditing">
+        <input [(ngModel)]="objective.name"/> 
+        (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})
+        <button (click)="stopEditing()">OK</button>
+    </span>
+</li>
 <ul *ngIf="objective.assignments">
     <li *ngFor="let assignment of objective.assignments"><app-assignment
         [assignment]="assignment" [unit]="unit"
