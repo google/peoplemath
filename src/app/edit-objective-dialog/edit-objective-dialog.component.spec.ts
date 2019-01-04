@@ -17,6 +17,7 @@ describe('EditObjectiveDialogComponent', () => {
     'okAction': 'OK',
     'allowCancel': true,
     'unit': 'person weeks',
+    'onDelete': undefined,
   };
 
   beforeEach(async(() => {
