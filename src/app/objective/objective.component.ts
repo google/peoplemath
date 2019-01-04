@@ -57,8 +57,8 @@ export class ObjectiveComponent implements OnInit {
       if (!result) {
         return;
       }
-      this.objective.assignments = result.people.filter(pad => pad.assign > 0)
-          .map(pad => new Assignment(pad.username, pad.assign));
+      this.objective.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
+          .map((pad: PersonAssignmentData) => new Assignment(pad.username, pad.assign));
     });
   }
 
