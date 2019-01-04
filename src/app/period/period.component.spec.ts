@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { BucketComponent } from '../bucket/bucket.component';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
+import { PeopleComponent } from '../people/people.component';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -20,6 +21,7 @@ describe('PeriodComponent', () => {
         BucketComponent,
         ObjectiveComponent,
         AssignmentComponent,
+        PeopleComponent,
       ],
       imports: [
         RouterTestingModule,

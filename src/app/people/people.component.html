@@ -1,0 +1,23 @@
+<h3>People</h3>
+<table>
+    <tr><th></th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
+    <tr *ngFor="let person of people">
+        <td><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
+        <td><input type="number" [(ngModel)]="person.availability"/></td>
+        <td>{{personCommitted(person)}}</td>
+        <td>{{personUncommitted(person)}}</td>
+    </tr>
+    <tr>
+        <td><button (click)="addPerson()">Add</button></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><b>Total</b></td>
+        <td><b>{{totalAvailable}}</b></td>
+        <td><b>{{totalCommitted}}</b></td>
+        <td><b>{{totalUncommitted}}</b></td>
+    </tr>
+</table>
+<p>Default availability: <input type="number" [(ngModel)]="defaultPersonAvailability"/> {{unit}}</p>

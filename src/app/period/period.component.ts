@@ -19,7 +19,6 @@ import { Assignment } from '../assignment';
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
-  defaultPersonAvailability: number = 6;
 
   constructor(
     private okrStorage: OkrStorageService,
@@ -64,38 +63,20 @@ export class PeriodComponent implements OnInit {
         .reduce((sum, current) => sum + current, 0);
   }
 
-  private personAssignments(person: Person): PersonAssignment[] {
-    let result: PersonAssignment[] = [];
+  peopleCommitments(): Map<string, number> {
+    let result: Map<string, number> = new Map();
     this.period.buckets.forEach(bucket => {
-      bucket.assignedObjectives().forEach(objective => {
-        objective.assignments
-            .filter(assignment => assignment.personId === person.id)
-            .forEach(assignment => result.push(new PersonAssignment(objective, assignment)));
-      });
+      bucket.objectives.forEach(objective => {
+        objective.assignments.forEach(assignment => {
+          let personId = assignment.personId;
+          if (!result.has(personId)) {
+            result.set(personId, 0);
+          }
+          result.set(personId, result.get(personId) + assignment.commitment);
+        })
+      })
     });
     return result;
-  }
-
-  /**
-   * Amount of the given person's resources committed to objectives during this period.
-   */
-  personCommitted(person: Person): number {
-    return this.personAssignments(person)
-        .map(pa => pa.assignment.commitment)
-        .reduce((sum, current) => sum + current, 0);
-  }
-
-  /**
-   * Amount of the given person's resources not committed to objectives during this period.
-   */
-  personUncommitted(person: Person): number {
-    return person.availability - this.personCommitted(person);
-  }
-
-  addPerson(): void {
-    const person = new Person();
-    person.availability = this.defaultPersonAvailability;
-    this.period.people.push(person);
   }
 
   loadData(): void {
@@ -104,11 +85,4 @@ export class PeriodComponent implements OnInit {
     this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
     this.okrStorage.getPeriod(teamId, periodId).subscribe(period => this.period = period);
   }
-}
-
-class PersonAssignment {
-  constructor(
-    public objective: Objective,
-    public assignment: Assignment,
-  ) {}
 }

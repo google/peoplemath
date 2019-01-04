@@ -48,12 +48,12 @@ export class OkrStorageService {
 
   getPeriods(teamId: string): Observable<Period[]> {
     return of([
-      { id: '2018q2', displayName: '2018Q2' },
-      { id: '2018q3', displayName: '2018Q3' },
+      new Period('2018q2', '2018Q2'),
+      new Period('2018q3', '2018Q3'),
     ]);
   }
   
   getPeriod(teamId: string, periodId: string): Observable<Period> {
-    return of({ id: periodId, displayName: periodId, buckets: BUCKETS, people: PEOPLE, unit: 'person weeks' });
+    return of(new Period(periodId, periodId, 'person weeks', BUCKETS, PEOPLE));
   }
 }
