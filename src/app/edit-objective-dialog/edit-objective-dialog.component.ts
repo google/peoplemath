@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Objective } from '../objective';
 
@@ -8,6 +8,7 @@ export interface EditObjectiveDialogData {
   okAction: string;
   allowCancel: boolean;
   unit: string;
+  onDelete: EventEmitter<Objective>;
 }
 
 @Component({
@@ -21,6 +22,8 @@ export class EditObjectiveDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditObjectiveDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData) { }
 
+  showDeleteConfirm: boolean = false;
+
   ngOnInit() {
   }
 
@@ -30,5 +33,18 @@ export class EditObjectiveDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  onDelete(): void {
+    this.showDeleteConfirm = true;
+  }
+
+  onConfirmDelete(): void {
+    this.data.onDelete.emit(this.data.objective);
+    this.dialogRef.close();
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteConfirm = false;
   }
 }

@@ -73,11 +73,8 @@ export class ObjectiveComponent implements OnInit {
         'okAction': 'OK',
         'allowCancel': false,
         'unit': this.unit,
+        'onDelete': this.onDelete,
       }
     });
-  }
-
-  delete(): void {
-    this.onDelete.emit(this.objective);
   }
 }

@@ -5,5 +5,4 @@
     </span>
     <span (click)="assign()" class="assignments">{{assignmentSummary()}}</span>
     <button *ngIf="!objective.assignments.length" (click)="assign()" mat-button color="primary">Assign</button>
-    <button (click)="delete()" mat-button color="warn">Delete</button>
 </mat-list-item>
