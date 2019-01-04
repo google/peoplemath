@@ -7,7 +7,7 @@
         </span>
     </span>
 </h3>
-<p><b [class.error]="bucket.resourcesCommitted() > bucketAllocation()">
+<p><b [class.overcommitted]="bucket.resourcesCommitted() > bucketAllocation()">
     {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}} committed
 </b></p>
 <ul>
