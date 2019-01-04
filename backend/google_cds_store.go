@@ -9,16 +9,17 @@ import (
 	"cloud.google.com/go/datastore"
 )
 
-type appEngineStore struct {
+// StorageService using Google Cloud Datastore
+type googleCDSStore struct {
 	client *datastore.Client
 }
 
-func makeAppEngineStore(ctx context.Context, projectID string) (StorageService, error) {
+func makeGoogleCDSStore(ctx context.Context, projectID string) (StorageService, error) {
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
 		return nil, fmt.Errorf("Could not create datastore client: %s", err)
 	}
-	return &appEngineStore{client: client}, nil
+	return &googleCDSStore{client: client}, nil
 }
 
 func getTeamKey(teamID string) *datastore.Key {
@@ -29,7 +30,7 @@ func getPeriodKey(teamKey *datastore.Key, periodID string) *datastore.Key {
 	return datastore.NameKey("Period", periodID, teamKey)
 }
 
-func (s *appEngineStore) GetAllTeams(ctx context.Context) ([]Team, error) {
+func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]Team, error) {
 	query := datastore.NewQuery("Team").Order("DisplayName")
 	iter := s.client.Run(ctx, query)
 	result := []Team{}
@@ -47,7 +48,7 @@ func (s *appEngineStore) GetAllTeams(ctx context.Context) ([]Team, error) {
 	return result, nil
 }
 
-func (s *appEngineStore) GetTeam(ctx context.Context, teamID string) (Team, bool, error) {
+func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (Team, bool, error) {
 	key := getTeamKey(teamID)
 	var team Team
 	err := s.client.Get(ctx, key, &team)
@@ -60,7 +61,7 @@ func (s *appEngineStore) GetTeam(ctx context.Context, teamID string) (Team, bool
 	return team, true, nil
 }
 
-func (s *appEngineStore) CreateTeam(ctx context.Context, team Team) error {
+func (s *googleCDSStore) CreateTeam(ctx context.Context, team Team) error {
 	key := getTeamKey(team.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
 		var empty Team
@@ -73,7 +74,7 @@ func (s *appEngineStore) CreateTeam(ctx context.Context, team Team) error {
 	return err
 }
 
-func (s *appEngineStore) UpdateTeam(ctx context.Context, team Team) error {
+func (s *googleCDSStore) UpdateTeam(ctx context.Context, team Team) error {
 	key := getTeamKey(team.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
 		var ignored Team
@@ -86,7 +87,7 @@ func (s *appEngineStore) UpdateTeam(ctx context.Context, team Team) error {
 	return err
 }
 
-func (s *appEngineStore) GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error) {
+func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error) {
 	if _, ok, err := s.GetTeam(ctx, teamID); !ok || err != nil {
 		return nil, false, err
 	}
@@ -108,7 +109,7 @@ func (s *appEngineStore) GetAllPeriods(ctx context.Context, teamID string) ([]Pe
 	return result, true, nil
 }
 
-func (s *appEngineStore) GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error) {
+func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error) {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, periodID)
 	var period Period
@@ -119,7 +120,7 @@ func (s *appEngineStore) GetPeriod(ctx context.Context, teamID, periodID string)
 	return period, true, err
 }
 
-func (s *appEngineStore) CreatePeriod(ctx context.Context, teamID string, period Period) error {
+func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
@@ -133,7 +134,7 @@ func (s *appEngineStore) CreatePeriod(ctx context.Context, teamID string, period
 	return err
 }
 
-func (s *appEngineStore) UpdatePeriod(ctx context.Context, teamID string, period Period) error {
+func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
@@ -147,6 +148,6 @@ func (s *appEngineStore) UpdatePeriod(ctx context.Context, teamID string, period
 	return err
 }
 
-func (s *appEngineStore) Close() error {
+func (s *googleCDSStore) Close() error {
 	return s.client.Close()
 }

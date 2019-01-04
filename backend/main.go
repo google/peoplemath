@@ -308,7 +308,7 @@ func main() {
 		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
 		ctx := context.Background()
 		var err error
-		store, err = makeAppEngineStore(ctx, gcloudProject)
+		store, err = makeGoogleCDSStore(ctx, gcloudProject)
 		if err != nil {
 			log.Fatalf("Could not instantiate datastore: %s", err)
 			return
