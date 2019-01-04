@@ -3,6 +3,7 @@ import { Team } from './team';
 import { Period } from './period';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ObjectUpdateResponse } from './objectupdateresponse';
 
 @Injectable()
 export class StorageService {
@@ -35,11 +36,11 @@ export class StorageService {
     return this.http.get<Period>('/api/period/' + teamId + '/' + periodId);
   }
 
-  addPeriod(teamId: string, period: Period): Observable<any> {
-    return this.http.post('/api/period/' + teamId + '/', period);
+  addPeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
+    return this.http.post<ObjectUpdateResponse>('/api/period/' + teamId + '/', period);
   }
 
-  updatePeriod(teamId: string, period: Period): Observable<any> {
-    return this.http.put('/api/period/' + teamId + '/' + period.id, period);
+  updatePeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
+    return this.http.put<ObjectUpdateResponse>('/api/period/' + teamId + '/' + period.id, period);
   }
 }

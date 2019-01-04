@@ -8,5 +8,6 @@ export class Period {
     public unit: string = 'person weeks',
     public buckets: Bucket[] = [],
     public people: Person[] = [],
+    public lastUpdateUUID: string,
   ) {}
 }

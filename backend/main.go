@@ -10,6 +10,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 const (
@@ -29,6 +31,8 @@ type Period struct {
 	Unit        string   `json:"unit"`
 	Buckets     []Bucket `json:"buckets"`
 	People      []Person `json:"people"`
+	// UUID for simple optimistic concurrency control
+	LastUpdateUUID string `json:"lastUpdateUUID"`
 }
 
 // Bucket model struct
@@ -56,6 +60,11 @@ type Person struct {
 	ID           string  `json:"id"`
 	DisplayName  string  `json:"displayName"`
 	Availability float64 `json:"availability"`
+}
+
+// ObjectUpdateResponse is returned to the browser after an insert or update (e.g. for concurrency control)
+type ObjectUpdateResponse struct {
+	LastUpdateUUID string `json:"lastUpdateUUID"`
 }
 
 // StorageService to represent the persistent store
@@ -104,14 +113,14 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 	return true
 }
 
-func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) bool {
+func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (Period, bool) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	_, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
+	period, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
 	if err != nil {
 		log.Printf("Could not validate existence of period '%s' for team '%s': error: %s", periodID, teamID, err)
 		http.Error(w, fmt.Sprintf("Could not validate existence of period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
-		return false
+		return period, false
 	}
 	if exists != expected {
 		statusCode := http.StatusBadRequest
@@ -119,6 +128,16 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 			statusCode = http.StatusNotFound
 		}
 		http.Error(w, fmt.Sprintf("Period '%s' for team '%s' expected exists=%v, found %v", periodID, teamID, expected, exists), statusCode)
+		return period, false
+	}
+	return period, true
+}
+
+func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, period, savedPeriod Period) bool {
+	if savedPeriod.LastUpdateUUID != period.LastUpdateUUID {
+		msg := fmt.Sprintf("Concurrent modification: last saved UUID=%s, your last loaded UUID=%s",
+			savedPeriod.LastUpdateUUID, period.LastUpdateUUID)
+		http.Error(w, msg, http.StatusConflict)
 		return false
 	}
 	return true
@@ -272,6 +291,13 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	}
 }
 
+func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period Period) {
+	response := ObjectUpdateResponse{LastUpdateUUID: period.LastUpdateUUID}
+	enc := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	enc.Encode(response)
+}
+
 func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID string) {
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
@@ -280,9 +306,10 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 	if !s.ensureTeamExistence(w, r, teamID, true) {
 		return
 	}
-	if !s.ensurePeriodExistence(w, r, teamID, period.ID, false) {
+	if _, ok := s.ensurePeriodExistence(w, r, teamID, period.ID, false); !ok {
 		return
 	}
+	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	err := s.store.CreatePeriod(ctx, teamID, period)
@@ -291,6 +318,7 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 		http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
 		return
 	}
+	s.writePeriodUpdateResponse(w, r, period)
 }
 
 func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
@@ -301,9 +329,11 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	if !s.ensureTeamExistence(w, r, teamID, true) {
 		return
 	}
-	if !s.ensurePeriodExistence(w, r, teamID, periodID, true) {
+	savedPeriod, ok := s.ensurePeriodExistence(w, r, teamID, periodID, true)
+	if !ok || !s.ensureNoConcurrentMod(w, r, period, savedPeriod) {
 		return
 	}
+	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	err := s.store.UpdatePeriod(ctx, teamID, period)
@@ -312,6 +342,7 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID,
 		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
 		return
 	}
+	s.writePeriodUpdateResponse(w, r, period)
 }
 
 func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {

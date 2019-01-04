@@ -55,7 +55,7 @@ export class TeamPeriodsComponent implements OnInit {
 
   addPeriod(): void {
     const dialogData: EditPeriodDialogData = {
-      period: new Period('', '', 'person weeks', [], []),
+      period: new Period('', '', 'person weeks', [], [], ''),
       title: 'New Period',
       okAction: 'Add',
       allowCancel: true,
@@ -70,10 +70,11 @@ export class TeamPeriodsComponent implements OnInit {
         catchError(error => {
           this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
           console.log(error);
-          return of("error");
+          return of(undefined);
         })
-      ).subscribe(res => {
-        if (res != "error") {
+      ).subscribe(updateResponse => {
+        if (updateResponse) {
+          period.lastUpdateUUID = updateResponse.lastUpdateUUID;
           this.periods.push(period);
         }
       })

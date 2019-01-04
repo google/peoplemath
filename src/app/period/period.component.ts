@@ -141,7 +141,7 @@ export class PeriodComponent implements OnInit {
         this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
           + error.error, 'Dismiss');
         console.log(error);
-        return of(new Period('', '', '', [], []));
+        return of(new Period('', '', '', [], [], ''));
       })
     ).subscribe(period => this.period = period);
   }
@@ -158,13 +158,18 @@ export class PeriodComponent implements OnInit {
   performSave(): void {
     this.storage.updatePeriod(this.team.id, this.period).pipe(
       catchError(error => {
-        this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
+        if (error.status == 409) {
+          this.snackBar.open('This period was modified in another session. Try reloading the page and reapplying your edit.', 'Dismiss');
+        } else {
+          this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
+        }
         console.log(error);
-        return of("error");
+        return of(undefined);
       })
-    ).subscribe(res => {
-      if (res != "error") {
+    ).subscribe(updateResponse => {
+      if (updateResponse) {
         this.snackBar.open('Saved', '', {duration: 2000});
+        this.period.lastUpdateUUID = updateResponse.lastUpdateUUID;
       }
     });
   }
