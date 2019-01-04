@@ -14,7 +14,9 @@
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [uncommittedTime]="uncommittedTime()"
-    [showOrderButtons]="showOrderButtons"></app-bucket>
+    [showOrderButtons]="showOrderButtons"
+    (onMoveBucketUp)="moveBucketUpOne($event)"
+    (onMoveBucketDown)="moveBucketDownOne($event)"></app-bucket>
 
 <div><button (click)="addBucket()" mat-button color="primary">Add Bucket</button></div>
 

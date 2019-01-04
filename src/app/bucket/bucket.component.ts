@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { MatDialog } from '@angular/material';
@@ -17,6 +17,8 @@ export class BucketComponent implements OnInit {
   @Input() globalResourcesAvailable: number;
   @Input() uncommittedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
+  @Output() onMoveBucketUp = new EventEmitter<Bucket>();
+  @Output() onMoveBucketDown = new EventEmitter<Bucket>();
 
   constructor(public dialog: MatDialog) { }
 
@@ -82,5 +84,13 @@ export class BucketComponent implements OnInit {
     }
     this.bucket.objectives[index] = this.bucket.objectives[index + 1];
     this.bucket.objectives[index + 1] = objective;
+  }
+
+  moveBucketUp(): void {
+    this.onMoveBucketUp.emit(this.bucket);
+  }
+
+  moveBucketDown(): void {
+    this.onMoveBucketDown.emit(this.bucket);
   }
 }

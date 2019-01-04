@@ -147,4 +147,20 @@ export class PeriodComponent implements OnInit {
       this.period.buckets.push(bucket);
     })
   }
+
+  moveBucketUpOne(bucket: Bucket): void {
+    let index = this.period.buckets.findIndex(b => b === bucket);
+    if (index > 0) {
+      this.period.buckets[index] = this.period.buckets[index - 1];
+      this.period.buckets[index - 1] = bucket;
+    }
+  }
+
+  moveBucketDownOne(bucket: Bucket): void {
+    let index = this.period.buckets.findIndex(b => b === bucket);
+    if (index >= 0 && index < this.period.buckets.length - 1) {
+      this.period.buckets[index] = this.period.buckets[index + 1];
+      this.period.buckets[index + 1] = bucket;
+    }
+  }
 }
