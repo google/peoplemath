@@ -19,7 +19,7 @@ describe('AssignmentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentComponent);
     component = fixture.componentInstance;
-    component.assignment = new Assignment();
+    component.assignment = new Assignment('', 0);
     component.validAssignees = [];
     fixture.detectChanges();
   });

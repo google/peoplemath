@@ -9,6 +9,7 @@ import { BucketComponent } from '../bucket/bucket.component';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
 import { PeopleComponent } from '../people/people.component';
+import { AssignmentsByPersonComponent } from '../assignments-by-person/assignments-by-person.component';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -22,6 +23,7 @@ describe('PeriodComponent', () => {
         ObjectiveComponent,
         AssignmentComponent,
         PeopleComponent,
+        AssignmentsByPersonComponent,
       ],
       imports: [
         RouterTestingModule,
