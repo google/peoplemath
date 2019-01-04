@@ -121,7 +121,7 @@ func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	teamID := pathParts[3]
 	if r.Method == http.MethodGet {
-		s.handleGetTeam(teamID, w, r)
+		s.handleGetTeam(w, r, teamID)
 	} else if r.Method == http.MethodPost {
 		s.handlePostTeam(w, r)
 	} else if r.Method == http.MethodPut {
@@ -131,7 +131,7 @@ func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) handleGetTeam(teamID string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID string) {
 	if teamID == "" {
 		teams, err := s.store.GetAllTeams(r.Context())
 		if err != nil {
@@ -208,17 +208,17 @@ func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
 	teamID := pathParts[3]
 	periodID := pathParts[4]
 	if r.Method == http.MethodGet {
-		s.handleGetPeriod(teamID, periodID, w, r)
+		s.handleGetPeriod(w, r, teamID, periodID)
 	} else if r.Method == http.MethodPost {
-		s.handlePostPeriod(teamID, w, r)
+		s.handlePostPeriod(w, r, teamID)
 	} else if r.Method == http.MethodPut {
-		s.handlePutPeriod(teamID, periodID, w, r)
+		s.handlePutPeriod(w, r, teamID, periodID)
 	} else {
 		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
 	}
 }
 
-func (s *Server) handleGetPeriod(teamID, periodID string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
 	if periodID == "" {
 		periods, found, err := s.store.GetAllPeriods(r.Context(), teamID)
 		if !found {
@@ -248,7 +248,7 @@ func (s *Server) handleGetPeriod(teamID, periodID string, w http.ResponseWriter,
 	}
 }
 
-func (s *Server) handlePostPeriod(teamID string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID string) {
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
@@ -266,7 +266,7 @@ func (s *Server) handlePostPeriod(teamID string, w http.ResponseWriter, r *http.
 	}
 }
 
-func (s *Server) handlePutPeriod(teamID, periodID string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
