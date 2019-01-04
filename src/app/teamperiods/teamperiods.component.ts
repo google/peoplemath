@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
+import { MatDialog } from '@angular/material';
+import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dialog.component';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class TeamPeriodsComponent implements OnInit {
   constructor(
     private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -27,5 +30,23 @@ export class TeamPeriodsComponent implements OnInit {
     const teamId = this.route.snapshot.paramMap.get('team');
     this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
     this.okrStorage.getPeriods(teamId).subscribe(periods => this.periods = periods);
+  }
+
+  addPeriod(): void {
+    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {
+      data: {
+        period: new Period('', '', 'person weeks', [], []),
+        title: 'New Period',
+        okAction: 'Add',
+        allowCancel: true,
+        allowEditID: true,
+      },
+    });
+    dialogRef.afterClosed().subscribe(period => {
+      if (!period) {
+        return;
+      }
+      this.periods.push(period);
+    });
   }
 }

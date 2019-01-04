@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<div mat-dialog-content>
+  <div *ngIf="data.allowEditID">
+  <p>Period ID</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="data.period.id">
+    </mat-form-field>
+  </div>
+  <p>Display name</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.displayName">
+  </mat-form-field>
+  <p>Unit</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.unit">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="data.period" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
+  <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
+</div>

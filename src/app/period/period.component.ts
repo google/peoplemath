@@ -2,27 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Bucket } from '../bucket';
-import { Person } from '../person';
 import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
-import { Objective } from '../objective';
-import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material';
 import { EditBucketDialogComponent } from '../edit-bucket-dialog/edit-bucket-dialog.component';
+import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dialog.component';
 
 @Component({
   selector: 'app-period',
   templateUrl: './period.component.html',
   styleUrls: ['./period.component.css'],
-  providers: [
-  ],
 })
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
-  isEditing: boolean = false;
-
+ 
   constructor(
     private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
@@ -131,11 +126,12 @@ export class PeriodComponent implements OnInit {
   }
 
   edit(): void {
-    this.isEditing = true;
-  }
-
-  stopEditing(): void {
-    this.isEditing = false;
+    this.dialog.open(EditPeriodDialogComponent, {
+      data: {
+        period: this.period, title: 'Edit Period "' + this.period.id + '"',
+        okAction: 'OK', allowCancel: false, allowEditID: false,
+      },
+    });
   }
 
   addBucket(): void {

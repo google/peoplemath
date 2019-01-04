@@ -1,11 +1,7 @@
 <div class="grid-container">
 
 <h2 class="mat-h2"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : 
-    <span *ngIf="!isEditing" (click)="edit()">{{period.displayName}}</span>
-    <span *ngIf="isEditing">
-        <input [(ngModel)]="period.displayName"/>
-        <button (click)="stopEditing()" class="btn btn-primary">OK</button>
-    </span>
+    <span (click)="edit()">{{period.displayName}}</span>
 </h2>
 
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">

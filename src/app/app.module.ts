@@ -20,6 +20,7 @@ import { MaterialModule } from './material/material.module';
 import { AssignmentDialogComponent } from './assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objective-dialog.component';
 import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
+import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dial
     AssignmentDialogComponent,
     EditObjectiveDialogComponent,
     EditBucketDialogComponent,
+    EditPeriodDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +53,7 @@ import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dial
     AssignmentDialogComponent,
     EditObjectiveDialogComponent,
     EditBucketDialogComponent,
+    EditPeriodDialogComponent,
   ],
   providers: [
     OkrStorageService,
