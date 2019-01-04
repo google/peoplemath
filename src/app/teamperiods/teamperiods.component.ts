@@ -53,7 +53,17 @@ export class TeamPeriodsComponent implements OnInit {
       if (!period) {
         return;
       }
-      this.periods.push(period);
+      this.okrStorage.addPeriod(this.team.id, period).pipe(
+        catchError(error => {
+          this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
+          console.log(error);
+          return of("error");
+        })
+      ).subscribe(res => {
+        if (res != "error") {
+          this.periods.push(period);
+        }
+      })
     });
   }
 

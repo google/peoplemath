@@ -34,4 +34,8 @@ export class OkrStorageService {
   getPeriod(teamId: string, periodId: string): Observable<Period> {
     return this.http.get<Period>('/api/period/' + teamId + '/' + periodId);
   }
+
+  addPeriod(teamId: string, period: Period): Observable<any> {
+    return this.http.post('/api/period/' + teamId + '/', period);
+  }
 }
