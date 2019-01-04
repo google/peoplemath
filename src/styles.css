@@ -3,6 +3,7 @@
 .overcommitted { color: darkorange }
 
 .grid-container { margin: 20px }
+.mat-card-header-text { width: 100% }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -4,6 +4,7 @@
     <span (click)="edit()">{{bucket.displayName}}
     <span [class.error]="totalAllocationPercentage > 100"> ({{bucket.allocationPercentage}}%)</span>
     </span>
+    <button (click)="addObjective()" mat-button color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
   <div [class.warning]="bucket.resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
@@ -20,6 +21,5 @@
         (onDelete)="deleteObjective($event)"></app-objective>
     </ng-container>
 </mat-list>
-<button (click)="addObjective()" mat-button color="primary">Add Objective</button>
 </mat-card-content>
 </mat-card>
