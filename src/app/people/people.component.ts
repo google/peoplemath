@@ -29,7 +29,6 @@ export class PeopleComponent implements OnInit {
   @Input() totalUncommitted: number;
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
-  editingPerson: Person = undefined;
   displayedColumns: string[] = ["person", "available", "committed", "uncommitted", "assignmentCount"];
   
   constructor(public dialog: MatDialog) { }
