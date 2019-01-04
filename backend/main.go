@@ -328,14 +328,20 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
 }
 
 func main() {
-	var gcloudProject string
-	flag.StringVar(&gcloudProject, "gcloud_project", "", "GCP project ID")
+	var useInMemStore bool
+	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.Parse()
+
 	var store StorageService
-	if gcloudProject == "" {
-		log.Printf("Using in-memory store")
+	if useInMemStore {
+		log.Printf("Using in-memory store per command-line flag")
 		store = makeInMemStore()
 	} else {
+		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
+		if gcloudProject == "" {
+			log.Fatalf("GOOGLE_CLOUD_PROJECT not set")
+			return
+		}
 		log.Printf("Using Cloud Datastore storage service; project='%s'", gcloudProject)
 		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
 		ctx := context.Background()
