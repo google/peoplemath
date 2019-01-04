@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { MatDialog } from '@angular/material';
-import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
+import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -26,15 +26,14 @@ export class TeamsComponent implements OnInit {
   }
 
   addTeam(): void {
-    const dialogRef = this.dialog.open(EditTeamDialogComponent, {
-      data: {
-        team: new Team('', ''),
-        title: 'Add Team',
-        okAction: 'Add',
-        allowCancel: true,
-        allowEditID: true,
-      },
-    });
+    const dialogData: EditTeamDialogData = {
+      team: new Team('', ''),
+      title: 'Add Team',
+      okAction: 'Add',
+      allowCancel: true,
+      allowEditID: true,
+    };
+    const dialogRef = this.dialog.open(EditTeamDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(team => {
       if (!team) {
         return;

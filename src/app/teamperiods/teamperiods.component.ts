@@ -4,8 +4,8 @@ import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { MatDialog } from '@angular/material';
-import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dialog.component';
-import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
+import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
+import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 
 
 @Component({
@@ -34,15 +34,14 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   addPeriod(): void {
-    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {
-      data: {
-        period: new Period('', '', 'person weeks', [], []),
-        title: 'New Period',
-        okAction: 'Add',
-        allowCancel: true,
-        allowEditID: true,
-      },
-    });
+    const dialogData: EditPeriodDialogData = {
+      period: new Period('', '', 'person weeks', [], []),
+      title: 'New Period',
+      okAction: 'Add',
+      allowCancel: true,
+      allowEditID: true,
+    };
+    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(period => {
       if (!period) {
         return;
@@ -52,14 +51,13 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   editTeam(): void {
-    this.dialog.open(EditTeamDialogComponent, {
-      data: {
-        team: this.team,
-        title: 'Edit Team "' + this.team.id + '"',
-        okAction: 'OK',
-        allowCancel: false,
-        allowEditID: false,
-      },
-    });
+    const dialogData: EditTeamDialogData = {
+      team: this.team,
+      title: 'Edit Team "' + this.team.id + '"',
+      okAction: 'OK',
+      allowCancel: false,
+      allowEditID: false,
+    };
+    this.dialog.open(EditTeamDialogComponent, {data: dialogData});
   }
 }

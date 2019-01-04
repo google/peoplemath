@@ -3,7 +3,7 @@ import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
-import { EditObjectiveDialogComponent } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 
 @Component({
   selector: 'app-objective',
@@ -66,16 +66,15 @@ export class ObjectiveComponent implements OnInit {
   }
 
   edit(): void {
-    this.dialog.open(EditObjectiveDialogComponent, {
-      'data': {
-        'objective': this.objective,
-        'title': 'Edit Objective',
-        'okAction': 'OK',
-        'allowCancel': false,
-        'unit': this.unit,
-        'onDelete': this.onDelete,
-      }
-    });
+    const dialogData: EditObjectiveDialogData = {
+      'objective': this.objective,
+      'title': 'Edit Objective',
+      'okAction': 'OK',
+      'allowCancel': false,
+      'unit': this.unit,
+      'onDelete': this.onDelete,
+    };
+    this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
   }
 
   moveObjectiveUp(): void {

@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { MatDialog } from '@angular/material';
-import { EditObjectiveDialogComponent } from '../edit-objective-dialog/edit-objective-dialog.component';
-import { EditBucketDialogComponent } from '../edit-bucket-dialog/edit-bucket-dialog.component';
+import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 
 @Component({
   selector: 'app-bucket',
@@ -32,24 +32,23 @@ export class BucketComponent implements OnInit {
   }
 
   edit(): void {
-    this.dialog.open(EditBucketDialogComponent, {
-      data: {
-        'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
-        'title': 'Edit bucket "' + this.bucket.displayName + '"',
-      },
-    });
+    const dialogData: EditBucketDialogData = {
+      'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
+      'title': 'Edit bucket "' + this.bucket.displayName + '"',
+    };
+    this.dialog.open(EditBucketDialogComponent, {data: dialogData});
   }
 
   addObjective(): void {
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {
-      'data': {
-        'objective': new Objective('', 0, []),
-        'title': 'Add Objective',
-        'okAction': 'Add',
-        'allowCancel': true,
-        'unit': this.unit,
-      },
-    });
+    const dialogData: EditObjectiveDialogData = {
+      'objective': new Objective('', 0, []),
+      'title': 'Add Objective',
+      'okAction': 'Add',
+      'allowCancel': true,
+      'unit': this.unit,
+      'onDelete': undefined,
+    };
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(objective => {
       if (!objective) {
         return;

@@ -6,8 +6,8 @@ import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { MatDialog } from '@angular/material';
-import { EditBucketDialogComponent } from '../edit-bucket-dialog/edit-bucket-dialog.component';
-import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dialog.component';
+import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
+import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
 
 @Component({
   selector: 'app-period',
@@ -128,18 +128,18 @@ export class PeriodComponent implements OnInit {
   }
 
   edit(): void {
-    this.dialog.open(EditPeriodDialogComponent, {
-      data: {
-        period: this.period, title: 'Edit Period "' + this.period.id + '"',
-        okAction: 'OK', allowCancel: false, allowEditID: false,
-      },
-    });
+    const dialogData: EditPeriodDialogData = {
+      period: this.period, title: 'Edit Period "' + this.period.id + '"',
+      okAction: 'OK', allowCancel: false, allowEditID: false,
+    };
+    this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
   }
 
   addBucket(): void {
-    const dialogRef = this.dialog.open(EditBucketDialogComponent, {
-      data: {bucket: new Bucket('', 0, []), okAction: 'Add', allowCancel: true, title: 'Add bucket'},
-    });
+    const dialogData: EditBucketDialogData = {
+      bucket: new Bucket('', 0, []),
+      okAction: 'Add', allowCancel: true, title: 'Add bucket'};
+    const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(bucket => {
       if (!bucket) {
         return;
