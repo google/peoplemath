@@ -11,6 +11,7 @@
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [validAssignees]="validAssignees()"></app-bucket>
+<p><button (click)="addBucket()">Add Bucket</button></p>
 
 <app-people [people]="period.people"
      [peopleCommitments]="peopleCommitments()"

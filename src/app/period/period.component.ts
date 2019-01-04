@@ -98,4 +98,9 @@ export class PeriodComponent implements OnInit {
   stopEditing(): void {
     this.isEditing = false;
   }
+
+  addBucket(): void {
+    const bucket = new Bucket('New Bucket', 0, []);
+    this.period.buckets.push(bucket);
+  }
 }
