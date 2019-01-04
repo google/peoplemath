@@ -18,10 +18,9 @@
 
 <div><button (click)="addBucket()" mat-raised-button color="primary">Add Bucket</button></div>
 
-<app-assignments-by-person [period]="period"></app-assignments-by-person>
 </div>
 
-<div fxFlex="calc(50%-20px)">
+<span fxLayout="column" fxFlex="calc(50%-20px)" fxLayoutGap="20px">
 <app-people [people]="period.people"
     [peopleCommitments]="peopleCommitments()"
     [totalAvailable]="totalAvailable()"
@@ -29,7 +28,8 @@
     [totalUncommitted]="totalUncommitted()"
     [unit]="period.unit">
 </app-people>
-</div>
+<app-assignments-by-person [period]="period"></app-assignments-by-person>
+</span>
 
 </div>
 </div>
