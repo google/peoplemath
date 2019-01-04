@@ -23,9 +23,11 @@
 <span fxLayout="column" fxFlex="calc(50%-20px)" fxLayoutGap="20px">
 <app-people [people]="period.people"
     [peopleCommitments]="peopleCommitments()"
+    [peopleAssignmentCounts]="peopleAssignmentCounts()"
     [totalAvailable]="totalAvailable()"
     [totalCommitted]="totalCommitted()"
     [totalUncommitted]="totalUncommitted()"
+    [totalAssignmentCount]="totalAssignmentCount()"
     [unit]="period.unit">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>

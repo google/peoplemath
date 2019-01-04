@@ -8,6 +8,7 @@ class PersonData {
       public availability: number,
       public committed: number,
       public uncommitted: number,
+      public assignmentCount: number,
       public isOvercommitted: boolean,
       public isTotal: boolean,
       public person: Person,
@@ -22,12 +23,14 @@ class PersonData {
 export class PeopleComponent implements OnInit {
   @Input() people: Person[];
   @Input() peopleCommitments: Map<string, number>;
+  @Input() peopleAssignmentCounts: Map<string, number>;
   @Input() totalAvailable: number;
   @Input() totalCommitted: number;
   @Input() totalUncommitted: number;
+  @Input() totalAssignmentCount: number;
   @Input() unit: string;
   editingPerson: Person = undefined;
-  displayedColumns: string[] = ["person", "available", "committed", "uncommitted"];
+  displayedColumns: string[] = ["person", "available", "committed", "uncommitted", "assignmentCount"];
   
   constructor(public editDialog: MatDialog) { }
 
@@ -36,8 +39,10 @@ export class PeopleComponent implements OnInit {
 
   tableData(): PersonData[] {
     let result = this.people.map(p => new PersonData(p.displayNameWithUsername(), p.availability,
-      this.personCommitted(p), this.personUncommitted(p), this.isPersonOvercommitted(p), false, p));
-    result.push(new PersonData("Total", this.totalAvailable, this.totalCommitted, this.totalUncommitted,
+      this.personCommitted(p), this.personUncommitted(p), this.personAssignmentCount(p),
+      this.isPersonOvercommitted(p), false, p));
+    result.push(new PersonData("Total", this.totalAvailable,
+      this.totalCommitted, this.totalUncommitted, this.totalAssignmentCount,
       this.isTeamOvercommitted(), true, undefined));
     return result;
   }
@@ -54,6 +59,13 @@ export class PeopleComponent implements OnInit {
    */
   personUncommitted(person: Person): number {
     return person.availability - this.personCommitted(person);
+  }
+
+  /**
+   * Number of distinct assignments for the person during this period.
+   */
+  personAssignmentCount(person: Person): number {
+    return this.peopleAssignmentCounts.has(person.id) ? this.peopleAssignmentCounts.get(person.id) : 0;
   }
 
   isPersonOvercommitted(person: Person): boolean {

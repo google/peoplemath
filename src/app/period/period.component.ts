@@ -64,6 +64,14 @@ export class PeriodComponent implements OnInit {
         .reduce((sum, current) => sum + current, 0);
   }
 
+  totalAssignmentCount(): number {
+    return this.period.buckets.map(
+      bucket => bucket.objectives.map(
+        objective => objective.assignments.length).reduce(
+          (sum, current) => sum + current, 0)).reduce(
+            (sum, current) => sum + current, 0);
+  }
+
   peopleCommitments(): Map<string, number> {
     let result: Map<string, number> = new Map();
     this.period.buckets.forEach(bucket => {
@@ -74,6 +82,22 @@ export class PeriodComponent implements OnInit {
             result.set(personId, 0);
           }
           result.set(personId, result.get(personId) + assignment.commitment);
+        })
+      })
+    });
+    return result;
+  }
+
+  peopleAssignmentCounts(): Map<string, number> {
+    let result = new Map();
+    this.period.buckets.forEach(bucket => {
+      bucket.objectives.forEach(objective => {
+        objective.assignments.forEach(assignment => {
+          let personId = assignment.personId;
+          if (!result.has(personId)) {
+            result.set(personId, 0);
+          }
+          result.set(personId, result.get(personId) + 1);
         })
       })
     });
