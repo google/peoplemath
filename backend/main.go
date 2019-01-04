@@ -9,6 +9,11 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
+)
+
+const (
+	defaultStoreTimeout = 5 * time.Second
 )
 
 // Team model struct
@@ -68,7 +73,8 @@ type StorageService interface {
 
 // Server struct to handle incoming HTTP requests
 type Server struct {
-	store StorageService
+	store        StorageService
+	storeTimeout time.Duration
 }
 
 func (s *Server) makeHandler() http.Handler {
@@ -79,7 +85,9 @@ func (s *Server) makeHandler() http.Handler {
 }
 
 func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
-	_, exists, err := s.store.GetTeam(r.Context(), teamID)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	_, exists, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s': %s", teamID, err), http.StatusInternalServerError)
 		return false
@@ -96,7 +104,9 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 }
 
 func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) bool {
-	_, exists, err := s.store.GetPeriod(r.Context(), teamID, periodID)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	_, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not validate existence of period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
 		return false
@@ -132,8 +142,10 @@ func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID string) {
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
 	if teamID == "" {
-		teams, err := s.store.GetAllTeams(r.Context())
+		teams, err := s.store.GetAllTeams(ctx)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Could not retrieve teams: %s", err), http.StatusInternalServerError)
 			return
@@ -142,7 +154,7 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID st
 		w.Header().Set("Content-Type", "application/json")
 		enc.Encode(teams)
 	} else {
-		team, found, err := s.store.GetTeam(r.Context(), teamID)
+		team, found, err := s.store.GetTeam(ctx, teamID)
 		if !found {
 			http.NotFound(w, r)
 			return
@@ -165,7 +177,9 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	if !s.ensureTeamExistence(w, r, team.ID, false) {
 		return
 	}
-	err := s.store.CreateTeam(r.Context(), team)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	err := s.store.CreateTeam(ctx, team)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not create team: %s", err), http.StatusInternalServerError)
 		return
@@ -180,7 +194,9 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	if !s.ensureTeamExistence(w, r, team.ID, true) {
 		return
 	}
-	err := s.store.UpdateTeam(r.Context(), team)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	err := s.store.UpdateTeam(ctx, team)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not update team: %s", err), http.StatusInternalServerError)
 		return
@@ -219,8 +235,10 @@ func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
 	if periodID == "" {
-		periods, found, err := s.store.GetAllPeriods(r.Context(), teamID)
+		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
 		if !found {
 			http.NotFound(w, r)
 			return
@@ -233,7 +251,7 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 		w.Header().Set("Content-Type", "application/json")
 		enc.Encode(periods)
 	} else {
-		period, found, err := s.store.GetPeriod(r.Context(), teamID, periodID)
+		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
 		if !found {
 			http.NotFound(w, r)
 			return
@@ -259,7 +277,9 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 	if !s.ensurePeriodExistence(w, r, teamID, period.ID, false) {
 		return
 	}
-	err := s.store.CreatePeriod(r.Context(), teamID, period)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	err := s.store.CreatePeriod(ctx, teamID, period)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not create period for team '%s': %s", teamID, err), http.StatusInternalServerError)
 		return
@@ -277,7 +297,9 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	if !s.ensurePeriodExistence(w, r, teamID, periodID, true) {
 		return
 	}
-	err := s.store.UpdatePeriod(r.Context(), teamID, period)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	err := s.store.UpdatePeriod(ctx, teamID, period)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
 		return
@@ -314,7 +336,7 @@ func main() {
 			return
 		}
 	}
-	server := Server{store: store}
+	server := Server{store: store, storeTimeout: defaultStoreTimeout}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
 	if port == "" {
