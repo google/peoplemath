@@ -41,4 +41,9 @@ export class BucketComponent implements OnInit {
     const objective = new Objective('New Objective', 0, []);
     this.bucket.objectives.push(objective);
   }
+
+  deleteObjective(objective: Objective): void {
+    const index = this.bucket.objectives.findIndex(o => o === objective);
+    this.bucket.objectives.splice(index, 1);
+  }
 }

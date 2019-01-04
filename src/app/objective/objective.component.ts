@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 
@@ -11,6 +11,7 @@ export class ObjectiveComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
   @Input() validAssignees: string[];
+  @Output() onDelete = new EventEmitter<Objective>();
   isEditing: boolean = false;
   
   constructor() { }
@@ -47,5 +48,9 @@ export class ObjectiveComponent implements OnInit {
 
   stopEditing(): void {
     this.isEditing = false;
+  }
+
+  delete(): void {
+    this.onDelete.emit(this.objective);
   }
 }

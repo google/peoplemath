@@ -13,6 +13,7 @@
 <ul>
     <app-objective *ngFor="let objective of bucket.objectives"
         [objective]="objective" [unit]="unit"
-        [validAssignees]="validAssignees"></app-objective>
+        [validAssignees]="validAssignees"
+        (onDelete)="deleteObjective($event)"></app-objective>
 </ul>
 <button (click)="addObjective()">Add Objective</button>

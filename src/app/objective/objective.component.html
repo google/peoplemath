@@ -6,6 +6,7 @@
         <button (click)="stopEditing()">OK</button>
     </span>
     <button *ngIf="!isFullyAssigned()" (click)="assign()">Assign</button>
+    <button (click)="delete()">Delete</button>
 </li>
 <ul *ngIf="objective.assignments">
     <li *ngFor="let assignment of objective.assignments"><app-assignment
