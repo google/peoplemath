@@ -1,4 +1,6 @@
 export class Team {
-    id: string;
-    displayName: string;
+    constructor(
+        public id: string,
+        public displayName: string
+    ) {}
 }

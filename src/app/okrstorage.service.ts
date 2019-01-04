@@ -4,10 +4,16 @@ import { Period } from './period';
 import { Bucket } from './bucket';
 import { Person } from './person';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Objective } from './objective';
 import { Assignment } from './assignment';
 
 // TODO Move to backend storage service
+
+const TEAMS: Team[] = [
+  new Team('team1', 'First team'),
+  new Team('team2', 'Second team'),
+];
 
 const BUCKETS: Bucket[] = [
   new Bucket('First bucket', 40, [
@@ -36,14 +42,11 @@ export class OkrStorageService {
   constructor() { }
 
   getTeams(): Observable<Team[]> {
-    return of([
-      { id: 'team1', displayName: 'First Team' },
-      { id: 'team2', displayName: 'Second Team' },
-    ]);
+    return of(TEAMS);
   }
 
   getTeam(teamId: string): Observable<Team> {
-    return of({ id: teamId, displayName: teamId });
+    return this.getTeams().pipe(map(teams => teams.find(t => t.id == teamId)));
   }
 
   getPeriods(teamId: string): Observable<Period[]> {
@@ -54,6 +57,6 @@ export class OkrStorageService {
   }
   
   getPeriod(teamId: string, periodId: string): Observable<Period> {
-    return of(new Period(periodId, periodId, 'person weeks', BUCKETS, PEOPLE));
+    return of(new Period(periodId, periodId.toUpperCase(), 'person weeks', BUCKETS, PEOPLE));
   }
 }
