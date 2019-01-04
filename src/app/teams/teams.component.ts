@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-teams',
@@ -15,6 +17,7 @@ export class TeamsComponent implements OnInit {
   constructor(
     private okrStorage: OkrStorageService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -42,7 +45,13 @@ export class TeamsComponent implements OnInit {
       if (!team) {
         return;
       }
-      this.teams.push(team);
+      this.okrStorage.addTeam(team).pipe(
+        catchError(error => {
+          this.snackBar.open("Could not save new team: " + error.error, 'Dismiss');
+          console.log(error);
+          return of(undefined);
+        }),
+      ).subscribe(res => this.loadData());
     });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Team } from './team';
 import { Period } from './period';
 import { Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class OkrStorageService {
@@ -15,6 +15,11 @@ export class OkrStorageService {
 
   getTeam(teamId: string): Observable<Team> {
     return this.http.get<Team>('/api/team/' + teamId);
+  }
+
+  addTeam(team: Team): Observable<any> {
+    let options = {headers: new HttpHeaders({'Content-Type': 'application.json'})};
+    return this.http.post('/api/team/', team, options);
   }
 
   getPeriods(teamId: string): Observable<Period[]> {
