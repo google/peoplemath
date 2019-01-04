@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material';
-import { PersonAssignmentData, AssignmentDialogComponent } from '../assignment-dialog/assignment-dialog.component';
+import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent } from '../edit-objective-dialog/edit-objective-dialog.component';
 
 @Component({
@@ -48,14 +48,14 @@ export class ObjectiveComponent implements OnInit {
       assignmentData.push(new PersonAssignmentData(
         personId, uncommitted + currentAssignment, currentAssignment));
     });
+    const dialogData: AssignmentDialogData = {
+      'objective': this.objective,
+      'people': assignmentData,
+      'unit': this.unit,
+      'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
       'width': '700px',
-      'data': {
-        'objective': this.objective,
-        'people': assignmentData,
-        'timeEstimate': this.objective.resourceEstimate,
-        'unit': this.unit,
-        'columns': ['person', 'available', 'assign', 'actions']}});
+      'data': dialogData});
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         return;

@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Objective } from '../objective';
 
 export class PersonAssignmentData {
   constructor(
@@ -9,9 +10,8 @@ export class PersonAssignmentData {
 }
 
 export interface AssignmentDialogData {
-  objective: string;
+  objective: Objective;
   people: PersonAssignmentData[];
-  timeEstimate: number;
   unit: string;
   columns: string[];
 }
@@ -38,7 +38,7 @@ export class AssignmentDialogComponent implements OnInit {
    */
   unassignedTime(): number {
     let assigned = this.data.people.map(d => d.assign).reduce((sum, current) => sum + current, 0);
-    return this.data.timeEstimate - assigned;
+    return this.data.objective.resourceEstimate - assigned;
   }
 
   assignNone(row: PersonAssignmentData): void {
@@ -46,7 +46,7 @@ export class AssignmentDialogComponent implements OnInit {
   }
 
   assignAll(row: PersonAssignmentData): void {
-    row.assign = Math.min(row.available, this.data.timeEstimate);
+    row.assign = Math.min(row.available, this.data.objective.resourceEstimate);
   }
 
   assignRemaining(row: PersonAssignmentData): void {

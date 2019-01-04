@@ -10,9 +10,8 @@ describe('AssignmentDialogComponent', () => {
   let fixture: ComponentFixture<AssignmentDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: AssignmentDialogData = {
-    'objective': 'My Test Objective',
+    'objective': new Objective('My Test Objective', 10, []),
     'people': [],
-    'timeEstimate': 10,
     'unit': 'person weeks',
     'columns': [],
   };
