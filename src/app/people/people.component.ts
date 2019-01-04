@@ -35,6 +35,10 @@ export class PeopleComponent implements OnInit {
     return person.availability - this.personCommitted(person);
   }
 
+  isPersonOvercommitted(person: Person): boolean {
+    return this.personCommitted(person) > person.availability;
+  }
+
   addPerson(): void {
     const person = new Person();
     person.id = 'new';

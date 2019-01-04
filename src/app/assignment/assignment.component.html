@@ -1,8 +1,8 @@
 <span [class.error]="!isValidAssignee()">
-<span *ngIf="!isEditing" (click)="edit()">{{assignment.personId}}: </span>
-<span *ngIf="isEditing"><input [(ngModel)]="assignment.personId"/>: </span>
+<span *ngIf="!isEditing()" (click)="edit()">{{assignment.personId}}: </span>
+<span *ngIf="isEditing()"><input [(ngModel)]="assignment.personId"/>: </span>
 </span>
 <span [class.error]="objectiveResourcesCommitted > objectiveResourceEstimate">
-<span *ngIf="!isEditing" (click)="edit()">{{assignment.commitment}} {{unit}}</span>
-<span *ngIf="isEditing"><input type="number" [(ngModel)]="assignment.commitment"/> {{unit}}<button (click)="stopEditing()">OK</button></span>
+<span *ngIf="!isEditing()" (click)="edit()">{{assignment.commitment}} {{unit}}</span>
+<span *ngIf="isEditing()"><input type="number" [(ngModel)]="assignment.commitment"/> {{unit}}<button (click)="stopEditing()">OK</button></span>
 </span>

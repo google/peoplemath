@@ -1,10 +1,11 @@
 <li>
-    <span *ngIf="!isEditing" (click)="edit()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
+    <span *ngIf="!isEditing" (click)="edit()" [class.unassigned]="isUnassigned()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
     <span *ngIf="isEditing">
         <input [(ngModel)]="objective.name"/> 
         (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})
         <button (click)="stopEditing()">OK</button>
     </span>
+    <button *ngIf="!isFullyAssigned()" (click)="assign()">Assign</button>
 </li>
 <ul *ngIf="objective.assignments">
     <li *ngFor="let assignment of objective.assignments"><app-assignment

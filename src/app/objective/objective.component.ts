@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Objective } from '../objective';
+import { Assignment } from '../assignment';
 
 @Component({
   selector: 'app-objective',
@@ -15,6 +16,21 @@ export class ObjectiveComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  isUnassigned(): boolean {
+    return this.objective.resourcesCommitted() <= 0;
+  }
+
+  isFullyAssigned(): boolean {
+    return this.objective.resourcesCommitted() >= this.objective.resourceEstimate;
+  }
+
+  assign(): void {
+    const assignment = new Assignment();
+    assignment.personId = '';
+    assignment.commitment = this.objective.resourceEstimate - this.objective.resourcesCommitted();
+    this.objective.assignments.push(assignment);
   }
 
   nonDupeValidAssignees(): string[] {

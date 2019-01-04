@@ -2,12 +2,12 @@
 <table>
     <tr><th></th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
     <tr *ngFor="let person of people">
-        <td *ngIf="!isEditing(person)" (click)="edit(person)">{{person.displayName}} ({{person.id}})</td>
+        <td *ngIf="!isEditing(person)" (click)="edit(person)" [class.overcommitted]="isPersonOvercommitted(person)">{{person.displayName}} ({{person.id}})</td>
         <td *ngIf="isEditing(person)"><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
         <td *ngIf="!isEditing(person)" (click)="edit(person)">{{person.availability}}</td>
         <td *ngIf="isEditing(person)"><input type="number" [(ngModel)]="person.availability"/></td>
-        <td>{{personCommitted(person)}}</td>
-        <td>{{personUncommitted(person)}}</td>
+        <td [class.overcommitted]="isPersonOvercommitted(person)">{{personCommitted(person)}}</td>
+        <td [class.overcommitted]="isPersonOvercommitted(person)">{{personUncommitted(person)}}</td>
         <td *ngIf="isEditing(person)"><button (click)="stopEditing()">OK</button></td>
     </tr>
     <tr>

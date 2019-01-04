@@ -12,7 +12,7 @@ export class AssignmentComponent implements OnInit {
   @Input() objectiveResourceEstimate;
   @Input() objectiveResourcesCommitted;
   @Input() validAssignees: string[];
-  isEditing: boolean = false;
+  isForcedEditing: boolean = false;
 
   constructor() { }
 
@@ -23,11 +23,15 @@ export class AssignmentComponent implements OnInit {
     return this.validAssignees.findIndex(id => id === this.assignment.personId) >= 0;
   }
 
+  isEditing(): boolean {
+    return this.isForcedEditing || !this.isValidAssignee();
+  }
+
   edit(): void {
-    this.isEditing = true;
+    this.isForcedEditing = true;
   }
 
   stopEditing(): void {
-    this.isEditing = false;
+    this.isForcedEditing = false;
   }
 }
