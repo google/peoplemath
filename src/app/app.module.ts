@@ -22,6 +22,7 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
 import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.com
     BrowserAnimationsModule,
     LayoutModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpClientModule,
   ],
   entryComponents: [
     EditPersonDialog,

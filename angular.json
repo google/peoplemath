@@ -58,7 +58,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "okrplanner:build"
+            "browserTarget": "okrplanner:build",
+            "proxyConfig": "src/devproxy.conf.json"
           },
           "configurations": {
             "production": {

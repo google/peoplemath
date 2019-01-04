@@ -25,6 +25,10 @@ export class TeamsComponent implements OnInit {
     this.okrStorage.getTeams().subscribe(teams => this.teams = teams);
   }
 
+  isLoaded(): boolean {
+    return this.teams != undefined;
+  }
+
   addTeam(): void {
     const dialogData: EditTeamDialogData = {
       team: new Team('', ''),

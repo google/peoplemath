@@ -11,8 +11,8 @@
     <button (click)="addObjective()" mat-button color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
-  <div [class.warning]="bucket.resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
-            {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}}
+  <div [class.warning]="resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
+            {{resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}}
   </div>
 </mat-card-subtitle>
 </mat-card-header>

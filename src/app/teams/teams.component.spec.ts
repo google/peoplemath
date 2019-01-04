@@ -4,6 +4,7 @@ import { TeamsComponent } from './teams.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OkrStorageService } from '../okrstorage.service';
 import { MaterialModule } from '../material/material.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TeamsComponent', () => {
   let component: TeamsComponent;
@@ -12,10 +13,14 @@ describe('TeamsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeamsComponent ],
-      imports: [ RouterTestingModule, MaterialModule ],
+      imports: [
+        RouterTestingModule,
+        MaterialModule,
+        HttpClientTestingModule,
+      ],
       providers: [
         OkrStorageService,
-      ]
+      ],
     })
     .compileComponents();
   }));

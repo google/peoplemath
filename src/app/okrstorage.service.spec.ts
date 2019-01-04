@@ -1,11 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { OkrStorageService } from './okrstorage.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('OkrstorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OkrStorageService]
+      providers: [OkrStorageService],
+      imports: [
+        HttpClientTestingModule,
+      ],
     });
   });
 

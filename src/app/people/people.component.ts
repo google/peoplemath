@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { Person } from '../person';
+import { Person, personDisplayNameWithUsername } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 class PersonData {
@@ -37,7 +37,7 @@ export class PeopleComponent implements OnInit {
   }
 
   tableData(): PersonData[] {
-    let result = this.people.map(p => new PersonData(p.displayNameWithUsername(), p.availability,
+    let result = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
       this.personCommitted(p), this.personUncommitted(p), this.personAssignmentCount(p),
       this.isPersonOvercommitted(p), false, p));
     result.push(new PersonData("Total", this.totalAvailable,

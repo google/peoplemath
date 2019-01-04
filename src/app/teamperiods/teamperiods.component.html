@@ -1,4 +1,5 @@
-<div class="grid-container">
+<mat-spinner *ngIf="!isLoaded()"></mat-spinner>
+<div *ngIf="isLoaded()" class="grid-container">
 <mat-card>
 <mat-card-header>
   <mat-card-title (click)="editTeam()">{{team.displayName}}: Periods</mat-card-title>

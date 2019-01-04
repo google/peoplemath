@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Bucket } from '../bucket';
+import { Bucket, bucketResourcesCommitted } from '../bucket';
 import { Objective } from '../objective';
 import { MatDialog } from '@angular/material';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
@@ -92,5 +92,9 @@ export class BucketComponent implements OnInit {
 
   moveBucketDown(): void {
     this.onMoveBucketDown.emit(this.bucket);
+  }
+
+  resourcesCommitted(): number {
+    return bucketResourcesCommitted(this.bucket);
   }
 }

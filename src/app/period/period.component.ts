@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Bucket } from '../bucket';
+import { Bucket, bucketResourcesCommitted } from '../bucket';
 import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
@@ -44,7 +44,7 @@ export class PeriodComponent implements OnInit {
    */
   totalCommitted(): number {
     return this.period.buckets
-        .map(bucket => bucket.resourcesCommitted())
+        .map(bucketResourcesCommitted)
         .reduce((sum, prev) => sum + prev, 0);
   }
 
@@ -125,6 +125,10 @@ export class PeriodComponent implements OnInit {
     const periodId = this.route.snapshot.paramMap.get('period');
     this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
     this.okrStorage.getPeriod(teamId, periodId).subscribe(period => this.period = period);
+  }
+
+  isLoaded(): boolean {
+    return this.team != undefined && this.period != undefined;
   }
 
   edit(): void {

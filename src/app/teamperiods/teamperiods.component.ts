@@ -33,6 +33,10 @@ export class TeamPeriodsComponent implements OnInit {
     this.okrStorage.getPeriods(teamId).subscribe(periods => this.periods = periods);
   }
 
+  isLoaded(): boolean {
+    return this.team != undefined && this.periods != undefined;
+  }
+
   addPeriod(): void {
     const dialogData: EditPeriodDialogData = {
       period: new Period('', '', 'person weeks', [], []),
