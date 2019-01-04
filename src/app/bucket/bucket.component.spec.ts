@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
-import { BucketAllocationService } from '../bucket-allocation.service';
 import { PersonAvailabilityService } from '../person-availability.service';
 import { Bucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
@@ -21,7 +20,6 @@ describe('BucketComponent', () => {
       ],
       imports: [ FormsModule ],
       providers: [
-        BucketAllocationService,
         PersonAvailabilityService,
       ],
     })

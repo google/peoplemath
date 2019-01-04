@@ -8,7 +8,6 @@ import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
-import { BucketAllocationService } from '../bucket-allocation.service';
 import { PersonAvailabilityService } from '../person-availability.service';
 
 @Component({
@@ -16,7 +15,6 @@ import { PersonAvailabilityService } from '../person-availability.service';
   templateUrl: './period.component.html',
   styleUrls: ['./period.component.css'],
   providers: [
-    BucketAllocationService,
     PersonAvailabilityService,
   ],
 })
@@ -27,15 +25,12 @@ export class PeriodComponent implements OnInit {
 
   constructor(
     private okrStorage: OkrStorageService,
-    private bucketAllocationService: BucketAllocationService,
     private personAvailabilityService: PersonAvailabilityService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.loadData();
-    this.bucketAllocationService.allocationsChanged$.subscribe(
-      _ => this.bucketAllocationService.setTotalAllocationPercentage(this.totalAllocationPercentage()));
     this.onPersonAvailabilityChange();
   }
 
