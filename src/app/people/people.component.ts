@@ -10,6 +10,7 @@ class PersonData {
       public uncommitted: number,
       public assignmentCount: number,
       public isOvercommitted: boolean,
+      // TODO: This should probably be done as a proper mat-footer-row
       public isTotal: boolean,
       public person: Person,
   ) {}
