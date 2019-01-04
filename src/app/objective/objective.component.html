@@ -1,4 +1,4 @@
-<li class="list-group-item" [class.disabled]="isUnassigned()">
+<li class="list-group-item">
     <span *ngIf="!isEditing" (click)="edit()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
     <span *ngIf="isEditing">
         <input [(ngModel)]="objective.name"/> 
