@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('okrplanner App', () => {
+describe('peoplemath App', () => {
   let page: AppPage;
 
   beforeEach(() => {
