@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BucketAllocationService } from '../bucket-allocation.service';
 import { PersonAvailabilityService } from '../person-availability.service';
 import { Bucket } from '../bucket';
+import { ObjectiveComponent } from '../objective/objective.component';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -12,7 +13,7 @@ describe('BucketComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BucketComponent ],
+      declarations: [ BucketComponent, ObjectiveComponent ],
       imports: [ FormsModule ],
       providers: [
         BucketAllocationService,

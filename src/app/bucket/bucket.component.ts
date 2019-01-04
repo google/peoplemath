@@ -29,15 +29,6 @@ export class BucketComponent implements OnInit {
   }
 
   /**
-   * Sum of resources committed to the given objective
-   */
-  objectiveCommitted(objective: Objective): number {
-    return objective.assignments
-        .map(assignment => assignment.commitment)
-        .reduce((sum, current) => sum + current, 0);
-  }
-
-  /**
    * Resources allocated to the given bucket in this period, based on total available
    * and bucket allocation percentage.
    */

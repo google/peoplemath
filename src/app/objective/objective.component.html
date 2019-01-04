@@ -1,0 +1,6 @@
+<li>{{objective.name}} (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})</li>
+<ul *ngIf="objective.assignments">
+    <li *ngFor="let assignment of objective.assignments">
+        {{assignment.personId}}: <input type="number" [(ngModel)]="assignment.commitment"/> <span [class.error]="objective.resourcesCommitted() > objective.resourceEstimate">{{unit}}</span>
+    </li>
+</ul>

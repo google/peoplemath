@@ -3,13 +3,6 @@
     {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}} committed
 </b></p>
 <ul>
-    <div *ngFor="let objective of bucket.objectives">
-        <li>{{objective.name}} (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})</li>
-        <ul *ngIf="objective.assignments">
-            <li *ngFor="let assignment of objective.assignments">
-                {{assignment.personId}}: <input type="number" [(ngModel)]="assignment.commitment"/> <span [class.error]="objectiveCommitted(objective) > objective.resourceEstimate">{{unit}}</span>
-            </li>
-        </ul>
-    </div>
+    <app-objective *ngFor="let objective of bucket.objectives" [objective]="objective" [unit]="unit"></app-objective>
 </ul>
 

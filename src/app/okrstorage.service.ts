@@ -5,22 +5,23 @@ import { Bucket } from './bucket';
 import { Person } from './person';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Objective } from './objective';
 
 // TODO Move to backend storage service
 
 const BUCKETS: Bucket[] = [
   new Bucket('First bucket', 40, [
-    { name: 'A bucket 1 thing', resourceEstimate: 6 },
-    { name: 'Another bucket 1 thing', resourceEstimate: 3, assignments: [
+    new Objective('A bucket 1 thing', 6, []),
+    new Objective('Another bucket 1 thing', 3, [
       { personId: 'alice', commitment: 2 },
-    ] },
+    ]),
   ]),
   new Bucket('Second bucket', 40, [
-    { name: 'A bucket 2 thing', resourceEstimate: 12 },
-    { name: 'Another bucket 2 thing', resourceEstimate: 1 },
+    new Objective('A bucket 2 thing', 12, []),
+    new Objective('Another bucket 2 thing', 1, []),
   ]),
   new Bucket('Third bucket', 20, [
-    { name: 'A bucket 3 thing', resourceEstimate: 3 },
+    new Objective('A bucket 3 thing', 3, []),
   ]),
 ];
 const PEOPLE: Person[] = [

@@ -6,6 +6,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { OkrStorageService } from '../okrstorage.service';
 import { FormsModule } from '@angular/forms';
 import { BucketComponent } from '../bucket/bucket.component';
+import { ObjectiveComponent } from '../objective/objective.component';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -13,7 +14,7 @@ describe('PeriodComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PeriodComponent, BucketComponent ],
+      declarations: [ PeriodComponent, BucketComponent, ObjectiveComponent ],
       imports: [
         RouterTestingModule,
         FormsModule,

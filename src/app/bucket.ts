@@ -9,18 +9,12 @@ export class Bucket {
   ) {}
 
   resourcesCommitted(): number {
-    return this.allAssignments()
-        .map(assignment => assignment.commitment)
+    return this.objectives
+        .map(objective => objective.resourcesCommitted())
         .reduce((sum, current) => sum + current, 0);
   }
 
   assignedObjectives(): Objective[] {
     return this.objectives.filter(objective => objective.assignments);
-  }
-
-  private allAssignments(): Assignment[] {
-    return this.assignedObjectives()
-        .map(objective => objective.assignments)
-        .reduce((prev, current) => prev.concat(current), []);
   }
 }
