@@ -17,7 +17,8 @@
     [uncommittedTime]="uncommittedTime()"
     [showOrderButtons]="showOrderButtons"
     (onMoveBucketUp)="moveBucketUpOne($event)"
-    (onMoveBucketDown)="moveBucketDownOne($event)"></app-bucket>
+    (onMoveBucketDown)="moveBucketDownOne($event)"
+    (onChanged)="save()"></app-bucket>
 
 <div><button (click)="addBucket()" mat-button color="primary">Add Bucket</button></div>
 
@@ -31,7 +32,8 @@
     [totalCommitted]="totalCommitted()"
     [totalUncommitted]="totalUncommitted()"
     [totalAssignmentCount]="totalAssignmentCount()"
-    [unit]="period.unit">
+    [unit]="period.unit"
+    (onChanged)="save()">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
 </span>

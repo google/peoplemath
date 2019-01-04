@@ -18,6 +18,7 @@ export class ObjectiveComponent implements OnInit {
   @Output() onDelete = new EventEmitter<Objective>();
   @Output() onMoveObjectiveUp = new EventEmitter<Objective>();
   @Output() onMoveObjectiveDown = new EventEmitter<Objective>();
+  @Output() onChanged = new EventEmitter<Objective>();
   
   constructor(public dialog: MatDialog) { }
 
@@ -62,6 +63,7 @@ export class ObjectiveComponent implements OnInit {
       }
       this.objective.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
           .map((pad: PersonAssignmentData) => new Assignment(pad.username, pad.assign));
+      this.onChanged.emit(this.objective);
     });
   }
 
@@ -74,7 +76,8 @@ export class ObjectiveComponent implements OnInit {
       'unit': this.unit,
       'onDelete': this.onDelete,
     };
-    this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
+    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.objective));
   }
 
   moveObjectiveUp(): void {

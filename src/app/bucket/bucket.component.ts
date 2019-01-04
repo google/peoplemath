@@ -19,6 +19,7 @@ export class BucketComponent implements OnInit {
   @Input() showOrderButtons: boolean;
   @Output() onMoveBucketUp = new EventEmitter<Bucket>();
   @Output() onMoveBucketDown = new EventEmitter<Bucket>();
+  @Output() onChanged = new EventEmitter<any>();
 
   constructor(public dialog: MatDialog) { }
 
@@ -38,7 +39,8 @@ export class BucketComponent implements OnInit {
       'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
       'title': 'Edit bucket "' + this.bucket.displayName + '"',
     };
-    this.dialog.open(EditBucketDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
+    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.bucket));
   }
 
   addObjective(): void {
@@ -56,6 +58,7 @@ export class BucketComponent implements OnInit {
         return;
       }
       this.bucket.objectives.push(objective);
+      this.onChanged.emit(this.bucket);
     });
   }
 
@@ -66,6 +69,7 @@ export class BucketComponent implements OnInit {
   deleteObjective(objective: Objective): void {
     const index = this.objectiveIndex(objective);
     this.bucket.objectives.splice(index, 1);
+    this.onChanged.emit(this.bucket);
   }
 
   moveObjectiveUpOne(objective: Objective): void {
@@ -75,6 +79,7 @@ export class BucketComponent implements OnInit {
     }
     this.bucket.objectives[index] = this.bucket.objectives[index - 1];
     this.bucket.objectives[index - 1] = objective;
+    this.onChanged.emit(this.bucket);
   }
 
   moveObjectiveDownOne(objective: Objective): void {
@@ -84,6 +89,11 @@ export class BucketComponent implements OnInit {
     }
     this.bucket.objectives[index] = this.bucket.objectives[index + 1];
     this.bucket.objectives[index + 1] = objective;
+    this.onChanged.emit(this.bucket);
+  }
+
+  onObjectiveChanged(objective: Objective): void {
+    this.onChanged.emit(objective);
   }
 
   moveBucketUp(): void {

@@ -25,7 +25,8 @@
         [showOrderButtons]="showOrderButtons"
         (onDelete)="deleteObjective($event)"
         (onMoveObjectiveUp)="moveObjectiveUpOne($event)"
-        (onMoveObjectiveDown)="moveObjectiveDownOne($event)"></app-objective>
+        (onMoveObjectiveDown)="moveObjectiveDownOne($event)"
+        (onChanged)="onObjectiveChanged($event)"></app-objective>
     </ng-container>
 </mat-list>
 </mat-card-content>

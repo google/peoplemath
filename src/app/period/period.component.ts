@@ -5,9 +5,11 @@ import { Bucket, bucketResourcesCommitted } from '../bucket';
 import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-period',
@@ -23,6 +25,7 @@ export class PeriodComponent implements OnInit {
     private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -131,12 +134,27 @@ export class PeriodComponent implements OnInit {
     return this.team != undefined && this.period != undefined;
   }
 
+  save(): void {
+    this.okrStorage.updatePeriod(this.team.id, this.period).pipe(
+      catchError(error => {
+        this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
+        console.log(error);
+        return of("error");
+      })
+    ).subscribe(res => {
+      if (res != "error") {
+        this.snackBar.open('Saved', '', {duration: 2000});
+      }
+  });
+  }
+
   edit(): void {
     const dialogData: EditPeriodDialogData = {
       period: this.period, title: 'Edit Period "' + this.period.id + '"',
       okAction: 'OK', allowCancel: false, allowEditID: false,
     };
-    this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
+    dialogRef.afterClosed().subscribe(_ => this.save());
   }
 
   addBucket(): void {
@@ -149,7 +167,8 @@ export class PeriodComponent implements OnInit {
         return;
       }
       this.period.buckets.push(bucket);
-    })
+      this.save();
+    });
   }
 
   moveBucketUpOne(bucket: Bucket): void {
@@ -158,6 +177,7 @@ export class PeriodComponent implements OnInit {
       this.period.buckets[index] = this.period.buckets[index - 1];
       this.period.buckets[index - 1] = bucket;
     }
+    this.save();
   }
 
   moveBucketDownOne(bucket: Bucket): void {
@@ -166,5 +186,6 @@ export class PeriodComponent implements OnInit {
       this.period.buckets[index] = this.period.buckets[index + 1];
       this.period.buckets[index + 1] = bucket;
     }
+    this.save();
   }
 }

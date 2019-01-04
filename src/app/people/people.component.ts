@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, EventEmitter, Output } from '@angular/core';
 import { Person, personDisplayNameWithUsername } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -29,6 +29,7 @@ export class PeopleComponent implements OnInit {
   @Input() totalUncommitted: number;
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
+  @Output() onChanged = new EventEmitter<any>();
   displayedColumns: string[] = ["person", "available", "committed", "uncommitted", "assignmentCount"];
   
   constructor(public dialog: MatDialog) { }
@@ -107,6 +108,7 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.people.push(result);
+        this.onChanged.emit(result);
       }
     });
   }
@@ -119,7 +121,8 @@ export class PeopleComponent implements OnInit {
       person: p, unit: this.unit, title: 'Edit person "' + p.id + '"', okAction: "OK",
       allowCancel: false, allowUsernameEdit: false,
     };
-    this.dialog.open(EditPersonDialog, {data: dialogData});
+    const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
+    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(p));
   }
 }
 
