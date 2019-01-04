@@ -36,4 +36,9 @@ export class BucketComponent implements OnInit {
   stopEditing(): void {
     this.isEditing = false;
   }
+
+  addObjective(): void {
+    const objective = new Objective('New Objective', 0, []);
+    this.bucket.objectives.push(objective);
+  }
 }
