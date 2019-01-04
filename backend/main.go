@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -295,8 +296,24 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
 }
 
 func main() {
-	// TODO Replace with real persistent store
-	store := makeInMemStore()
+	var gcloudProject string
+	flag.StringVar(&gcloudProject, "gcloud_project", "", "GCP project ID")
+	flag.Parse()
+	var store StorageService
+	if gcloudProject == "" {
+		log.Printf("Using in-memory store")
+		store = makeInMemStore()
+	} else {
+		log.Printf("Using Cloud Datastore storage service; project='%s'", gcloudProject)
+		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
+		ctx := context.Background()
+		var err error
+		store, err = makeAppEngineStore(ctx, gcloudProject)
+		if err != nil {
+			log.Fatalf("Could not instantiate datastore: %s", err)
+			return
+		}
+	}
 	server := Server{store: store}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
