@@ -49,9 +49,13 @@ export class TeamsComponent implements OnInit {
         catchError(error => {
           this.snackBar.open("Could not save new team: " + error.error, 'Dismiss');
           console.log(error);
-          return of(undefined);
+          return of("error");
         }),
-      ).subscribe(res => this.loadData());
+      ).subscribe(res => {
+        if (res != "error") {
+          this.teams.push(team);
+        }
+      });
     });
   }
 }

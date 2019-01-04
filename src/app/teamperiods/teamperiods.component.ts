@@ -3,9 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Period } from '../period';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -21,6 +23,7 @@ export class TeamPeriodsComponent implements OnInit {
     private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -62,6 +65,19 @@ export class TeamPeriodsComponent implements OnInit {
       allowCancel: false,
       allowEditID: false,
     };
-    this.dialog.open(EditTeamDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditTeamDialogComponent, {data: dialogData});
+    dialogRef.afterClosed().subscribe(team => {
+      this.okrStorage.updateTeam(team).pipe(
+        catchError(error => {
+          this.snackBar.open('Could not save team: ' + error.error, 'Dismiss');
+          console.log(error);
+          return of("error");
+        })
+      ).subscribe(res => {
+        if (res != "error") {
+          this.snackBar.open('Saved', '', {duration: 2000});
+        }
+      });
+    });
   }
 }

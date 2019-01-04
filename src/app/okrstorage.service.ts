@@ -18,8 +18,13 @@ export class OkrStorageService {
   }
 
   addTeam(team: Team): Observable<any> {
-    let options = {headers: new HttpHeaders({'Content-Type': 'application.json'})};
+    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.post('/api/team/', team, options);
+  }
+
+  updateTeam(team: Team): Observable<any> {
+    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    return this.http.put('/api/team/' + team.id, team, options);
   }
 
   getPeriods(teamId: string): Observable<Period[]> {
