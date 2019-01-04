@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { PeriodComponent } from './period.component';
-import { AppRoutingModule } from '../app-routing.module';
 import { OkrStorageService } from '../okrstorage.service';
 import { FormsModule } from '@angular/forms';
 import { BucketComponent } from '../bucket/bucket.component';
