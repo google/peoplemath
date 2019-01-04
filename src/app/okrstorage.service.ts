@@ -9,19 +9,19 @@ import { of } from 'rxjs/observable/of';
 // TODO Move to backend storage service
 
 const BUCKETS: Bucket[] = [
-  { displayName: 'First bucket', allocationPercentage: 40, objectives: [
+  new Bucket('First bucket', 40, [
     { name: 'A bucket 1 thing', resourceEstimate: 6 },
     { name: 'Another bucket 1 thing', resourceEstimate: 3, assignments: [
       { personId: 'alice', commitment: 2 },
     ] },
-  ] },
-  { displayName: 'Second bucket', allocationPercentage: 40, objectives: [
+  ]),
+  new Bucket('Second bucket', 40, [
     { name: 'A bucket 2 thing', resourceEstimate: 12 },
     { name: 'Another bucket 2 thing', resourceEstimate: 1 },
-  ] },
-  { displayName: 'Third bucket', allocationPercentage: 20, objectives: [
+  ]),
+  new Bucket('Third bucket', 20, [
     { name: 'A bucket 3 thing', resourceEstimate: 3 },
-  ] },
+  ]),
 ];
 const PEOPLE: Person[] = [
   { id: 'alice', displayName: 'Alice Anderson', availability: 3 },

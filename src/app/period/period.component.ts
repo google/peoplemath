@@ -8,11 +8,17 @@ import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
+import { BucketAllocationService } from '../bucket-allocation.service';
+import { PersonAvailabilityService } from '../person-availability.service';
 
 @Component({
   selector: 'app-period',
   templateUrl: './period.component.html',
-  styleUrls: ['./period.component.css']
+  styleUrls: ['./period.component.css'],
+  providers: [
+    BucketAllocationService,
+    PersonAvailabilityService,
+  ],
 })
 export class PeriodComponent implements OnInit {
   team: Team;
@@ -21,11 +27,16 @@ export class PeriodComponent implements OnInit {
 
   constructor(
     private okrStorage: OkrStorageService,
+    private bucketAllocationService: BucketAllocationService,
+    private personAvailabilityService: PersonAvailabilityService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.loadData();
+    this.bucketAllocationService.allocationsChanged$.subscribe(
+      _ => this.bucketAllocationService.setTotalAllocationPercentage(this.totalAllocationPercentage()));
+    this.onPersonAvailabilityChange();
   }
 
   /**
@@ -42,7 +53,7 @@ export class PeriodComponent implements OnInit {
    */
   totalCommitted(): number {
     return this.period.buckets
-        .map(bucket => this.bucketCommitted(bucket))
+        .map(bucket => bucket.resourcesCommitted())
         .reduce((sum, prev) => sum + prev, 0);
   }
 
@@ -62,46 +73,10 @@ export class PeriodComponent implements OnInit {
         .reduce((sum, current) => sum + current, 0);
   }
 
-  /**
-   * Resources allocated to the given bucket in this period, based on total available
-   * and bucket allocation percentage.
-   */
-  bucketAllocation(bucket: Bucket): number {
-    return this.totalAvailable() * bucket.allocationPercentage / 100;
-  }
-
-  private assignedObjectives(bucket: Bucket): Objective[] {
-    return bucket.objectives.filter(objective => objective.assignments);
-  }
-
-  private bucketAssignments(bucket: Bucket): Assignment[] {
-    return this.assignedObjectives(bucket)
-        .map(objective => objective.assignments)
-        .reduce((prev, current) => prev.concat(current), []);
-  }
-
-  /**
-   * Sum of resources committed to objectives in the given bucket
-   */
-  bucketCommitted(bucket: Bucket): number {
-    return this.bucketAssignments(bucket)
-        .map(assignment => assignment.commitment)
-        .reduce((sum, current) => sum + current, 0);
-  }
-
-  /**
-   * Sum of resources committed to the given objective
-   */
-  objectiveCommitted(objective: Objective): number {
-    return objective.assignments
-        .map(assignment => assignment.commitment)
-        .reduce((sum, current) => sum + current, 0);
-  }
-
   private personAssignments(person: Person): PersonAssignment[] {
     let result: PersonAssignment[] = [];
     this.period.buckets.forEach(bucket => {
-      this.assignedObjectives(bucket).forEach(objective => {
+      bucket.assignedObjectives().forEach(objective => {
         objective.assignments
             .filter(assignment => assignment.personId === person.id)
             .forEach(assignment => result.push(new PersonAssignment(objective, assignment)));
@@ -130,6 +105,11 @@ export class PeriodComponent implements OnInit {
     const person = new Person();
     person.availability = this.defaultPersonAvailability;
     this.period.people.push(person);
+    this.onPersonAvailabilityChange();
+  }
+
+  onPersonAvailabilityChange(): void {
+    this.personAvailabilityService.setTotalAvailability(this.totalAvailable());
   }
 
   loadData(): void {

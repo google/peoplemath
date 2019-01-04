@@ -9,6 +9,8 @@ import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
 import { OkrStorageService } from './okrstorage.service';
+import { BucketComponent } from './bucket/bucket.component';
+import { BucketAllocationService } from './bucket-allocation.service';
 
 
 @NgModule({
@@ -16,7 +18,8 @@ import { OkrStorageService } from './okrstorage.service';
     AppComponent,
     TeamsComponent,
     TeamPeriodsComponent,
-    PeriodComponent
+    PeriodComponent,
+    BucketComponent
   ],
   imports: [
     BrowserModule,
