@@ -1,9 +1,11 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 <div mat-dialog-content>
-    <p>Username</p>
-    <mat-form-field>
-        <input matInput [(ngModel)]="data.person.id">
-    </mat-form-field>
+    <div *ngIf="data.allowUsernameEdit">
+        <p>Username</p>
+        <mat-form-field>
+            <input matInput [(ngModel)]="data.person.id">
+        </mat-form-field>
+    </div>
     <p>Display name (optional)</p>
     <mat-form-field>
         <input matInput [(ngModel)]="data.person.displayName">

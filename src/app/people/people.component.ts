@@ -101,7 +101,9 @@ export class PeopleComponent implements OnInit {
   addPerson(): void {
     const person = new Person('', '', this.defaultPersonAvailability());
     const dialogRef = this.dialog.open(EditPersonDialog, {
-      data: {person: person, unit: this.unit, title: "Add person", okAction: "Add", allowCancel: true}});
+      data: {
+        person: person, unit: this.unit, title: "Add person", okAction: "Add",
+        allowCancel: true, allowUsernameEdit: true}});
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.people.push(result);
@@ -114,7 +116,9 @@ export class PeopleComponent implements OnInit {
       return;
     }
     this.dialog.open(EditPersonDialog, {
-      data: {person: p, unit: this.unit, title: "Edit person", okAction: "OK", allowCancel: false}});
+      data: {
+        person: p, unit: this.unit, title: 'Edit person "' + p.id + '"', okAction: "OK",
+        allowCancel: false, allowUsernameEdit: false}});
   }
 }
 
@@ -124,6 +128,7 @@ export interface EditPersonDialogData {
   title: string;
   okAction: string;
   allowCancel: boolean;
+  allowUsernameEdit: boolean;
 }
 
 @Component({
