@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { PeriodComponent } from './period.component';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { FormsModule } from '@angular/forms';
 import { BucketComponent } from '../bucket/bucket.component';
 import { ObjectiveComponent } from '../objective/objective.component';
@@ -17,7 +17,7 @@ import { of } from 'rxjs';
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
   let fixture: ComponentFixture<PeriodComponent>;
-  let storageServiceSpy = jasmine.createSpyObj('OkrStorageService', ['getTeam', 'getPeriod']);
+  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
   let TEST_TEAM = new Team('testTeam', 'My test team');
   let TEST_PERIOD = new Period('testPeriod', 'My test period', 'person weeks');
 
@@ -36,7 +36,7 @@ describe('PeriodComponent', () => {
         MaterialModule
       ],
       providers: [
-        {provide: OkrStorageService, useValue: storageServiceSpy},
+        {provide: StorageService, useValue: storageServiceSpy},
         {provide: ActivatedRoute, useValue: {
           'snapshot': {'paramMap': convertToParamMap({'team': TEST_TEAM.id, 'period': TEST_PERIOD.id})}}},
       ],

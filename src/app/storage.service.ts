@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
-export class OkrStorageService {
+export class StorageService {
 
   constructor(private http: HttpClient) { }
 

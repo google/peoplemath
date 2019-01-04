@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class TeamsComponent implements OnInit {
   teams: Team[];
 
   constructor(
-    private okrStorage: OkrStorageService,
+    private storage: StorageService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) { }
@@ -25,7 +25,7 @@ export class TeamsComponent implements OnInit {
   }
 
   loadData(): void {
-    this.okrStorage.getTeams().pipe(
+    this.storage.getTeams().pipe(
       catchError(error => {
         this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
         console.log(error);
@@ -51,7 +51,7 @@ export class TeamsComponent implements OnInit {
       if (!team) {
         return;
       }
-      this.okrStorage.addTeam(team).pipe(
+      this.storage.addTeam(team).pipe(
         catchError(error => {
           this.snackBar.open("Could not save new team: " + error.error, 'Dismiss');
           console.log(error);

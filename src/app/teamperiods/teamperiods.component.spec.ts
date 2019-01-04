@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamPeriodsComponent } from './teamperiods.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 describe('TeamPeriodsComponent', () => {
   let component: TeamPeriodsComponent;
   let fixture: ComponentFixture<TeamPeriodsComponent>;
-  let storageServiceSpy = jasmine.createSpyObj('OkrStorageService', ['getTeam', 'getPeriods']);
+  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriods']);
   let TEST_TEAM = new Team('testTeam', 'My test team');
 
   beforeEach(async(() => {
@@ -19,7 +19,7 @@ describe('TeamPeriodsComponent', () => {
       declarations: [ TeamPeriodsComponent ],
       imports: [ RouterTestingModule, MaterialModule ],
       providers: [
-        {provide: OkrStorageService, useValue: storageServiceSpy},
+        {provide: StorageService, useValue: storageServiceSpy},
         {provide: ActivatedRoute, useValue: {snapshot: {paramMap: convertToParamMap({'team': TEST_TEAM.id})}}},
       ],
     })

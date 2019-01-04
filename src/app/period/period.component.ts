@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Bucket, bucketResourcesCommitted } from '../bucket';
 import { Period } from '../period';
 import { Team } from '../team';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
@@ -23,7 +23,7 @@ export class PeriodComponent implements OnInit {
   eventsRequiringSave = new Subject<any>();
  
   constructor(
-    private okrStorage: OkrStorageService,
+    private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -128,7 +128,7 @@ export class PeriodComponent implements OnInit {
   loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
     const periodId = this.route.snapshot.paramMap.get('period');
-    this.okrStorage.getTeam(teamId).pipe(
+    this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
@@ -136,7 +136,7 @@ export class PeriodComponent implements OnInit {
       })
     ).subscribe(team => this.team = team);
 
-    this.okrStorage.getPeriod(teamId, periodId).pipe(
+    this.storage.getPeriod(teamId, periodId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
           + error.error, 'Dismiss');
@@ -156,7 +156,7 @@ export class PeriodComponent implements OnInit {
   }
 
   performSave(): void {
-    this.okrStorage.updatePeriod(this.team.id, this.period).pipe(
+    this.storage.updatePeriod(this.team.id, this.period).pipe(
       catchError(error => {
         this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
         console.log(error);

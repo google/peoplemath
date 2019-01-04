@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OkrStorageService } from './okrstorage.service';
+import { StorageService } from './storage.service';
 import { MaterialModule } from './material/material.module';
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -11,7 +11,7 @@ describe('AppComponent', () => {
       ],
       imports: [ RouterTestingModule, MaterialModule ],
       providers: [
-        OkrStorageService,
+        StorageService,
       ],
     }).compileComponents();
   }));

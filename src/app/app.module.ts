@@ -10,7 +10,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
-import { OkrStorageService } from './okrstorage.service';
+import { StorageService } from './storage.service';
 import { BucketComponent } from './bucket/bucket.component';
 import { ObjectiveComponent } from './objective/objective.component';
 import { PeopleComponent, EditPersonDialog } from './people/people.component';
@@ -61,7 +61,7 @@ import { HttpClientModule } from '@angular/common/http';
     EditTeamDialogComponent,
   ],
   providers: [
-    OkrStorageService,
+    StorageService,
   ],
   bootstrap: [AppComponent]
 })

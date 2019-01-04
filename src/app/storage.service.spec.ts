@@ -1,19 +1,19 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { OkrStorageService } from './okrstorage.service';
+import { StorageService } from './storage.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('OkrstorageService', () => {
+describe('StorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OkrStorageService],
+      providers: [StorageService],
       imports: [
         HttpClientTestingModule,
       ],
     });
   });
 
-  it('should be created', inject([OkrStorageService], (service: OkrStorageService) => {
+  it('should be created', inject([StorageService], (service: StorageService) => {
     expect(service).toBeTruthy();
   }));
 });

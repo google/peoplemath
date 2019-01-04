@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Period } from '../period';
 import { Team } from '../team';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
@@ -20,7 +20,7 @@ export class TeamPeriodsComponent implements OnInit {
   periods: Period[];
 
   constructor(
-    private okrStorage: OkrStorageService,
+    private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -32,7 +32,7 @@ export class TeamPeriodsComponent implements OnInit {
 
   loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
-    this.okrStorage.getTeam(teamId).pipe(
+    this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
@@ -40,7 +40,7 @@ export class TeamPeriodsComponent implements OnInit {
       })
     ).subscribe(team => this.team = team);
 
-    this.okrStorage.getPeriods(teamId).pipe(
+    this.storage.getPeriods(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load periods for team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
@@ -66,7 +66,7 @@ export class TeamPeriodsComponent implements OnInit {
       if (!period) {
         return;
       }
-      this.okrStorage.addPeriod(this.team.id, period).pipe(
+      this.storage.addPeriod(this.team.id, period).pipe(
         catchError(error => {
           this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
           console.log(error);
@@ -90,7 +90,7 @@ export class TeamPeriodsComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(EditTeamDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(team => {
-      this.okrStorage.updateTeam(team).pipe(
+      this.storage.updateTeam(team).pipe(
         catchError(error => {
           this.snackBar.open('Could not save team: ' + error.error, 'Dismiss');
           console.log(error);

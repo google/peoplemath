@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamsComponent } from './teams.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OkrStorageService } from '../okrstorage.service';
+import { StorageService } from '../storage.service';
 import { MaterialModule } from '../material/material.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -19,7 +19,7 @@ describe('TeamsComponent', () => {
         HttpClientTestingModule,
       ],
       providers: [
-        OkrStorageService,
+        StorageService,
       ],
     })
     .compileComponents();
