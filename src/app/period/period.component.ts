@@ -17,6 +17,7 @@ import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dia
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
+  showOrderButtons: boolean;
  
   constructor(
     private okrStorage: OkrStorageService,
@@ -25,6 +26,7 @@ export class PeriodComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.showOrderButtons = false;
     this.loadData();
   }
 

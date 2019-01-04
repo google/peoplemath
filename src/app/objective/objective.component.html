@@ -1,4 +1,8 @@
 <mat-list-item>
+    <span *ngIf="showOrderButtons" class="order-buttons">
+        <button (click)="moveObjectiveUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
+        <button (click)="moveObjectiveDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
+    </span>
     <span (click)="edit()" [class.unassigned]="!objective.assignments.length">
         <span class="objective-name">{{objective.name}}</span>
         <span class="resource-estimate"> ({{objective.resourceEstimate}} {{unit}})</span>

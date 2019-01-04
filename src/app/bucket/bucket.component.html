@@ -18,7 +18,10 @@
     <app-objective
         [objective]="objective" [unit]="unit"
         [uncommittedTime]="uncommittedTime"
-        (onDelete)="deleteObjective($event)"></app-objective>
+        [showOrderButtons]="showOrderButtons"
+        (onDelete)="deleteObjective($event)"
+        (onMoveObjectiveUp)="moveObjectiveUpOne($event)"
+        (onMoveObjectiveDown)="moveObjectiveDownOne($event)"></app-objective>
     </ng-container>
 </mat-list>
 </mat-card-content>

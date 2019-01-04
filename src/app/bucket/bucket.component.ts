@@ -16,6 +16,7 @@ export class BucketComponent implements OnInit {
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
   @Input() uncommittedTime: Map<string, number>;
+  @Input() showOrderButtons: boolean;
 
   constructor(public dialog: MatDialog) { }
 
@@ -57,8 +58,30 @@ export class BucketComponent implements OnInit {
     });
   }
 
+  private objectiveIndex(objective: Objective): number {
+    return this.bucket.objectives.findIndex(o => o === objective);
+  }
+
   deleteObjective(objective: Objective): void {
-    const index = this.bucket.objectives.findIndex(o => o === objective);
+    const index = this.objectiveIndex(objective);
     this.bucket.objectives.splice(index, 1);
+  }
+
+  moveObjectiveUpOne(objective: Objective): void {
+    const index = this.objectiveIndex(objective);
+    if (index == 0) {
+      return;
+    }
+    this.bucket.objectives[index] = this.bucket.objectives[index - 1];
+    this.bucket.objectives[index - 1] = objective;
+  }
+
+  moveObjectiveDownOne(objective: Objective): void {
+    const index = this.objectiveIndex(objective);
+    if (index >= this.bucket.objectives.length - 1) {
+      return;
+    }
+    this.bucket.objectives[index] = this.bucket.objectives[index + 1];
+    this.bucket.objectives[index + 1] = objective;
   }
 }

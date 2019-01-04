@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatListModule, MatToolbarModule, MatSidenavModule, MatCardModule,
          MatFormFieldModule, MatButtonModule, MatTableModule, MatDialogModule,
-         MatInputModule } from '@angular/material';
+         MatInputModule, MatIconModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
   declarations: [],
@@ -10,8 +10,10 @@ import { MatListModule, MatToolbarModule, MatSidenavModule, MatCardModule,
     CommonModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatListModule,
     MatSidenavModule,
@@ -21,8 +23,10 @@ import { MatListModule, MatToolbarModule, MatSidenavModule, MatCardModule,
   exports: [
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatListModule,
     MatSidenavModule,

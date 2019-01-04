@@ -2,6 +2,9 @@
 
 <h2 class="mat-h2"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : 
     <span (click)="edit()">{{period.displayName}}</span>
+    <div class="mat-h4 editor-options">
+        <mat-checkbox [(ngModel)]="showOrderButtons">Reorder</mat-checkbox>
+    </div>
 </h2>
 
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
@@ -10,7 +13,8 @@
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
-    [uncommittedTime]="uncommittedTime()"></app-bucket>
+    [uncommittedTime]="uncommittedTime()"
+    [showOrderButtons]="showOrderButtons"></app-bucket>
 
 <div><button (click)="addBucket()" mat-button color="primary">Add Bucket</button></div>
 

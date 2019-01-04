@@ -14,7 +14,10 @@ export class ObjectiveComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
   @Input() uncommittedTime: Map<string, number>;
+  @Input() showOrderButtons: boolean;
   @Output() onDelete = new EventEmitter<Objective>();
+  @Output() onMoveObjectiveUp = new EventEmitter<Objective>();
+  @Output() onMoveObjectiveDown = new EventEmitter<Objective>();
   
   constructor(public dialog: MatDialog) { }
 
@@ -73,5 +76,13 @@ export class ObjectiveComponent implements OnInit {
         'onDelete': this.onDelete,
       }
     });
+  }
+
+  moveObjectiveUp(): void {
+    this.onMoveObjectiveUp.emit(this.objective);
+  }
+
+  moveObjectiveDown(): void {
+    this.onMoveObjectiveDown.emit(this.objective);
   }
 }
