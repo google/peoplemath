@@ -126,8 +126,22 @@ export class PeriodComponent implements OnInit {
   loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
     const periodId = this.route.snapshot.paramMap.get('period');
-    this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
-    this.okrStorage.getPeriod(teamId, periodId).subscribe(period => this.period = period);
+    this.okrStorage.getTeam(teamId).pipe(
+      catchError(error => {
+        this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
+        console.log(error);
+        return of(new Team('', ''));
+      })
+    ).subscribe(team => this.team = team);
+
+    this.okrStorage.getPeriod(teamId, periodId).pipe(
+      catchError(error => {
+        this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
+          + error.error, 'Dismiss');
+        console.log(error);
+        return of(new Period('', '', '', [], []));
+      })
+    ).subscribe(period => this.period = period);
   }
 
   isLoaded(): boolean {

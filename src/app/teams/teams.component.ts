@@ -25,7 +25,13 @@ export class TeamsComponent implements OnInit {
   }
 
   loadData(): void {
-    this.okrStorage.getTeams().subscribe(teams => this.teams = teams);
+    this.okrStorage.getTeams().pipe(
+      catchError(error => {
+        this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
+        console.log(error);
+        return of([])
+      })
+    ).subscribe(teams => this.teams = teams);
   }
 
   isLoaded(): boolean {
