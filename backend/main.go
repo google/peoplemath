@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -53,37 +54,64 @@ type Person struct {
 
 // StorageService to represent the persistent store
 type StorageService interface {
-	GetAllTeams() []Team
-	GetTeam(teamID string) (Team, bool)
-	CreateTeam(team Team)
-	UpdateTeam(team Team)
-	GetAllPeriods(teamID string) ([]Period, bool)
-	GetPeriod(teamID, periodID string) (Period, bool)
-	CreatePeriod(teamID string, period Period)
-	UpdatePeriod(teamID string, period Period)
+	GetAllTeams(ctx context.Context) ([]Team, error)
+	GetTeam(ctx context.Context, teamID string) (Team, bool, error)
+	CreateTeam(ctx context.Context, team Team) error
+	UpdateTeam(ctx context.Context, team Team) error
+	GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error)
+	GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error)
+	CreatePeriod(ctx context.Context, teamID string, period Period) error
+	UpdatePeriod(ctx context.Context, teamID string, period Period) error
+	Close() error
 }
 
-func makeHandler(store StorageService) http.Handler {
+// Server struct to handle incoming HTTP requests
+type Server struct {
+	store StorageService
+}
+
+func (s *Server) makeHandler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/team/", func(w http.ResponseWriter, r *http.Request) { handleTeam(w, r, store) })
-	mux.HandleFunc("/api/period/", func(w http.ResponseWriter, r *http.Request) { handlePeriod(w, r, store) })
+	mux.HandleFunc("/api/team/", s.handleTeam)
+	mux.HandleFunc("/api/period/", s.handlePeriod)
 	return mux
 }
 
-func main() {
-	// TODO Replace with real persistent store
-	store := makeInMemStore()
-	handler := makeHandler(store)
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("Defaulting to port %s", port)
+func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
+	_, exists, err := s.store.GetTeam(r.Context(), teamID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s': %s", teamID, err), http.StatusInternalServerError)
+		return false
 	}
-	log.Printf("Listening on port %s", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
+	if exists != expected {
+		statusCode := http.StatusBadRequest
+		if expected {
+			statusCode = http.StatusNotFound
+		}
+		http.Error(w, fmt.Sprintf("Team with ID '%s' expected exists=%s, found %s", teamID, expected, exists), statusCode)
+		return false
+	}
+	return true
 }
 
-func handleTeam(w http.ResponseWriter, r *http.Request, store StorageService) {
+func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) bool {
+	_, exists, err := s.store.GetPeriod(r.Context(), teamID, periodID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not validate existence of period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+		return false
+	}
+	if exists != expected {
+		statusCode := http.StatusBadRequest
+		if expected {
+			statusCode = http.StatusNotFound
+		}
+		http.Error(w, fmt.Sprintf("Period '%s' for team '%s' expected exists=%s, found %s", periodID, teamID, expected, exists), statusCode)
+		return false
+	}
+	return true
+}
+
+func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	log.Printf("Team path: %q", pathParts)
 	if len(pathParts) != 4 {
@@ -92,51 +120,84 @@ func handleTeam(w http.ResponseWriter, r *http.Request, store StorageService) {
 	}
 	teamID := pathParts[3]
 	if r.Method == http.MethodGet {
-		if teamID == "" {
-			teams := store.GetAllTeams()
-			enc := json.NewEncoder(w)
-			w.Header().Set("Content-Type", "application/json")
-			enc.Encode(teams)
-		} else if team, ok := store.GetTeam(teamID); ok {
-			enc := json.NewEncoder(w)
-			w.Header().Set("Content-Type", "application/json")
-			enc.Encode(team)
-		} else {
-			http.NotFound(w, r)
-		}
+		s.handleGetTeam(teamID, w, r)
 	} else if r.Method == http.MethodPost {
-		dec := json.NewDecoder(r.Body)
-		team := Team{}
-		err := dec.Decode(&team)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
-			return
-		}
-		if _, exists := store.GetTeam(team.ID); exists {
-			http.Error(w, fmt.Sprintf("Team with ID '%s' already exists", team.ID), http.StatusBadRequest)
-			return
-		}
-		store.CreateTeam(team)
+		s.handlePostTeam(w, r)
 	} else if r.Method == http.MethodPut {
-		dec := json.NewDecoder(r.Body)
-		team := Team{}
-		err := dec.Decode(&team)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
-			return
-		}
-		if _, exists := store.GetTeam(teamID); !exists {
-			http.Error(w, fmt.Sprintf("No team with ID '%s'", team.ID), http.StatusNotFound)
-			return
-		}
-		store.UpdateTeam(team)
+		s.handlePutTeam(w, r)
 	} else {
 		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
+	}
+}
+
+func (s *Server) handleGetTeam(teamID string, w http.ResponseWriter, r *http.Request) {
+	if teamID == "" {
+		teams, err := s.store.GetAllTeams(r.Context())
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not retrieve teams: %s", err), http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(teams)
+	} else {
+		team, found, err := s.store.GetTeam(r.Context(), teamID)
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not retrieve team '%s': %s", teamID, err), http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(team)
+	}
+}
+
+func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
+	team, ok := readTeamFromBody(w, r)
+	if !ok {
+		return
+	}
+	if !s.ensureTeamExistence(w, r, team.ID, false) {
+		return
+	}
+	err := s.store.CreateTeam(r.Context(), team)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not create team: %s", err), http.StatusInternalServerError)
 		return
 	}
 }
 
-func handlePeriod(w http.ResponseWriter, r *http.Request, store StorageService) {
+func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
+	team, ok := readTeamFromBody(w, r)
+	if !ok {
+		return
+	}
+	if !s.ensureTeamExistence(w, r, team.ID, true) {
+		return
+	}
+	err := s.store.UpdateTeam(r.Context(), team)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not update team: %s", err), http.StatusInternalServerError)
+		return
+	}
+}
+
+func readTeamFromBody(w http.ResponseWriter, r *http.Request) (Team, bool) {
+	dec := json.NewDecoder(r.Body)
+	team := Team{}
+	err := dec.Decode(&team)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
+		return team, false
+	}
+	return team, true
+}
+
+func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	log.Printf("Period path: %q", pathParts)
 	if len(pathParts) != 5 {
@@ -146,57 +207,103 @@ func handlePeriod(w http.ResponseWriter, r *http.Request, store StorageService) 
 	teamID := pathParts[3]
 	periodID := pathParts[4]
 	if r.Method == http.MethodGet {
-		if periodID == "" {
-			if periods, ok := store.GetAllPeriods(teamID); ok {
-				enc := json.NewEncoder(w)
-				w.Header().Set("Content-Type", "application/json")
-				enc.Encode(periods)
-			} else {
-				http.NotFound(w, r)
-			}
-		} else if period, ok := store.GetPeriod(teamID, periodID); ok {
-			enc := json.NewEncoder(w)
-			w.Header().Set("Content-Type", "application/json")
-			enc.Encode(period)
-		} else {
-			http.NotFound(w, r)
-		}
+		s.handleGetPeriod(teamID, periodID, w, r)
 	} else if r.Method == http.MethodPost {
-		dec := json.NewDecoder(r.Body)
-		period := Period{}
-		err := dec.Decode(&period)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
-			return
-		}
-		if _, teamExists := store.GetTeam(teamID); !teamExists {
-			http.Error(w, fmt.Sprintf("Team '%s' not found", teamID), http.StatusNotFound)
-			return
-		}
-		if _, periodExists := store.GetPeriod(teamID, period.ID); periodExists {
-			http.Error(w, fmt.Sprintf("Period with ID '%s' already exists for team '%s'", period.ID, teamID), http.StatusBadRequest)
-			return
-		}
-		store.CreatePeriod(teamID, period)
+		s.handlePostPeriod(teamID, w, r)
 	} else if r.Method == http.MethodPut {
-		dec := json.NewDecoder(r.Body)
-		period := Period{}
-		err := dec.Decode(&period)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
-			return
-		}
-		if _, teamExists := store.GetTeam(teamID); !teamExists {
-			http.Error(w, fmt.Sprintf("Team '%s' not found", teamID), http.StatusNotFound)
-			return
-		}
-		if _, periodExists := store.GetPeriod(teamID, periodID); !periodExists {
-			http.Error(w, fmt.Sprintf("Period ID '%s' not found for team '%s'", period.ID, teamID), http.StatusNotFound)
-			return
-		}
-		store.UpdatePeriod(teamID, period)
+		s.handlePutPeriod(teamID, periodID, w, r)
 	} else {
 		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
+	}
+}
+
+func (s *Server) handleGetPeriod(teamID, periodID string, w http.ResponseWriter, r *http.Request) {
+	if periodID == "" {
+		periods, found, err := s.store.GetAllPeriods(r.Context(), teamID)
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s': %s", teamID, err), http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(periods)
+	} else {
+		period, found, err := s.store.GetPeriod(r.Context(), teamID, periodID)
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(period)
+	}
+}
+
+func (s *Server) handlePostPeriod(teamID string, w http.ResponseWriter, r *http.Request) {
+	period, ok := readPeriodFromBody(w, r)
+	if !ok {
 		return
 	}
+	if !s.ensureTeamExistence(w, r, teamID, true) {
+		return
+	}
+	if !s.ensurePeriodExistence(w, r, teamID, period.ID, false) {
+		return
+	}
+	err := s.store.CreatePeriod(r.Context(), teamID, period)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not create period for team '%s': %s", teamID, err), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (s *Server) handlePutPeriod(teamID, periodID string, w http.ResponseWriter, r *http.Request) {
+	period, ok := readPeriodFromBody(w, r)
+	if !ok {
+		return
+	}
+	if !s.ensureTeamExistence(w, r, teamID, true) {
+		return
+	}
+	if !s.ensurePeriodExistence(w, r, teamID, periodID, true) {
+		return
+	}
+	err := s.store.UpdatePeriod(r.Context(), teamID, period)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+		return
+	}
+}
+
+func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
+	dec := json.NewDecoder(r.Body)
+	period := Period{}
+	err := dec.Decode(&period)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
+		return period, false
+	}
+	return period, true
+}
+
+func main() {
+	// TODO Replace with real persistent store
+	store := makeInMemStore()
+	server := Server{store: store}
+	handler := server.makeHandler()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("Defaulting to port %s", port)
+	}
+	log.Printf("Listening on port %s", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
 }

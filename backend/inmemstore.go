@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"strings"
 )
@@ -28,62 +29,70 @@ func makeInMemStore() StorageService {
 	return &inMemStore{teams: teams, periods: periods}
 }
 
-func (s *inMemStore) GetAllTeams() []Team {
+func (s *inMemStore) GetAllTeams(ctx context.Context) ([]Team, error) {
 	teamsSlice := make([]Team, 0, len(s.teams))
 	for _, t := range s.teams {
 		teamsSlice = append(teamsSlice, t)
 	}
-	return teamsSlice
+	return teamsSlice, nil
 }
 
-func (s *inMemStore) GetTeam(teamID string) (Team, bool) {
+func (s *inMemStore) GetTeam(ctx context.Context, teamID string) (Team, bool, error) {
 	team, ok := s.teams[teamID]
-	return team, ok
+	return team, ok, nil
 }
 
-func (s *inMemStore) CreateTeam(team Team) {
+func (s *inMemStore) CreateTeam(ctx context.Context, team Team) error {
 	s.teams[team.ID] = team
 	s.periods[team.ID] = map[string]Period{}
 	log.Printf("Added new team %s", team.ID)
+	return nil
 }
 
-func (s *inMemStore) UpdateTeam(team Team) {
+func (s *inMemStore) UpdateTeam(ctx context.Context, team Team) error {
 	s.teams[team.ID] = team
 	log.Printf("Updated team %s", team.ID)
+	return nil
 }
 
-func (s *inMemStore) GetAllPeriods(teamID string) ([]Period, bool) {
+func (s *inMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodSlice := make([]Period, 0, len(periodsByName))
 		for _, p := range periodsByName {
 			periodSlice = append(periodSlice, p)
 		}
-		return periodSlice, true
+		return periodSlice, true, nil
 	}
-	return []Period{}, false
+	return []Period{}, false, nil
 }
 
-func (s *inMemStore) GetPeriod(teamID, periodID string) (Period, bool) {
+func (s *inMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		if period, ok := periodsByName[periodID]; ok {
-			return period, true
+			return period, true, nil
 		}
 	}
-	return Period{}, false
+	return Period{}, false, nil
 }
 
-func (s *inMemStore) CreatePeriod(teamID string, period Period) {
+func (s *inMemStore) CreatePeriod(ctx context.Context, teamID string, period Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Added period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
+	return nil
 }
 
-func (s *inMemStore) UpdatePeriod(teamID string, period Period) {
+func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
+	return nil
+}
+
+func (s *inMemStore) Close() error {
+	return nil
 }
 
 func makeFakePeriod(id string) Period {
