@@ -18,6 +18,8 @@ import { PeopleComponent, EditPersonDialog } from './people/people.component';
 import { AssignmentsByPersonComponent } from './assignments-by-person/assignments-by-person.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
+import { AssignmentDialogComponent } from './assignment-dialog/assignment-dialog.component';
+import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objective-dialog.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { MaterialModule } from './material/material.module';
     AssignmentComponent,
     PeopleComponent,
     EditPersonDialog,
-    AssignmentsByPersonComponent
+    AssignmentsByPersonComponent,
+    AssignmentDialogComponent,
+    EditObjectiveDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +48,8 @@ import { MaterialModule } from './material/material.module';
   ],
   entryComponents: [
     EditPersonDialog,
+    AssignmentDialogComponent,
+    EditObjectiveDialogComponent,
   ],
   providers: [
     OkrStorageService,

@@ -1,1 +1,4 @@
-.assignmentlist { margin-left: 30px; padding-top: 0 }
+.objective-name { font-weight: normal }
+.resource-estimate { font-style: italic }
+.assignments { margin-left: 10px; font-weight: bold }
+.unassigned { color: grey }

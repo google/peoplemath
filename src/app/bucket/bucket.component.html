@@ -22,7 +22,7 @@
     <ng-container *ngFor="let objective of bucket.objectives">
     <app-objective
         [objective]="objective" [unit]="unit"
-        [validAssignees]="validAssignees"
+        [uncommittedTime]="uncommittedTime"
         (onDelete)="deleteObjective($event)"></app-objective>
     </ng-container>
 </mat-list>

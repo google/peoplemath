@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
+import { MatDialog } from '@angular/material';
+import { EditObjectiveDialogComponent } from '../edit-objective-dialog/edit-objective-dialog.component';
 
 @Component({
   selector: 'app-bucket',
@@ -12,10 +14,10 @@ export class BucketComponent implements OnInit {
   @Input() unit: string;
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
-  @Input() validAssignees: string[];
+  @Input() uncommittedTime: Map<string, number>;
   isEditing: boolean = false;
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -37,8 +39,21 @@ export class BucketComponent implements OnInit {
   }
 
   addObjective(): void {
-    const objective = new Objective('New Objective', 0, []);
-    this.bucket.objectives.push(objective);
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {
+      'data': {
+        'objective': new Objective('', 0, []),
+        'title': 'Add Objective',
+        'okAction': 'Add',
+        'allowCancel': true,
+        'unit': this.unit,
+      },
+    });
+    dialogRef.afterClosed().subscribe(objective => {
+      if (!objective) {
+        return;
+      }
+      this.bucket.objectives.push(objective);
+    });
   }
 
   deleteObjective(objective: Objective): void {

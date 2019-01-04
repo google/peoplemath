@@ -104,8 +104,20 @@ export class PeriodComponent implements OnInit {
     return result;
   }
 
-  validAssignees(): string[] {
-    return this.period.people.map(person => person.id);
+  /**
+   * Amount of uncommitted time for each person
+   */
+  uncommittedTime(): Map<string,number> {
+    let result = new Map();
+    this.period.people.forEach(p => result.set(p.id, p.availability));
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.assignments.forEach(a => {
+          result.set(a.personId, result.get(a.personId) - a.commitment);
+        });
+      });
+    });
+    return result;
   }
 
   loadData(): void {
