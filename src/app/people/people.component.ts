@@ -32,7 +32,7 @@ export class PeopleComponent implements OnInit {
   editingPerson: Person = undefined;
   displayedColumns: string[] = ["person", "available", "committed", "uncommitted", "assignmentCount"];
   
-  constructor(public editDialog: MatDialog) { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -100,7 +100,7 @@ export class PeopleComponent implements OnInit {
 
   addPerson(): void {
     const person = new Person('', '', this.defaultPersonAvailability());
-    const dialogRef = this.editDialog.open(EditPersonDialog, {
+    const dialogRef = this.dialog.open(EditPersonDialog, {
       data: {person: person, unit: this.unit, title: "Add person", okAction: "Add", allowCancel: true}});
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -113,7 +113,7 @@ export class PeopleComponent implements OnInit {
     if (!p) {
       return;
     }
-    this.editDialog.open(EditPersonDialog, {
+    this.dialog.open(EditPersonDialog, {
       data: {person: p, unit: this.unit, title: "Edit person", okAction: "OK", allowCancel: false}});
   }
 }
