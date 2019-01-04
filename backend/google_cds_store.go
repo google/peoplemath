@@ -9,6 +9,13 @@ import (
 	"cloud.google.com/go/datastore"
 )
 
+const (
+	// TeamKind - Datastore kind name for teams
+	TeamKind = "Team"
+	// PeriodKind - Datastore kind name for periods
+	PeriodKind = "Period"
+)
+
 // StorageService using Google Cloud Datastore
 type googleCDSStore struct {
 	client *datastore.Client
@@ -23,15 +30,15 @@ func makeGoogleCDSStore(ctx context.Context, projectID string) (StorageService, 
 }
 
 func getTeamKey(teamID string) *datastore.Key {
-	return datastore.NameKey("Team", teamID, nil)
+	return datastore.NameKey(TeamKind, teamID, nil)
 }
 
 func getPeriodKey(teamKey *datastore.Key, periodID string) *datastore.Key {
-	return datastore.NameKey("Period", periodID, teamKey)
+	return datastore.NameKey(PeriodKind, periodID, teamKey)
 }
 
 func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]Team, error) {
-	query := datastore.NewQuery("Team").Order("DisplayName")
+	query := datastore.NewQuery(TeamKind).Order("DisplayName")
 	iter := s.client.Run(ctx, query)
 	result := []Team{}
 	for {
@@ -92,7 +99,7 @@ func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]Pe
 		return nil, false, err
 	}
 	teamKey := getTeamKey(teamID)
-	query := datastore.NewQuery("Period").Ancestor(teamKey)
+	query := datastore.NewQuery(PeriodKind).Ancestor(teamKey)
 	iter := s.client.Run(ctx, query)
 	result := []Period{}
 	for {
