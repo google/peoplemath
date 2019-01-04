@@ -11,7 +11,7 @@
     <tr><th></th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
     <tr *ngFor="let person of period.people">
         <td><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
-        <td><input type="number" [(ngModel)]="person.availability" (input)="onPersonAvailabilityChange()"/></td>
+        <td><input type="number" [(ngModel)]="person.availability"/></td>
         <td>{{personCommitted(person)}}</td>
         <td>{{personUncommitted(person)}}</td>
     </tr>

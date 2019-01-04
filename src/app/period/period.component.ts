@@ -8,14 +8,12 @@ import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
-import { PersonAvailabilityService } from '../person-availability.service';
 
 @Component({
   selector: 'app-period',
   templateUrl: './period.component.html',
   styleUrls: ['./period.component.css'],
   providers: [
-    PersonAvailabilityService,
   ],
 })
 export class PeriodComponent implements OnInit {
@@ -25,13 +23,11 @@ export class PeriodComponent implements OnInit {
 
   constructor(
     private okrStorage: OkrStorageService,
-    private personAvailabilityService: PersonAvailabilityService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.loadData();
-    this.onPersonAvailabilityChange();
   }
 
   /**
@@ -100,11 +96,6 @@ export class PeriodComponent implements OnInit {
     const person = new Person();
     person.availability = this.defaultPersonAvailability;
     this.period.people.push(person);
-    this.onPersonAvailabilityChange();
-  }
-
-  onPersonAvailabilityChange(): void {
-    this.personAvailabilityService.setTotalAvailability(this.totalAvailable());
   }
 
   loadData(): void {

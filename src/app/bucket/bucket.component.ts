@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
-import { PersonAvailabilityService } from '../person-availability.service';
 
 @Component({
   selector: 'app-bucket',
@@ -15,13 +14,9 @@ export class BucketComponent implements OnInit {
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
 
-  constructor(
-    private personAvailabilityService: PersonAvailabilityService,
-  ) { }
+  constructor() { }
 
   ngOnInit() {
-    this.personAvailabilityService.totalAvailability$.subscribe(
-      totalAvailability => this.globalResourcesAvailable = totalAvailability);
   }
 
   /**

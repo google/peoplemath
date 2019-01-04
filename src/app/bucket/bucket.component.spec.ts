@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
-import { PersonAvailabilityService } from '../person-availability.service';
 import { Bucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
@@ -20,7 +19,6 @@ describe('BucketComponent', () => {
       ],
       imports: [ FormsModule ],
       providers: [
-        PersonAvailabilityService,
       ],
     })
     .compileComponents();
