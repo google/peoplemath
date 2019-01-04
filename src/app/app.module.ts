@@ -13,7 +13,6 @@ import { PeriodComponent } from './period/period.component';
 import { OkrStorageService } from './okrstorage.service';
 import { BucketComponent } from './bucket/bucket.component';
 import { ObjectiveComponent } from './objective/objective.component';
-import { AssignmentComponent } from './assignment/assignment.component';
 import { PeopleComponent, EditPersonDialog } from './people/people.component';
 import { AssignmentsByPersonComponent } from './assignments-by-person/assignments-by-person.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,7 +30,6 @@ import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dial
     PeriodComponent,
     BucketComponent,
     ObjectiveComponent,
-    AssignmentComponent,
     PeopleComponent,
     EditPersonDialog,
     AssignmentsByPersonComponent,

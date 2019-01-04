@@ -4,7 +4,6 @@ import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
 import { Bucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
-import { AssignmentComponent } from '../assignment/assignment.component';
 import { MaterialModule } from '../material/material.module';
 
 describe('BucketComponent', () => {
@@ -16,7 +15,6 @@ describe('BucketComponent', () => {
       declarations: [
         BucketComponent,
         ObjectiveComponent,
-        AssignmentComponent,
       ],
       imports: [ FormsModule, MaterialModule ],
       providers: [

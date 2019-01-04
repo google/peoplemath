@@ -6,7 +6,6 @@ import { OkrStorageService } from '../okrstorage.service';
 import { FormsModule } from '@angular/forms';
 import { BucketComponent } from '../bucket/bucket.component';
 import { ObjectiveComponent } from '../objective/objective.component';
-import { AssignmentComponent } from '../assignment/assignment.component';
 import { PeopleComponent } from '../people/people.component';
 import { AssignmentsByPersonComponent } from '../assignments-by-person/assignments-by-person.component';
 import { MaterialModule } from '../material/material.module';
@@ -28,7 +27,6 @@ describe('PeriodComponent', () => {
         PeriodComponent,
         BucketComponent,
         ObjectiveComponent,
-        AssignmentComponent,
         PeopleComponent,
         AssignmentsByPersonComponent,
       ],
