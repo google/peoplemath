@@ -28,7 +28,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    return this.data.objective.name && this.data.objective.resourceEstimate > 0;
+    return this.data.objective.name && this.data.objective.resourceEstimate >= 0;
   }
 
   onCancel(): void {

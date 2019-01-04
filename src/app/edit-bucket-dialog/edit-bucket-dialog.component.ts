@@ -24,7 +24,7 @@ export class EditBucketDialogComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    return this.data.bucket.allocationPercentage > 0 && this.data.bucket.allocationPercentage <= 100;
+    return this.data.bucket.allocationPercentage >= 0 && this.data.bucket.allocationPercentage <= 100;
   }
 
   onCancel(): void {
