@@ -18,6 +18,6 @@
 
 <h3>People</h3>
 <ul>
-    <li *ngFor="let person of period.people">{{person.displayName}} ({{person.id}}) - {{person.availability}} {{period.unit}} available</li>
-    <li><b>Total: {{totalAvailable()}} {{period.unit}} available</b></li>
+    <li *ngFor="let person of period.people">{{person.displayName}} ({{person.id}}) - {{person.availability}} {{period.unit}} available, {{personCommitted(person)}} committed, {{personUncommitted(person)}} uncommitted</li>
+    <li><b>Total: {{totalAvailable()}} {{period.unit}} available; {{totalCommitted()}} committed</b></li>
 </ul>
