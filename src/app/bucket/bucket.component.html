@@ -11,6 +11,8 @@
     {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}} committed
 </b></p>
 <ul>
-    <app-objective *ngFor="let objective of bucket.objectives" [objective]="objective" [unit]="unit"></app-objective>
+    <app-objective *ngFor="let objective of bucket.objectives"
+        [objective]="objective" [unit]="unit"
+        [validAssignees]="validAssignees"></app-objective>
 </ul>
 

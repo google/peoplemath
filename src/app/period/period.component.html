@@ -9,7 +9,8 @@
 
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
-    [globalResourcesAvailable]="totalAvailable()"></app-bucket>
+    [globalResourcesAvailable]="totalAvailable()"
+    [validAssignees]="validAssignees()"></app-bucket>
 
 <app-people [people]="period.people"
      [peopleCommitments]="peopleCommitments()"

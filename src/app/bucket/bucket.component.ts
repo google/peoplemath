@@ -13,6 +13,7 @@ export class BucketComponent implements OnInit {
   @Input() unit: string;
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
+  @Input() validAssignees: string[];
   isEditing: boolean = false;
 
   constructor() { }

@@ -20,6 +20,7 @@ describe('AssignmentComponent', () => {
     fixture = TestBed.createComponent(AssignmentComponent);
     component = fixture.componentInstance;
     component.assignment = new Assignment();
+    component.validAssignees = [];
     fixture.detectChanges();
   });
 

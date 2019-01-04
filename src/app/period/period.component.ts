@@ -80,6 +80,10 @@ export class PeriodComponent implements OnInit {
     return result;
   }
 
+  validAssignees(): string[] {
+    return this.period.people.map(person => person.id);
+  }
+
   loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
     const periodId = this.route.snapshot.paramMap.get('period');

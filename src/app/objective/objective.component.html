@@ -10,5 +10,6 @@
     <li *ngFor="let assignment of objective.assignments"><app-assignment
         [assignment]="assignment" [unit]="unit"
         [objectiveResourceEstimate]="objective.resourceEstimate"
-        [objectiveResourcesCommitted]="objective.resourcesCommitted()"></app-assignment></li>
+        [objectiveResourcesCommitted]="objective.resourcesCommitted()"
+        [validAssignees]="nonDupeValidAssignees()"></app-assignment></li>
 </ul>

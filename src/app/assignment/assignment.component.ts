@@ -11,11 +11,16 @@ export class AssignmentComponent implements OnInit {
   @Input() unit: string;
   @Input() objectiveResourceEstimate;
   @Input() objectiveResourcesCommitted;
+  @Input() validAssignees: string[];
   isEditing: boolean = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  isValidAssignee(): boolean {
+    return this.validAssignees.findIndex(id => id === this.assignment.personId) >= 0;
   }
 
   edit(): void {
