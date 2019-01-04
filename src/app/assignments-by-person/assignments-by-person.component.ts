@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Period } from '../period';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
-import { Person } from '../person';
+import { Person, personDisplayNameWithUsername } from '../person';
 
 @Component({
   selector: 'app-assignments-by-person',
@@ -31,6 +31,10 @@ export class AssignmentsByPersonComponent implements OnInit {
     // Sort in descending order of commitment
     result.sort((a,b) => b.assignment.commitment - a.assignment.commitment);
     return result;
+  }
+
+  personDisplayNameWithUsername(person: Person): string {
+    return personDisplayNameWithUsername(person);
   }
 }
 

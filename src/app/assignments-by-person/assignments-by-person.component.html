@@ -5,7 +5,7 @@
 <mat-card-content>
 <mat-list>
 <mat-list-item *ngFor="let person of period.people">
-  <div matLine>{{person.displayName}} ({{person.id}})</div>
+  <div matLine>{{personDisplayNameWithUsername(person)}}</div>
   <div matLine>
   <ul>
     <li *ngFor="let oa of assignmentsFor(person)" class="list-group-item">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
