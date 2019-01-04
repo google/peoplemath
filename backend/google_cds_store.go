@@ -104,6 +104,7 @@ func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]Pe
 		if err != nil {
 			return result, true, err
 		}
+		scrubLoadedPeriod(&p)
 		result = append(result, p)
 	}
 	return result, true, nil
@@ -117,6 +118,7 @@ func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string)
 	if err == datastore.ErrNoSuchEntity {
 		return period, false, nil
 	}
+	scrubLoadedPeriod(&period)
 	return period, true, err
 }
 
@@ -150,4 +152,25 @@ func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period
 
 func (s *googleCDSStore) Close() error {
 	return s.client.Close()
+}
+
+// Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
+// they may be nil. This function is to avoid clients having to deal with this.
+func scrubLoadedPeriod(period *Period) {
+	if period.People == nil {
+		period.People = []Person{}
+	}
+	if period.Buckets == nil {
+		period.Buckets = []Bucket{}
+	}
+	for i := range period.Buckets {
+		if period.Buckets[i].Objectives == nil {
+			period.Buckets[i].Objectives = []Objective{}
+		}
+		for j := range period.Buckets[i].Objectives {
+			if period.Buckets[i].Objectives[j].Assignments == nil {
+				period.Buckets[i].Objectives[j].Assignments = []Assignment{}
+			}
+		}
+	}
 }
