@@ -5,6 +5,7 @@ import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { MatDialog } from '@angular/material';
 import { EditPeriodDialogComponent } from '../edit-period-dialog/edit-period-dialog.component';
+import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
 
 
 @Component({
@@ -47,6 +48,18 @@ export class TeamPeriodsComponent implements OnInit {
         return;
       }
       this.periods.push(period);
+    });
+  }
+
+  editTeam(): void {
+    this.dialog.open(EditTeamDialogComponent, {
+      data: {
+        team: this.team,
+        title: 'Edit Team "' + this.team.id + '"',
+        okAction: 'OK',
+        allowCancel: false,
+        allowEditID: false,
+      },
     });
   }
 }

@@ -7,6 +7,7 @@
 <mat-list>
   <mat-list-item *ngFor="let team of teams"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a></mat-list-item>
 </mat-list>
+<button mat-raised-button (click)="addTeam()" color="primary">Add Team</button>
 </mat-card-content>
 </mat-card>
 </div>

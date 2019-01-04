@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
+import { MatDialog } from '@angular/material';
+import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -12,6 +14,7 @@ export class TeamsComponent implements OnInit {
 
   constructor(
     private okrStorage: OkrStorageService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -20,5 +23,23 @@ export class TeamsComponent implements OnInit {
 
   loadData(): void {
     this.okrStorage.getTeams().subscribe(teams => this.teams = teams);
+  }
+
+  addTeam(): void {
+    const dialogRef = this.dialog.open(EditTeamDialogComponent, {
+      data: {
+        team: new Team('', ''),
+        title: 'Add Team',
+        okAction: 'Add',
+        allowCancel: true,
+        allowEditID: true,
+      },
+    });
+    dialogRef.afterClosed().subscribe(team => {
+      if (!team) {
+        return;
+      }
+      this.teams.push(team);
+    });
   }
 }
