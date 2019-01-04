@@ -1,5 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Person } from '../person';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+class PersonData {
+  constructor(
+      public personDesc: string,
+      public availability: number,
+      public committed: number,
+      public uncommitted: number,
+      public isOvercommitted: boolean,
+      public isTotal: boolean,
+      public person: Person,
+  ) {}
+}
 
 @Component({
   selector: 'app-people',
@@ -13,12 +26,20 @@ export class PeopleComponent implements OnInit {
   @Input() totalCommitted: number;
   @Input() totalUncommitted: number;
   @Input() unit: string;
-  defaultPersonAvailability: number = 6;
   editingPerson: Person = undefined;
+  displayedColumns: string[] = ["person", "available", "committed", "uncommitted"];
   
-  constructor() { }
+  constructor(public editDialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  tableData(): PersonData[] {
+    let result = this.people.map(p => new PersonData(p.displayNameWithUsername(), p.availability,
+      this.personCommitted(p), this.personUncommitted(p), this.isPersonOvercommitted(p), false, p));
+    result.push(new PersonData("Total", this.totalAvailable, this.totalCommitted, this.totalUncommitted,
+      this.isTeamOvercommitted(), true, undefined));
+    return result;
   }
 
   /**
@@ -43,21 +64,66 @@ export class PeopleComponent implements OnInit {
     return this.totalUncommitted < 0;
   }
 
+  /**
+   * Just calculate the modal availability
+   */
+  defaultPersonAvailability(): number {
+    var availCounts = {};
+    this.people.forEach(p => {
+      if (availCounts[p.availability] === undefined) {
+        availCounts[p.availability] = 0;
+      }
+      availCounts[p.availability] += 1;
+    });
+    var maxFreq = 0;
+    var mode: string = "0";
+    for (var a in availCounts) {
+      if (availCounts[a] > maxFreq) {
+        maxFreq = availCounts[a];
+        mode = a;
+      }
+    }
+    return parseInt(mode, 10);
+  }
+
   addPerson(): void {
-    const person = new Person('new', '', this.defaultPersonAvailability);
-    this.people.push(person);
-    this.edit(person);
+    const person = new Person('', '', this.defaultPersonAvailability());
+    const dialogRef = this.editDialog.open(EditPersonDialog, {
+      data: {person: person, unit: this.unit, title: "Add person", okAction: "Add", allowCancel: true}});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.people.push(result);
+      }
+    });
   }
 
-  isEditing(person: Person): boolean {
-    return this.editingPerson === person;
+  editPerson(p: Person): void {
+    if (!p) {
+      return;
+    }
+    this.editDialog.open(EditPersonDialog, {
+      data: {person: p, unit: this.unit, title: "Edit person", okAction: "OK", allowCancel: false}});
   }
+}
 
-  edit(person: Person) {
-    this.editingPerson = person;
-  }
+export interface EditPersonDialogData {
+  person: Person;
+  unit: string;
+  title: string;
+  okAction: string;
+  allowCancel: boolean;
+}
 
-  stopEditing(): void {
-    this.editingPerson = undefined;
+@Component({
+  selector: 'app-edit-person-dialog',
+  templateUrl: 'edit-person-dialog.html'
+})
+export class EditPersonDialog {
+  constructor(
+    public dialogRef: MatDialogRef<EditPersonDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {}
+
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }

@@ -1,28 +1,26 @@
 <mat-card>
 <mat-card-content>
-<table>
-  <thead>
-    <tr><th>Person</th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let person of people">
-        <td *ngIf="!isEditing(person)" (click)="edit(person)" [class.overcommitted]="isPersonOvercommitted(person)">{{person.displayName}} ({{person.id}})</td>
-        <td *ngIf="isEditing(person)"><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
-        <td *ngIf="!isEditing(person)" (click)="edit(person)">{{person.availability}}</td>
-        <td *ngIf="isEditing(person)"><input type="number" [(ngModel)]="person.availability"/></td>
-        <td [class.overcommitted]="isPersonOvercommitted(person)">{{personCommitted(person)}}</td>
-        <td [class.overcommitted]="isPersonOvercommitted(person)">{{personUncommitted(person)}}</td>
-        <td *ngIf="isEditing(person)"><button (click)="stopEditing()" mat-raised-button color="primary">OK</button></td>
-    </tr>
-    <tr>
-        <td><b>Total</b></td>
-        <td><b>{{totalAvailable}}</b></td>
-        <td [class.overcommitted]="isTeamOvercommitted()"><b>{{totalCommitted}}</b></td>
-        <td [class.overcommitted]="isTeamOvercommitted()"><b>{{totalUncommitted}}</b></td>
-    </tr>
-  </tbody>
+<table mat-table [dataSource]="tableData()">
+  <ng-container matColumnDef="person">
+    <th mat-header-cell *matHeaderCellDef>Person</th>
+    <td mat-cell *matCellDef="let element">{{element.personDesc}}</td>
+  </ng-container>
+  <ng-container matColumnDef="available">
+    <th mat-header-cell *matHeaderCellDef>Available</th>
+    <td mat-cell *matCellDef="let element">{{element.availability}}</td>
+  </ng-container>
+  <ng-container matColumnDef="committed">
+    <th mat-header-cell *matHeaderCellDef>Committed</th>
+    <td mat-cell *matCellDef="let element" [class.overcommitted]="element.isOvercommitted">{{element.committed}}</td>
+  </ng-container>
+  <ng-container matColumnDef="uncommitted">
+    <th mat-header-cell *matHeaderCellDef>Uncommitted</th>
+    <td mat-cell *matCellDef="let element" [class.overcommitted]="element.isOvercommitted">{{element.uncommitted}}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editPerson(row.person)"
+     [class.total]="row.isTotal"></tr>
 </table>
-<p><button (click)="addPerson()" mat-button color="primary">Add</button>
-    Default availability: <input type="number" [(ngModel)]="defaultPersonAvailability"/> {{unit}}</p>
+<p><button (click)="addPerson()" mat-button color="primary">Add</button></p>
 </mat-card-content>
 </mat-card>

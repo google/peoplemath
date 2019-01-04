@@ -14,7 +14,7 @@ import { OkrStorageService } from './okrstorage.service';
 import { BucketComponent } from './bucket/bucket.component';
 import { ObjectiveComponent } from './objective/objective.component';
 import { AssignmentComponent } from './assignment/assignment.component';
-import { PeopleComponent } from './people/people.component';
+import { PeopleComponent, EditPersonDialog } from './people/people.component';
 import { AssignmentsByPersonComponent } from './assignments-by-person/assignments-by-person.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
@@ -30,6 +30,7 @@ import { MaterialModule } from './material/material.module';
     ObjectiveComponent,
     AssignmentComponent,
     PeopleComponent,
+    EditPersonDialog,
     AssignmentsByPersonComponent
   ],
   imports: [
@@ -40,6 +41,9 @@ import { MaterialModule } from './material/material.module';
     LayoutModule,
     MaterialModule,
     FlexLayoutModule
+  ],
+  entryComponents: [
+    EditPersonDialog,
   ],
   providers: [
     OkrStorageService,

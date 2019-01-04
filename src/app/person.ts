@@ -16,4 +16,11 @@ export class Person {
     get availability(): number {
         return this._availability;
     }
+
+    public displayNameWithUsername(): string {
+        if (this.id == this.displayName || !this.displayName) {
+            return this.id;
+        }
+        return this.displayName + " (" + this.id + ")";
+    }
 }
