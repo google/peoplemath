@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamsComponent } from './teams.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { OkrStorageService } from '../okrstorage.service';
 
 describe('TeamsComponent', () => {
   let component: TeamsComponent;
@@ -11,6 +12,9 @@ describe('TeamsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TeamsComponent ],
       imports: [ RouterTestingModule ],
+      providers: [
+        OkrStorageService,
+      ]
     })
     .compileComponents();
   }));

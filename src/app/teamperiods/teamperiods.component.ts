@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Period } from '../period';
 import { Team } from '../team';
+import { OkrStorageService } from '../okrstorage.service';
 
-// TODO Move to service, make team-dependent
-const PERIODS: Period[] = [
-  { id: '2018q2', displayName: '2018Q2' },
-  { id: '2018q3', displayName: '2018Q3' },
-];
 
 @Component({
   selector: 'app-teamperiods',
@@ -16,19 +12,20 @@ const PERIODS: Period[] = [
 })
 export class TeamPeriodsComponent implements OnInit {
   team: Team;
-  periods: Period[] = PERIODS;
+  periods: Period[];
 
   constructor(
+    private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    this.loadTeam();
+    this.loadData();
   }
 
-  loadTeam(): void {
+  loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
-    // TODO service
-    this.team = { id: teamId, displayName: 'Dunno' };
+    this.okrStorage.getTeam(teamId).subscribe(team => this.team = team);
+    this.okrStorage.getPeriods(teamId).subscribe(periods => this.periods = periods);
   }
 }

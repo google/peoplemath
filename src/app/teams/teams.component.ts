@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
-
-// TODO Use backend service
-const TEAMS: Team[] = [
-  { id: 'team1', displayName: 'First Team' },
-  { id: 'team2', displayName: 'Second Team' },
-];
+import { OkrStorageService } from '../okrstorage.service';
 
 @Component({
   selector: 'app-teams',
@@ -13,11 +8,17 @@ const TEAMS: Team[] = [
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
-  teams: Team[] = TEAMS;
+  teams: Team[];
 
-  constructor() { }
+  constructor(
+    private okrStorage: OkrStorageService,
+  ) { }
 
   ngOnInit() {
+    this.loadData();
   }
 
+  loadData(): void {
+    this.okrStorage.getTeams().subscribe(teams => this.teams = teams);
+  }
 }

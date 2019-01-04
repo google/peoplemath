@@ -7,6 +7,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
+import { OkrStorageService } from './okrstorage.service';
 
 
 @NgModule({
@@ -20,7 +21,9 @@ import { PeriodComponent } from './period/period.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    OkrStorageService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
