@@ -14,6 +14,7 @@ const BUCKETS: Bucket[] = [
     new Objective('A bucket 1 thing', 6, []),
     new Objective('Another bucket 1 thing', 3, [
       { personId: 'alice', commitment: 2 },
+      { personId: 'bob', commitment: 1 },
     ]),
   ]),
   new Bucket('Second bucket', 40, [

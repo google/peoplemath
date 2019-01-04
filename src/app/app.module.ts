@@ -12,6 +12,7 @@ import { OkrStorageService } from './okrstorage.service';
 import { BucketComponent } from './bucket/bucket.component';
 import { BucketAllocationService } from './bucket-allocation.service';
 import { ObjectiveComponent } from './objective/objective.component';
+import { AssignmentComponent } from './assignment/assignment.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ObjectiveComponent } from './objective/objective.component';
     TeamPeriodsComponent,
     PeriodComponent,
     BucketComponent,
-    ObjectiveComponent
+    ObjectiveComponent,
+    AssignmentComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { BucketAllocationService } from '../bucket-allocation.service';
 import { PersonAvailabilityService } from '../person-availability.service';
 import { Bucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
+import { AssignmentComponent } from '../assignment/assignment.component';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -13,7 +14,11 @@ describe('BucketComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BucketComponent, ObjectiveComponent ],
+      declarations: [
+        BucketComponent,
+        ObjectiveComponent,
+        AssignmentComponent,
+      ],
       imports: [ FormsModule ],
       providers: [
         BucketAllocationService,
