@@ -21,10 +21,6 @@ export class ObjectiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  isUnassigned(): boolean {
-    return this.objective.resourcesCommitted() <= 0;
-  }
-
   assignmentSummary(): string {
     return this.objective.assignments.filter(a => a.commitment > 0)
         .map(a => a.personId + ": " + a.commitment).join(", ");
@@ -58,11 +54,6 @@ export class ObjectiveComponent implements OnInit {
       this.objective.assignments = result.people.filter(pad => pad.assign > 0)
           .map(pad => new Assignment(pad.username, pad.assign));
     });
-  }
-
-  deleteAssignment(assignment: Assignment): void {
-    const index = this.objective.assignments.findIndex(a => a === assignment);
-    this.objective.assignments.splice(index, 1);
   }
 
   edit(): void {
