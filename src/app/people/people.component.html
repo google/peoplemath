@@ -2,10 +2,13 @@
 <table>
     <tr><th></th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
     <tr *ngFor="let person of people">
-        <td><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
-        <td><input type="number" [(ngModel)]="person.availability"/></td>
+        <td *ngIf="!isEditing(person)" (click)="edit(person)">{{person.displayName}} ({{person.id}})</td>
+        <td *ngIf="isEditing(person)"><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
+        <td *ngIf="!isEditing(person)" (click)="edit(person)">{{person.availability}}</td>
+        <td *ngIf="isEditing(person)"><input type="number" [(ngModel)]="person.availability"/></td>
         <td>{{personCommitted(person)}}</td>
         <td>{{personUncommitted(person)}}</td>
+        <td *ngIf="isEditing(person)"><button (click)="stopEditing()">OK</button></td>
     </tr>
     <tr>
         <td><button (click)="addPerson()">Add</button></td>

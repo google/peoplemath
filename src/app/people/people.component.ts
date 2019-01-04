@@ -14,6 +14,7 @@ export class PeopleComponent implements OnInit {
   @Input() totalUncommitted: number;
   @Input() unit: string;
   defaultPersonAvailability: number = 6;
+  editingPerson: Person = undefined;
   
   constructor() { }
 
@@ -36,8 +37,21 @@ export class PeopleComponent implements OnInit {
 
   addPerson(): void {
     const person = new Person();
+    person.id = 'new';
     person.availability = this.defaultPersonAvailability;
     this.people.push(person);
+    this.edit(person);
   }
 
+  isEditing(person: Person): boolean {
+    return this.editingPerson === person;
+  }
+
+  edit(person: Person) {
+    this.editingPerson = person;
+  }
+
+  stopEditing(): void {
+    this.editingPerson = undefined;
+  }
 }
