@@ -3,8 +3,7 @@ import { Team } from './team';
 import { Period } from './period';
 import { Bucket } from './bucket';
 import { Person } from './person';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 import { Objective } from './objective';
 import { Assignment } from './assignment';
 
