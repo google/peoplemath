@@ -3,6 +3,6 @@ import { Objective } from "./objective";
 export class Bucket {
     id: string;
     displayName: string;
-    percentage: number;
+    allocationPercentage: number;
     objectives?: Objective[] = [];
 }

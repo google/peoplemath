@@ -3,7 +3,9 @@
 <h2><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : {{period.displayName}}</h2>
 
 <div *ngFor="let bucket of period.buckets">
-<h3>{{bucket.displayName}} ({{bucket.percentage}}%)</h3>
+<h3>{{bucket.displayName}}</h3>
+<p><b>Allocation: {{bucket.allocationPercentage}}% = {{bucketAllocation(bucket) | number:'1.1'}} {{period.unit}}</b>
+<br/><b>Committed: {{bucketCommitted(bucket)}} {{period.unit}}</b></p>
 <ul>
     <div *ngFor="let objective of bucket.objectives">
         <li>{{objective.name}} ({{objective.resourceEstimate}} {{period.unit}})</li>
@@ -17,4 +19,5 @@
 <h3>People</h3>
 <ul>
     <li *ngFor="let person of period.people">{{person.displayName}} ({{person.id}}) - {{person.availability}} {{period.unit}} available</li>
+    <li><b>Total: {{totalAvailable()}} {{period.unit}} available</b></li>
 </ul>
