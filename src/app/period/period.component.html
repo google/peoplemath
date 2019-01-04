@@ -3,13 +3,17 @@
 <h2><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : {{period.displayName}}</h2>
 
 <div *ngFor="let bucket of period.buckets">
-<h3>{{bucket.displayName}} (<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)</h3>
-<p><b>{{bucketCommitted(bucket)}} of {{bucketAllocation(bucket) | number:'1.1-1'}} {{period.unit}} committed</b></p>
+<h3>{{bucket.displayName}} <span [class.error]="totalAllocationPercentage() > 100">(<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)</span></h3>
+<p><b [class.error]="bucketCommitted(bucket) > bucketAllocation(bucket)">
+    {{bucketCommitted(bucket)}} of {{bucketAllocation(bucket) | number:'1.1-1'}} {{period.unit}} committed
+</b></p>
 <ul>
     <div *ngFor="let objective of bucket.objectives">
-        <li>{{objective.name}} ({{objective.resourceEstimate}} {{period.unit}})</li>
+        <li>{{objective.name}} (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{period.unit}})</li>
         <ul *ngIf="objective.assignments">
-            <li *ngFor="let assignment of objective.assignments">{{assignment.personId}}: {{assignment.commitment}} {{period.unit}}</li>
+            <li *ngFor="let assignment of objective.assignments">
+                {{assignment.personId}}: <input type="number" [(ngModel)]="assignment.commitment"/> <span [class.error]="objectiveCommitted(objective) > objective.resourceEstimate">{{period.unit}}</span>
+            </li>
         </ul>
     </div>
 </ul>
@@ -19,10 +23,16 @@
 <table>
     <tr><th></th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
     <tr *ngFor="let person of period.people">
-        <td>{{person.displayName}} ({{person.id}})</td>
+        <td><input [(ngModel)]="person.displayName"/> (<input [(ngModel)]="person.id"/>)</td>
         <td><input type="number" [(ngModel)]="person.availability"/></td>
         <td>{{personCommitted(person)}}</td>
         <td>{{personUncommitted(person)}}</td>
+    </tr>
+    <tr>
+        <td><button (click)="addPerson()">Add</button></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td><b>Total</b></td>
@@ -31,3 +41,4 @@
         <td><b>{{totalUncommitted()}}</b></td>
     </tr>
 </table>
+<p>Default availability: <input type="number" [(ngModel)]="defaultPersonAvailability"/> {{period.unit}}</p>

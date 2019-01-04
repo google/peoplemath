@@ -17,6 +17,7 @@ import { Assignment } from '../assignment';
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
+  defaultPersonAvailability: number = 6;
 
   constructor(
     private okrStorage: OkrStorageService,
@@ -53,6 +54,15 @@ export class PeriodComponent implements OnInit {
   }
 
   /**
+   * Sum of bucket allocation percentages. Should generally be 100 (and never more).
+   */
+  totalAllocationPercentage(): number {
+    return this.period.buckets
+        .map(bucket => bucket.allocationPercentage)
+        .reduce((sum, current) => sum + current, 0);
+  }
+
+  /**
    * Resources allocated to the given bucket in this period, based on total available
    * and bucket allocation percentage.
    */
@@ -75,6 +85,15 @@ export class PeriodComponent implements OnInit {
    */
   bucketCommitted(bucket: Bucket): number {
     return this.bucketAssignments(bucket)
+        .map(assignment => assignment.commitment)
+        .reduce((sum, current) => sum + current, 0);
+  }
+
+  /**
+   * Sum of resources committed to the given objective
+   */
+  objectiveCommitted(objective: Objective): number {
+    return objective.assignments
         .map(assignment => assignment.commitment)
         .reduce((sum, current) => sum + current, 0);
   }
@@ -105,6 +124,12 @@ export class PeriodComponent implements OnInit {
    */
   personUncommitted(person: Person): number {
     return person.availability - this.personCommitted(person);
+  }
+
+  addPerson(): void {
+    const person = new Person();
+    person.availability = this.defaultPersonAvailability;
+    this.period.people.push(person);
   }
 
   loadData(): void {
