@@ -10,7 +10,7 @@
 
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
 
-<div fxLayout="column" fxFlex="calc(50%-20px)" fxLayoutGap="20px">
+<div fxLayout="column" fxFlex.gt-md="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
@@ -20,7 +20,7 @@
 
 </div>
 
-<span fxLayout="column" fxFlex="calc(50%-20px)" fxLayoutGap="20px">
+<span fxLayout="column" fxFlex.gt-md="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <app-people [people]="period.people"
     [peopleCommitments]="peopleCommitments()"
     [peopleAssignmentCounts]="peopleAssignmentCounts()"
