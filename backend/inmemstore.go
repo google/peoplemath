@@ -59,9 +59,8 @@ func (s *inMemStore) GetAllPeriods(teamID string) ([]Period, bool) {
 			periodSlice = append(periodSlice, p)
 		}
 		return periodSlice, true
-	} else {
-		return []Period{}, false
 	}
+	return []Period{}, false
 }
 
 func (s *inMemStore) GetPeriod(teamID, periodID string) (Period, bool) {
