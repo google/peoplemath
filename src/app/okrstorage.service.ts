@@ -6,6 +6,7 @@ import { Person } from './person';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Objective } from './objective';
+import { Assignment } from './assignment';
 
 // TODO Move to backend storage service
 
@@ -13,8 +14,8 @@ const BUCKETS: Bucket[] = [
   new Bucket('First bucket', 40, [
     new Objective('A bucket 1 thing', 6, []),
     new Objective('Another bucket 1 thing', 3, [
-      { personId: 'alice', commitment: 2 },
-      { personId: 'bob', commitment: 1 },
+      new Assignment('alice', 2),
+      new Assignment('bob', 1),
     ]),
   ]),
   new Bucket('Second bucket', 40, [
@@ -26,8 +27,8 @@ const BUCKETS: Bucket[] = [
   ]),
 ];
 const PEOPLE: Person[] = [
-  { id: 'alice', displayName: 'Alice Anderson', availability: 3 },
-  { id: 'bob', displayName: 'Bob Briggs', availability: 6 },
+  new Person('alice', 'Alice Anderson', 3),
+  new Person('bob', 'Bob Briggs', 6),
 ];
 
 @Injectable()

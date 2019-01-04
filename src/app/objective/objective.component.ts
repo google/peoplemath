@@ -27,9 +27,7 @@ export class ObjectiveComponent implements OnInit {
   }
 
   assign(): void {
-    const assignment = new Assignment();
-    assignment.personId = '';
-    assignment.commitment = this.objective.resourceEstimate - this.objective.resourcesCommitted();
+    const assignment = new Assignment('', this.objective.resourceEstimate - this.objective.resourcesCommitted());
     this.objective.assignments.push(assignment);
   }
 

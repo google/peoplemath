@@ -40,9 +40,7 @@ export class PeopleComponent implements OnInit {
   }
 
   addPerson(): void {
-    const person = new Person();
-    person.id = 'new';
-    person.availability = this.defaultPersonAvailability;
+    const person = new Person('new', '', this.defaultPersonAvailability);
     this.people.push(person);
     this.edit(person);
   }
