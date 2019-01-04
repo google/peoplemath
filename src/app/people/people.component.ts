@@ -39,6 +39,10 @@ export class PeopleComponent implements OnInit {
     return this.personCommitted(person) > person.availability;
   }
 
+  isTeamOvercommitted(): boolean {
+    return this.totalUncommitted < 0;
+  }
+
   addPerson(): void {
     const person = new Person('new', '', this.defaultPersonAvailability);
     this.people.push(person);

@@ -19,8 +19,8 @@
     <tr>
         <td><b>Total</b></td>
         <td><b>{{totalAvailable}}</b></td>
-        <td><b>{{totalCommitted}}</b></td>
-        <td><b>{{totalUncommitted}}</b></td>
+        <td [class.overcommitted]="isTeamOvercommitted()"><b>{{totalCommitted}}</b></td>
+        <td [class.overcommitted]="isTeamOvercommitted()"><b>{{totalUncommitted}}</b></td>
     </tr>
 </table>
 <p>Default availability: <input type="number" [(ngModel)]="defaultPersonAvailability"/> {{unit}}</p>
