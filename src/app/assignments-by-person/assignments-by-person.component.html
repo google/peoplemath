@@ -1,8 +1,10 @@
 <h2>Assignments by person</h2>
 
-<span *ngFor="let person of period.people">
-  <h3>{{person.displayName}} ({{person.id}})</h3>
-  <ul>
-    <li *ngFor="let oa of assignmentsFor(person)">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
+<div *ngFor="let person of period.people" class="card mb-2">
+  <h5 class="card-header">{{person.displayName}} ({{person.id}})</h5>
+  <div class="card-body">
+  <ul class="list-group">
+    <li *ngFor="let oa of assignmentsFor(person)" class="list-group-item">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
   </ul>
-</span>
+</div>
+</div>

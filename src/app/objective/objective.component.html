@@ -1,13 +1,12 @@
-<li>
-    <span *ngIf="!isEditing" (click)="edit()" [class.unassigned]="isUnassigned()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
+<li class="list-group-item" [class.disabled]="isUnassigned()">
+    <span *ngIf="!isEditing" (click)="edit()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
     <span *ngIf="isEditing">
         <input [(ngModel)]="objective.name"/> 
         (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})
-        <button (click)="stopEditing()">OK</button>
+        <button (click)="stopEditing()" class="btn btn-primary">OK</button>
     </span>
-    <button *ngIf="!isFullyAssigned()" (click)="assign()">Assign</button>
-    <button (click)="delete()">Delete</button>
-</li>
+    <button *ngIf="!isFullyAssigned()" (click)="assign()" class="btn btn-secondary">Assign</button>
+    <button (click)="delete()" class="btn btn-danger">Delete</button>
 <ul *ngIf="objective.assignments">
     <li *ngFor="let assignment of objective.assignments"><app-assignment
         [assignment]="assignment" [unit]="unit"
@@ -16,3 +15,4 @@
         [validAssignees]="nonDupeValidAssignees()"
         (onDelete)="deleteAssignment($event)"></app-assignment></li>
 </ul>
+</li>

@@ -1,21 +1,25 @@
-<h3>
-    <span *ngIf="!isEditing" (click)="edit()">{{bucket.displayName}}</span>
+<div class="card mb-2">
+<div class="card-header">
+    <span *ngIf="!isEditing" (click)="edit()" class="card-title">{{bucket.displayName}}</span>
     <span *ngIf="isEditing"><input [(ngModel)]="bucket.displayName"/></span>
     <span [class.error]="totalAllocationPercentage > 100"> 
         <span *ngIf="!isEditing" (click)="edit()">({{bucket.allocationPercentage}}%)</span>
         <span *ngIf="isEditing">
             (<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)
-            <button (click)="stopEditing()">OK</button>
+            <button (click)="stopEditing()" class="btn btn-primary">OK</button>
         </span>
     </span>
-</h3>
-<p><b [class.overcommitted]="bucket.resourcesCommitted() > bucketAllocation()">
-    {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}} committed
-</b></p>
-<ul>
+  <div [class.badge-warning]="bucket.resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
+            {{bucket.resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}}
+  </div>
+</div>
+<div class="card-body p-0">
+<ul class="list-group list-group-flush">
     <app-objective *ngFor="let objective of bucket.objectives"
         [objective]="objective" [unit]="unit"
         [validAssignees]="validAssignees"
         (onDelete)="deleteObjective($event)"></app-objective>
 </ul>
-<button (click)="addObjective()">Add Objective</button>
+<button (click)="addObjective()" class="btn btn-secondary">Add Objective</button>
+</div>
+</div>

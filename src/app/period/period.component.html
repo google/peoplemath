@@ -1,18 +1,24 @@
+<div class="row col-md-12">
 <a routerLink="/teams">All teams</a>
-
+</div>
+<div class="row col-md-12">
 <h2><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : 
     <span *ngIf="!isEditing" (click)="edit()">{{period.displayName}}</span>
     <span *ngIf="isEditing">
         <input [(ngModel)]="period.displayName"/>
-        <button (click)="stopEditing()">OK</button>
+        <button (click)="stopEditing()" class="btn btn-primary">OK</button>
     </span></h2>
+</div>
 
+<div class="row">
+<div class="col-md-6">
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [validAssignees]="validAssignees()"></app-bucket>
-<p><button (click)="addBucket()">Add Bucket</button></p>
-
+<p><button (click)="addBucket()" class="btn btn-secondary">Add Bucket</button></p>
+</div>
+<div class="col-md-6">
 <app-people [people]="period.people"
      [peopleCommitments]="peopleCommitments()"
      [totalAvailable]="totalAvailable()"
@@ -20,5 +26,9 @@
      [totalUncommitted]="totalUncommitted()"
      [unit]="period.unit">
 </app-people>
+</div>
+</div>
 
+<div class="row col-md-12">
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
+</div>
