@@ -158,13 +158,13 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID st
 		enc.Encode(teams)
 	} else {
 		team, found, err := s.store.GetTeam(ctx, teamID)
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
 		if err != nil {
 			log.Printf("Could not retrieve team '%s': %s", teamID, err)
 			http.Error(w, fmt.Sprintf("Could not retrieve team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -245,13 +245,13 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	defer cancel()
 	if periodID == "" {
 		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
 		if err != nil {
 			log.Printf("Could not retrieve periods for team '%s': %s", teamID, err)
 			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -259,13 +259,13 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 		enc.Encode(periods)
 	} else {
 		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
 		if err != nil {
 			log.Printf("Could not retrieve period '%s' for team '%s': %s", periodID, teamID, err)
 			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
 			return
 		}
 		enc := json.NewEncoder(w)
