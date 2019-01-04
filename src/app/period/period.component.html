@@ -10,13 +10,13 @@
 
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
 
-<div fxLayout="column" fxFlex="calc(50%-20px)">
+<div fxLayout="column" fxFlex="calc(50%-20px)" fxLayoutGap="20px">
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [validAssignees]="validAssignees()"></app-bucket>
 
-<p><button (click)="addBucket()" mat-raised-button color="primary">Add Bucket</button></p>
+<div><button (click)="addBucket()" mat-raised-button color="primary">Add Bucket</button></div>
 
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
 </div>
