@@ -3,7 +3,7 @@
     <span *ngIf="!isEditing" (click)="edit()" class="card-title">{{bucket.displayName}}</span>
     <span *ngIf="isEditing"><input [(ngModel)]="bucket.displayName"/></span>
     <span [class.error]="totalAllocationPercentage > 100"> 
-        <span *ngIf="!isEditing" (click)="edit()">({{bucket.allocationPercentage}}%)</span>
+        <span *ngIf="!isEditing" (click)="edit()"> ({{bucket.allocationPercentage}}%)</span>
         <span *ngIf="isEditing">
             (<input type="number" [(ngModel)]="bucket.allocationPercentage"/>%)
             <button (click)="stopEditing()" class="btn btn-primary">OK</button>
