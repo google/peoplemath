@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { AssignmentDialogComponent } from './assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objective-dialog.component';
+import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
     AssignmentsByPersonComponent,
     AssignmentDialogComponent,
     EditObjectiveDialogComponent,
+    EditBucketDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +52,7 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
     EditPersonDialog,
     AssignmentDialogComponent,
     EditObjectiveDialogComponent,
+    EditBucketDialogComponent,
   ],
   providers: [
     OkrStorageService,

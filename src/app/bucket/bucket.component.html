@@ -1,14 +1,8 @@
 <mat-card>
 <mat-card-header>
 <mat-card-title>
-    <span *ngIf="!isEditing" (click)="edit()">{{bucket.displayName}}</span>
-    <span *ngIf="isEditing"><input [(ngModel)]="bucket.displayName"/></span>
-    <span [class.error]="totalAllocationPercentage > 100"> 
-        <span *ngIf="!isEditing" (click)="edit()"> ({{bucket.allocationPercentage}}%)</span>
-        <span *ngIf="isEditing">
-            (<input matInput type="number" [(ngModel)]="bucket.allocationPercentage"/>%)
-            <button (click)="stopEditing()" mat-raised-button color="primary">OK</button>
-        </span>
+    <span (click)="edit()">{{bucket.displayName}}
+    <span [class.error]="totalAllocationPercentage > 100"> ({{bucket.allocationPercentage}}%)</span>
     </span>
 </mat-card-title>
 <mat-card-subtitle>

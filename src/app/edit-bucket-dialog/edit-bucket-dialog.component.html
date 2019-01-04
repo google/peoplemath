@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<div mat-dialog-content>
+  <p>Bucket name</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.bucket.displayName">
+  </mat-form-field>
+  <p>Allocation (%)</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.bucket.allocationPercentage" type="number">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="data.bucket" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
+  <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
+</div>

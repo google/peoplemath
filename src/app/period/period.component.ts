@@ -8,6 +8,8 @@ import { Team } from '../team';
 import { OkrStorageService } from '../okrstorage.service';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
+import { MatDialog } from '@angular/material';
+import { EditBucketDialogComponent } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 
 @Component({
   selector: 'app-period',
@@ -24,6 +26,7 @@ export class PeriodComponent implements OnInit {
   constructor(
     private okrStorage: OkrStorageService,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -136,7 +139,14 @@ export class PeriodComponent implements OnInit {
   }
 
   addBucket(): void {
-    const bucket = new Bucket('New Bucket', 0, []);
-    this.period.buckets.push(bucket);
+    const dialogRef = this.dialog.open(EditBucketDialogComponent, {
+      data: {bucket: new Bucket('', 0, []), okAction: 'Add', allowCancel: true, title: 'Add bucket'},
+    });
+    dialogRef.afterClosed().subscribe(bucket => {
+      if (!bucket) {
+        return;
+      }
+      this.period.buckets.push(bucket);
+    })
   }
 }

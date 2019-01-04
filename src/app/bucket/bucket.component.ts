@@ -3,6 +3,7 @@ import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { MatDialog } from '@angular/material';
 import { EditObjectiveDialogComponent } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { EditBucketDialogComponent } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 
 @Component({
   selector: 'app-bucket',
@@ -15,7 +16,6 @@ export class BucketComponent implements OnInit {
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
   @Input() uncommittedTime: Map<string, number>;
-  isEditing: boolean = false;
 
   constructor(public dialog: MatDialog) { }
 
@@ -31,11 +31,12 @@ export class BucketComponent implements OnInit {
   }
 
   edit(): void {
-    this.isEditing = true;
-  }
-
-  stopEditing(): void {
-    this.isEditing = false;
+    this.dialog.open(EditBucketDialogComponent, {
+      data: {
+        'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
+        'title': 'Edit bucket "' + this.bucket.displayName + '"',
+      },
+    });
   }
 
   addObjective(): void {
