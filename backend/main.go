@@ -89,7 +89,8 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 	defer cancel()
 	_, exists, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s': %s", teamID, err), http.StatusInternalServerError)
+		log.Printf("Could not validate existence of team '%s': %s", teamID, err)
+		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s' (see server log)", teamID), http.StatusInternalServerError)
 		return false
 	}
 	if exists != expected {
@@ -108,7 +109,8 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 	defer cancel()
 	_, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not validate existence of period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+		log.Printf("Could not validate existence of period '%s' for team '%s': %s", periodID, teamID, err)
+		http.Error(w, fmt.Sprintf("Could not validate existence of period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
 		return false
 	}
 	if exists != expected {
@@ -147,7 +149,8 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID st
 	if teamID == "" {
 		teams, err := s.store.GetAllTeams(ctx)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not retrieve teams: %s", err), http.StatusInternalServerError)
+			log.Printf("Could not retrieve teams: %s", err)
+			http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -160,7 +163,8 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID st
 			return
 		}
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not retrieve team '%s': %s", teamID, err), http.StatusInternalServerError)
+			log.Printf("Could not retrieve team '%s': %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve team '%s' (see server log)", teamID), http.StatusInternalServerError)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -181,7 +185,8 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	err := s.store.CreateTeam(ctx, team)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not create team: %s", err), http.StatusInternalServerError)
+		log.Printf("Could not create team: %s", err)
+		http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
 		return
 	}
 }
@@ -198,7 +203,8 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	err := s.store.UpdateTeam(ctx, team)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not update team: %s", err), http.StatusInternalServerError)
+		log.Printf("Could not update team: %s", err)
+		http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
 		return
 	}
 }
@@ -244,7 +250,8 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 			return
 		}
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s': %s", teamID, err), http.StatusInternalServerError)
+			log.Printf("Could not retrieve periods for team '%s': %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -257,7 +264,8 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 			return
 		}
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+			log.Printf("Could not retrieve period '%s' for team '%s': %s", periodID, teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
 			return
 		}
 		enc := json.NewEncoder(w)
@@ -281,7 +289,8 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 	defer cancel()
 	err := s.store.CreatePeriod(ctx, teamID, period)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not create period for team '%s': %s", teamID, err), http.StatusInternalServerError)
+		log.Printf("Could not create period for team '%s': %s", teamID, err)
+		http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
 		return
 	}
 }
@@ -301,7 +310,8 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	defer cancel()
 	err := s.store.UpdatePeriod(ctx, teamID, period)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s': %s", periodID, teamID, err), http.StatusInternalServerError)
+		log.Printf("Could not update period '%s' for team '%s': %s", periodID, teamID, err)
+		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
 		return
 	}
 }
