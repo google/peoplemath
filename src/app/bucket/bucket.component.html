@@ -1,4 +1,6 @@
-<h3>{{bucket.displayName}} 
+<h3>
+    <span *ngIf="!isEditing" (click)="edit()">{{bucket.displayName}}</span>
+    <span *ngIf="isEditing"><input [(ngModel)]="bucket.displayName"/></span>
     <span [class.error]="totalAllocationPercentage > 100"> 
         <span *ngIf="!isEditing" (click)="edit()">({{bucket.allocationPercentage}}%)</span>
         <span *ngIf="isEditing">
