@@ -12,5 +12,6 @@
         [assignment]="assignment" [unit]="unit"
         [objectiveResourceEstimate]="objective.resourceEstimate"
         [objectiveResourcesCommitted]="objective.resourcesCommitted()"
-        [validAssignees]="nonDupeValidAssignees()"></app-assignment></li>
+        [validAssignees]="nonDupeValidAssignees()"
+        (onDelete)="deleteAssignment($event)"></app-assignment></li>
 </ul>

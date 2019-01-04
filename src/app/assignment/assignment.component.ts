@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Assignment } from '../assignment';
 
 @Component({
@@ -12,6 +12,7 @@ export class AssignmentComponent implements OnInit {
   @Input() objectiveResourceEstimate;
   @Input() objectiveResourcesCommitted;
   @Input() validAssignees: string[];
+  @Output() onDelete = new EventEmitter<Assignment>();
   isForcedEditing: boolean = false;
 
   constructor() { }
@@ -33,5 +34,9 @@ export class AssignmentComponent implements OnInit {
 
   stopEditing(): void {
     this.isForcedEditing = false;
+  }
+
+  delete(): void {
+    this.onDelete.emit(this.assignment);
   }
 }

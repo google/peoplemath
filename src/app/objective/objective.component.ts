@@ -33,6 +33,11 @@ export class ObjectiveComponent implements OnInit {
     this.objective.assignments.push(assignment);
   }
 
+  deleteAssignment(assignment: Assignment): void {
+    const index = this.objective.assignments.findIndex(a => a === assignment);
+    this.objective.assignments.splice(index, 1);
+  }
+
   nonDupeValidAssignees(): string[] {
     const usedAssignees = this.objective.assignments.map(assignment => assignment.personId);
     return this.validAssignees.filter(personId => usedAssignees.filter(pid => pid === personId).length < 2);

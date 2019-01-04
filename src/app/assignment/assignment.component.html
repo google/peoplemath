@@ -6,3 +6,4 @@
 <span *ngIf="!isEditing()" (click)="edit()">{{assignment.commitment}} {{unit}}</span>
 <span *ngIf="isEditing()"><input type="number" [(ngModel)]="assignment.commitment"/> {{unit}}<button (click)="stopEditing()">OK</button></span>
 </span>
+<button (click)="delete()">Delete</button>
