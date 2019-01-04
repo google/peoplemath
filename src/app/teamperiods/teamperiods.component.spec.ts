@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeamPeriodsComponent } from './teamperiods.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OkrStorageService } from '../okrstorage.service';
+import { MaterialModule } from '../material/material.module';
 
 describe('TeamPeriodsComponent', () => {
   let component: TeamPeriodsComponent;
@@ -11,7 +12,7 @@ describe('TeamPeriodsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeamPeriodsComponent ],
-      imports: [ RouterTestingModule ],
+      imports: [ RouterTestingModule, MaterialModule ],
       providers: [
         OkrStorageService,
       ],

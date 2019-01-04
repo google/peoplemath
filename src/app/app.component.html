@@ -1,5 +1,8 @@
-<div class="container-fluid">
-<h1>{{title}}</h1>
-
-<router-outlet></router-outlet>
-</div>
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <h1 class="mat-h1"><a routerLink="/teams">{{title}}</a></h1>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

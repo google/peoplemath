@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Bucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
+import { MaterialModule } from '../material/material.module';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -17,7 +18,7 @@ describe('BucketComponent', () => {
         ObjectiveComponent,
         AssignmentComponent,
       ],
-      imports: [ FormsModule ],
+      imports: [ FormsModule, MaterialModule ],
       providers: [
       ],
     })

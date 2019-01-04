@@ -1,5 +1,4 @@
 import { Objective } from "./objective";
-import { Assignment } from "./assignment";
 
 export class Bucket {
   constructor(

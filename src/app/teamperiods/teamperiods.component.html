@@ -1,7 +1,14 @@
-<a routerLink="/teams">All teams</a>
-
-<h2>Periods</h2>
-
-<ul>
-  <li *ngFor="let period of periods"><a routerLink="/team/{{team.id}}/period/{{period.id}}">{{period.displayName}}</a></li>
-</ul>
+<mat-grid-list cols="1">
+<mat-grid-tile>
+<mat-card>
+<mat-card-header>
+  <mat-card-title>Periods</mat-card-title>
+</mat-card-header>
+<mat-card-content>
+<mat-list>
+  <mat-list-item *ngFor="let period of periods"><a routerLink="/team/{{team.id}}/period/{{period.id}}">{{period.displayName}}</a></mat-list-item>
+</mat-list>
+</mat-card-content>
+</mat-card>
+</mat-grid-tile>
+</mat-grid-list>

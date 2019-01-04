@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentsByPersonComponent } from './assignments-by-person.component';
 import { Period } from '../period';
+import { MaterialModule } from '../material/material.module';
 
 describe('AssignmentsByPersonComponent', () => {
   let component: AssignmentsByPersonComponent;
@@ -9,7 +10,8 @@ describe('AssignmentsByPersonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssignmentsByPersonComponent ]
+      declarations: [ AssignmentsByPersonComponent ],
+      imports: [ MaterialModule ]
     })
     .compileComponents();
   }));

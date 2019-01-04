@@ -1,18 +1,20 @@
-<li class="list-group-item">
+<mat-list-item>
     <span *ngIf="!isEditing" (click)="edit()">{{objective.name}} ({{objective.resourceEstimate}} {{unit}})</span>
     <span *ngIf="isEditing">
         <input [(ngModel)]="objective.name"/> 
         (<input type="number" [(ngModel)]="objective.resourceEstimate"/> {{unit}})
-        <button (click)="stopEditing()" class="btn btn-primary">OK</button>
+        <button (click)="stopEditing()" mat-raised-button color="primary">OK</button>
     </span>
-    <button *ngIf="!isFullyAssigned()" (click)="assign()" class="btn btn-secondary">Assign</button>
-    <button (click)="delete()" class="btn btn-danger">Delete</button>
-<ul *ngIf="objective.assignments">
-    <li *ngFor="let assignment of objective.assignments"><app-assignment
-        [assignment]="assignment" [unit]="unit"
-        [objectiveResourceEstimate]="objective.resourceEstimate"
-        [objectiveResourcesCommitted]="objective.resourcesCommitted()"
-        [validAssignees]="nonDupeValidAssignees()"
-        (onDelete)="deleteAssignment($event)"></app-assignment></li>
-</ul>
-</li>
+    <button *ngIf="!isFullyAssigned()" (click)="assign()" mat-button color="primary">Assign</button>
+    <button (click)="delete()" mat-button color="warn">Delete</button>
+</mat-list-item>
+<mat-list class="assignmentlist" *ngIf="objective.assignments">
+    <mat-list-item *ngFor="let assignment of objective.assignments">
+        <app-assignment
+                [assignment]="assignment" [unit]="unit"
+                [objectiveResourceEstimate]="objective.resourceEstimate"
+                [objectiveResourcesCommitted]="objective.resourcesCommitted()"
+                [validAssignees]="nonDupeValidAssignees()"
+                (onDelete)="deleteAssignment($event)"></app-assignment>
+    </mat-list-item>
+</mat-list>

@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PeopleComponent } from './people.component';
 import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '../material/material.module';
 
 describe('PeopleComponent', () => {
   let component: PeopleComponent;
@@ -10,7 +11,7 @@ describe('PeopleComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PeopleComponent ],
-      imports: [ FormsModule ],
+      imports: [ FormsModule, MaterialModule ],
     })
     .compileComponents();
   }));

@@ -4,6 +4,7 @@ import { ObjectiveComponent } from './objective.component';
 import { FormsModule } from '@angular/forms';
 import { Objective } from '../objective';
 import { AssignmentComponent } from '../assignment/assignment.component';
+import { MaterialModule } from '../material/material.module';
 
 describe('ObjectiveComponent', () => {
   let component: ObjectiveComponent;
@@ -15,7 +16,7 @@ describe('ObjectiveComponent', () => {
         ObjectiveComponent,
         AssignmentComponent,
       ],
-      imports: [ FormsModule ]
+      imports: [ FormsModule, MaterialModule ]
 ,    })
     .compileComponents();
   }));

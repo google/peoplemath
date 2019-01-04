@@ -1,5 +1,14 @@
-<h2>Teams</h2>
-
-<ul>
-  <li *ngFor="let team of teams"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a></li>
-</ul>
+<mat-grid-list cols="1">
+<mat-grid-tile>
+<mat-card>
+<mat-card-header>
+  <mat-card-title>Teams</mat-card-title>
+</mat-card-header>
+<mat-card-content>
+<mat-list>
+  <mat-list-item *ngFor="let team of teams"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a></mat-list-item>
+</mat-list>
+</mat-card-content>
+</mat-card>
+</mat-grid-tile>
+</mat-grid-list>

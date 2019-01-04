@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
-import { Assignment } from '../assignment';
 
 @Component({
   selector: 'app-bucket',

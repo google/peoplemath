@@ -1,10 +1,17 @@
-<h2>Assignments by person</h2>
-
-<div *ngFor="let person of period.people" class="card mb-2">
-  <h5 class="card-header">{{person.displayName}} ({{person.id}})</h5>
-  <div class="card-body">
-  <ul class="list-group">
+<mat-card>
+<mat-card-header>
+<mat-card-title>Assignments by person</mat-card-title>
+</mat-card-header>
+<mat-card-content>
+<mat-list>
+<mat-list-item *ngFor="let person of period.people">
+  <div matLine>{{person.displayName}} ({{person.id}})</div>
+  <div matLine>
+  <ul>
     <li *ngFor="let oa of assignmentsFor(person)" class="list-group-item">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
   </ul>
-</div>
-</div>
+  </div>
+</mat-list-item>
+</mat-list>
+</mat-card-content>
+</mat-card>

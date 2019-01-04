@@ -1,5 +1,7 @@
-<table class="table">
-  <thead class="thead-light">
+<mat-card>
+<mat-card-content>
+<table>
+  <thead>
     <tr><th>Person</th><th>Available</th><th>Committed</th><th>Uncommitted</th></tr>
   </thead>
   <tbody>
@@ -10,7 +12,7 @@
         <td *ngIf="isEditing(person)"><input type="number" [(ngModel)]="person.availability"/></td>
         <td [class.overcommitted]="isPersonOvercommitted(person)">{{personCommitted(person)}}</td>
         <td [class.overcommitted]="isPersonOvercommitted(person)">{{personUncommitted(person)}}</td>
-        <td *ngIf="isEditing(person)"><button (click)="stopEditing()" class="btn btn-primary">OK</button></td>
+        <td *ngIf="isEditing(person)"><button (click)="stopEditing()" mat-raised-button color="primary">OK</button></td>
     </tr>
     <tr>
         <td><b>Total</b></td>
@@ -20,5 +22,7 @@
     </tr>
   </tbody>
 </table>
-<p><button (click)="addPerson()" class="btn btn-secondary">Add</button>
+<p><button (click)="addPerson()" mat-button color="primary">Add</button>
     Default availability: <input type="number" [(ngModel)]="defaultPersonAvailability"/> {{unit}}</p>
+</mat-card-content>
+</mat-card>
