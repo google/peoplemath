@@ -126,7 +126,6 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 
 func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
-	log.Printf("Team path: %q", pathParts)
 	if len(pathParts) != 4 {
 		http.NotFound(w, r)
 		return
@@ -222,7 +221,6 @@ func readTeamFromBody(w http.ResponseWriter, r *http.Request) (Team, bool) {
 
 func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
-	log.Printf("Period path: %q", pathParts)
 	if len(pathParts) != 5 {
 		http.NotFound(w, r)
 		return
