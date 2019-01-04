@@ -8,8 +8,8 @@ import { OkrStorageService } from '../okrstorage.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, debounceTime } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-period',
@@ -20,6 +20,7 @@ export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
   showOrderButtons: boolean;
+  eventsRequiringSave = new Subject<any>();
  
   constructor(
     private okrStorage: OkrStorageService,
@@ -31,6 +32,7 @@ export class PeriodComponent implements OnInit {
   ngOnInit() {
     this.showOrderButtons = false;
     this.loadData();
+    this.eventsRequiringSave.pipe(debounceTime(2000)).subscribe(_ => this.performSave());
   }
 
   /**
@@ -149,6 +151,11 @@ export class PeriodComponent implements OnInit {
   }
 
   save(): void {
+    // Running through a Subject allows debouncing
+    this.eventsRequiringSave.next();
+  }
+
+  performSave(): void {
     this.okrStorage.updatePeriod(this.team.id, this.period).pipe(
       catchError(error => {
         this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
@@ -159,7 +166,7 @@ export class PeriodComponent implements OnInit {
       if (res != "error") {
         this.snackBar.open('Saved', '', {duration: 2000});
       }
-  });
+    });
   }
 
   edit(): void {
