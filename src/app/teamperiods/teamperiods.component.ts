@@ -53,6 +53,12 @@ export class TeamPeriodsComponent implements OnInit {
     return this.team != undefined && this.periods != undefined;
   }
 
+  sortedPeriods(): Period[] {
+    let result = this.periods.slice();
+    result.sort((a, b) => a.displayName < b.displayName ? 1 : (a.displayName > b.displayName ? -1 : 0));
+    return result;
+  }
+
   addPeriod(): void {
     const dialogData: EditPeriodDialogData = {
       period: new Period('', '', 'person weeks', [], [], ''),
