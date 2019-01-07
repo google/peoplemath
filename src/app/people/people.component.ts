@@ -109,6 +109,7 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.people.push(result);
+        this.people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
         this.onChanged.emit(result);
       }
     });
