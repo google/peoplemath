@@ -6,6 +6,8 @@
 /tmp
 /out-tsc
 /appengine_dist
+/backend/peoplemath
+/backend/peoplemath.exe
 
 # dependencies
 /node_modules
