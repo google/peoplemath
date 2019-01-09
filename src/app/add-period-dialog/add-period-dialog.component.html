@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>New Period</h1>
+
+<div mat-dialog-content>
+  <p>Period ID</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.id">
+  </mat-form-field>
+  <p>Display name</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.displayName">
+  </mat-form-field>
+
+  <p>
+  <mat-radio-group [(ngModel)]="data.createMethod">
+    <mat-radio-button value="blank" class="selector-series">Blank Period</mat-radio-button>
+    <mat-radio-button value="copy" class="selector-series">Copy Existing Period</mat-radio-button>
+  </mat-radio-group>
+  </p>
+
+  <div *ngIf="isCopy()">
+    <p>Copy from</p>
+    <mat-form-field>
+      <mat-select [(value)]="data.copyFromPeriodID">
+        <mat-option *ngFor="let period of data.existingPeriods" [value]="period.id">
+          {{period.displayName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <p>
+    <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Unit</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.copyPeople" class="selector-series">Copy People</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.copyBuckets" class="selector-series">Copy Buckets</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.copyObjectives" [disabled]="!data.copyBuckets" class="selector-series">Copy Objectives</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.copyAssignments" [disabled]="!data.copyObjectives" class="selector-series">Copy Assignments</mat-checkbox>
+    </p>
+  </div>
+
+  <div *ngIf="isUnitRequired()">
+    <p>Unit</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="data.period.unit">
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="data" [disabled]="!isDataValid()" color="primary">Create</button>
+  <button mat-button (click)="onCancel()" color="warn">Cancel</button>
+</div>

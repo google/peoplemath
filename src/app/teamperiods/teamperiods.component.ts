@@ -8,6 +8,11 @@ import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { AddPeriodDialogData, AddPeriodDialogComponent, CreateMethod } from '../add-period-dialog/add-period-dialog.component';
+import { Bucket } from '../bucket';
+import { Person } from '../person';
+import { Objective } from '../objective';
+import { Assignment } from '../assignment';
 
 
 @Component({
@@ -60,6 +65,78 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   addPeriod(): void {
+    if (this.periods.length == 0) {
+      this.addBlankPeriod();
+      return;
+    }
+    const existingPeriods = this.sortedPeriods();
+    const dialogData: AddPeriodDialogData = {
+      period: new Period('', '', 'person weeks', [], [], ''),
+      createMethod: CreateMethod.Blank,
+      existingPeriods: existingPeriods,
+      copyFromPeriodID: existingPeriods[0].id,
+      copyUnit: true,
+      copyPeople: true,
+      copyBuckets: true,
+      copyObjectives: false,
+      copyAssignments: false,
+    };
+    const dialogRef = this.dialog.open(AddPeriodDialogComponent, {data: dialogData});
+    dialogRef.afterClosed().subscribe(data => {
+      if (!data) {
+        return;
+      }
+      var newPeriod: Period;
+      if (data.createMethod == CreateMethod.Blank) {
+        newPeriod = data.period;
+      } else if (data.createMethod == CreateMethod.Copy) {
+        let copiedPeriod = this.periods.find(p => p.id == data.copyFromPeriodID);
+        if (!copiedPeriod) {
+          console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
+          return;
+        }
+        newPeriod = new Period(data.period.id, data.period.displayName,
+          data.copyUnit ? copiedPeriod.unit : data.period.unit,
+          data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
+          data.copyPeople ? copiedPeriod.people : [],
+          '');
+      } else {
+        console.error('Unexpected createMethod "' + data.createMethod + '"');
+        return;
+      }
+      this.storeNewPeriod(newPeriod);
+    });
+  }
+
+  copyPeople(orig: Person[]): Person[] {
+    let result = [];
+    for (let p of orig) {
+      result.push(new Person(p.id, p.displayName, p.availability));
+    }
+    return result;
+  }
+
+  copyBuckets(orig: Bucket[], copyObjectives: boolean, copyAssignments: boolean): Bucket[] {
+    let result = [];
+    for (let b of orig) {
+      let objectives = [];
+      if (copyObjectives) {
+        for (let o of b.objectives) {
+          let assignments = [];
+          if (copyAssignments) {
+            for (let a of o.assignments) {
+              assignments.push(new Assignment(a.personId, a.commitment));
+            }
+          }
+          objectives.push(new Objective(o.name, o.resourceEstimate, assignments));
+        }
+      }
+      result.push(new Bucket(b.displayName, b.allocationPercentage, objectives));
+    }
+    return result;
+  }
+
+  addBlankPeriod(): void {
     const dialogData: EditPeriodDialogData = {
       period: new Period('', '', 'person weeks', [], [], ''),
       title: 'New Period',
@@ -72,18 +149,22 @@ export class TeamPeriodsComponent implements OnInit {
       if (!period) {
         return;
       }
-      this.storage.addPeriod(this.team.id, period).pipe(
-        catchError(error => {
-          this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
-          console.log(error);
-          return of(undefined);
-        })
-      ).subscribe(updateResponse => {
-        if (updateResponse) {
-          period.lastUpdateUUID = updateResponse.lastUpdateUUID;
-          this.periods.push(period);
-        }
+      this.storeNewPeriod(period);
+    });
+  }
+
+  storeNewPeriod(period: Period): void {
+    this.storage.addPeriod(this.team.id, period).pipe(
+      catchError(error => {
+        this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
+        console.log(error);
+        return of(undefined);
       })
+    ).subscribe(updateResponse => {
+      if (updateResponse) {
+        period.lastUpdateUUID = updateResponse.lastUpdateUUID;
+        this.periods.push(period);
+      }
     });
   }
 

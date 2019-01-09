@@ -23,6 +23,7 @@ import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dial
 import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { HttpClientModule } from '@angular/common/http';
     EditBucketDialogComponent,
     EditPeriodDialogComponent,
     EditTeamDialogComponent,
+    AddPeriodDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +61,7 @@ import { HttpClientModule } from '@angular/common/http';
     EditBucketDialogComponent,
     EditPeriodDialogComponent,
     EditTeamDialogComponent,
+    AddPeriodDialogComponent,
   ],
   providers: [
     StorageService,
