@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Inject, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Person, personDisplayNameWithUsername } from '../person';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
 
 class PersonData {
   constructor(
@@ -29,17 +29,21 @@ export class PeopleComponent implements OnInit {
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
   @Output() onChanged = new EventEmitter<any>();
-  displayedColumns: string[] = ["person", "available", "committed", "uncommitted", "assignmentCount"];
+  displayedColumns: string[] = ["personDesc", "availability", "committed", "uncommitted", "assignmentCount"];
+  @ViewChild(MatSort) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
-  tableData(): PersonData[] {
-    return this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
+  tableData(): MatTableDataSource<PersonData> {
+    let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
       this.personCommitted(p), this.personUncommitted(p), this.personAssignmentCount(p),
       this.isPersonOvercommitted(p), p));
+    let result = new MatTableDataSource(data);
+    result.sort = this.sort;
+    return result;
   }
 
   /**

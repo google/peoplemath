@@ -13,6 +13,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { Period } from '../period';
 import { of } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -33,7 +34,8 @@ describe('PeriodComponent', () => {
       imports: [
         RouterTestingModule,
         FormsModule,
-        MaterialModule
+        MaterialModule,
+        BrowserAnimationsModule,
       ],
       providers: [
         {provide: StorageService, useValue: storageServiceSpy},
