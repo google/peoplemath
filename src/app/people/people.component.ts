@@ -10,8 +10,6 @@ class PersonData {
       public uncommitted: number,
       public assignmentCount: number,
       public isOvercommitted: boolean,
-      // TODO: This should probably be done as a proper mat-footer-row
-      public isTotal: boolean,
       public person: Person,
   ) {}
 }
@@ -39,13 +37,9 @@ export class PeopleComponent implements OnInit {
   }
 
   tableData(): PersonData[] {
-    let result = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
+    return this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
       this.personCommitted(p), this.personUncommitted(p), this.personAssignmentCount(p),
-      this.isPersonOvercommitted(p), false, p));
-    result.push(new PersonData("Total", this.totalAvailable,
-      this.totalCommitted, this.totalUncommitted, this.totalAssignmentCount,
-      this.isTeamOvercommitted(), true, undefined));
-    return result;
+      this.isPersonOvercommitted(p), p));
   }
 
   /**
