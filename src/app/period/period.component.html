@@ -1,12 +1,24 @@
 <mat-spinner *ngIf="!isLoaded()"></mat-spinner>
 <div *ngIf="isLoaded()" class="grid-container">
 
-<h2 class="mat-h2"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : 
-    <span (click)="edit()">{{period.displayName}}</span>
-    <div class="mat-h4 editor-options">
+<div fxLayout="row" fxLayoutGap="20px" width="100%">
+<div fxLayout="column" fxFlex.gt-md="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
+    <h2 class="mat-h2">
+            <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
+    </h2>
+</div>
+<div fxLayout="column" fxFlex.gt-md="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
+<div class="mat-h4 editor-options">
+    <div *ngIf="isEditingEnabled">
         <mat-checkbox [(ngModel)]="showOrderButtons">Reorder</mat-checkbox>
+        <button mat-raised-button (click)="disableEditing()" color="primary">Stop Editing</button>
     </div>
-</h2>
+    <div *ngIf="!isEditingEnabled">
+        <button mat-raised-button (click)="enableEditing()" color="primary">Edit</button>
+    </div>
+</div>
+</div>
+</div>
 
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
 
@@ -16,11 +28,12 @@
     [globalResourcesAvailable]="totalAvailable()"
     [uncommittedTime]="uncommittedTime()"
     [showOrderButtons]="showOrderButtons"
+    [isEditingEnabled]="isEditingEnabled"
     (onMoveBucketUp)="moveBucketUpOne($event)"
     (onMoveBucketDown)="moveBucketDownOne($event)"
     (onChanged)="save()"></app-bucket>
 
-<div><button (click)="addBucket()" mat-button color="primary">Add Bucket</button></div>
+<div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
 
 </div>
 
@@ -33,6 +46,7 @@
     [totalUncommitted]="totalUncommitted()"
     [totalAssignmentCount]="totalAssignmentCount()"
     [unit]="period.unit"
+    [isEditingEnabled]="isEditingEnabled"
     (onChanged)="save()">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>

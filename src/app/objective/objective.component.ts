@@ -15,6 +15,7 @@ export class ObjectiveComponent implements OnInit {
   @Input() unit: string;
   @Input() uncommittedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
+  @Input() isEditingEnabled: boolean;
   @Output() onDelete = new EventEmitter<Objective>();
   @Output() onMoveObjectiveUp = new EventEmitter<Objective>();
   @Output() onMoveObjectiveDown = new EventEmitter<Objective>();
@@ -43,6 +44,9 @@ export class ObjectiveComponent implements OnInit {
   }
 
   assign(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     let assignmentData = [];
     this.uncommittedTime.forEach((uncommitted, personId) => {
       let currentAssignment = this.currentAssignment(personId);
@@ -68,6 +72,9 @@ export class ObjectiveComponent implements OnInit {
   }
 
   edit(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const dialogData: EditObjectiveDialogData = {
       'objective': this.objective,
       'title': 'Edit Objective',

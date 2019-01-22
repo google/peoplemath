@@ -1,1 +1,2 @@
-.editor-options { float: right }
+.editor-options { text-align: right }
+.editor-options button { margin-left: 20px }

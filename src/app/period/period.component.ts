@@ -19,6 +19,7 @@ import { of, Subject } from 'rxjs';
 export class PeriodComponent implements OnInit {
   team: Team;
   period: Period;
+  isEditingEnabled: boolean;
   showOrderButtons: boolean;
   eventsRequiringSave = new Subject<any>();
  
@@ -30,9 +31,18 @@ export class PeriodComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isEditingEnabled = false;
     this.showOrderButtons = false;
     this.loadData();
     this.eventsRequiringSave.pipe(debounceTime(2000)).subscribe(_ => this.performSave());
+  }
+
+  enableEditing(): void {
+    this.isEditingEnabled = true;
+  }
+
+  disableEditing(): void {
+    this.isEditingEnabled = false;
   }
 
   /**
@@ -175,6 +185,9 @@ export class PeriodComponent implements OnInit {
   }
 
   edit(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const dialogData: EditPeriodDialogData = {
       period: this.period, title: 'Edit Period "' + this.period.id + '"',
       okAction: 'OK', allowCancel: false, allowEditID: false,
@@ -184,6 +197,9 @@ export class PeriodComponent implements OnInit {
   }
 
   addBucket(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const dialogData: EditBucketDialogData = {
       bucket: new Bucket('', 0, []),
       okAction: 'Add', allowCancel: true, title: 'Add bucket'};

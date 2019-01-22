@@ -8,7 +8,7 @@
     <span (click)="edit()">{{bucket.displayName}}
     <span [class.error]="totalAllocationPercentage > 100"> ({{bucket.allocationPercentage}}%)</span>
     </span>
-    <button (click)="addObjective()" mat-button color="primary" class="header-button">Add Objective</button>
+    <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
   <div [class.warning]="resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
@@ -23,6 +23,7 @@
         [objective]="objective" [unit]="unit"
         [uncommittedTime]="uncommittedTime"
         [showOrderButtons]="showOrderButtons"
+        [isEditingEnabled]="isEditingEnabled"
         (onDelete)="deleteObjective($event)"
         (onMoveObjectiveUp)="moveObjectiveUpOne($event)"
         (onMoveObjectiveDown)="moveObjectiveDownOne($event)"

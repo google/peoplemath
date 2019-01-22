@@ -8,5 +8,5 @@
         <span class="resource-estimate"> ({{objective.resourceEstimate}} {{unit}})</span>
     </span>
     <span (click)="assign()" class="assignments" [class.fully-assigned]="isFullyAssigned()" [class.warning]="!isFullyAssigned()">{{assignmentSummary()}}</span>
-    <button *ngIf="!objective.assignments.length" [disabled]="objective.resourceEstimate <= 0" (click)="assign()" mat-button color="primary">Assign</button>
+    <button *ngIf="!objective.assignments.length" [disabled]="!isEditingEnabled || objective.resourceEstimate <= 0" (click)="assign()" mat-button color="primary">Assign</button>
 </mat-list-item>

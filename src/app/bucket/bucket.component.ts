@@ -17,6 +17,7 @@ export class BucketComponent implements OnInit {
   @Input() globalResourcesAvailable: number;
   @Input() uncommittedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
+  @Input() isEditingEnabled: boolean;
   @Output() onMoveBucketUp = new EventEmitter<Bucket>();
   @Output() onMoveBucketDown = new EventEmitter<Bucket>();
   @Output() onChanged = new EventEmitter<any>();
@@ -35,6 +36,9 @@ export class BucketComponent implements OnInit {
   }
 
   edit(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const dialogData: EditBucketDialogData = {
       'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
       'title': 'Edit bucket "' + this.bucket.displayName + '"',
@@ -44,6 +48,9 @@ export class BucketComponent implements OnInit {
   }
 
   addObjective(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const dialogData: EditObjectiveDialogData = {
       'objective': new Objective('', 0, []),
       'title': 'Add Objective',

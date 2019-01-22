@@ -28,6 +28,7 @@ export class PeopleComponent implements OnInit {
   @Input() totalUncommitted: number;
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
+  @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
   displayedColumns: string[] = ["personDesc", "availability", "committed", "uncommitted", "assignmentCount"];
   @ViewChild(MatSort) sort: MatSort;
@@ -98,6 +99,9 @@ export class PeopleComponent implements OnInit {
   }
 
   addPerson(): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
     const person = new Person('', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
       person: person, unit: this.unit, title: "Add person", okAction: "Add",
@@ -114,7 +118,7 @@ export class PeopleComponent implements OnInit {
   }
 
   editPerson(p: Person): void {
-    if (!p) {
+    if (!this.isEditingEnabled || !p) {
       return;
     }
     const dialogData: EditPersonDialogData = {

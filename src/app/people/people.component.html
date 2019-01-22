@@ -30,6 +30,6 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editPerson(row.person)"></tr>
   <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 </table>
-<p><button (click)="addPerson()" mat-button color="primary">Add</button></p>
+<p><button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button></p>
 </mat-card-content>
 </mat-card>
