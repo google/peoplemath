@@ -10,7 +10,7 @@ The whole application was designed to run on [Google AppEngine](https://cloud.go
 
 ## Development
 
-The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc).
+The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
 
 In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.11 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary.
 
