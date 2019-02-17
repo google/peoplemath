@@ -8,6 +8,8 @@ The front end was built using [Angular](https://angular.io) and [Angular Materia
 
 The whole application was designed to run on [Google AppEngine](https://cloud.google.com/appengine/), using [Google Cloud Datastore](https://cloud.google.com/datastore/) for persistence, though the front-end could be deployed with a back-end that used an entirely different persistence mechanism or runtime platform.
 
+This is not an officially supported Google product.
+
 ## Development
 
 The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
