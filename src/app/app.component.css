@@ -1,1 +1,2 @@
 .mat-toolbar h1 a { color: white; text-decoration: none; font-weight: bold }
+.flex-spacer { flex-grow: 1; }
