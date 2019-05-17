@@ -44,6 +44,7 @@ export class PeopleComponent implements OnInit {
   @Input() unit: string;
   @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
+  @Output() onDelete = new EventEmitter<Person>();
   displayedColumns: string[] = ["personDesc", "availability", "committed", "uncommitted", "assignmentCount"];
   @ViewChild(MatSort) sort: MatSort;
   
@@ -119,7 +120,8 @@ export class PeopleComponent implements OnInit {
     const person = new Person('', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
       person: person, unit: this.unit, title: "Add person", okAction: "Add",
-      allowCancel: true, allowUsernameEdit: true,
+      allowCancel: true, allowDelete: false, showDeleteConfirm: false,
+      allowUsernameEdit: true, onDelete: undefined,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
     dialogRef.afterClosed().subscribe(result => {
@@ -137,7 +139,8 @@ export class PeopleComponent implements OnInit {
     }
     const dialogData: EditPersonDialogData = {
       person: p, unit: this.unit, title: 'Edit person "' + p.id + '"', okAction: "OK",
-      allowCancel: false, allowUsernameEdit: false,
+      allowCancel: false, allowDelete: true, showDeleteConfirm: false,
+      allowUsernameEdit: false, onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
     dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(p));
@@ -150,7 +153,10 @@ export interface EditPersonDialogData {
   title: string;
   okAction: string;
   allowCancel: boolean;
+  allowDelete: boolean;
+  showDeleteConfirm: boolean;
   allowUsernameEdit: boolean;
+  onDelete: EventEmitter<Person>;
 }
 
 @Component({
@@ -163,6 +169,21 @@ export class EditPersonDialog {
       @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {}
 
   onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  delete(): void {
+    this.data.allowDelete = false;
+    this.data.showDeleteConfirm = true;
+  }
+
+  cancelDelete(): void {
+    this.data.allowDelete = true;
+    this.data.showDeleteConfirm = false;
+  }
+
+  confirmDelete(): void {
+    this.data.onDelete.emit(this.data.person);
     this.dialogRef.close();
   }
 }

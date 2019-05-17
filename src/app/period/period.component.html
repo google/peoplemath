@@ -47,7 +47,8 @@
     [totalAssignmentCount]="totalAssignmentCount()"
     [unit]="period.unit"
     [isEditingEnabled]="isEditingEnabled"
-    (onChanged)="save()">
+    (onChanged)="save()"
+    (onDelete)="deletePerson($event)">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
 </span>

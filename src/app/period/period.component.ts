@@ -24,6 +24,7 @@ import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
 import { catchError, debounceTime } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
+import { Person } from '../person';
 
 @Component({
   selector: 'app-period',
@@ -177,6 +178,18 @@ export class PeriodComponent implements OnInit {
   save(): void {
     // Running through a Subject allows debouncing
     this.eventsRequiringSave.next();
+  }
+
+  deletePerson(person: Person): void {
+    // Deleting a person requires ensuring their assignments are deleted as well
+    const index = this.period.people.findIndex(p => p === person);
+    this.period.people.splice(index, 1);
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.assignments = o.assignments.filter(a => a.personId != person.id);
+      });
+    });
+    this.save();
   }
 
   performSave(): void {
