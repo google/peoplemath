@@ -1,24 +1,27 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
+<form>
 <div mat-dialog-content>
     <div *ngIf="data.allowUsernameEdit">
         <p>Username</p>
         <mat-form-field>
-            <input matInput [(ngModel)]="data.person.id">
+            <input matInput [formControl]="userIdControl">
+            <mat-error *ngIf="userIdControl.hasError('nonunique')">Person with ID "{{userIdControl.value}}" already exists!</mat-error>
         </mat-form-field>
     </div>
     <p>Display name (optional)</p>
     <mat-form-field>
-        <input matInput [(ngModel)]="data.person.displayName">
+        <input matInput [formControl]="displayNameControl">
     </mat-form-field>
     <p>Availability ({{data.unit}})</p>
     <mat-form-field>
-        <input matInput [(ngModel)]="data.person.availability" type="number">
+        <input matInput [formControl]="availabilityControl" type="number">
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button [mat-dialog-close]="data.person" color="primary">{{data.okAction}}</button>
+    <button mat-raised-button (click)="onOK()" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
     <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
     <button *ngIf="data.allowDelete" mat-button (click)="delete()" color="warn">Delete</button>
     <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="cancelDelete()">Cancel Delete</button>
     <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="confirmDelete()" color="warn">Confirm Delete</button>
 </div>
+</form>

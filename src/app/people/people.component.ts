@@ -15,6 +15,7 @@
 import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Person, personDisplayNameWithUsername } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
+import { FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 
 class PersonData {
   constructor(
@@ -120,15 +121,16 @@ export class PeopleComponent implements OnInit {
     const person = new Person('', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
       person: person, unit: this.unit, title: "Add person", okAction: "Add",
+      existingUserIDs: this.people.map(p => p.id),
       allowCancel: true, allowDelete: false, showDeleteConfirm: false,
       allowUsernameEdit: true, onDelete: undefined,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.people.push(result);
+    dialogRef.afterClosed().subscribe(ok => {
+      if (ok) {
+        this.people.push(person);
         this.people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
-        this.onChanged.emit(result);
+        this.onChanged.emit(person);
       }
     });
   }
@@ -139,11 +141,16 @@ export class PeopleComponent implements OnInit {
     }
     const dialogData: EditPersonDialogData = {
       person: p, unit: this.unit, title: 'Edit person "' + p.id + '"', okAction: "OK",
+      existingUserIDs: [], // Doesn't matter for existing people
       allowCancel: false, allowDelete: true, showDeleteConfirm: false,
       allowUsernameEdit: false, onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
-    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(p));
+    dialogRef.afterClosed().subscribe(ok => {
+      if (ok) {
+        this.onChanged.emit(p);
+      }
+    });
   }
 }
 
@@ -156,6 +163,7 @@ export interface EditPersonDialogData {
   allowDelete: boolean;
   showDeleteConfirm: boolean;
   allowUsernameEdit: boolean;
+  existingUserIDs: Array<String>;
   onDelete: EventEmitter<Person>;
 }
 
@@ -164,12 +172,41 @@ export interface EditPersonDialogData {
   templateUrl: 'edit-person-dialog.html'
 })
 export class EditPersonDialog {
+  userIdControl: FormControl;
+  displayNameControl: FormControl;
+  availabilityControl: FormControl;
+
   constructor(
     public dialogRef: MatDialogRef<EditPersonDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {
+      this.userIdControl = new FormControl(data.person.id, this.validateUserId);
+      this.displayNameControl = new FormControl(data.person.displayName);
+      this.availabilityControl = new FormControl(data.person.availability);
+  }
+
+  get validateUserId(): ValidatorFn {
+    return (c: AbstractControl) => {
+      if (this.data.allowUsernameEdit && this.data.existingUserIDs.includes(c.value)) {
+        return {'nonunique': true};
+      }
+      return null;
+    };
+  }
+
+  isDataValid(): boolean {
+    return this.userIdControl.valid && this.displayNameControl.valid
+        && this.availabilityControl.valid;
+  }
+
+  onOK(): void {
+    this.data.person.id = this.userIdControl.value;
+    this.data.person.displayName = this.displayNameControl.value;
+    this.data.person.availability = this.availabilityControl.value;
+    this.dialogRef.close(true);
+  }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   delete(): void {
@@ -184,6 +221,6 @@ export class EditPersonDialog {
 
   confirmDelete(): void {
     this.data.onDelete.emit(this.data.person);
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }
