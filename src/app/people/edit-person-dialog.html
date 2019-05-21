@@ -5,6 +5,7 @@
         <p>Username</p>
         <mat-form-field>
             <input matInput [formControl]="userIdControl">
+            <mat-error *ngIf="userIdControl.hasError('required')">Username is required</mat-error>
             <mat-error *ngIf="userIdControl.hasError('nonunique')">Person with ID "{{userIdControl.value}}" already exists!</mat-error>
         </mat-form-field>
     </div>

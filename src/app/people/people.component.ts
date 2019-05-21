@@ -15,7 +15,7 @@
 import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Person, personDisplayNameWithUsername } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
-import { FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms';
 
 class PersonData {
   constructor(
@@ -179,7 +179,7 @@ export class EditPersonDialog {
   constructor(
     public dialogRef: MatDialogRef<EditPersonDialog>,
     @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {
-      this.userIdControl = new FormControl(data.person.id, this.validateUserId);
+      this.userIdControl = new FormControl(data.person.id, [this.validateUserId, Validators.required]);
       this.displayNameControl = new FormControl(data.person.displayName);
       this.availabilityControl = new FormControl(data.person.availability);
   }
