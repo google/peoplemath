@@ -22,8 +22,9 @@ import (
 
 // In-memory implementation of StorageService, for local testing
 type inMemStore struct {
-	teams   map[string]Team
-	periods map[string]map[string]Period
+	teams    map[string]Team
+	periods  map[string]map[string]Period
+	settings Settings
 }
 
 func makeInMemStore() StorageService {
@@ -40,7 +41,10 @@ func makeInMemStore() StorageService {
 			"2018q4": makeFakePeriod("2018q4"),
 		},
 	}
-	return &inMemStore{teams: teams, periods: periods}
+	settings := Settings{
+		ImproveUrl: "https://github.com/google/peoplemath",
+	}
+	return &inMemStore{teams: teams, periods: periods, settings: settings}
 }
 
 func (s *inMemStore) GetAllTeams(ctx context.Context) ([]Team, error) {
@@ -103,6 +107,10 @@ func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period Per
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
 	return nil
+}
+
+func (s *inMemStore) GetSettings(ctx context.Context) (Settings, error) {
+	return s.settings, nil
 }
 
 func (s *inMemStore) Close() error {

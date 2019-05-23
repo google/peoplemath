@@ -17,6 +17,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -74,5 +75,29 @@ func TestPostPeriod(t *testing.T) {
 	}
 	if p.Buckets[0].AllocationPercentage != 80 {
 		t.Fatalf("Expected allocation percentage 80, found %v", p.Buckets[0].AllocationPercentage)
+	}
+}
+
+func TestImprove(t *testing.T) {
+	server := Server{store: makeInMemStore()}
+	handler := server.makeHandler()
+
+	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+	if resp.StatusCode != http.StatusFound {
+		t.Fatalf("Expected response %c, got %v", http.StatusFound, resp.StatusCode)
+	}
+	expectedImproveUrl := "https://github.com/google/peoplemath"
+	location := resp.Header.Get("Location")
+	if location != expectedImproveUrl {
+		t.Errorf("Expected redirect to %v, found %v", expectedImproveUrl, location)
+	}
+
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	body := string(bodyBytes)
+	if !strings.Contains(body, expectedImproveUrl) {
+		t.Errorf("Expected redirect URL %v in body, found %v", expectedImproveUrl, body)
 	}
 }

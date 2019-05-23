@@ -81,6 +81,11 @@ type ObjectUpdateResponse struct {
 	LastUpdateUUID string `json:"lastUpdateUUID"`
 }
 
+// Settings holds stored configuration options
+type Settings struct {
+	ImproveUrl string
+}
+
 // StorageService to represent the persistent store
 type StorageService interface {
 	GetAllTeams(ctx context.Context) ([]Team, error)
@@ -91,6 +96,7 @@ type StorageService interface {
 	GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error)
 	CreatePeriod(ctx context.Context, teamID string, period Period) error
 	UpdatePeriod(ctx context.Context, teamID string, period Period) error
+	GetSettings(ctx context.Context) (Settings, error)
 	Close() error
 }
 
@@ -104,6 +110,7 @@ func (s *Server) makeHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/team/", s.handleTeam)
 	mux.HandleFunc("/api/period/", s.handlePeriod)
+	mux.HandleFunc("/improve", s.handleImprove)
 	return mux
 }
 
@@ -368,6 +375,21 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
 		return period, false
 	}
 	return period, true
+}
+
+func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+		defer cancel()
+		settings, err := s.store.GetSettings(ctx)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not retrieve settings: %v", err), http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, settings.ImproveUrl, http.StatusFound)
+	} else {
+		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
+	}
 }
 
 func main() {

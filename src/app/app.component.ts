@@ -21,5 +21,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'PeopleMath'
-  repo = 'https://github.com/google/peoplemath'
 }

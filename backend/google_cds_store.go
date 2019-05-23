@@ -28,6 +28,10 @@ const (
 	TeamKind = "Team"
 	// PeriodKind - Datastore kind name for periods
 	PeriodKind = "Period"
+	// SettingsKind - Datastore kind name for settings
+	SettingsKind = "Settings"
+	// SettingsEntity - entity name for settings
+	SettingsEntity = "Settings"
 )
 
 // StorageService using Google Cloud Datastore
@@ -169,6 +173,21 @@ func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period
 		return err
 	})
 	return err
+}
+
+func (s *googleCDSStore) GetSettings(ctx context.Context) (Settings, error) {
+	key := datastore.NameKey(SettingsKind, SettingsEntity, nil)
+	var result Settings
+	err := s.client.Get(ctx, key, &result)
+	if err == datastore.ErrNoSuchEntity {
+		result = Settings{}
+	} else if err != nil {
+		return result, err
+	}
+	if result.ImproveUrl == "" {
+		result.ImproveUrl = "https://github.com/google/peoplemath"
+	}
+	return result, nil
 }
 
 func (s *googleCDSStore) Close() error {
