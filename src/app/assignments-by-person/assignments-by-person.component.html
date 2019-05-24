@@ -3,15 +3,11 @@
 <mat-card-title>Assignments by person</mat-card-title>
 </mat-card-header>
 <mat-card-content>
-<mat-list>
-<mat-list-item *ngFor="let person of period.people">
-  <div matLine>{{personDisplayNameWithUsername(person)}}</div>
-  <div matLine>
-  <ul>
-    <li *ngFor="let oa of assignmentsFor(person)" class="list-group-item">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
-  </ul>
+  <div *ngFor="let person of period.people" class="personassignment">
+    <h3>{{personDisplayNameWithUsername(person)}}</h3>
+    <ul>
+      <li *ngFor="let oa of assignmentsFor(person)">{{oa.objective.name}}: {{oa.assignment.commitment}} {{period.unit}}</li>
+    </ul>
   </div>
-</mat-list-item>
-</mat-list>
 </mat-card-content>
 </mat-card>
