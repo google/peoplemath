@@ -31,13 +31,25 @@ export class AssignmentsByPersonComponent implements OnInit {
   ngOnInit() {
   }
 
+  hasAssignments(person: Person): boolean {
+    for (let bucket of this.period.buckets) {
+      for (let objective of bucket.objectives) {
+        for (let assignment of objective.assignments) {
+          if (assignment.personId === person.id) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   assignmentsFor(person: Person): ObjectiveAssignment[] {
     const result = [];
     this.period.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
         objective.assignments.filter(assignment => assignment.personId === person.id)
                              .forEach(assignment => {
-          const personId = assignment.personId;
           result.push(new ObjectiveAssignment(objective, assignment));
         });
       });
