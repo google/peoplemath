@@ -17,7 +17,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditBucketDialogComponent, EditBucketDialogData } from './edit-bucket-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Bucket } from '../bucket';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 

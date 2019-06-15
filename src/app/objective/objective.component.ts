@@ -15,7 +15,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 

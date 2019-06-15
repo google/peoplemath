@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Objective } from '../objective';
 
 export interface EditObjectiveDialogData {

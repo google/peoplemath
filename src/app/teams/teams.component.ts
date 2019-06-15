@@ -15,7 +15,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from '../team';
 import { StorageService } from '../storage.service';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';

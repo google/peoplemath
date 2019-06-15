@@ -14,7 +14,9 @@
 
 import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Person, personDisplayNameWithUsername } from '../person';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms';
 
 class PersonData {
@@ -47,7 +49,7 @@ export class PeopleComponent implements OnInit {
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
   displayedColumns: string[] = ["personDesc", "availability", "committed", "uncommitted", "assignmentCount"];
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
 

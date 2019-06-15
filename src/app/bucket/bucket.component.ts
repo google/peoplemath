@@ -15,7 +15,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Bucket, bucketResourcesCommitted } from '../bucket';
 import { Objective } from '../objective';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 

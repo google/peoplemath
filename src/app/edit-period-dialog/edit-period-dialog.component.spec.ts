@@ -17,7 +17,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPeriodDialogComponent, EditPeriodDialogData } from './edit-period-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Period } from '../period';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
