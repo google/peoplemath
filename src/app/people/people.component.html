@@ -12,12 +12,12 @@
     <td mat-footer-cell *matFooterCellDef>{{totalAvailable}}</td>
   </ng-container>
   <ng-container matColumnDef="committed">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Committed</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Allocated</th>
     <td mat-cell *matCellDef="let element" [class.overcommitted]="element.isOvercommitted">{{element.committed}}</td>
     <td mat-footer-cell *matFooterCellDef [class.overcommitted]="isTeamOvercommitted()">{{totalCommitted}}</td>
   </ng-container>
   <ng-container matColumnDef="uncommitted">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Uncommitted</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Free</th>
     <td mat-cell *matCellDef="let element" [class.overcommitted]="element.isOvercommitted">{{element.uncommitted}}</td>
     <td mat-footer-cell *matFooterCellDef [class.overcommitted]="isTeamOvercommitted()">{{totalUncommitted}}</td>
   </ng-container>
