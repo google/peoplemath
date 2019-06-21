@@ -27,7 +27,7 @@
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [uncommittedTime]="uncommittedTime()"
-    [showOrderButtons]="showOrderButtons"
+    [showOrderButtons]="showOrderButtons && isEditingEnabled"
     [isEditingEnabled]="isEditingEnabled"
     (onMoveBucketUp)="moveBucketUpOne($event)"
     (onMoveBucketDown)="moveBucketDownOne($event)"
