@@ -14,7 +14,7 @@ This is not an officially supported Google product.
 
 The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
 
-In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.11 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary.
+In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.12 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary.
 
 The simplest way to run it is with `peoplemath --inmemstore`, which will use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
 
@@ -24,7 +24,7 @@ To persist the API data and exercise the Cloud Datastore persistence layer, the 
 
 To deploy the app to Google AppEngine:
 
-* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go111/quickstart)
+* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go112/quickstart)
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
