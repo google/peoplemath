@@ -59,7 +59,7 @@ func TestPostPeriod(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","assignments":[]}]}],"people":[]}`
 	addPeriod(handler, teamID, periodJSON, t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/2019q1", nil)
@@ -77,6 +77,31 @@ func TestPostPeriod(t *testing.T) {
 	}
 	if p.Buckets[0].AllocationPercentage != 80 {
 		t.Fatalf("Expected allocation percentage 80, found %v", p.Buckets[0].AllocationPercentage)
+	}
+}
+
+func TestInvalidCommitmentType(t *testing.T) {
+	server := Server{store: makeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"wibble","assignments":[]}]}],"people":[]}`
+
+	req := httptest.NewRequest(http.MethodPost, "/api/period/"+teamID+"/", strings.NewReader(periodJSON))
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	body := string(bodyBytes)
+
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Fatalf("Expected status code %v, found %v: %v", http.StatusBadRequest, resp.StatusCode, body)
+	}
+
+	if !strings.Contains(body, "wibble") {
+		t.Fatalf("Expected bad commitment type to appear in body, found: %v", body)
 	}
 }
 

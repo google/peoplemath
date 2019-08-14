@@ -26,6 +26,7 @@ import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-
 import { catchError, debounceTime } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { Person } from '../person';
+import { CommitmentType } from '../objective';
 
 @Component({
   selector: 'app-period',
@@ -149,6 +150,30 @@ export class PeriodComponent implements OnInit {
       });
     });
     return result;
+  }
+
+  /**
+   * Resources allocated to committed objectives
+   */
+  committedAllocations(): number {
+    let totalCommitted = 0;
+    this.period.buckets.forEach(bucket => {
+      bucket.objectives.forEach(o => {
+        if (o.commitmentType == CommitmentType.Committed) {
+          o.assignments.forEach(a => {
+            totalCommitted += a.commitment;
+          })
+        }
+      })
+    });
+    return totalCommitted;
+  }
+  
+  /**
+   * Fraction of allocated resources which is allocated to committed objectives
+   */
+  committedAllocationRatio(): number {
+    return this.committedAllocations() / this.totalAllocated();
   }
 
   loadData(): void {

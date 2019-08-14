@@ -17,14 +17,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssignmentDialogComponent, AssignmentDialogData } from './assignment-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Objective } from '../objective';
+import { Objective, CommitmentType } from '../objective';
 
 describe('AssignmentDialogComponent', () => {
   let component: AssignmentDialogComponent;
   let fixture: ComponentFixture<AssignmentDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: AssignmentDialogData = {
-    'objective': new Objective('My Test Objective', 10, []),
+    'objective': new Objective('My Test Objective', 10, CommitmentType.Aspirational, []),
     'people': [],
     'unit': 'person weeks',
     'columns': [],

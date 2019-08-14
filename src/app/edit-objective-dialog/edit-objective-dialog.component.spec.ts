@@ -18,7 +18,7 @@ import { EditObjectiveDialogComponent, EditObjectiveDialogData } from './edit-ob
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Objective } from '../objective';
+import { Objective, CommitmentType } from '../objective';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditObjectiveDialogComponent', () => {
@@ -26,7 +26,7 @@ describe('EditObjectiveDialogComponent', () => {
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: EditObjectiveDialogData = {
-    'objective': new Objective('My test objective', 17, []),
+    'objective': new Objective('My test objective', 17, CommitmentType.Aspirational, []),
     'title': 'My test dialog',
     'okAction': 'OK',
     'allowCancel': true,

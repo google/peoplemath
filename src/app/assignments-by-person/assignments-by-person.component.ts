@@ -14,7 +14,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Period } from '../period';
-import { Objective } from '../objective';
+import { Objective, CommitmentType } from '../objective';
 import { Assignment } from '../assignment';
 import { Person, personDisplayNameWithUsername } from '../person';
 
@@ -61,6 +61,13 @@ export class AssignmentsByPersonComponent implements OnInit {
 
   personDisplayNameWithUsername(person: Person): string {
     return personDisplayNameWithUsername(person);
+  }
+
+  commitmentTypeBadge(oa: ObjectiveAssignment): string {
+    switch (oa.objective.commitmentType) {
+      case CommitmentType.Committed: return "C";
+      default: return "";
+    }
   }
 }
 

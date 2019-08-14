@@ -62,7 +62,13 @@ type Objective struct {
 	Name             string       `json:"name"`
 	ResourceEstimate float64      `json:"resourceEstimate"`
 	Assignments      []Assignment `json:"assignments"`
+	CommitmentType   string       `json:"commitmentType"`
 }
+
+const (
+	CommitmentTypeAspirational = "Aspirational"
+	CommitmentTypeCommitted    = "Committed"
+)
 
 // Assignment model struct
 type Assignment struct {
@@ -374,6 +380,16 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
 		return period, false
+	}
+	for _, bucket := range period.Buckets {
+		for _, objective := range bucket.Objectives {
+			if objective.CommitmentType != "" {
+				if objective.CommitmentType != CommitmentTypeCommitted && objective.CommitmentType != CommitmentTypeAspirational {
+					http.Error(w, fmt.Sprintf("Illegal commitment type '%s'", objective.CommitmentType), http.StatusBadRequest)
+					return period, false
+				}
+			}
+		}
 	}
 	return period, true
 }

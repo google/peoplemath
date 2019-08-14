@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Objective } from '../objective';
+import { Objective, CommitmentType } from '../objective';
 import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
@@ -107,5 +107,19 @@ export class ObjectiveComponent implements OnInit {
 
   moveObjectiveDown(): void {
     this.onMoveObjectiveDown.emit(this.objective);
+  }
+
+  commitmentTypeBadge(): string {
+    switch (this.objective.commitmentType) {
+      case CommitmentType.Committed: return "C";
+      default: return "";
+    }
+  }
+
+  commitmentTypeBadgeColour(): string {
+    switch (this.objective.commitmentType) {
+      case CommitmentType.Committed: return "primary";
+      default: return "";
+    }
   }
 }

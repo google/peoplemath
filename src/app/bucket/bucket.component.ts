@@ -14,7 +14,7 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Bucket, bucketResourcesAllocated } from '../bucket';
-import { Objective } from '../objective';
+import { Objective, CommitmentType } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
@@ -66,7 +66,7 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditObjectiveDialogData = {
-      'objective': new Objective('', 0, []),
+      'objective': new Objective('', 0, CommitmentType.Aspirational, []),
       'title': 'Add Objective',
       'okAction': 'Add',
       'allowCancel': true,

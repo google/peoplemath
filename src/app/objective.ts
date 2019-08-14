@@ -14,10 +14,13 @@
 
 import { Assignment } from "./assignment";
 
+export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
+
 export class Objective {
   constructor(
       public name: string,
       public resourceEstimate: number,
+      public commitmentType: CommitmentType,
       public assignments: Assignment[],
   ) {}
 }

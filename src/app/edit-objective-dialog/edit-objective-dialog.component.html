@@ -9,6 +9,13 @@
   <mat-form-field>
     <input matInput [(ngModel)]="data.objective.resourceEstimate" type="number">
   </mat-form-field>
+  <p>Commitment type</p>
+  <mat-form-field>
+    <mat-select [(ngModel)]="data.objective.commitmentType">
+        <mat-option value="Aspirational">Aspirational</mat-option>
+        <mat-option value="Committed">Committed</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <div mat-dialog-actions>
