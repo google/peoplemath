@@ -15,7 +15,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Bucket, bucketResourcesCommitted } from '../bucket';
+import { Bucket, bucketResourcesAllocated } from '../bucket';
 import { Period } from '../period';
 import { Team } from '../team';
 import { StorageService } from '../storage.service';
@@ -71,19 +71,19 @@ export class PeriodComponent implements OnInit {
   }
 
   /**
-   * Total resources for this period which have been committed to objectives
+   * Total resources for this period which have been allocated to objectives
    */
-  totalCommitted(): number {
+  totalAllocated(): number {
     return this.period.buckets
-        .map(bucketResourcesCommitted)
+        .map(bucketResourcesAllocated)
         .reduce((sum, prev) => sum + prev, 0);
   }
 
   /**
-   * Total resources for this period which have not been committed to objectives
+   * Total resources for this period which have not been allocated to objectives
    */
-  totalUncommitted(): number {
-    return this.totalAvailable() - this.totalCommitted();
+  totalUnallocated(): number {
+    return this.totalAvailable() - this.totalAllocated();
   }
 
   /**
@@ -103,7 +103,7 @@ export class PeriodComponent implements OnInit {
             (sum, current) => sum + current, 0);
   }
 
-  peopleCommitments(): Map<string, number> {
+  peopleAllocations(): Map<string, number> {
     let result: Map<string, number> = new Map();
     this.period.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
@@ -136,9 +136,9 @@ export class PeriodComponent implements OnInit {
   }
 
   /**
-   * Amount of uncommitted time for each person
+   * Amount of unallocated time for each person
    */
-  uncommittedTime(): Map<string,number> {
+  unallocatedTime(): Map<string,number> {
     let result = new Map();
     this.period.people.forEach(p => result.set(p.id, p.availability));
     this.period.buckets.forEach(b => {

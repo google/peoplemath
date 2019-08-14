@@ -11,8 +11,8 @@
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
-  <div [class.warning]="resourcesCommitted() > bucketAllocation()" class="badge badge-pill text-right">
-            {{resourcesCommitted()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}}
+  <div [class.warning]="resourcesAllocated() > bucketAllocation()" class="badge badge-pill text-right">
+            {{resourcesAllocated()}} of {{bucketAllocation() | number:'1.1-1'}} {{unit}}
   </div>
 </mat-card-subtitle>
 </mat-card-header>
@@ -21,7 +21,7 @@
     <ng-container *ngFor="let objective of bucket.objectives">
     <app-objective
         [objective]="objective" [unit]="unit"
-        [uncommittedTime]="uncommittedTime"
+        [unallocatedTime]="unallocatedTime"
         [showOrderButtons]="showOrderButtons"
         [isEditingEnabled]="isEditingEnabled"
         (onDelete)="deleteObjective($event)"

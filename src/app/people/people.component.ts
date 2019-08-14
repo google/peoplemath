@@ -23,10 +23,10 @@ class PersonData {
   constructor(
       public personDesc: string,
       public availability: number,
-      public committed: number,
-      public uncommitted: number,
+      public allocated: number,
+      public unallocated: number,
       public assignmentCount: number,
-      public isOvercommitted: boolean,
+      public isOverallocated: boolean,
       public person: Person,
   ) {}
 }
@@ -38,17 +38,17 @@ class PersonData {
 })
 export class PeopleComponent implements OnInit {
   @Input() people: Person[];
-  @Input() peopleCommitments: Map<string, number>;
+  @Input() peopleAllocations: Map<string, number>;
   @Input() peopleAssignmentCounts: Map<string, number>;
   @Input() totalAvailable: number;
-  @Input() totalCommitted: number;
-  @Input() totalUncommitted: number;
+  @Input() totalAllocated: number;
+  @Input() totalUnallocated: number;
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
   @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
-  displayedColumns: string[] = ["personDesc", "availability", "committed", "uncommitted", "assignmentCount"];
+  displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount"];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
@@ -58,25 +58,25 @@ export class PeopleComponent implements OnInit {
 
   tableData(): MatTableDataSource<PersonData> {
     let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
-      this.personCommitted(p), this.personUncommitted(p), this.personAssignmentCount(p),
-      this.isPersonOvercommitted(p), p));
+      this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
+      this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
     result.sort = this.sort;
     return result;
   }
 
   /**
-   * Amount of the given person's resources committed to objectives during this period.
+   * Amount of the given person's resources allocated to objectives during this period.
    */
-  personCommitted(person: Person): number {
-    return this.peopleCommitments.has(person.id) ? this.peopleCommitments.get(person.id) : 0;
+  personAllocated(person: Person): number {
+    return this.peopleAllocations.has(person.id) ? this.peopleAllocations.get(person.id) : 0;
   }
 
   /**
-   * Amount of the given person's resources not committed to objectives during this period.
+   * Amount of the given person's resources not allocated to objectives during this period.
    */
-  personUncommitted(person: Person): number {
-    return person.availability - this.personCommitted(person);
+  personUnallocated(person: Person): number {
+    return person.availability - this.personAllocated(person);
   }
 
   /**
@@ -86,12 +86,12 @@ export class PeopleComponent implements OnInit {
     return this.peopleAssignmentCounts.has(person.id) ? this.peopleAssignmentCounts.get(person.id) : 0;
   }
 
-  isPersonOvercommitted(person: Person): boolean {
-    return this.personCommitted(person) > person.availability;
+  isPersonOverallocated(person: Person): boolean {
+    return this.personAllocated(person) > person.availability;
   }
 
-  isTeamOvercommitted(): boolean {
-    return this.totalUncommitted < 0;
+  isTeamOverallocated(): boolean {
+    return this.totalUnallocated < 0;
   }
 
   /**

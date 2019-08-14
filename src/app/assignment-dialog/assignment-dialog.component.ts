@@ -75,11 +75,11 @@ export class AssignmentDialogComponent implements OnInit {
     row.assign = Math.max(0, row.assign - 1);
   }
 
-  isFullyCommitted(row: PersonAssignmentData): boolean {
+  isFullyAllocated(row: PersonAssignmentData): boolean {
     return row.assign >= row.available;
   }
 
-  isFullyUncommitted(row: PersonAssignmentData): boolean {
+  isFullyUnallocated(row: PersonAssignmentData): boolean {
     return row.assign <= 0;
   }
 

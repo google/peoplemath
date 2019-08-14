@@ -23,10 +23,10 @@ export class Objective {
 }
 
 /**
- * Sum of resources committed to the given objective.
+ * Sum of resources allocated to the given objective.
  * Not a member function to avoid problems with (de)serialization.
  */
-export function objectiveResourcesCommitted(objective: Objective): number {
+export function objectiveResourcesAllocated(objective: Objective): number {
   return objective.assignments
     .map(assignment => assignment.commitment)
     .reduce((sum, current) => sum + current, 0);

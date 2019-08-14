@@ -27,7 +27,7 @@ import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-o
 export class ObjectiveComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
-  @Input() uncommittedTime: Map<string, number>;
+  @Input() unallocatedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
   @Input() isEditingEnabled: boolean;
   @Output() onDelete = new EventEmitter<Objective>();
@@ -40,7 +40,7 @@ export class ObjectiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  isFullyAssigned(): boolean {
+  isFullyAllocated(): boolean {
     let assigned = this.objective.assignments.map(a => a.commitment)
         .reduce((sum, current) => sum + current, 0);
     return assigned >= this.objective.resourceEstimate;
@@ -62,10 +62,10 @@ export class ObjectiveComponent implements OnInit {
       return;
     }
     let assignmentData = [];
-    this.uncommittedTime.forEach((uncommitted, personId) => {
+    this.unallocatedTime.forEach((unallocated, personId) => {
       let currentAssignment = this.currentAssignment(personId);
       assignmentData.push(new PersonAssignmentData(
-        personId, uncommitted + currentAssignment, currentAssignment));
+        personId, unallocated + currentAssignment, currentAssignment));
     });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective,

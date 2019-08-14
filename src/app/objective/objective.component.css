@@ -2,6 +2,6 @@
 .resource-estimate { font-style: italic }
 .assignments { margin-left: 10px; font-weight: bold }
 .unassigned { color: grey }
-.fully-assigned { color: green }
+.fully-allocated { color: green }
 .order-buttons { margin-right: 10px }
 .mat-icon-button { width: 30px }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Bucket, bucketResourcesCommitted } from '../bucket';
+import { Bucket, bucketResourcesAllocated } from '../bucket';
 import { Objective } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
@@ -29,7 +29,7 @@ export class BucketComponent implements OnInit {
   @Input() unit: string;
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
-  @Input() uncommittedTime: Map<string, number>;
+  @Input() unallocatedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
   @Input() isEditingEnabled: boolean;
   @Output() onMoveBucketUp = new EventEmitter<Bucket>();
@@ -125,7 +125,7 @@ export class BucketComponent implements OnInit {
     this.onMoveBucketDown.emit(this.bucket);
   }
 
-  resourcesCommitted(): number {
-    return bucketResourcesCommitted(this.bucket);
+  resourcesAllocated(): number {
+    return bucketResourcesAllocated(this.bucket);
   }
 }

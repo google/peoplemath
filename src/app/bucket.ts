@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Objective, objectiveResourcesCommitted } from "./objective";
+import { Objective, objectiveResourcesAllocated } from "./objective";
 
 export class Bucket {
   constructor(
@@ -23,12 +23,12 @@ export class Bucket {
 };
 
 /**
- * Sum of resources committed to the bucket.
+ * Sum of resources allocated to the bucket.
  * Not a member function to avoid problems with JSON (de)serialization.
  */
-export function bucketResourcesCommitted(bucket: Bucket): number {
+export function bucketResourcesAllocated(bucket: Bucket): number {
   return bucket.objectives
-    .map(objectiveResourcesCommitted)
+    .map(objectiveResourcesAllocated)
     .reduce((sum, current) => sum + current, 0);
 }
 

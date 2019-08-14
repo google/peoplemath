@@ -20,8 +20,8 @@
                 <button mat-button (click)="assignNone(element)" color="primary">None</button>
                 <button mat-button (click)="assignAll(element)" color="primary">All</button>
                 <button mat-button (click)="assignRemaining(element)" [disabled]="unassignedTime() <= 0" color="primary">Remaining</button>
-                <button mat-button (click)="assignMore(element)" [disabled]="isFullyCommitted(element)" color="primary">+1</button>
-                <button mat-button (click)="assignLess(element)" [disabled]="isFullyUncommitted(element)" color="primary">-1</button>
+                <button mat-button (click)="assignMore(element)" [disabled]="isFullyAllocated(element)" color="primary">+1</button>
+                <button mat-button (click)="assignLess(element)" [disabled]="isFullyUnallocated(element)" color="primary">-1</button>
             </td>
         </ng-container>
 

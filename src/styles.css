@@ -1,6 +1,6 @@
 .error { color: #dc3545; }
 .warning { color: darkorange }
-.overcommitted { color: darkorange }
+.overallocated { color: darkorange }
 
 .grid-container { margin: 20px }
 .mat-card-header-text { width: 100% }
