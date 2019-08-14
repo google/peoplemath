@@ -19,6 +19,10 @@
   <mat-form-field>
     <input matInput [(ngModel)]="data.period.notesURL">
   </mat-form-field>
+  <p>Max resources allocated to committed objectives (%)</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.maxCommittedPercentage" type="number">
+  </mat-form-field>
 </div>
 
 <div mat-dialog-actions>

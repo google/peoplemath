@@ -21,6 +21,7 @@ export class Period {
     public displayName: string,
     public unit: string = 'person weeks',
     public notesURL: string,
+    public maxCommittedPercentage: number,
     public buckets: Bucket[] = [],
     public people: Person[] = [],
     public lastUpdateUUID: string,

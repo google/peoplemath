@@ -9,7 +9,7 @@
             <a mat-raised-button *ngIf="period.notesURL" href="{{period.notesURL}}" target="_blank" color="primary">View Notes</a>
         </span>
     </h2>
-    <h4 class="mat-h4">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.1-1'}} of {{totalAllocated() | number:'1.1-1'}} {{period.unit}})</h4>
+    <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.1-1'}} of {{totalAllocated() | number:'1.1-1'}} {{period.unit}})</h4>
 </div>
 <div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <div class="mat-h4 editor-options">

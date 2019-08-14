@@ -173,7 +173,15 @@ export class PeriodComponent implements OnInit {
    * Fraction of allocated resources which is allocated to committed objectives
    */
   committedAllocationRatio(): number {
-    return this.committedAllocations() / this.totalAllocated();
+    let totalAllocated = this.totalAllocated();
+    if (!totalAllocated) {
+      return 0;
+    }
+    return this.committedAllocations() / totalAllocated;
+  }
+
+  committedAllocationsTooHigh(): boolean {
+    return (this.committedAllocationRatio() * 100) > this.period.maxCommittedPercentage;
   }
 
   loadData(): void {
@@ -192,10 +200,10 @@ export class PeriodComponent implements OnInit {
         this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
           + error.error, 'Dismiss');
         console.log(error);
-        return of(new Period('', '', '', '', [], [], ''));
+        return of(new Period('', '', '', '', 0, [], [], ''));
       })
-    ).subscribe(period => this.period = period);
-  }
+      ).subscribe(period => this.period = period);
+    }
 
   isLoaded(): boolean {
     return this.team != undefined && this.period != undefined;

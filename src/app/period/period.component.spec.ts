@@ -34,7 +34,7 @@ describe('PeriodComponent', () => {
   let fixture: ComponentFixture<PeriodComponent>;
   let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
   let TEST_TEAM = new Team('testTeam', 'My test team');
-  let TEST_PERIOD = new Period('testPeriod', 'My test period', 'person weeks', '', [], [], '');
+  let TEST_PERIOD = new Period('testPeriod', 'My test period', 'person weeks', '', 0, [], [], '');
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -69,6 +69,7 @@ describe('PeriodComponent', () => {
   });
 
   it('should create', () => {
+    expect(component.period.buckets).toBeTruthy();
     expect(component).toBeTruthy();
   });
 });

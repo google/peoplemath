@@ -28,7 +28,7 @@
     </mat-form-field>
 
     <p>
-    <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Unit</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Unit and Limits</mat-checkbox>
     <mat-checkbox [(ngModel)]="data.copyPeople" class="selector-series">Copy People</mat-checkbox>
     <mat-checkbox [(ngModel)]="data.copyBuckets" class="selector-series">Copy Buckets</mat-checkbox>
     <mat-checkbox [(ngModel)]="data.copyObjectives" [disabled]="!data.copyBuckets" class="selector-series">Copy Objectives</mat-checkbox>
@@ -40,6 +40,13 @@
     <p>Unit</p>
     <mat-form-field>
       <input matInput [(ngModel)]="data.period.unit">
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="isMaxCommittedPercentageRequired()">
+    <p>Max resources allocated to committed objectives (%)</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="data.period.maxCommittedPercentage" type="number">
     </mat-form-field>
   </div>
 </div>

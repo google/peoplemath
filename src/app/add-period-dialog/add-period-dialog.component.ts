@@ -60,12 +60,21 @@ export class AddPeriodDialogComponent implements OnInit {
     return this.data.createMethod == CreateMethod.Blank || !this.data.copyUnit;
   }
 
+  isMaxCommittedPercentageRequired(): boolean {
+    return this.isUnitRequired();
+  }
+
   isDataValid(): boolean {
     if (!this.data.period.id || !this.data.period.displayName) {
       return false;
     }
     if (this.isUnitRequired() && !this.data.period.unit) {
       return false;
+    }
+    if (this.isMaxCommittedPercentageRequired()) {
+      if (this.data.period.maxCommittedPercentage < 0 || this.data.period.maxCommittedPercentage > 100) {
+        return false;
+      }
     }
 
     if (this.data.createMethod == CreateMethod.Copy) {

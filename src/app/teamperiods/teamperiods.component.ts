@@ -29,6 +29,7 @@ import { Person } from '../person';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 
+const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
 @Component({
   selector: 'app-teamperiods',
@@ -86,7 +87,7 @@ export class TeamPeriodsComponent implements OnInit {
     }
     const existingPeriods = this.sortedPeriods();
     const dialogData: AddPeriodDialogData = {
-      period: new Period('', '', 'person weeks', '', [], [], ''),
+      period: new Period('', '', 'person weeks', '', DEFAULT_MAX_COMMITTED_PERCENTAGE, [], [], ''),
       createMethod: CreateMethod.Blank,
       existingPeriods: existingPeriods,
       copyFromPeriodID: existingPeriods[0].id,
@@ -113,6 +114,7 @@ export class TeamPeriodsComponent implements OnInit {
         // New periods should always have new notes so there's no option to copy the notes URL
         newPeriod = new Period(data.period.id, data.period.displayName, '',
           data.copyUnit ? copiedPeriod.unit : data.period.unit,
+          data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
           data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
           data.copyPeople ? copiedPeriod.people : [],
           '');
@@ -154,7 +156,7 @@ export class TeamPeriodsComponent implements OnInit {
 
   addBlankPeriod(): void {
     const dialogData: EditPeriodDialogData = {
-      period: new Period('', '', 'person weeks', '', [], [], ''),
+      period: new Period('', '', 'person weeks', '', DEFAULT_MAX_COMMITTED_PERCENTAGE, [], [], ''),
       title: 'New Period',
       okAction: 'Add',
       allowCancel: true,

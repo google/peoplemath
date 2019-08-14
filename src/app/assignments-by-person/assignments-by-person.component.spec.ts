@@ -33,7 +33,7 @@ describe('AssignmentsByPersonComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentsByPersonComponent);
     component = fixture.componentInstance;
-    component.period = new Period('test', 'Test Period', 'person weeks', '', [], [], '');
+    component.period = new Period('test', 'Test Period', 'person weeks', '', 0, [], [], '');
     fixture.detectChanges();
   });
 

@@ -40,12 +40,13 @@ type Team struct {
 
 // Period model struct
 type Period struct {
-	ID          string   `json:"id"`
-	DisplayName string   `json:"displayName"`
-	Unit        string   `json:"unit"`
-	NotesURL    string   `json:"notesURL"`
-	Buckets     []Bucket `json:"buckets"`
-	People      []Person `json:"people"`
+	ID                     string   `json:"id"`
+	DisplayName            string   `json:"displayName"`
+	Unit                   string   `json:"unit"`
+	NotesURL               string   `json:"notesURL"`
+	MaxCommittedPercentage float64  `json:"maxCommittedPercentage"`
+	Buckets                []Bucket `json:"buckets"`
+	People                 []Person `json:"people"`
 	// UUID for simple optimistic concurrency control
 	LastUpdateUUID string `json:"lastUpdateUUID"`
 }

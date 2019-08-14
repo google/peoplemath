@@ -26,7 +26,7 @@ describe('EditPeriodDialogComponent', () => {
   let fixture: ComponentFixture<EditPeriodDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: EditPeriodDialogData = {
-    period: new Period('mytest', 'My Test Period', 'person weeks', '', [], [], ''),
+    period: new Period('mytest', 'My Test Period', 'person weeks', '', 0, [], [], ''),
     okAction: 'OK', allowCancel: true, title: 'My Test Title', allowEditID: false,
   };
 
