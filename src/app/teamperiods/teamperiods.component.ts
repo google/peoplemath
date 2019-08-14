@@ -86,7 +86,7 @@ export class TeamPeriodsComponent implements OnInit {
     }
     const existingPeriods = this.sortedPeriods();
     const dialogData: AddPeriodDialogData = {
-      period: new Period('', '', 'person weeks', [], [], ''),
+      period: new Period('', '', 'person weeks', '', [], [], ''),
       createMethod: CreateMethod.Blank,
       existingPeriods: existingPeriods,
       copyFromPeriodID: existingPeriods[0].id,
@@ -110,7 +110,8 @@ export class TeamPeriodsComponent implements OnInit {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
         }
-        newPeriod = new Period(data.period.id, data.period.displayName,
+        // New periods should always have new notes so there's no option to copy the notes URL
+        newPeriod = new Period(data.period.id, data.period.displayName, '',
           data.copyUnit ? copiedPeriod.unit : data.period.unit,
           data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
           data.copyPeople ? copiedPeriod.people : [],
@@ -153,7 +154,7 @@ export class TeamPeriodsComponent implements OnInit {
 
   addBlankPeriod(): void {
     const dialogData: EditPeriodDialogData = {
-      period: new Period('', '', 'person weeks', [], [], ''),
+      period: new Period('', '', 'person weeks', '', [], [], ''),
       title: 'New Period',
       okAction: 'Add',
       allowCancel: true,

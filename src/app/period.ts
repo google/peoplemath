@@ -20,6 +20,7 @@ export class Period {
     public id: string,
     public displayName: string,
     public unit: string = 'person weeks',
+    public notesURL: string,
     public buckets: Bucket[] = [],
     public people: Person[] = [],
     public lastUpdateUUID: string,

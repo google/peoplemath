@@ -4,18 +4,21 @@
 <div fxLayout="row" fxLayoutGap="20px" width="100%">
 <div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
     <h2 class="mat-h2">
-            <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
+        <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
+        <span class="title-buttons">
+            <a mat-raised-button *ngIf="period.notesURL" href="{{period.notesURL}}" target="_blank" color="primary">View Notes</a>
+        </span>
     </h2>
 </div>
 <div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <div class="mat-h4 editor-options">
-    <div *ngIf="isEditingEnabled">
+    <span *ngIf="isEditingEnabled">
         <mat-checkbox [(ngModel)]="showOrderButtons">Reorder</mat-checkbox>
         <button mat-raised-button (click)="disableEditing()" color="primary">Stop Editing</button>
-    </div>
-    <div *ngIf="!isEditingEnabled">
+    </span>
+    <span *ngIf="!isEditingEnabled">
         <button mat-raised-button (click)="enableEditing()" color="primary">Edit</button>
-    </div>
+    </span>
 </div>
 </div>
 </div>

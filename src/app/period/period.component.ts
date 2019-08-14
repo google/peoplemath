@@ -167,7 +167,7 @@ export class PeriodComponent implements OnInit {
         this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
           + error.error, 'Dismiss');
         console.log(error);
-        return of(new Period('', '', '', [], [], ''));
+        return of(new Period('', '', '', '', [], [], ''));
       })
     ).subscribe(period => this.period = period);
   }

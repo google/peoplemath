@@ -26,7 +26,7 @@ describe('AddPeriodDialogComponent', () => {
   let fixture: ComponentFixture<AddPeriodDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: AddPeriodDialogData = {
-    period: new Period('test', 'Test Period', 'person weeks', [], [], ''),
+    period: new Period('test', 'Test Period', 'person weeks', '', [], [], ''),
     createMethod: CreateMethod.Blank,
     existingPeriods: [],
     copyFromPeriodID: '',

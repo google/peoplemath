@@ -47,7 +47,9 @@ func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
 	handler.ServeHTTP(w, req)
 	resp := w.Result()
 	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected response %v, got %v", http.StatusOK, resp.StatusCode)
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		body := string(bodyBytes)
+		t.Fatalf("Expected response %v, got %v: %v", http.StatusOK, resp.StatusCode, body)
 	}
 }
 
@@ -57,7 +59,7 @@ func TestPostPeriod(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
 	addPeriod(handler, teamID, periodJSON, t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/2019q1", nil)
