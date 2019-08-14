@@ -111,9 +111,8 @@ export class TeamPeriodsComponent implements OnInit {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
         }
-        // New periods should always have new notes so there's no option to copy the notes URL
-        newPeriod = new Period(data.period.id, data.period.displayName, '',
-          data.copyUnit ? copiedPeriod.unit : data.period.unit,
+        newPeriod = new Period(data.period.id, data.period.displayName,
+          data.copyUnit ? copiedPeriod.unit : data.period.unit, data.period.notesURL,
           data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
           data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
           data.copyPeople ? copiedPeriod.people : [],

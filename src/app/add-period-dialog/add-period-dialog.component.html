@@ -43,6 +43,11 @@
     </mat-form-field>
   </div>
 
+  <p>Notes URL</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.period.notesURL">
+  </mat-form-field>
+
   <div *ngIf="isMaxCommittedPercentageRequired()">
     <p>Max resources allocated to committed objectives (%)</p>
     <mat-form-field>

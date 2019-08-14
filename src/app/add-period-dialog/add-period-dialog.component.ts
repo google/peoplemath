@@ -40,6 +40,10 @@ export interface AddPeriodDialogData {
 })
 export class AddPeriodDialogComponent implements OnInit {
 
+  // I'd like to switch this to use reactive forms so you can use validations,
+  // but then you lose the ability to disable controls via data-driven methods,
+  // which seems like a net usability loss. :-(
+  // https://github.com/angular/angular/issues/11271
   constructor(
     public dialogRef: MatDialogRef<AddPeriodDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
