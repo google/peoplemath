@@ -15,7 +15,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditPeriodDialogComponent, EditPeriodDialogData } from './edit-period-dialog.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Period } from '../period';
@@ -27,7 +27,7 @@ describe('EditPeriodDialogComponent', () => {
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: EditPeriodDialogData = {
     period: new Period('mytest', 'My Test Period', 'person weeks', '', 0, [], [], ''),
-    okAction: 'OK', allowCancel: true, title: 'My Test Title', allowEditID: false,
+    okAction: 'OK', title: 'My Test Title', allowEditID: false,
   };
 
   beforeEach(async(() => {
@@ -36,6 +36,7 @@ describe('EditPeriodDialogComponent', () => {
       imports: [
         MaterialModule,
         FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
       ],
       providers: [

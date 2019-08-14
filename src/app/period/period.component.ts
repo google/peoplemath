@@ -251,10 +251,14 @@ export class PeriodComponent implements OnInit {
     }
     const dialogData: EditPeriodDialogData = {
       period: this.period, title: 'Edit Period "' + this.period.id + '"',
-      okAction: 'OK', allowCancel: false, allowEditID: false,
+      okAction: 'OK', allowEditID: false,
     };
     const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(_ => this.save());
+    dialogRef.afterClosed().subscribe(ok => {
+      if (ok) {
+        this.save();
+      }
+    });
   }
 
   addBucket(): void {

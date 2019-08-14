@@ -159,15 +159,13 @@ export class TeamPeriodsComponent implements OnInit {
       period: new Period('', '', 'person weeks', '', DEFAULT_MAX_COMMITTED_PERCENTAGE, [], [], ''),
       title: 'New Period',
       okAction: 'Add',
-      allowCancel: true,
       allowEditID: true,
     };
     const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(period => {
-      if (!period) {
-        return;
+    dialogRef.afterClosed().subscribe(ok => {
+      if (ok) {
+        this.storeNewPeriod(dialogData.period);
       }
-      this.storeNewPeriod(period);
     });
   }
 

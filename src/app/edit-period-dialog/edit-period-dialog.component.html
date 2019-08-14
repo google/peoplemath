@@ -4,28 +4,30 @@
   <div *ngIf="data.allowEditID">
   <p>Period ID</p>
     <mat-form-field>
-      <input matInput [(ngModel)]="data.period.id">
+      <input matInput [formControl]="periodIdControl">
     </mat-form-field>
   </div>
   <p>Display name</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.period.displayName">
+    <input matInput [formControl]="displayNameControl">
   </mat-form-field>
   <p>Unit</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.period.unit">
+    <input matInput [formControl]="unitControl">
   </mat-form-field>
   <p>Notes URL</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.period.notesURL">
+    <input matInput [formControl]="notesUrlControl">
   </mat-form-field>
   <p>Max resources allocated to committed objectives (%)</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.period.maxCommittedPercentage" type="number">
+    <input matInput [formControl]="maxCommitPctControl" type="number">
+    <mat-error *ngIf="maxCommitPctControl.hasError('min')">Cannot be negative</mat-error>
+    <mat-error *ngIf="maxCommitPctControl.hasError('max')">Cannot be more than 100%</mat-error>
   </mat-form-field>
 </div>
 
 <div mat-dialog-actions>
-  <button mat-raised-button [mat-dialog-close]="data.period" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
-  <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
+  <button mat-raised-button (click)="onOK()" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
+  <button mat-button (click)="onCancel()" color="warn">Cancel</button>
 </div>
