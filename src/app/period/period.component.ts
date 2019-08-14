@@ -202,8 +202,8 @@ export class PeriodComponent implements OnInit {
         console.log(error);
         return of(new Period('', '', '', '', 0, [], [], ''));
       })
-      ).subscribe(period => this.period = period);
-    }
+    ).subscribe(period => this.period = period);
+  }
 
   isLoaded(): boolean {
     return this.team != undefined && this.period != undefined;
