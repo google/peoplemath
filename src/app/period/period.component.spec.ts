@@ -69,7 +69,6 @@ describe('PeriodComponent', () => {
   });
 
   it('should create', () => {
-    expect(component.period.buckets).toBeTruthy();
     expect(component).toBeTruthy();
   });
 });
