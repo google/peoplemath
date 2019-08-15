@@ -126,11 +126,13 @@ func makeFakePeriod(id string) Period {
 				Objective{
 					Name:             "First objective",
 					ResourceEstimate: 10,
+					CommitmentType:   "Committed",
 					Assignments:      []Assignment{},
 				},
 				Objective{
 					Name:             "Second objective",
 					ResourceEstimate: 15,
+					CommitmentType:   "Aspirational",
 					Assignments:      []Assignment{},
 				},
 			},
@@ -138,7 +140,14 @@ func makeFakePeriod(id string) Period {
 		Bucket{
 			DisplayName:          "Second bucket",
 			AllocationPercentage: 40,
-			Objectives:           []Objective{},
+			Objectives: []Objective{
+				Objective{
+					Name:             "Third objective",
+					ResourceEstimate: 2,
+					CommitmentType:   "Aspirational",
+					Assignments:      []Assignment{},
+				},
+			},
 		},
 		Bucket{
 			DisplayName:          "Third bucket",
@@ -164,10 +173,11 @@ func makeFakePeriod(id string) Period {
 		},
 	}
 	return Period{
-		ID:          id,
-		DisplayName: strings.ToUpper(id),
-		Unit:        "person weeks",
-		Buckets:     buckets,
-		People:      people,
+		ID:                     id,
+		DisplayName:            strings.ToUpper(id),
+		Unit:                   "person weeks",
+		MaxCommittedPercentage: 50,
+		Buckets:                buckets,
+		People:                 people,
 	}
 }
