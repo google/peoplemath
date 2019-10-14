@@ -18,6 +18,8 @@ import { Objective, CommitmentType } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ObjectiveComponent } from '../objective/objective.component';
 
 @Component({
   selector: 'app-bucket',
@@ -93,23 +95,8 @@ export class BucketComponent implements OnInit {
     this.onChanged.emit(this.bucket);
   }
 
-  moveObjectiveUpOne(objective: Objective): void {
-    const index = this.objectiveIndex(objective);
-    if (index == 0) {
-      return;
-    }
-    this.bucket.objectives[index] = this.bucket.objectives[index - 1];
-    this.bucket.objectives[index - 1] = objective;
-    this.onChanged.emit(this.bucket);
-  }
-
-  moveObjectiveDownOne(objective: Objective): void {
-    const index = this.objectiveIndex(objective);
-    if (index >= this.bucket.objectives.length - 1) {
-      return;
-    }
-    this.bucket.objectives[index] = this.bucket.objectives[index + 1];
-    this.bucket.objectives[index + 1] = objective;
+  reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>) {
+    moveItemInArray(this.bucket.objectives, event.previousIndex, event.currentIndex);
     this.onChanged.emit(this.bucket);
   }
 

@@ -28,11 +28,8 @@ export class ObjectiveComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
   @Input() unallocatedTime: Map<string, number>;
-  @Input() showOrderButtons: boolean;
   @Input() isEditingEnabled: boolean;
   @Output() onDelete = new EventEmitter<Objective>();
-  @Output() onMoveObjectiveUp = new EventEmitter<Objective>();
-  @Output() onMoveObjectiveDown = new EventEmitter<Objective>();
   @Output() onChanged = new EventEmitter<Objective>();
   
   constructor(public dialog: MatDialog) { }
@@ -99,14 +96,6 @@ export class ObjectiveComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.objective));
-  }
-
-  moveObjectiveUp(): void {
-    this.onMoveObjectiveUp.emit(this.objective);
-  }
-
-  moveObjectiveDown(): void {
-    this.onMoveObjectiveDown.emit(this.objective);
   }
 
   commitmentTypeBadge(): string {
