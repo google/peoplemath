@@ -97,7 +97,9 @@ export class BucketComponent implements OnInit {
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>) {
     moveItemInArray(this.bucket.objectives, event.previousIndex, event.currentIndex);
-    this.onChanged.emit(this.bucket);
+    if (event.previousIndex != event.currentIndex) {
+      this.onChanged.emit(this.bucket);
+    }
   }
 
   onObjectiveChanged(objective: Objective): void {
