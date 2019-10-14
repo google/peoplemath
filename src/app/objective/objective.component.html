@@ -1,16 +1,10 @@
-<mat-list-item>
-    <span *ngIf="showOrderButtons" class="order-buttons">
-        <button (click)="moveObjectiveUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
-        <button (click)="moveObjectiveDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
-    </span>
-    <span (click)="edit()" [class.unassigned]="!objective.assignments.length">
-        <span class="objective-name"
-              matBadge="{{commitmentTypeBadge()}}"
-              matBadgeColor="{{commitmentTypeBadgeColour()}}"
-              matBadgePosition="above before"
-              matBadgeOverlap="false">{{objective.name}}</span>
-        <span class="resource-estimate"> ({{objective.resourceEstimate}} {{unit}})</span>
-    </span>
-    <span (click)="assign()" class="assignments" [class.fully-allocated]="isFullyAllocated()" [class.warning]="!isFullyAllocated()">{{assignmentSummary()}}</span>
-    <button *ngIf="!objective.assignments.length" [disabled]="!isEditingEnabled || objective.resourceEstimate <= 0" (click)="assign()" mat-button color="primary">Assign</button>
-</mat-list-item>
+<span (click)="edit()" [class.unassigned]="!objective.assignments.length">
+    <span class="objective-name"
+            matBadge="{{commitmentTypeBadge()}}"
+            matBadgeColor="{{commitmentTypeBadgeColour()}}"
+            matBadgePosition="above before"
+            matBadgeOverlap="false">{{objective.name}}</span>
+    <span class="resource-estimate"> ({{objective.resourceEstimate}} {{unit}})</span>
+</span>
+<span (click)="assign()" class="assignments" [class.fully-allocated]="isFullyAllocated()" [class.warning]="!isFullyAllocated()">{{assignmentSummary()}}</span>
+<button *ngIf="!objective.assignments.length" [disabled]="!isEditingEnabled || objective.resourceEstimate <= 0" (click)="assign()" mat-button color="primary">Assign</button>

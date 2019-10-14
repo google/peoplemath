@@ -14,6 +14,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +37,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   declarations: [],
   imports: [
     CommonModule,
+    DragDropModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
@@ -52,9 +54,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
   ],
   exports: [
+    DragDropModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
@@ -71,7 +74,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
   ]
 })
 export class MaterialModule { }

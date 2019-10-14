@@ -17,18 +17,21 @@
 </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
-<mat-list dense>
-    <ng-container *ngFor="let objective of bucket.objectives">
+<mat-list dense *ngIf="!showOrderButtons">
+    <mat-list-item *ngFor="let objective of bucket.objectives">
     <app-objective
         [objective]="objective" [unit]="unit"
         [unallocatedTime]="unallocatedTime"
-        [showOrderButtons]="showOrderButtons"
         [isEditingEnabled]="isEditingEnabled"
         (onDelete)="deleteObjective($event)"
-        (onMoveObjectiveUp)="moveObjectiveUpOne($event)"
-        (onMoveObjectiveDown)="moveObjectiveDownOne($event)"
         (onChanged)="onObjectiveChanged($event)"></app-objective>
-    </ng-container>
+    </mat-list-item>
+</mat-list>
+<mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
+    <mat-list-item *ngFor="let objective of bucket.objectives" cdkDrag>
+        <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
+        {{objective.name}}
+    </mat-list-item>
 </mat-list>
 </mat-card-content>
 </mat-card>
