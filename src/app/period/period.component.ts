@@ -26,7 +26,8 @@ import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-
 import { catchError, debounceTime } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { Person } from '../person';
-import { CommitmentType } from '../objective';
+import { CommitmentType, Objective } from '../objective';
+import { Assignment } from '../assignment';
 
 @Component({
   selector: 'app-period',
@@ -104,36 +105,36 @@ export class PeriodComponent implements OnInit {
             (sum, current) => sum + current, 0);
   }
 
-  peopleAllocations(): Map<string, number> {
+  sumAssignmentValByPerson(objPred: (Objective) => boolean, valFunc: (Assignment) => number): Map<string, number> {
     let result: Map<string, number> = new Map();
     this.period.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
-        objective.assignments.forEach(assignment => {
-          let personId = assignment.personId;
-          if (!result.has(personId)) {
-            result.set(personId, 0);
-          }
-          result.set(personId, result.get(personId) + assignment.commitment);
-        })
+        if (objPred(objective)) {
+          objective.assignments.forEach(assignment => {
+            let personId = assignment.personId;
+            if (!result.has(personId)) {
+              result.set(personId, 0);
+            }
+            result.set(personId, result.get(personId) + valFunc(assignment));
+          })
+        }
       })
     });
     return result;
   }
 
+  peopleAllocations(): Map<string, number> {
+    return this.sumAssignmentValByPerson(o => true, (a: Assignment) => a.commitment);
+  }s
+
+  peopleCommittedAllocations(): Map<string, number> {
+    return this.sumAssignmentValByPerson(
+      (o: Objective) => o.commitmentType == CommitmentType.Committed,
+      (a: Assignment) => a.commitment);
+  }
+
   peopleAssignmentCounts(): Map<string, number> {
-    let result = new Map();
-    this.period.buckets.forEach(bucket => {
-      bucket.objectives.forEach(objective => {
-        objective.assignments.forEach(assignment => {
-          let personId = assignment.personId;
-          if (!result.has(personId)) {
-            result.set(personId, 0);
-          }
-          result.set(personId, result.get(personId) + 1);
-        })
-      })
-    });
-    return result;
+    return this.sumAssignmentValByPerson(o => true, a => 1);
   }
 
   /**

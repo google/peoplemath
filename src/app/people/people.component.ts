@@ -26,6 +26,7 @@ class PersonData {
       public allocated: number,
       public unallocated: number,
       public assignmentCount: number,
+      public commitFraction: number,
       public isOverallocated: boolean,
       public person: Person,
   ) {}
@@ -39,6 +40,7 @@ class PersonData {
 export class PeopleComponent implements OnInit {
   @Input() people: Person[];
   @Input() peopleAllocations: Map<string, number>;
+  @Input() peopleCommittedAllocations: Map<string, number>;
   @Input() peopleAssignmentCounts: Map<string, number>;
   @Input() totalAvailable: number;
   @Input() totalAllocated: number;
@@ -48,7 +50,7 @@ export class PeopleComponent implements OnInit {
   @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
-  displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount"];
+  displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
@@ -59,7 +61,7 @@ export class PeopleComponent implements OnInit {
   tableData(): MatTableDataSource<PersonData> {
     let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
-      this.isPersonOverallocated(p), p));
+      this.personCommitFraction(p), this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
     result.sort = this.sort;
     return result;
@@ -84,6 +86,18 @@ export class PeopleComponent implements OnInit {
    */
   personAssignmentCount(person: Person): number {
     return this.peopleAssignmentCounts.has(person.id) ? this.peopleAssignmentCounts.get(person.id) : 0;
+  }
+
+  /**
+   * Fraction of a person's assignments which are committed objectives
+   */
+  personCommitFraction(person: Person): number {
+    let totalAllocated = this.personAllocated(person);
+    if (!totalAllocated) {
+      return 0;
+    }
+    let committed = this.peopleCommittedAllocations.has(person.id) ? this.peopleCommittedAllocations.get(person.id) : 0;
+    return committed / totalAllocated;
   }
 
   isPersonOverallocated(person: Person): boolean {
