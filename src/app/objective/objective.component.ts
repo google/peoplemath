@@ -29,6 +29,7 @@ export class ObjectiveComponent implements OnInit {
   @Input() unit: string;
   @Input() unallocatedTime: Map<string, number>;
   @Input() isEditingEnabled: boolean;
+  @Input() isReorderingEnabled: boolean;
   @Output() onDelete = new EventEmitter<Objective>();
   @Output() onChanged = new EventEmitter<Objective>();
   
@@ -99,6 +100,10 @@ export class ObjectiveComponent implements OnInit {
   }
 
   commitmentTypeBadge(): string {
+    // The commitment type badge overlaps the reordering button, so hide it
+    if (this.isReorderingEnabled) {
+      return "";
+    }
     switch (this.objective.commitmentType) {
       case CommitmentType.Committed: return "C";
       default: return "";

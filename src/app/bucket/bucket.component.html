@@ -23,6 +23,7 @@
         [objective]="objective" [unit]="unit"
         [unallocatedTime]="unallocatedTime"
         [isEditingEnabled]="isEditingEnabled"
+        [isReorderingEnabled]="showOrderButtons"
         (onDelete)="deleteObjective($event)"
         (onChanged)="onObjectiveChanged($event)"></app-objective>
     </mat-list-item>
@@ -30,7 +31,13 @@
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
     <mat-list-item *ngFor="let objective of bucket.objectives" cdkDrag>
         <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
-        {{objective.name}}
+        <app-objective
+            [objective]="objective" [unit]="unit"
+            [unallocatedTime]="unallocatedTime"
+            [isEditingEnabled]="isEditingEnabled"
+            [isReorderingEnabled]="showOrderButtons"
+            (onDelete)="deleteObjective($event)"
+            (onChanged)="onObjectiveChanged($event)"></app-objective>
     </mat-list-item>
 </mat-list>
 </mat-card-content>
