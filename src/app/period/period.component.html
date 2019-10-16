@@ -33,6 +33,7 @@
     [unallocatedTime]="unallocatedTime()"
     [showOrderButtons]="showOrderButtons && isEditingEnabled"
     [isEditingEnabled]="isEditingEnabled"
+    [otherBuckets]="otherBuckets(bucket)"
     (onMoveBucketUp)="moveBucketUpOne($event)"
     (onMoveBucketDown)="moveBucketDownOne($event)"
     (onChanged)="save()"></app-bucket>

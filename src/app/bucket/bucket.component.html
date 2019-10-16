@@ -24,6 +24,8 @@
         [unallocatedTime]="unallocatedTime"
         [isEditingEnabled]="isEditingEnabled"
         [isReorderingEnabled]="showOrderButtons"
+        [otherBuckets]="otherBuckets"
+        (onMoveBucket)="moveObjective($event[0], $event[1])"
         (onDelete)="deleteObjective($event)"
         (onChanged)="onObjectiveChanged($event)"></app-objective>
     </mat-list-item>
@@ -36,6 +38,8 @@
             [unallocatedTime]="unallocatedTime"
             [isEditingEnabled]="isEditingEnabled"
             [isReorderingEnabled]="showOrderButtons"
+            [otherBuckets]="otherBuckets"
+            (onMoveBucket)="moveObjective($event[0], $event[1])"
             (onDelete)="deleteObjective($event)"
             (onChanged)="onObjectiveChanged($event)"></app-objective>
     </mat-list-item>

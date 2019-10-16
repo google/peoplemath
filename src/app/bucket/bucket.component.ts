@@ -34,6 +34,7 @@ export class BucketComponent implements OnInit {
   @Input() unallocatedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
   @Input() isEditingEnabled: boolean;
+  @Input() otherBuckets: Bucket[];
   @Output() onMoveBucketUp = new EventEmitter<Bucket>();
   @Output() onMoveBucketDown = new EventEmitter<Bucket>();
   @Output() onChanged = new EventEmitter<any>();
@@ -73,6 +74,8 @@ export class BucketComponent implements OnInit {
       'okAction': 'Add',
       'allowCancel': true,
       'unit': this.unit,
+      'otherBuckets': [],
+      'onMoveBucket': undefined,
       'onDelete': undefined,
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
@@ -87,6 +90,12 @@ export class BucketComponent implements OnInit {
 
   private objectiveIndex(objective: Objective): number {
     return this.bucket.objectives.findIndex(o => o === objective);
+  }
+
+  moveObjective(objective: Objective, newBucket: Bucket) {
+    this.deleteObjective(objective);
+    newBucket.objectives.push(objective);
+    this.onChanged.emit(newBucket);
   }
 
   deleteObjective(objective: Objective): void {
