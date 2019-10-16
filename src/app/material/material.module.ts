@@ -24,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
@@ -47,6 +48,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
@@ -67,6 +69,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,

@@ -15,6 +15,7 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Objective } from '../objective';
+import { Bucket } from '../bucket';
 
 export interface EditObjectiveDialogData {
   objective: Objective;
@@ -22,6 +23,8 @@ export interface EditObjectiveDialogData {
   okAction: string;
   allowCancel: boolean;
   unit: string;
+  otherBuckets: Bucket[];
+  onMoveBucket: EventEmitter<[Objective, Bucket]>;
   onDelete: EventEmitter<Objective>;
 }
 
@@ -46,6 +49,11 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  onMove(newBucket: Bucket): void {
+    this.data.onMoveBucket.emit([this.data.objective, newBucket]);
     this.dialogRef.close();
   }
 

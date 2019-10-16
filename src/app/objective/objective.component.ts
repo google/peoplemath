@@ -18,6 +18,7 @@ import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { Bucket } from '../bucket';
 
 @Component({
   selector: 'app-objective',
@@ -30,6 +31,8 @@ export class ObjectiveComponent implements OnInit {
   @Input() unallocatedTime: Map<string, number>;
   @Input() isEditingEnabled: boolean;
   @Input() isReorderingEnabled: boolean;
+  @Input() otherBuckets: Bucket[];
+  @Output() onMoveBucket = new EventEmitter<[Objective, Bucket]>();
   @Output() onDelete = new EventEmitter<Objective>();
   @Output() onChanged = new EventEmitter<Objective>();
   
@@ -93,6 +96,8 @@ export class ObjectiveComponent implements OnInit {
       'okAction': 'OK',
       'allowCancel': false,
       'unit': this.unit,
+      'otherBuckets': this.otherBuckets,
+      'onMoveBucket': this.onMoveBucket,
       'onDelete': this.onDelete,
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});

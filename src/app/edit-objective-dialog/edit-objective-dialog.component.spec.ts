@@ -31,6 +31,8 @@ describe('EditObjectiveDialogComponent', () => {
     'okAction': 'OK',
     'allowCancel': true,
     'unit': 'person weeks',
+    'otherBuckets': [],
+    'onMoveBucket': undefined,
     'onDelete': undefined,
   };
 

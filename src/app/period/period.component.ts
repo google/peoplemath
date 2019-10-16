@@ -185,6 +185,10 @@ export class PeriodComponent implements OnInit {
     return (this.committedAllocationRatio() * 100) > this.period.maxCommittedPercentage;
   }
 
+  otherBuckets(bucket: Bucket): Bucket[] {
+    return this.period.buckets.filter(b => b !== bucket);
+  }
+
   loadData(): void {
     const teamId = this.route.snapshot.paramMap.get('team');
     const periodId = this.route.snapshot.paramMap.get('period');
