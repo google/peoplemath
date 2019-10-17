@@ -11,9 +11,9 @@
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
-  <div [class.warning]="resourcesAllocated() > bucketAllocationLimit()" class="badge badge-pill text-right">
-            {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
-  </div>
+  <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
+    {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
+  </span>
 </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
