@@ -14,6 +14,9 @@
   <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
     {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
   </span>
+  <span [class.warning]="commitRatio() * 100 > maxCommittedPercentage">
+    ({{commitRatio() | percent}} committed)
+  </span>
 </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
