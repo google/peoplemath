@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Bucket, bucketResourcesAllocated } from '../bucket';
+import { Bucket, bucketResourcesAllocated, bucketCommittedResourcesAllocated } from '../bucket';
 import { Objective, CommitmentType } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
@@ -31,6 +31,7 @@ export class BucketComponent implements OnInit {
   @Input() unit: string;
   @Input() totalAllocationPercentage: number;
   @Input() globalResourcesAvailable: number;
+  @Input() maxCommittedPercentage: number;
   @Input() unallocatedTime: Map<string, number>;
   @Input() showOrderButtons: boolean;
   @Input() isEditingEnabled: boolean;
@@ -125,5 +126,17 @@ export class BucketComponent implements OnInit {
 
   resourcesAllocated(): number {
     return bucketResourcesAllocated(this.bucket);
+  }
+
+  committedResourcesAllocated(): number {
+    return bucketCommittedResourcesAllocated(this.bucket);
+  }
+
+  /**
+   * Fraction of resources allocated within this bucket to committed objectives
+   */
+  commitRatio(): number {
+    let total = this.resourcesAllocated();
+    return total ? this.committedResourcesAllocated() / total : 0;
   }
 }

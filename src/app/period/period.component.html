@@ -30,6 +30,7 @@
 <app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
+    [maxCommittedPercentage]="period.maxCommittedPercentage"
     [unallocatedTime]="unallocatedTime()"
     [showOrderButtons]="showOrderButtons && isEditingEnabled"
     [isEditingEnabled]="isEditingEnabled"
