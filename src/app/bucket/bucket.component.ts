@@ -45,10 +45,10 @@ export class BucketComponent implements OnInit {
   }
 
   /**
-   * Resources allocated to the given bucket in this period, based on total available
-   * and bucket allocation percentage.
+   * Limit of resources expected to be allocated to the given bucket in this period,
+   * based on total available and the percentage the user has set for this bucket.
    */
-  bucketAllocation(): number {
+  bucketAllocationLimit(): number {
     return this.globalResourcesAvailable * this.bucket.allocationPercentage / 100;
   }
 
