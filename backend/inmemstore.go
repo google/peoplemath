@@ -176,6 +176,7 @@ func makeFakePeriod(id string) Period {
 		ID:                     id,
 		DisplayName:            strings.ToUpper(id),
 		Unit:                   "person weeks",
+		NotesURL:				"https://github.com/google/peoplemath",
 		MaxCommittedPercentage: 50,
 		Buckets:                buckets,
 		People:                 people,
