@@ -7,3 +7,5 @@ require (
 	github.com/google/uuid v1.1.1
 	google.golang.org/api v0.11.0
 )
+
+go 1.13
