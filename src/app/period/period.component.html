@@ -2,7 +2,7 @@
 <div *ngIf="isLoaded()" class="grid-container">
 
 <div fxLayout="row" fxLayoutGap="20px" width="100%">
-<div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%">
+<div fxLayout="column" fxFlex="calc(70%-20px)" fxFlex.lt-md="100%">
     <h2 class="mat-h2 period-title">
         <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
         <span class="title-buttons">
@@ -12,7 +12,7 @@
     </h2>
     <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.1-1'}} of {{totalAllocated() | number:'1.1-1'}} {{period.unit}})</h4>
 </div>
-<div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
+<div fxLayout="column" fxFlex="calc(30%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <div class="mat-h4 editor-options">
     <span *ngIf="isEditingEnabled">
         <mat-checkbox [(ngModel)]="showOrderButtons">Reorder</mat-checkbox>
