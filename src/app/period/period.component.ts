@@ -16,7 +16,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Bucket, bucketResourcesAllocated } from '../bucket';
-import { Period } from '../period';
+import { Period, periodResourcesAllocated } from '../period';
 import { Team } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -72,13 +72,8 @@ export class PeriodComponent implements OnInit {
         .reduce((sum, current) => sum + current, 0);
   }
 
-  /**
-   * Total resources for this period which have been allocated to objectives
-   */
   totalAllocated(): number {
-    return this.period.buckets
-        .map(bucketResourcesAllocated)
-        .reduce((sum, prev) => sum + prev, 0);
+    return periodResourcesAllocated(this.period);
   }
 
   /**

@@ -6,6 +6,7 @@
     <h2 class="mat-h2 period-title">
         <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
         <span class="title-buttons">
+            <a mat-raised-button routerLink="/team/{{team.id}}/periodsummary/{{period.id}}" target="_blank" rel="noopener noreferrer" color="primary">View Summary</a>
             <a mat-raised-button *ngIf="period.notesURL" href="{{period.notesURL}}" target="_blank" rel="noopener noreferrer" color="primary">View Notes</a>
         </span>
     </h2>

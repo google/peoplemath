@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Bucket } from "./bucket";
+import { Bucket, bucketResourcesAllocated } from "./bucket";
 import { Person } from "./person";
 
 export class Period {
@@ -26,4 +26,13 @@ export class Period {
     public people: Person[] = [],
     public lastUpdateUUID: string,
   ) {}
+}
+
+/**
+ * Total resources for this period which have been allocated to objectives
+ */
+export function periodResourcesAllocated(period: Period): number {
+  return period.buckets
+      .map(bucketResourcesAllocated)
+      .reduce((sum, prev) => sum + prev, 0);
 }
