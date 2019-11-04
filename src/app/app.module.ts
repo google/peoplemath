@@ -38,6 +38,8 @@ import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dial
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
+import { PeriodSummaryComponent } from './period-summary/period-summary.component';
+import { ObjectiveSummaryComponent } from './objective-summary/objective-summary.component';
 
 
 @NgModule({
@@ -57,6 +59,8 @@ import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.
     EditPeriodDialogComponent,
     EditTeamDialogComponent,
     AddPeriodDialogComponent,
+    PeriodSummaryComponent,
+    ObjectiveSummaryComponent,
   ],
   imports: [
     BrowserModule,

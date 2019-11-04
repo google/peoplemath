@@ -1,0 +1,35 @@
+<mat-spinner *ngIf="!isLoaded()"></mat-spinner>
+<div *ngIf="isLoaded()" class="grid-container">
+    <h1><a routerLink="/team/{{team.id}}/period/{{period.id}}">{{team.displayName}} {{period.displayName}}</a></h1>
+
+    <div *ngFor="let bucket of period.buckets">
+        <h2>{{bucket.displayName}} ({{bucketAllocationFraction(bucket) | percent}})</h2>
+
+        <div *ngIf="hasCommittedObjectives(bucket)">
+        <h3>Committed</h3>
+        <ul>
+            <li *ngFor="let objective of committedObjectives(bucket)">
+                <app-objective-summary [objective]="objective" [unit]="period.unit"></app-objective-summary>
+            </li>
+        </ul>
+        </div>
+
+        <div *ngIf="hasAspirationalObjectives(bucket)">
+        <h3>Aspirational (descending priority)</h3>
+        <ul>
+            <li *ngFor="let objective of aspirationalObjectives(bucket)">
+                <app-objective-summary [objective]="objective" [unit]="period.unit"></app-objective-summary>
+            </li>
+        </ul>
+        </div>
+
+        <div *ngIf="hasRejectedObjectives(bucket)">
+        <h3>Rejected</h3>
+        <ul>
+            <li *ngFor="let objective of rejectedObjectives(bucket)">
+                <app-objective-summary [objective]="objective" [unit]="period.unit"></app-objective-summary>
+            </li>
+        </ul>
+        </div>
+    </div>
+</div>
