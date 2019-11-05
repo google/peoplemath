@@ -49,7 +49,7 @@ export class PeriodSummaryComponent implements OnInit {
 
   aspirationalObjectives(bucket: Bucket): Objective[] {
     return bucket.objectives.filter(
-      o => o.commitmentType == CommitmentType.Aspirational &&
+      o => o.commitmentType != CommitmentType.Committed &&
       objectiveResourcesAllocated(o) > 0);
   }
 
