@@ -1,2 +1,3 @@
-.rejected { color: grey; font-style: italic; }
+.resources { font-style: italic }
+.rejected { color: grey }
 .partialalloc { color: orange }
