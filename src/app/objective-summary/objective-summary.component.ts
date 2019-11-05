@@ -20,7 +20,13 @@ export class ObjectiveSummaryComponent implements OnInit {
   }
 
   allocationSummary(): string {
-    return (this.isRejected() || this.isPartiallyAllocated()) ? this.allocatedResources() + ' of ' + this.objective.resourceEstimate : '' + this.allocatedResources();
+    if (this.isRejected()) {
+      return this.objective.resourceEstimate + '';
+    } else if (this.isPartiallyAllocated()) {
+      return this.allocatedResources() + ' of ' + this.objective.resourceEstimate;
+    } else {
+      return this.allocatedResources() + '';
+    }
   }
 
   isRejected(): boolean {
