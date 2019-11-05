@@ -70,7 +70,7 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditObjectiveDialogData = {
-      'objective': new Objective('', 0, CommitmentType.Aspirational, []),
+      'objective': new Objective('', 0, CommitmentType.Aspirational, '', []),
       'title': 'Add Objective',
       'okAction': 'Add',
       'allowCancel': true,

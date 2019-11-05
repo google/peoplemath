@@ -16,6 +16,10 @@
         <mat-option value="Committed">Committed</mat-option>
     </mat-select>
   </mat-form-field>
+  <p>Notes</p>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="data.objective.notes"></textarea>
+  </mat-form-field>
 </div>
 
 <div mat-dialog-actions>

@@ -21,6 +21,7 @@ export class Objective {
       public name: string,
       public resourceEstimate: number,
       public commitmentType: CommitmentType,
+      public notes: string,
       public assignments: Assignment[],
   ) {}
 }

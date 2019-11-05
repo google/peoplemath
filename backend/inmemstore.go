@@ -142,6 +142,7 @@ func makeFakePeriod(id string) Period {
 					Name:             "Second objective",
 					ResourceEstimate: 15,
 					CommitmentType:   "Aspirational",
+					Notes:            "Some notes",
 					Assignments: []Assignment{
 						Assignment{
 							PersonID:   "bob",

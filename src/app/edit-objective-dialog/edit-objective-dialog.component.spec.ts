@@ -26,7 +26,7 @@ describe('EditObjectiveDialogComponent', () => {
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: EditObjectiveDialogData = {
-    'objective': new Objective('My test objective', 17, CommitmentType.Aspirational, []),
+    'objective': new Objective('My test objective', 17, CommitmentType.Aspirational, '', []),
     'title': 'My test dialog',
     'okAction': 'OK',
     'allowCancel': true,

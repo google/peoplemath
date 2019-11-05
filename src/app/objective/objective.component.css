@@ -1,5 +1,7 @@
 .objective-name { font-weight: normal }
 .resource-estimate { font-style: italic }
+.icons { margin-left: 10px; }
+.notes-icon { vertical-align: middle; font-size: 16px; }
 .assignments { margin-left: 10px; font-weight: bold }
 .unassigned { color: grey }
 .fully-allocated { color: green }
