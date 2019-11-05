@@ -41,11 +41,15 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	}
 }
 
-func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
-	req := httptest.NewRequest(http.MethodPost, "/api/period/"+teamID+"/", strings.NewReader(periodJSON))
+func attemptWritePeriod(handler http.Handler, teamID, periodJSON, httpMethod string, t *testing.T) *http.Response {
+	req := httptest.NewRequest(httpMethod, "/api/period/"+teamID+"/", strings.NewReader(periodJSON))
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	return w.Result()
+}
+
+func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
+	resp := attemptWritePeriod(handler, teamID, periodJSON, http.MethodPost, t)
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		body := string(bodyBytes)
@@ -53,16 +57,8 @@ func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
 	}
 }
 
-func TestPostPeriod(t *testing.T) {
-	server := Server{store: makeInMemStore()}
-	handler := server.makeHandler()
-
-	teamID := "myteam"
-	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","assignments":[]}]}],"people":[]}`
-	addPeriod(handler, teamID, periodJSON, t)
-
-	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/2019q1", nil)
+func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *Period {
+	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/"+periodID, nil)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	resp := w.Result()
@@ -75,6 +71,20 @@ func TestPostPeriod(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Could not decode response body: %v", err)
 	}
+	return &p
+}
+
+func TestPostPeriod(t *testing.T) {
+	server := Server{store: makeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","assignments":[]}]}],"people":[]}`
+	addPeriod(handler, teamID, periodJSON, t)
+
+	p := getPeriod(handler, teamID, "2019q1", t)
+
 	if p.Buckets[0].AllocationPercentage != 80 {
 		t.Fatalf("Expected allocation percentage 80, found %v", p.Buckets[0].AllocationPercentage)
 	}
@@ -88,10 +98,7 @@ func TestInvalidCommitmentType(t *testing.T) {
 	addTeam(handler, teamID, t)
 	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"wibble","assignments":[]}]}],"people":[]}`
 
-	req := httptest.NewRequest(http.MethodPost, "/api/period/"+teamID+"/", strings.NewReader(periodJSON))
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := attemptWritePeriod(handler, teamID, periodJSON, http.MethodPost, t)
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	body := string(bodyBytes)
@@ -102,6 +109,23 @@ func TestInvalidCommitmentType(t *testing.T) {
 
 	if !strings.Contains(body, "wibble") {
 		t.Fatalf("Expected bad commitment type to appear in body, found: %v", body)
+	}
+}
+
+func TestMissingCommitmentType(t *testing.T) {
+	server := Server{store: makeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
+	addPeriod(handler, teamID, periodJSON, t)
+
+	p := getPeriod(handler, teamID, "2019q1", t)
+
+	readCommitType := p.Buckets[0].Objectives[0].CommitmentType
+	if readCommitType != "" {
+		t.Fatalf("Expected read objective to have empty commitment type, found %q", readCommitType)
 	}
 }
 
