@@ -66,6 +66,7 @@ type Objective struct {
 	CommitmentType   string       `json:"commitmentType"`
 }
 
+// Valid commitment types for assignments
 const (
 	CommitmentTypeAspirational = "Aspirational"
 	CommitmentTypeCommitted    = "Committed"
@@ -91,7 +92,7 @@ type ObjectUpdateResponse struct {
 
 // Settings holds stored configuration options
 type Settings struct {
-	ImproveUrl string
+	ImproveURL string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility
 }
 
 // StorageService to represent the persistent store
@@ -404,7 +405,7 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Could not retrieve settings: %v", err), http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, r, settings.ImproveUrl, http.StatusFound)
+		http.Redirect(w, r, settings.ImproveURL, http.StatusFound)
 	} else {
 		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
 	}

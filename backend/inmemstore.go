@@ -42,7 +42,7 @@ func makeInMemStore() StorageService {
 		},
 	}
 	settings := Settings{
-		ImproveUrl: "https://github.com/google/peoplemath",
+		ImproveURL: "https://github.com/google/peoplemath",
 	}
 	return &inMemStore{teams: teams, periods: periods, settings: settings}
 }

@@ -184,8 +184,8 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (Settings, error) {
 	} else if err != nil {
 		return result, err
 	}
-	if result.ImproveUrl == "" {
-		result.ImproveUrl = "https://github.com/google/peoplemath"
+	if result.ImproveURL == "" {
+		result.ImproveURL = "https://github.com/google/peoplemath"
 	}
 	return result, nil
 }

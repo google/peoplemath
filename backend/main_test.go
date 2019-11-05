@@ -116,15 +116,15 @@ func TestImprove(t *testing.T) {
 	if resp.StatusCode != http.StatusFound {
 		t.Fatalf("Expected response %c, got %v", http.StatusFound, resp.StatusCode)
 	}
-	expectedImproveUrl := "https://github.com/google/peoplemath"
+	expectedImproveURL := "https://github.com/google/peoplemath"
 	location := resp.Header.Get("Location")
-	if location != expectedImproveUrl {
-		t.Errorf("Expected redirect to %v, found %v", expectedImproveUrl, location)
+	if location != expectedImproveURL {
+		t.Errorf("Expected redirect to %v, found %v", expectedImproveURL, location)
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	body := string(bodyBytes)
-	if !strings.Contains(body, expectedImproveUrl) {
-		t.Errorf("Expected redirect URL %v in body, found %v", expectedImproveUrl, body)
+	if !strings.Contains(body, expectedImproveURL) {
+		t.Errorf("Expected redirect URL %v in body, found %v", expectedImproveURL, body)
 	}
 }
