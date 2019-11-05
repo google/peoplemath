@@ -14,7 +14,7 @@ import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 
 let TEST_TEAM = new Team('teamid', 'Team Name');
-let NO_COMMITMENTTYPE_OBJECTIVE = new Objective('An objective with no commitment type', 10, undefined, [
+let NO_COMMITMENTTYPE_OBJECTIVE = new Objective('An objective with no commitment type', 10, undefined, '', [
   new Assignment('person1', 5),
 ]);
 let BUCKETS = [new Bucket('Bucket 1', 100, [

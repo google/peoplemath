@@ -17,7 +17,7 @@ describe('ObjectiveSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveSummaryComponent);
     component = fixture.componentInstance;
-    component.objective = new Objective('', 0, CommitmentType.Aspirational, []);
+    component.objective = new Objective('', 0, CommitmentType.Aspirational, '', []);
     component.unit = '';
     fixture.detectChanges();
   });

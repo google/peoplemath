@@ -36,7 +36,7 @@ describe('ObjectiveComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveComponent);
     component = fixture.componentInstance;
-    component.objective = new Objective('test objective', 6, CommitmentType.Aspirational, []);
+    component.objective = new Objective('test objective', 6, CommitmentType.Aspirational, '', []);
     fixture.detectChanges();
   });
 

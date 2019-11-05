@@ -64,6 +64,7 @@ type Objective struct {
 	ResourceEstimate float64      `json:"resourceEstimate"`
 	Assignments      []Assignment `json:"assignments"`
 	CommitmentType   string       `json:"commitmentType"`
+	Notes            string       `json:"notes"`
 }
 
 // Valid commitment types for assignments

@@ -80,13 +80,17 @@ func TestPostPeriod(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","assignments":[]}]}],"people":[]}`
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[]}`
 	addPeriod(handler, teamID, periodJSON, t)
 
 	p := getPeriod(handler, teamID, "2019q1", t)
 
 	if p.Buckets[0].AllocationPercentage != 80 {
 		t.Fatalf("Expected allocation percentage 80, found %v", p.Buckets[0].AllocationPercentage)
+	}
+	readNotes := p.Buckets[0].Objectives[0].Notes
+	if readNotes != "some notes" {
+		t.Fatalf("Expected notes to persist, found %q", readNotes)
 	}
 }
 

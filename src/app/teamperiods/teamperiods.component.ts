@@ -145,7 +145,7 @@ export class TeamPeriodsComponent implements OnInit {
               assignments.push(new Assignment(a.personId, a.commitment));
             }
           }
-          objectives.push(new Objective(o.name, o.resourceEstimate, o.commitmentType, assignments));
+          objectives.push(new Objective(o.name, o.resourceEstimate, o.commitmentType, o.notes, assignments));
         }
       }
       result.push(new Bucket(b.displayName, b.allocationPercentage, objectives));
