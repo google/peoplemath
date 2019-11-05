@@ -127,13 +127,27 @@ func makeFakePeriod(id string) Period {
 					Name:             "First objective",
 					ResourceEstimate: 10,
 					CommitmentType:   "Committed",
-					Assignments:      []Assignment{},
+					Assignments: []Assignment{
+						Assignment{
+							PersonID:   "alice",
+							Commitment: 5,
+						},
+						Assignment{
+							PersonID:   "bob",
+							Commitment: 5,
+						},
+					},
 				},
 				Objective{
 					Name:             "Second objective",
 					ResourceEstimate: 15,
 					CommitmentType:   "Aspirational",
-					Assignments:      []Assignment{},
+					Assignments: []Assignment{
+						Assignment{
+							PersonID:   "bob",
+							Commitment: 2,
+						},
+					},
 				},
 			},
 		},
@@ -146,6 +160,17 @@ func makeFakePeriod(id string) Period {
 					ResourceEstimate: 2,
 					CommitmentType:   "Aspirational",
 					Assignments:      []Assignment{},
+				},
+				Objective{
+					Name:             "Fourth objective",
+					ResourceEstimate: 8,
+					CommitmentType:   "Aspirational",
+					Assignments: []Assignment{
+						Assignment{
+							PersonID:   "charlie",
+							Commitment: 8,
+						},
+					},
 				},
 			},
 		},
@@ -176,7 +201,7 @@ func makeFakePeriod(id string) Period {
 		ID:                     id,
 		DisplayName:            strings.ToUpper(id),
 		Unit:                   "person weeks",
-		NotesURL:				"https://github.com/google/peoplemath",
+		NotesURL:               "https://github.com/google/peoplemath",
 		MaxCommittedPercentage: 50,
 		Buckets:                buckets,
 		People:                 people,
