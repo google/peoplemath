@@ -80,4 +80,15 @@ describe('StorageService', () => {
 
     req.flush(team);
   });
+
+  it('should be able to GET all teams', () => {
+    const teams = [new Team('team1', 'Team 1'), new Team('team2', 'Team 2')];
+    service.getTeams().subscribe(data => expect(data).toEqual(teams));
+
+    const req = httpTestingController.expectOne('/api/team/');
+
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(teams);
+  });
 });
