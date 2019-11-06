@@ -19,6 +19,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Team } from './team';
 import { Period } from './period';
 import { ObjectUpdateResponse } from './objectupdateresponse';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('StorageService', () => {
   let httpTestingController: HttpTestingController;
@@ -145,5 +146,21 @@ describe('StorageService', () => {
     expect(req.request.method).toEqual('GET');
 
     req.flush(periods);
+  });
+
+  it('should handle 404 for single period GET', () => {
+    const message = '404 message';
+
+    service.getPeriod('testteam', 'testperiod').subscribe(
+      data => fail('should have failed with the 404 error'),
+      (error: HttpErrorResponse) => {
+        expect(error.status).toEqual(404, 'status');
+        expect(error.error).toEqual(message, 'message');
+      }
+    );
+
+    const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
+
+    req.flush(message, {status: 404, statusText: 'Not Found'});
   });
 });
