@@ -51,10 +51,12 @@ export class StorageService {
   }
 
   addPeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    return this.http.post<ObjectUpdateResponse>('/api/period/' + teamId + '/', period);
+    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    return this.http.post<ObjectUpdateResponse>('/api/period/' + teamId + '/', period, options);
   }
 
   updatePeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    return this.http.put<ObjectUpdateResponse>('/api/period/' + teamId + '/' + period.id, period);
+    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    return this.http.put<ObjectUpdateResponse>('/api/period/' + teamId + '/' + period.id, period, options);
   }
 }
