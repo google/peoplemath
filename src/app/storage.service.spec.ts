@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { StorageService } from './storage.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Team } from './team';
 
 describe('StorageService', () => {
+  let httpTestingController: HttpTestingController;
+  let service: StorageService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [StorageService],
@@ -25,9 +29,55 @@ describe('StorageService', () => {
         HttpClientTestingModule,
       ],
     });
+
+    httpTestingController = TestBed.get(HttpTestingController);
+    service = TestBed.get(StorageService);
   });
 
-  it('should be created', inject([StorageService], (service: StorageService) => {
+  afterEach(() => {
+    httpTestingController.verify();
+  });
+
+  it('should be created', () => {
     expect(service).toBeTruthy();
-  }));
+  });
+
+  it('should be able to POST a team', () => {
+    const team = new Team('testteam', 'Test team');
+    const response = '';
+    service.addTeam(team).subscribe(data => expect(data).toEqual(response));
+
+    const req = httpTestingController.expectOne('/api/team/');
+
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.headers.get('Content-Type')).toEqual('application/json');
+    expect(req.request.body).toEqual(team);
+
+    req.flush(response);
+  });
+
+  it('should be able to PUT a team', () => {
+    const team = new Team('testteam', 'Test team');
+    const response = '';
+    service.updateTeam(team).subscribe(data => expect(data).toEqual(response));
+
+    const req = httpTestingController.expectOne('/api/team/testteam');
+
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.headers.get('Content-Type')).toEqual('application/json');
+    expect(req.request.body).toEqual(team);
+
+    req.flush(response);
+  });
+
+  it('should be able to GET a team', () => {
+    const team = new Team('testteam', 'Test team');
+    service.getTeam('testteam').subscribe(data => expect(data).toEqual(team));
+
+    const req = httpTestingController.expectOne('/api/team/testteam');
+
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(team);
+  });
 });
