@@ -4,11 +4,29 @@
 
 This is a web application designed to help managers plan how teams will spend their time, particularly in situations where there is an aim to split the team's resources between several independently-prioritised "buckets" of work in a certain ratio.
 
+The fundamental entity in PeopleMath is the *period*, which can be any length of time you want to plan for your team. For each period, planners are expected to enter:
+
+* What *objectives* are you considering working on during this period, in each bucket?
+* How much (in whatever unit of resources you prefer to use) do you think each objective would require to complete?
+* What is the relative priority order of the objectives, within each bucket?
+* How much (of your resource units) do you expect each person on your team to have available during the period?
+* How much of each person's available resources do you intend to allocate to each objective?
+* Therefore, what is your level of confidence in the completion of each objective?
+
+The tool also supports a distinction between "committed" and "aspirational" objectives:
+
+* A *committed* objective is one which your team is making a firm promise to complete within the period; perhaps some other team or a customer is depending on it.
+* An *aspirational* objective is one you would like to achieve if possible, but something you would be willing to sacrifice for a committed objective if necessary.
+
+It's generally a good idea to keep an eye on the fraction of your team's resources allocated to committed objectives. Too little, and your team is promising too little to its stakeholders; too much, and you are at risk of breaking your promises, as there is nothing you can safely drop if you find yourself behind on a committed objective. PeopleMath allows you to set a target "commit ratio", and tells you how your plan compares to that target.
+
+This is not an officially supported Google product.
+
+## Implementation
+
 The front end was built using [Angular](https://angular.io) and [Angular Material](https://material.angular.io). The API server in the `backend` directory was written in [Go](https://golang.org).
 
 The whole application was designed to run on [Google AppEngine](https://cloud.google.com/appengine/), using [Google Cloud Datastore](https://cloud.google.com/datastore/) for persistence, though the front-end could be deployed with a back-end that used an entirely different persistence mechanism or runtime platform.
-
-This is not an officially supported Google product.
 
 ## Development
 
