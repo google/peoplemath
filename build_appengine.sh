@@ -15,7 +15,7 @@
 # limitations under the License.
 
 #!/bin/bash
-# Prepare prod app for deployment to Google AppEngine using gcloud app deploy
+# Prepare prod app for deployment to Google App Engine using gcloud app deploy
 
 if [[ -e appengine_dist ]]; then
     echo Remove appengine_dist first, e.g. via rm -rf
