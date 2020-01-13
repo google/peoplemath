@@ -1,5 +1,6 @@
 <mat-card>
 <mat-card-content>
+<div class="table-container">
 <table mat-table [dataSource]="tableData()" matSort>
   <ng-container matColumnDef="personDesc">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Person</th>
@@ -31,10 +32,11 @@
     <td mat-cell *matCellDef="let element">{{element.commitFraction | percent}}</td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editPerson(row.person)"></tr>
-  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
 </table>
+</div>
 <p><button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button></p>
 </mat-card-content>
 </mat-card>
