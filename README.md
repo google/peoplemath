@@ -26,7 +26,7 @@ This is not an officially supported Google product.
 
 The front end was built using [Angular](https://angular.io) and [Angular Material](https://material.angular.io). The API server in the `backend` directory was written in [Go](https://golang.org).
 
-The whole application was designed to run on [Google AppEngine](https://cloud.google.com/appengine/), using [Google Cloud Datastore](https://cloud.google.com/datastore/) for persistence, though the front-end could be deployed with a back-end that used an entirely different persistence mechanism or runtime platform.
+The whole application was designed to run on [Google App Engine](https://cloud.google.com/appengine/), using [Google Cloud Datastore](https://cloud.google.com/datastore/) for persistence, though the front-end could be deployed with a back-end that used an entirely different persistence mechanism or runtime platform.
 
 ## Development
 
@@ -38,9 +38,9 @@ The simplest way to run it is with `peoplemath --inmemstore`, which will use a s
 
 To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and run `peoplemath` with no arguments.
 
-## Deployment to AppEngine
+## Deployment to App Engine
 
-To deploy the app to Google AppEngine:
+To deploy the app to Google App Engine:
 
 * Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go112/quickstart)
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
