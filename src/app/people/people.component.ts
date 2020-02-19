@@ -50,21 +50,23 @@ export class PeopleComponent implements OnInit {
   @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
+  tableData: MatTableDataSource<PersonData>;
   displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
+    this.refreshTable();
   }
 
-  tableData(): MatTableDataSource<PersonData> {
+  refreshTable() {
     let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
       this.personCommitFraction(p), this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
     result.sort = this.sort;
-    return result;
+    this.tableData = result;
   }
 
   /**
@@ -147,6 +149,7 @@ export class PeopleComponent implements OnInit {
         this.people.push(person);
         this.people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
         this.onChanged.emit(person);
+        this.refreshTable();
       }
     });
   }
@@ -165,6 +168,7 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
         this.onChanged.emit(p);
+        this.refreshTable();
       }
     });
   }

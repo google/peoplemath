@@ -1,7 +1,7 @@
 <mat-card>
 <mat-card-content>
 <div class="table-container">
-<table mat-table [dataSource]="tableData()" matSort>
+<table mat-table [dataSource]="tableData" matSort>
   <ng-container matColumnDef="personDesc">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Person</th>
     <td mat-cell *matCellDef="let element">{{element.personDesc}}</td>
