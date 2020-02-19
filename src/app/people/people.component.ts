@@ -52,7 +52,7 @@ export class PeopleComponent implements OnInit {
   @Output() onDelete = new EventEmitter<Person>();
   tableData: MatTableDataSource<PersonData>;
   displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
   
   constructor(public dialog: MatDialog) { }
 
