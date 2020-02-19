@@ -25,7 +25,7 @@ export class PeriodSummaryComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadData();
+    this.route.paramMap.subscribe(m => this.loadDataFor(m.get('team'), m.get('period')));
   }
 
   bucketAllocationFraction(bucket: Bucket): number {
@@ -61,10 +61,9 @@ export class PeriodSummaryComponent implements OnInit {
     return bucket.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
   }
 
-  loadData() {
-    const teamId = this.route.snapshot.paramMap.get('team');
-    const periodId = this.route.snapshot.paramMap.get('period');
-
+  loadDataFor(teamId: string, periodId: string) {
+    this.team = undefined;
+    this.period = undefined;
     this.storage.getTeam(teamId).pipe(
       catchError(err => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + err.error, 'Dismiss');

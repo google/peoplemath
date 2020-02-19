@@ -48,11 +48,12 @@ export class TeamPeriodsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadData();
+    this.route.paramMap.subscribe(m => this.loadDataFor(m.get('team')));
   }
 
-  loadData(): void {
-    const teamId = this.route.snapshot.paramMap.get('team');
+  loadDataFor(teamId: string): void {
+    this.team = undefined;
+    this.periods = undefined;
     this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');

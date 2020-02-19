@@ -40,7 +40,7 @@ describe('PeriodSummaryComponent', () => {
       providers: [
         {provide: StorageService, useValue: storageServiceSpy},
         {provide: ActivatedRoute, useValue: {
-          'snapshot': {'paramMap': convertToParamMap({'team': TEST_TEAM.id, 'period': TEST_PERIOD.id})}},
+          paramMap: of(convertToParamMap({team: TEST_TEAM.id, period: TEST_PERIOD.id}))},
         },
       ],
     })
