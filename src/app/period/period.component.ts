@@ -51,7 +51,7 @@ export class PeriodComponent implements OnInit {
   ngOnInit() {
     this.isEditingEnabled = false;
     this.showOrderButtons = false;
-    this.loadData();
+    this.route.paramMap.subscribe(m => this.loadDataFor(m.get('team'), m.get('period')));
     this.eventsRequiringSave.pipe(debounceTime(2000)).subscribe(_ => this.performSave());
   }
 
@@ -184,9 +184,9 @@ export class PeriodComponent implements OnInit {
     return this.period.buckets.filter(b => b !== bucket);
   }
 
-  loadData(): void {
-    const teamId = this.route.snapshot.paramMap.get('team');
-    const periodId = this.route.snapshot.paramMap.get('period');
+  loadDataFor(teamId: string, periodId: string): void {
+    this.team = undefined;
+    this.period = undefined;
     this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');

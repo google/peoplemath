@@ -34,7 +34,7 @@ describe('TeamPeriodsComponent', () => {
       imports: [ RouterTestingModule, MaterialModule ],
       providers: [
         {provide: StorageService, useValue: storageServiceSpy},
-        {provide: ActivatedRoute, useValue: {snapshot: {paramMap: convertToParamMap({'team': TEST_TEAM.id})}}},
+        {provide: ActivatedRoute, useValue: {paramMap: of(convertToParamMap({team: TEST_TEAM.id}))}},
       ],
     })
     .compileComponents();
