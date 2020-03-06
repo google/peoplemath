@@ -14,7 +14,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditObjectiveDialogComponent, EditObjectiveDialogData } from './edit-objective-dialog.component';
+import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective } from './edit-objective-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -25,21 +25,22 @@ describe('EditObjectiveDialogComponent', () => {
   let component: EditObjectiveDialogComponent;
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  let objective: Objective = {
+    name: 'My test objective',
+    resourceEstimate: 17,
+    commitmentType: CommitmentType.Aspirational,
+    notes: '',
+    assignments: [],
+  };
   let DIALOG_DATA: EditObjectiveDialogData = {
-    'objective': {
-      name: 'My test objective',
-      resourceEstimate: 17,
-      commitmentType: CommitmentType.Aspirational,
-      notes: '',
-      assignments: [],
-    },
-    'title': 'My test dialog',
-    'okAction': 'OK',
-    'allowCancel': true,
-    'unit': 'person weeks',
-    'otherBuckets': [],
-    'onMoveBucket': undefined,
-    'onDelete': undefined,
+    objective: makeEditedObjective(objective),
+    original: objective,
+    title: 'My test dialog',
+    okAction: 'OK',
+    unit: 'person weeks',
+    otherBuckets: [],
+    onMoveBucket: undefined,
+    onDelete: undefined,
   };
 
   beforeEach(async(() => {
