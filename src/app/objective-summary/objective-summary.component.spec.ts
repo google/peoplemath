@@ -17,7 +17,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ObjectiveSummaryComponent } from './objective-summary.component';
-import { Objective, CommitmentType } from '../objective';
+import { CommitmentType } from '../objective';
 
 describe('ObjectiveSummaryComponent', () => {
   let component: ObjectiveSummaryComponent;
@@ -33,7 +33,13 @@ describe('ObjectiveSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveSummaryComponent);
     component = fixture.componentInstance;
-    component.objective = new Objective('', 0, CommitmentType.Aspirational, '', []);
+    component.objective = {
+      name: '',
+      resourceEstimate: 0,
+      commitmentType: CommitmentType.Aspirational,
+      notes: '',
+      assignments: [],
+    };
     component.unit = '';
     fixture.detectChanges();
   });
