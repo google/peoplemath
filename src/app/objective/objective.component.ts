@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import { Objective, CommitmentType } from '../objective';
 import { Assignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
-import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { Bucket } from '../bucket';
 
 @Component({
@@ -32,9 +32,9 @@ export class ObjectiveComponent implements OnInit {
   @Input() isEditingEnabled: boolean;
   @Input() isReorderingEnabled: boolean;
   @Input() otherBuckets: Bucket[];
-  @Output() onMoveBucket = new EventEmitter<[Objective, Bucket]>();
+  @Output() onMoveBucket = new EventEmitter<[Objective, Objective, Bucket]>();
   @Output() onDelete = new EventEmitter<Objective>();
-  @Output() onChanged = new EventEmitter<Objective>();
+  @Output() onChanged = new EventEmitter<[Objective, Objective]>();
   
   constructor(public dialog: MatDialog) { }
 
@@ -82,7 +82,7 @@ export class ObjectiveComponent implements OnInit {
       }
       this.objective.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
           .map((pad: PersonAssignmentData) => new Assignment(pad.username, pad.assign));
-      this.onChanged.emit(this.objective);
+      this.onChanged.emit([this.objective, this.objective]);
     });
   }
 
@@ -91,17 +91,21 @@ export class ObjectiveComponent implements OnInit {
       return;
     }
     const dialogData: EditObjectiveDialogData = {
-      'objective': this.objective,
-      'title': 'Edit Objective',
-      'okAction': 'OK',
-      'allowCancel': false,
-      'unit': this.unit,
-      'otherBuckets': this.otherBuckets,
-      'onMoveBucket': this.onMoveBucket,
-      'onDelete': this.onDelete,
+      objective: makeEditedObjective(this.objective),
+      original: this.objective,
+      title: 'Edit Objective',
+      okAction: 'OK',
+      unit: this.unit,
+      otherBuckets: this.otherBuckets,
+      onMoveBucket: this.onMoveBucket,
+      onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.objective));
+    dialogRef.afterClosed().subscribe(newObjective => {
+      if (newObjective) {
+        this.onChanged.emit([this.objective, newObjective]);
+      }
+    });
   }
 
   commitmentTypeBadge(): string {

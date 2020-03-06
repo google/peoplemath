@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@ import { Bucket } from '../bucket';
 
 export interface EditObjectiveDialogData {
   objective: Objective;
+  original: Objective;
   title: string;
   okAction: string;
-  allowCancel: boolean;
   unit: string;
   otherBuckets: Bucket[];
-  onMoveBucket: EventEmitter<[Objective, Bucket]>;
+  onMoveBucket: EventEmitter<[Objective, Objective, Bucket]>;
   onDelete: EventEmitter<Objective>;
+}
+
+export function makeEditedObjective(objective: Objective): Objective {
+  return Object.assign({}, objective);
 }
 
 @Component({
@@ -48,12 +52,16 @@ export class EditObjectiveDialogComponent implements OnInit {
     return this.data.objective.name && this.data.objective.resourceEstimate >= 0;
   }
 
+  onSave(): void {
+    this.dialogRef.close(this.data.objective);
+  }
+
   onCancel(): void {
     this.dialogRef.close();
   }
 
   onMove(newBucket: Bucket): void {
-    this.data.onMoveBucket.emit([this.data.objective, newBucket]);
+    this.data.onMoveBucket.emit([this.data.original, this.data.objective, newBucket]);
     this.dialogRef.close();
   }
 
@@ -62,7 +70,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onConfirmDelete(): void {
-    this.data.onDelete.emit(this.data.objective);
+    this.data.onDelete.emit(this.data.original);
     this.dialogRef.close();
   }
 

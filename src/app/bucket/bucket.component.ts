@@ -77,9 +77,9 @@ export class BucketComponent implements OnInit {
         notes: '',
         assignments: [],
       },
+      original: undefined,
       title: 'Add Objective',
       okAction: 'Add',
-      allowCancel: true,
       unit: this.unit,
       otherBuckets: [],
       onMoveBucket: undefined,
@@ -99,9 +99,9 @@ export class BucketComponent implements OnInit {
     return this.bucket.objectives.findIndex(o => o === objective);
   }
 
-  moveObjective(objective: Objective, newBucket: Bucket) {
-    this.deleteObjective(objective);
-    newBucket.objectives.push(objective);
+  moveObjective(original: Objective, newObjective: Objective, newBucket: Bucket) {
+    this.deleteObjective(original);
+    newBucket.objectives.push(newObjective);
     this.onChanged.emit(newBucket);
   }
 
@@ -118,8 +118,10 @@ export class BucketComponent implements OnInit {
     }
   }
 
-  onObjectiveChanged(objective: Objective): void {
-    this.onChanged.emit(objective);
+  onObjectiveChanged(original: Objective, newObjective: Objective): void {
+    const index = this.objectiveIndex(original);
+    this.bucket.objectives[index] = newObjective;
+    this.onChanged.emit(this.bucket);
   }
 
   moveBucketUp(): void {
