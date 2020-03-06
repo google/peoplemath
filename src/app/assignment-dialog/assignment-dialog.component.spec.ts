@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,10 +24,16 @@ describe('AssignmentDialogComponent', () => {
   let fixture: ComponentFixture<AssignmentDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: AssignmentDialogData = {
-    'objective': new Objective('My Test Objective', 10, CommitmentType.Aspirational, '', []),
-    'people': [],
-    'unit': 'person weeks',
-    'columns': [],
+    objective: {
+      name: 'My Test Objective',
+      resourceEstimate: 10,
+      commitmentType: CommitmentType.Aspirational,
+      notes: '',
+      assignments: [],
+    },
+    people: [],
+    unit: 'person weeks',
+    columns: [],
   };
 
   beforeEach(async(() => {

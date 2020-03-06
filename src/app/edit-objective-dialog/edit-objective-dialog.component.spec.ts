@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,13 @@ describe('EditObjectiveDialogComponent', () => {
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: EditObjectiveDialogData = {
-    'objective': new Objective('My test objective', 17, CommitmentType.Aspirational, '', []),
+    'objective': {
+      name: 'My test objective',
+      resourceEstimate: 17,
+      commitmentType: CommitmentType.Aspirational,
+      notes: '',
+      assignments: [],
+    },
     'title': 'My test dialog',
     'okAction': 'OK',
     'allowCancel': true,

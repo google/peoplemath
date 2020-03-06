@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,14 +70,20 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditObjectiveDialogData = {
-      'objective': new Objective('', 0, CommitmentType.Aspirational, '', []),
-      'title': 'Add Objective',
-      'okAction': 'Add',
-      'allowCancel': true,
-      'unit': this.unit,
-      'otherBuckets': [],
-      'onMoveBucket': undefined,
-      'onDelete': undefined,
+      objective: {
+        name: '',
+        resourceEstimate: 0,
+        commitmentType: CommitmentType.Aspirational,
+        notes: '',
+        assignments: [],
+      },
+      title: 'Add Objective',
+      okAction: 'Add',
+      allowCancel: true,
+      unit: this.unit,
+      otherBuckets: [],
+      onMoveBucket: undefined,
+      onDelete: undefined,
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(objective => {

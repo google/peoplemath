@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,14 +16,12 @@ import { Assignment } from "./assignment";
 
 export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
 
-export class Objective {
-  constructor(
-      public name: string,
-      public resourceEstimate: number,
-      public commitmentType: CommitmentType,
-      public notes: string,
-      public assignments: Assignment[],
-  ) {}
+export interface Objective {
+  name: string,
+  resourceEstimate: number,
+  commitmentType: CommitmentType,
+  notes: string,
+  assignments: Assignment[],
 }
 
 /**

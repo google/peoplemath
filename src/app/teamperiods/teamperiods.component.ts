@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -146,7 +146,13 @@ export class TeamPeriodsComponent implements OnInit {
               assignments.push(new Assignment(a.personId, a.commitment));
             }
           }
-          objectives.push(new Objective(o.name, o.resourceEstimate, o.commitmentType, o.notes, assignments));
+          objectives.push({
+            name: o.name,
+            resourceEstimate: o.resourceEstimate,
+            commitmentType: o.commitmentType,
+            notes: o.notes,
+            assignments: assignments,
+          });
         }
       }
       result.push(new Bucket(b.displayName, b.allocationPercentage, objectives));

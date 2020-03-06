@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,13 @@ describe('ObjectiveComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveComponent);
     component = fixture.componentInstance;
-    component.objective = new Objective('test objective', 6, CommitmentType.Aspirational, '', []);
+    component.objective = {
+      name: 'test objective',
+      resourceEstimate: 6,
+      commitmentType: CommitmentType.Aspirational,
+      notes: '',
+      assignments: [],
+    };
     fixture.detectChanges();
   });
 
