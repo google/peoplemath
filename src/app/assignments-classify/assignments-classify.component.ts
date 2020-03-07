@@ -16,7 +16,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Period } from '../period';
-import { Objective } from '../objective';
+import { Objective, objectiveResourcesAllocated } from '../objective';
 
 enum AggregateBy {
   Group = 'group',
@@ -79,7 +79,6 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   assignedResources(objective: Objective): number {
-    return objective.assignments.map(a => a.commitment).reduce(
-      (sum, next) => sum + next, 0);
+    return objectiveResourcesAllocated(objective);
   }
 }
