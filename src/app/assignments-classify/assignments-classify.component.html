@@ -1,0 +1,21 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{title}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="assignments">
+            <div *ngFor="let classobjs of objectivesByClass()">
+                <h3>{{classobjs[0]}}</h3>
+                <ul>
+                    <li *ngFor="let objective of classobjs[1]">
+                        <app-assignment
+                            [objective]="objective"
+                            [assignedResources]="assignedResources(objective)"
+                            [unit]="period.unit">
+                        </app-assignment>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

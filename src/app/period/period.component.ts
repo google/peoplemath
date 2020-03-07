@@ -184,6 +184,29 @@ export class PeriodComponent implements OnInit {
     return this.period.buckets.filter(b => b !== bucket);
   }
 
+  allGroupTypes(): string[] {
+    let result = new Set<string>();
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.groups.forEach(g => {
+          result.add(g.groupType);
+        });
+      });
+    });
+    return Array.from(result);
+  }
+
+  hasTags(): boolean {
+    for (let bucket of this.period.buckets) {
+      for (let objective of bucket.objectives) {
+        if (objective.tags.length > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;

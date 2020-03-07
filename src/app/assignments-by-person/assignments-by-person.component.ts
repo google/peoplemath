@@ -62,13 +62,6 @@ export class AssignmentsByPersonComponent implements OnInit {
   personDisplayNameWithUsername(person: Person): string {
     return personDisplayNameWithUsername(person);
   }
-
-  commitmentTypeBadge(oa: ObjectiveAssignment): string {
-    switch (oa.objective.commitmentType) {
-      case CommitmentType.Committed: return "C";
-      default: return "";
-    }
-  }
 }
 
 class ObjectiveAssignment {
