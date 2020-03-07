@@ -17,7 +17,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssignmentDialogComponent, AssignmentDialogData } from './assignment-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Objective, CommitmentType } from '../objective';
+import { CommitmentType } from '../objective';
 
 describe('AssignmentDialogComponent', () => {
   let component: AssignmentDialogComponent;
@@ -28,6 +28,8 @@ describe('AssignmentDialogComponent', () => {
       name: 'My Test Objective',
       resourceEstimate: 10,
       commitmentType: CommitmentType.Aspirational,
+      groups: [],
+      tags: [],
       notes: '',
       assignments: [],
     },

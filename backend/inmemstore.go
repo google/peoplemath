@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -137,6 +137,13 @@ func makeFakePeriod(id string) Period {
 							Commitment: 5,
 						},
 					},
+					Groups: []ObjectiveGroup{
+						ObjectiveGroup{
+							GroupType: "Project",
+							GroupName: "Project 1",
+						},
+					},
+					Tags: []ObjectiveTag{},
 				},
 				Objective{
 					Name:             "Second objective",
@@ -149,6 +156,13 @@ func makeFakePeriod(id string) Period {
 							Commitment: 2,
 						},
 					},
+					Groups: []ObjectiveGroup{
+						ObjectiveGroup{
+							GroupType: "Project",
+							GroupName: "Project 2",
+						},
+					},
+					Tags: []ObjectiveTag{},
 				},
 			},
 		},
@@ -161,6 +175,13 @@ func makeFakePeriod(id string) Period {
 					ResourceEstimate: 2,
 					CommitmentType:   "Aspirational",
 					Assignments:      []Assignment{},
+					Groups: []ObjectiveGroup{
+						ObjectiveGroup{
+							GroupType: "Project",
+							GroupName: "Project 1",
+						},
+					},
+					Tags: []ObjectiveTag{},
 				},
 				Objective{
 					Name:             "Fourth objective",
@@ -172,6 +193,8 @@ func makeFakePeriod(id string) Period {
 							Commitment: 8,
 						},
 					},
+					Groups: []ObjectiveGroup{},
+					Tags:   []ObjectiveTag{},
 				},
 			},
 		},

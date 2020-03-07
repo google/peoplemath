@@ -16,11 +16,22 @@ import { Assignment } from "./assignment";
 
 export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
 
+export interface ObjectiveGroup {
+  groupType: string;
+  groupName: string;
+}
+
+export interface ObjectiveTag {
+  name: string;
+}
+
 export interface Objective {
   name: string,
   resourceEstimate: number,
   commitmentType: CommitmentType,
   notes: string,
+  groups: ObjectiveGroup[],
+  tags: ObjectiveTag[],
   assignments: Assignment[],
 }
 

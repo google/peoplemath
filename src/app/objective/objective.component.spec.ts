@@ -16,7 +16,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ObjectiveComponent } from './objective.component';
 import { FormsModule } from '@angular/forms';
-import { Objective, CommitmentType } from '../objective';
+import { CommitmentType } from '../objective';
 import { MaterialModule } from '../material/material.module';
 
 describe('ObjectiveComponent', () => {
@@ -40,6 +40,8 @@ describe('ObjectiveComponent', () => {
       name: 'test objective',
       resourceEstimate: 6,
       commitmentType: CommitmentType.Aspirational,
+      groups: [],
+      tags: [],
       notes: '',
       assignments: [],
     };

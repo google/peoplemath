@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -210,6 +210,12 @@ func scrubLoadedPeriod(period *Period) {
 		for j := range period.Buckets[i].Objectives {
 			if period.Buckets[i].Objectives[j].Assignments == nil {
 				period.Buckets[i].Objectives[j].Assignments = []Assignment{}
+			}
+			if period.Buckets[i].Objectives[j].Groups == nil {
+				period.Buckets[i].Objectives[j].Groups = []ObjectiveGroup{}
+			}
+			if period.Buckets[i].Objectives[j].Tags == nil {
+				period.Buckets[i].Objectives[j].Tags = []ObjectiveTag{}
 			}
 		}
 	}
