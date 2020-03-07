@@ -16,6 +16,14 @@
         <mat-option value="Committed">Committed</mat-option>
     </mat-select>
   </mat-form-field>
+  <p>Groups (key1:value1,key2:value2,...)</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.objective.groups">
+  </mat-form-field>
+  <p>Tags (comma-separated)</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.objective.tags">
+  </mat-form-field>
   <p>Notes</p>
   <mat-form-field>
     <textarea matInput [(ngModel)]="data.objective.notes"></textarea>

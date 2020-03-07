@@ -37,6 +37,8 @@ describe('ObjectiveSummaryComponent', () => {
       name: '',
       resourceEstimate: 0,
       commitmentType: CommitmentType.Aspirational,
+      groups: [],
+      tags: [],
       notes: '',
       assignments: [],
     };

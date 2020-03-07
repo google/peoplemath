@@ -14,11 +14,22 @@
 
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Objective } from '../objective';
+import { Objective, CommitmentType, ObjectiveGroup, ObjectiveTag } from '../objective';
 import { Bucket } from '../bucket';
+import { Assignment } from '../assignment';
+
+export interface EditedObjective {
+  name: string;
+  resourceEstimate: number;
+  commitmentType: CommitmentType;
+  groups: string;
+  tags: string;
+  notes: string;
+  assignments: Assignment[],
+}
 
 export interface EditObjectiveDialogData {
-  objective: Objective;
+  objective: EditedObjective;
   original: Objective;
   title: string;
   okAction: string;
@@ -28,8 +39,59 @@ export interface EditObjectiveDialogData {
   onDelete: EventEmitter<Objective>;
 }
 
-export function makeEditedObjective(objective: Objective): Objective {
-  return Object.assign({}, objective);
+export function makeEditedObjective(objective: Objective): EditedObjective {
+  let groupsStr = objective.groups.map(g => g.groupType + ":" + g.groupName).join(",");
+  let tagsStr = objective.tags.map(t => t.name).join(",");
+
+  return {
+    name: objective.name,
+    resourceEstimate: objective.resourceEstimate,
+    commitmentType: objective.commitmentType,
+    groups: groupsStr,
+    tags: tagsStr,
+    notes: objective.notes,
+    assignments: objective.assignments,
+  };
+}
+
+export function makeGroups(groupsStr: string): ObjectiveGroup[] {
+  if (!groupsStr.trim()) {
+    return [];
+  }
+  return groupsStr.split(",").map(pairStr => {
+    let parts = pairStr.split(":").map(s => s.trim());
+    let result: ObjectiveGroup;
+    if (parts.length == 2) {
+      result = {groupType: parts[0], groupName: parts[1]};
+    } else {
+      result = {groupType: "Group", groupName: pairStr};
+    }
+    return result;
+  })
+}
+
+export function makeTags(tagsStr: string): ObjectiveTag[] {
+  if (!tagsStr.trim()) {
+    return [];
+  }
+  return tagsStr.split(",").map(s => {
+    let result: ObjectiveTag = {
+      name: s.trim(),
+    };
+    return result;
+  });
+}
+
+function makeObjective(edited: EditedObjective): Objective {
+  return {
+    name: edited.name,
+    resourceEstimate: edited.resourceEstimate,
+    commitmentType: edited.commitmentType,
+    groups: makeGroups(edited.groups),
+    tags: makeTags(edited.tags),
+    notes: edited.notes,
+    assignments: edited.assignments,
+  };
 }
 
 @Component({
@@ -53,7 +115,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onSave(): void {
-    this.dialogRef.close(this.data.objective);
+    this.dialogRef.close(makeObjective(this.data.objective));
   }
 
   onCancel(): void {
@@ -61,7 +123,8 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onMove(newBucket: Bucket): void {
-    this.data.onMoveBucket.emit([this.data.original, this.data.objective, newBucket]);
+    let newObjective = makeObjective(this.data.objective);
+    this.data.onMoveBucket.emit([this.data.original, newObjective, newBucket]);
     this.dialogRef.close();
   }
 

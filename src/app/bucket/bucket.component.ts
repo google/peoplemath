@@ -75,6 +75,8 @@ export class BucketComponent implements OnInit {
         resourceEstimate: 0,
         commitmentType: CommitmentType.Aspirational,
         notes: '',
+        groups: '',
+        tags: '',
         assignments: [],
       },
       original: undefined,

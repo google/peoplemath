@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,11 +60,24 @@ type Bucket struct {
 
 // Objective model struct
 type Objective struct {
-	Name             string       `json:"name"`
-	ResourceEstimate float64      `json:"resourceEstimate"`
-	Assignments      []Assignment `json:"assignments"`
-	CommitmentType   string       `json:"commitmentType"`
-	Notes            string       `json:"notes"`
+	Name             string           `json:"name"`
+	ResourceEstimate float64          `json:"resourceEstimate"`
+	Assignments      []Assignment     `json:"assignments"`
+	CommitmentType   string           `json:"commitmentType"`
+	Notes            string           `json:"notes"`
+	Groups           []ObjectiveGroup `json:"groups"`
+	Tags             []ObjectiveTag   `json:"tags"`
+}
+
+// ObjectiveGroup model struct
+type ObjectiveGroup struct {
+	GroupType string `json:"groupType"`
+	GroupName string `json:"groupName"`
+}
+
+// ObjectiveTag model struct
+type ObjectiveTag struct {
+	Name string `json:"name"`
 }
 
 // Valid commitment types for assignments

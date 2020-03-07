@@ -34,6 +34,8 @@ let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
   name: 'An objective with no commitment type',
   resourceEstimate: 10,
   commitmentType: undefined,
+  groups: [],
+  tags: [],
   notes: '',
   assignments: [
     new Assignment('person1', 5),

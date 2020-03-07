@@ -26,7 +26,6 @@ import { of } from 'rxjs';
 import { AddPeriodDialogData, AddPeriodDialogComponent, CreateMethod } from '../add-period-dialog/add-period-dialog.component';
 import { Bucket } from '../bucket';
 import { Person } from '../person';
-import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
@@ -151,6 +150,8 @@ export class TeamPeriodsComponent implements OnInit {
             resourceEstimate: o.resourceEstimate,
             commitmentType: o.commitmentType,
             notes: o.notes,
+            groups: o.groups,
+            tags: o.tags,
             assignments: assignments,
           });
         }
