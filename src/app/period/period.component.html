@@ -59,10 +59,10 @@
     (onDelete)="deletePerson($event)">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
-<app-assignments-classify *ngFor="let groupType of allGroupTypes()"
+<app-assignments-classify *ngFor="let groupType of groupTypesWithAssignments()"
     [period]="period" aggregateBy="group" [groupType]="groupType"
     title="Assignments by {{groupType}}"></app-assignments-classify>
-<app-assignments-classify *ngIf="hasTags()"
+<app-assignments-classify *ngIf="hasTagsWithAssignments()"
     [period]="period" aggregateBy="tag" title="Assignments by tag"></app-assignments-classify>
 </span>
 

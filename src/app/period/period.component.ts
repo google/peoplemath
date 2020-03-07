@@ -184,22 +184,24 @@ export class PeriodComponent implements OnInit {
     return this.period.buckets.filter(b => b !== bucket);
   }
 
-  allGroupTypes(): string[] {
+  groupTypesWithAssignments(): string[] {
     let result = new Set<string>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        o.groups.forEach(g => {
-          result.add(g.groupType);
-        });
+        if (o.assignments.length > 0) {
+          o.groups.forEach(g => {
+            result.add(g.groupType);
+          });
+        }
       });
     });
     return Array.from(result);
   }
 
-  hasTags(): boolean {
+  hasTagsWithAssignments(): boolean {
     for (let bucket of this.period.buckets) {
       for (let objective of bucket.objectives) {
-        if (objective.tags.length > 0) {
+        if (objective.assignments.length > 0 && objective.tags.length > 0) {
           return true;
         }
       }
