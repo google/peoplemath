@@ -28,6 +28,7 @@ import { of } from 'rxjs';
 import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
+import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.component';
 
 let TEST_TEAM = new Team('teamid', 'Team Name');
 let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
@@ -55,6 +56,7 @@ describe('PeriodSummaryComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         PeriodSummaryComponent,
+        BucketSummaryComponent,
         ObjectiveSummaryComponent,
       ],
       imports: [
@@ -81,9 +83,5 @@ describe('PeriodSummaryComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should classify objective with no commitment type as aspirational', () => {
-    expect(component.aspirationalObjectives(BUCKETS[0])).toEqual([NO_COMMITMENTTYPE_OBJECTIVE]);
   });
 });
