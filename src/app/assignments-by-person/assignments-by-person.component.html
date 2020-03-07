@@ -7,9 +7,10 @@
     <h3>{{personDisplayNameWithUsername(person)}}</h3>
     <ul *ngIf="hasAssignments(person)">
       <li *ngFor="let oa of assignmentsFor(person)">
-        <span matBadge="{{commitmentTypeBadge(oa)}}"
-              matBadgePosition="above before"
-              matBadgeOverlap="false">{{oa.objective.name}}</span>: {{oa.assignment.commitment}} {{period.unit}}
+        <app-assignment
+          [objective]="oa.objective"
+          [assignedResources]="oa.assignment.commitment"
+          [unit]="period.unit"></app-assignment>
       </li>
     </ul>
     <p *ngIf="!hasAssignments(person)" class="noassignments">No assignments</p>

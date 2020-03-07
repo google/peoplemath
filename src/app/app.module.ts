@@ -40,6 +40,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
 import { ObjectiveSummaryComponent } from './objective-summary/objective-summary.component';
+import { AssignmentsClassifyComponent } from './assignments-classify/assignments-classify.component';
+import { AssignmentComponent } from './assignment/assignment.component';
 
 
 @NgModule({
@@ -61,6 +63,8 @@ import { ObjectiveSummaryComponent } from './objective-summary/objective-summary
     AddPeriodDialogComponent,
     PeriodSummaryComponent,
     ObjectiveSummaryComponent,
+    AssignmentsClassifyComponent,
+    AssignmentComponent,
   ],
   imports: [
     BrowserModule,
