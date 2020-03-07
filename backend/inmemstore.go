@@ -162,7 +162,14 @@ func makeFakePeriod(id string) Period {
 							GroupName: "Project 2",
 						},
 					},
-					Tags: []ObjectiveTag{},
+					Tags: []ObjectiveTag{
+						ObjectiveTag{
+							Name: "tag1",
+						},
+						ObjectiveTag{
+							Name: "tag2",
+						},
+					},
 				},
 			},
 		},
