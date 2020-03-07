@@ -22,7 +22,6 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Team } from '../team';
 import { Bucket, bucketResourcesAllocated } from '../bucket';
-import { Objective, CommitmentType, objectiveResourcesAllocated } from '../objective';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -49,33 +48,6 @@ export class PeriodSummaryComponent implements OnInit {
     return (total == 0) ? 0 : bucketResourcesAllocated(bucket) / total;
   }
 
-  hasCommittedObjectives(bucket: Bucket): boolean {
-    return this.committedObjectives(bucket).length > 0;
-  }
-
-  committedObjectives(bucket: Bucket): Objective[] {
-    return bucket.objectives.filter(
-      o => o.commitmentType == CommitmentType.Committed &&
-      objectiveResourcesAllocated(o) > 0);
-  }
-
-  hasAspirationalObjectives(bucket: Bucket): boolean {
-    return this.aspirationalObjectives(bucket).length > 0;
-  }
-
-  aspirationalObjectives(bucket: Bucket): Objective[] {
-    return bucket.objectives.filter(
-      o => o.commitmentType != CommitmentType.Committed &&
-      objectiveResourcesAllocated(o) > 0);
-  }
-
-  hasRejectedObjectives(bucket: Bucket): boolean {
-    return this.rejectedObjectives(bucket).length > 0;
-  }
-
-  rejectedObjectives(bucket: Bucket): Objective[] {
-    return bucket.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
-  }
 
   loadDataFor(teamId: string, periodId: string) {
     this.team = undefined;
