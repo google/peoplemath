@@ -200,8 +200,17 @@ func makeFakePeriod(id string) Period {
 							Commitment: 8,
 						},
 					},
-					Groups: []ObjectiveGroup{},
-					Tags:   []ObjectiveTag{},
+					Groups: []ObjectiveGroup{
+						ObjectiveGroup{
+							GroupType: "Project",
+							GroupName: "Project 1",
+						},
+					},
+					Tags: []ObjectiveTag{
+						ObjectiveTag{
+							Name: "tag2",
+						},
+					},
 				},
 			},
 		},

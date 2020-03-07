@@ -14,6 +14,7 @@
                             [unit]="period.unit">
                         </app-assignment>
                     </li>
+                    <li *ngIf="classobjs[1].length > 1"><b>Total:</b> {{totalAssignedResources(classobjs[1])}} {{period.unit}}</li>
                 </ul>
             </div>
         </div>
