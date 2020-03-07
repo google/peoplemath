@@ -56,8 +56,8 @@ export class AssignmentsClassifyComponent implements OnInit {
     });
     let result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
-      let resources1 = obs1.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
-      let resources2 = obs2.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
+      let resources1 = this.totalAssignedResources(obs1);
+      let resources2 = this.totalAssignedResources(obs2);
       return (resources2 - resources1) || g1.localeCompare(g2);
     });
     return result;
@@ -92,5 +92,9 @@ export class AssignmentsClassifyComponent implements OnInit {
 
   assignedResources(objective: Objective): number {
     return objectiveResourcesAllocated(objective);
+  }
+
+  totalAssignedResources(objectives: Objective[]): number {
+    return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
   }
 }
