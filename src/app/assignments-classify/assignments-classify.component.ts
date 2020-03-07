@@ -43,12 +43,14 @@ export class AssignmentsClassifyComponent implements OnInit {
     let result = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        let mgs = o.groups.filter(g => g.groupType == this.groupType);
-        if (mgs.length > 0) {
-          let groupName = mgs[0].groupName;
-          let obs = result.has(groupName) ? result.get(groupName) : [];
-          obs.push(o);
-          result.set(groupName, obs);
+        if (o.assignments.length > 0) {
+          let mgs = o.groups.filter(g => g.groupType == this.groupType);
+          if (mgs.length > 0) {
+            let groupName = mgs[0].groupName;
+            let obs = result.has(groupName) ? result.get(groupName) : [];
+            obs.push(o);
+            result.set(groupName, obs);
+          }
         }
       });
     });
@@ -59,11 +61,13 @@ export class AssignmentsClassifyComponent implements OnInit {
     let result = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        o.tags.forEach(t => {
-          let obs = result.has(t.name) ? result.get(t.name) : [];
-          obs.push(o);
-          result.set(t.name, obs);
-        });
+        if (o.assignments.length > 0) {
+          o.tags.forEach(t => {
+            let obs = result.has(t.name) ? result.get(t.name) : [];
+            obs.push(o);
+            result.set(t.name, obs);
+          });
+        }
       });
     });
     return Array.from(result.entries());
