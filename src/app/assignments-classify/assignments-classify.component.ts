@@ -40,37 +40,45 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   objectivesByGroup(): Array<[string, Objective[]]> {
-    let result = new Map<string, Objective[]>();
+    let obsByGroup = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.assignments.length > 0) {
           let mgs = o.groups.filter(g => g.groupType == this.groupType);
           if (mgs.length > 0) {
             let groupName = mgs[0].groupName;
-            let obs = result.has(groupName) ? result.get(groupName) : [];
+            let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName) : [];
             obs.push(o);
-            result.set(groupName, obs);
+            obsByGroup.set(groupName, obs);
           }
         }
       });
     });
-    return Array.from(result.entries());
+    let result = Array.from(obsByGroup.entries());
+    result.sort(([g1, obs1], [g2, obs2]) => {
+      let resources1 = obs1.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
+      let resources2 = obs2.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
+      return (resources2 - resources1) || g1.localeCompare(g2);
+    });
+    return result;
   }
 
   objectivesByTag(): Array<[string, Objective[]]> {
-    let result = new Map<string, Objective[]>();
+    let obsByTag = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.assignments.length > 0) {
           o.tags.forEach(t => {
-            let obs = result.has(t.name) ? result.get(t.name) : [];
+            let obs = obsByTag.has(t.name) ? obsByTag.get(t.name) : [];
             obs.push(o);
-            result.set(t.name, obs);
+            obsByTag.set(t.name, obs);
           });
         }
       });
     });
-    return Array.from(result.entries());
+    let result = Array.from(obsByTag.entries());
+    result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
+    return result;
   }
 
   objectivesByClass(): Array<[string, Objective[]]> {
