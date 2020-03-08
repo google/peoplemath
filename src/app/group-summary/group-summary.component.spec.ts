@@ -19,6 +19,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupSummaryComponent } from './group-summary.component';
 import { Period } from '../period';
 import { MaterialModule } from '../material/material.module';
+import { FormsModule } from '@angular/forms';
 
 describe('GroupSummaryComponent', () => {
   let component: GroupSummaryComponent;
@@ -45,6 +46,7 @@ describe('GroupSummaryComponent', () => {
       declarations: [ GroupSummaryComponent ],
       imports: [
         MaterialModule,
+        FormsModule,
       ],
     })
     .compileComponents();
