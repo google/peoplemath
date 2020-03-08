@@ -5,6 +5,9 @@
     <div fxLayout="column" fxLayoutGap="20px" width="100%">
         <app-group-summary *ngFor="let groupType of allGroupTypes()"
             [period]="period" [groupType]="groupType"></app-group-summary>
+
+        <app-tag-summary *ngFor="let tag of allTags()"
+            [period]="period" [tag]="tag"></app-tag-summary>
             
         <app-bucket-summary *ngFor="let bucket of period.buckets"
             [bucket]="bucket"

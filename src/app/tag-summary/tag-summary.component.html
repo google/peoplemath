@@ -1,0 +1,13 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Work tagged {{tag}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <ul>
+            <li *ngFor="let objective of taggedObjectives()">
+                <app-objective-summary [objective]="objective" [unit]="period.unit">
+                </app-objective-summary>
+            </li>
+        </ul>
+    </mat-card-content>
+</mat-card>
