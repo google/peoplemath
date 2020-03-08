@@ -48,6 +48,17 @@ export class PeriodSummaryComponent implements OnInit {
     return (total == 0) ? 0 : bucketResourcesAllocated(bucket) / total;
   }
 
+  allGroupTypes(): string[] {
+    let groupTypes = new Set<string>();
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.groups.forEach(g => {
+          groupTypes.add(g.groupType);
+        });
+      });
+    });
+    return Array.from(groupTypes);
+  }
 
   loadDataFor(teamId: string, periodId: string) {
     this.team = undefined;
