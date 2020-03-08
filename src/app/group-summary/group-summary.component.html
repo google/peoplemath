@@ -1,0 +1,18 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Summary by {{groupType}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div *ngFor="let bucket of period.buckets" class="titlealign">
+            <h3>{{bucket.displayName}}</h3>
+            <ul>
+                <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)"
+                    [class.fullyfunded]="isFullyFunded(groupobs[1])"
+                    [class.partiallyfunded]="isPartiallyFunded(groupobs[1])"
+                    [class.unfunded]="isUnfunded(groupobs[1])">
+                    {{groupobs[0]}}: {{totalResourcesAllocated(groupobs[1])}} {{period.unit}}
+                </li>
+            </ul>
+        </div>
+    </mat-card-content>
+</mat-card>

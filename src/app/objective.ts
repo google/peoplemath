@@ -44,3 +44,10 @@ export function objectiveResourcesAllocated(objective: Objective): number {
     .map(assignment => assignment.commitment)
     .reduce((sum, current) => sum + current, 0);
 }
+
+/**
+ * Sum of resources allocated to a number of objectives.
+ */
+export function totalResourcesAllocated(objectives: Objective[]): number {
+  return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
+}

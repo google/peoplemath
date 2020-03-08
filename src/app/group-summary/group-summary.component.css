@@ -1,0 +1,4 @@
+.titlealign { padding: 0 16px }
+.fullyfunded { font-weight: bold; }
+.partiallyfunded { color: orange; }
+.unfunded { color: grey; font-style: italic; }
