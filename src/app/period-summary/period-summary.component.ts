@@ -57,7 +57,21 @@ export class PeriodSummaryComponent implements OnInit {
         });
       });
     });
-    return Array.from(groupTypes);
+    let result = Array.from(groupTypes);
+    result.sort();
+    return result;
+  }
+
+  allTags(): string[] {
+    let tags = new Set<string>();
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.tags.forEach(t => tags.add(t.name));
+      });
+    });
+    let result = Array.from(tags);
+    result.sort();
+    return result;
   }
 
   loadDataFor(teamId: string, periodId: string) {

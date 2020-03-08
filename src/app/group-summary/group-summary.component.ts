@@ -17,7 +17,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Period } from '../period';
 import { Bucket } from '../bucket';
-import { Objective, totalResourcesAllocated, objectiveResourcesAllocated } from '../objective';
+import { Objective, totalResourcesAllocated, CommitmentType } from '../objective';
 
 @Component({
   selector: 'app-group-summary',
@@ -60,37 +60,24 @@ export class GroupSummaryComponent implements OnInit {
     return result;
   }
 
+  summaryObjective(groupName: string, objectives: Objective[]): Objective {
+    let commitmentTypes = new Set<CommitmentType>(objectives.map(o => o.commitmentType));
+    let commitmentType = CommitmentType.Aspirational;
+    if (commitmentTypes.size == 1 && commitmentTypes.has(CommitmentType.Committed)) {
+      commitmentType = CommitmentType.Committed;
+    }
+    return {
+      name: groupName,
+      commitmentType: commitmentType,
+      resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
+      assignments: [{personId: undefined, commitment: totalResourcesAllocated(objectives)}],
+      notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,
+      groups: [],
+      tags: [],
+    };
+  }
+
   totalResourcesAllocated(objectives: Objective[]) {
     return totalResourcesAllocated(objectives);
-  }
-
-  isFullyFunded(objectives: Objective[]): boolean {
-    for (let objective of objectives) {
-      let totalAllocated = objectiveResourcesAllocated(objective);
-      if (totalAllocated < objective.resourceEstimate) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  isPartiallyFunded(objectives: Objective[]): boolean {
-    for (let objective of objectives) {
-      let totalAllocated = objectiveResourcesAllocated(objective);
-      if (totalAllocated > 0 && totalAllocated < objective.resourceEstimate) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  isUnfunded(objectives: Objective[]): boolean {
-    for (let objective of objectives) {
-      let totalAllocated = objectiveResourcesAllocated(objective);
-      if (totalAllocated > 0) {
-        return false;
-      }
-    }
-    return true;
   }
 }

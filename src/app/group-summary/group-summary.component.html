@@ -6,11 +6,10 @@
         <div *ngFor="let bucket of period.buckets" class="titlealign">
             <h3>{{bucket.displayName}}</h3>
             <ul>
-                <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)"
-                    [class.fullyfunded]="isFullyFunded(groupobs[1])"
-                    [class.partiallyfunded]="isPartiallyFunded(groupobs[1])"
-                    [class.unfunded]="isUnfunded(groupobs[1])">
-                    {{groupobs[0]}}: {{totalResourcesAllocated(groupobs[1])}} {{period.unit}}
+                <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)">
+                    <app-objective-summary
+                        [objective]="summaryObjective(groupobs[0], groupobs[1])"
+                        [unit]="period.unit"></app-objective-summary>
                 </li>
             </ul>
         </div>

@@ -44,6 +44,7 @@ import { AssignmentsClassifyComponent } from './assignments-classify/assignments
 import { AssignmentComponent } from './assignment/assignment.component';
 import { BucketSummaryComponent } from './bucket-summary/bucket-summary.component';
 import { GroupSummaryComponent } from './group-summary/group-summary.component';
+import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { GroupSummaryComponent } from './group-summary/group-summary.component';
     AssignmentComponent,
     BucketSummaryComponent,
     GroupSummaryComponent,
+    TagSummaryComponent,
   ],
   imports: [
     BrowserModule,
