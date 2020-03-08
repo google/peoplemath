@@ -8,6 +8,7 @@
                 <app-objective-summary [objective]="objective" [unit]="period.unit">
                 </app-objective-summary>
             </li>
+            <li><b>Total:</b> {{totalAllocationsForTag()}} {{period.unit}}</li>
         </ul>
     </mat-card-content>
 </mat-card>

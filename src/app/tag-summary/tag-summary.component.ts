@@ -16,7 +16,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Period } from '../period';
-import { Objective, objectiveResourcesAllocated } from '../objective';
+import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-tag-summary',
@@ -43,5 +43,9 @@ export class TagSummaryComponent implements OnInit {
     });
     result.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
     return result;
+  }
+
+  totalAllocationsForTag(): number {
+    return totalResourcesAllocated(this.taggedObjectives());
   }
 }
