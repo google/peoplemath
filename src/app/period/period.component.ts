@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -225,7 +225,16 @@ export class PeriodComponent implements OnInit {
         this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": '
           + error.error, 'Dismiss');
         console.log(error);
-        return of(new Period('', '', '', '', 0, [], [], ''));
+        return of({
+          id: '',
+          displayName: '',
+          unit: '',
+          notesURL: '',
+          maxCommittedPercentage: 0,
+          people: [],
+          buckets: [],
+          lastUpdateUUID: '',
+        });
       })
     ).subscribe(period => this.period = period);
   }
