@@ -54,7 +54,7 @@ describe('ResourceQuantityComponent', () => {
       {name: 'millithings', conversionFactor: 0.001},
     ];
     fixture.detectChanges();
-    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1.0 millithings)');
+    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings)');
 
     component.ofQuantity = undefined;
     fixture.detectChanges();
@@ -63,6 +63,6 @@ describe('ResourceQuantityComponent', () => {
     component.ofQuantity = 1000;
     component.secondaryUnits.push({name: 'centithings', conversionFactor: 0.01});
     fixture.detectChanges();
-    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1.0 millithings, 5.0 of 10.0 centithings)');
+    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings, 5 of 10 centithings)');
   });
 });
