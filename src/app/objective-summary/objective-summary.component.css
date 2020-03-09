@@ -1,3 +1,4 @@
 .resources { font-style: italic }
 .rejected { color: grey }
 .partialalloc { color: orange }
+app-resource-quantity { margin-left: 1em; }

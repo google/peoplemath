@@ -15,6 +15,11 @@
 import { Bucket, bucketResourcesAllocated } from "./bucket";
 import { Person } from "./person";
 
+export interface SecondaryUnit {
+  name: string,
+  conversionFactor: number,
+}
+
 export interface Period {
   id: string,
   displayName: string,
@@ -23,6 +28,7 @@ export interface Period {
   maxCommittedPercentage: number,
   buckets: Bucket[],
   people: Person[],
+  secondaryUnits: SecondaryUnit[],
   lastUpdateUUID: string,
 }
 

@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import { AssignmentComponent } from './assignment/assignment.component';
 import { BucketSummaryComponent } from './bucket-summary/bucket-summary.component';
 import { GroupSummaryComponent } from './group-summary/group-summary.component';
 import { TagSummaryComponent } from './tag-summary/tag-summary.component';
+import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { TagSummaryComponent } from './tag-summary/tag-summary.component';
     BucketSummaryComponent,
     GroupSummaryComponent,
     TagSummaryComponent,
+    ResourceQuantityComponent,
   ],
   imports: [
     BrowserModule,

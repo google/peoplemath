@@ -1,2 +1,8 @@
 {{objective.name}}
-<span class="resources" [class.rejected]="isRejected()" [class.partialalloc]="isPartiallyAllocated()">({{allocationSummary()}} {{unit}})</span>
+<span class="resources" [class.rejected]="isRejected()" [class.partialalloc]="isPartiallyAllocated()">
+    <app-resource-quantity
+        [quantity]="allocatedResources()"
+        [ofQuantity]="objective.resourceEstimate"
+        [primaryUnit]="unit"
+        [secondaryUnits]="secondaryUnits"></app-resource-quantity>
+</span>

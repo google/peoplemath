@@ -16,6 +16,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Objective, objectiveResourcesAllocated } from '../objective';
+import { SecondaryUnit } from '../period';
 
 @Component({
   selector: 'app-objective-summary',
@@ -25,6 +26,7 @@ import { Objective, objectiveResourcesAllocated } from '../objective';
 export class ObjectiveSummaryComponent implements OnInit {
   @Input() objective: Objective;
   @Input() unit: string;
+  @Input() secondaryUnits: SecondaryUnit[];
 
   constructor() { }
 

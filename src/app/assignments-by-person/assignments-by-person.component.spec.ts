@@ -37,6 +37,7 @@ describe('AssignmentsByPersonComponent', () => {
       id: 'test',
       displayName: 'Test Period',
       unit: 'person weeks',
+      secondaryUnits: [],
       notesURL: '',
       maxCommittedPercentage: 0,
       buckets: [],

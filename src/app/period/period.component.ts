@@ -229,6 +229,7 @@ export class PeriodComponent implements OnInit {
           id: '',
           displayName: '',
           unit: '',
+          secondaryUnits: [],
           notesURL: '',
           maxCommittedPercentage: 0,
           people: [],

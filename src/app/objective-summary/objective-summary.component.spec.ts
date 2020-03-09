@@ -18,6 +18,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ObjectiveSummaryComponent } from './objective-summary.component';
 import { CommitmentType } from '../objective';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('ObjectiveSummaryComponent', () => {
   let component: ObjectiveSummaryComponent;
@@ -25,7 +26,10 @@ describe('ObjectiveSummaryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ObjectiveSummaryComponent ]
+      declarations: [
+        ObjectiveSummaryComponent,
+        ResourceQuantityComponent,
+      ],
     })
     .compileComponents();
   }));

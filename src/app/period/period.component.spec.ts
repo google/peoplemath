@@ -38,6 +38,7 @@ describe('PeriodComponent', () => {
     id: 'testPeriod',
     displayName: 'My test period',
     unit: 'person weeks',
+    secondaryUnits: [],
     notesURL: '',
     maxCommittedPercentage: 0,
     people: [],

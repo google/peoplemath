@@ -18,7 +18,6 @@ import { EditPeriodDialogComponent, EditPeriodDialogData } from './edit-period-d
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Period } from '../period';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditPeriodDialogComponent', () => {
@@ -30,6 +29,7 @@ describe('EditPeriodDialogComponent', () => {
       id: 'mytest',
       displayName: 'My Test Period',
       unit: 'person weeks',
+      secondaryUnits: [],
       notesURL: '',
       maxCommittedPercentage: 0,
       people: [],
@@ -64,5 +64,21 @@ describe('EditPeriodDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should parse secondary units', () => {
+    component.secondaryUnitsControl.setValue('');
+    expect(component.parseSecondaryUnits()).toEqual([]);
+
+    component.secondaryUnitsControl.setValue('person days:7');
+    expect(component.parseSecondaryUnits()).toEqual([
+      {name: 'person days', conversionFactor: 7},
+    ]);
+
+    component.secondaryUnitsControl.setValue('person days:7, person hours:168');
+    expect(component.parseSecondaryUnits()).toEqual([
+      {name: 'person days', conversionFactor: 7},
+      {name: 'person hours', conversionFactor: 168},
+    ]);
   });
 });

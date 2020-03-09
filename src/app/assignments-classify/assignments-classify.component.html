@@ -14,7 +14,12 @@
                             [unit]="period.unit">
                         </app-assignment>
                     </li>
-                    <li *ngIf="classobjs[1].length > 1"><b>Total:</b> {{totalAssignedResources(classobjs[1])}} {{period.unit}}</li>
+                    <li *ngIf="classobjs[1].length > 1">
+                        <b>Total:</b> <app-resource-quantity
+                            [quantity]="totalAssignedResources(classobjs[1])"
+                            [primaryUnit]="period.unit"
+                            [secondaryUnits]="period.secondaryUnits"></app-resource-quantity>
+                    </li>
                 </ul>
             </div>
         </div>

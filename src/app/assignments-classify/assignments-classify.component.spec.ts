@@ -18,6 +18,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentsClassifyComponent } from './assignments-classify.component';
 import { MaterialModule } from '../material/material.module';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('AssignmentsClassifyComponent', () => {
   let component: AssignmentsClassifyComponent;
@@ -25,7 +26,10 @@ describe('AssignmentsClassifyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssignmentsClassifyComponent ],
+      declarations: [
+        AssignmentsClassifyComponent,
+        ResourceQuantityComponent,
+      ],
       imports: [
         MaterialModule,
       ],
