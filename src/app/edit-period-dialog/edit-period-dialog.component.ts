@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Inject } from '@angular/core';
-import { Period } from '../period';
+import { Period, SecondaryUnit } from '../period';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -33,6 +33,7 @@ export class EditPeriodDialogComponent implements OnInit {
   periodIdControl: FormControl;
   displayNameControl: FormControl;
   unitControl: FormControl;
+  secondaryUnitsControl: FormControl;
   notesUrlControl: FormControl;
   maxCommitPctControl: FormControl;
 
@@ -43,11 +44,30 @@ export class EditPeriodDialogComponent implements OnInit {
     this.periodIdControl = new FormControl(data.period.id, Validators.required);
     this.displayNameControl = new FormControl(data.period.displayName, Validators.required);
     this.unitControl = new FormControl(data.period.unit, Validators.required);
+    this.secondaryUnitsControl = new FormControl(data.period.secondaryUnits.map(
+      su => su.name + ":" + su.conversionFactor).join(","));
     this.notesUrlControl = new FormControl(data.period.notesURL);
     this.maxCommitPctControl = new FormControl(data.period.maxCommittedPercentage, [Validators.min(0), Validators.max(100)]);
   }
 
   ngOnInit() {
+  }
+
+  parseSecondaryUnits(): SecondaryUnit[] {
+    return this.secondaryUnitsControl.value.split(",").filter(
+      (kv: string) => !!kv.trim()
+    ).map(
+      (kv: string) => {
+        let result: SecondaryUnit;
+        let parts = kv.split(":").map(s => s.trim());
+        if (parts.length > 1) {
+          result = {name: parts[0], conversionFactor: parseFloat(parts[1])};
+        } else {
+          result = {name: parts[0], conversionFactor: 1.0};
+        }
+        return result;
+      }
+    );
   }
 
   onOK(): void {
@@ -56,6 +76,8 @@ export class EditPeriodDialogComponent implements OnInit {
     }
     this.data.period.displayName = this.displayNameControl.value;
     this.data.period.unit = this.unitControl.value;
+    let secondaryUnits: SecondaryUnit[] = this.parseSecondaryUnits();
+    this.data.period.secondaryUnits = secondaryUnits;
     this.data.period.notesURL = this.notesUrlControl.value;
     this.data.period.maxCommittedPercentage = this.maxCommitPctControl.value;
     this.dialogRef.close(true);
@@ -69,6 +91,7 @@ export class EditPeriodDialogComponent implements OnInit {
     return this.periodIdControl.valid
         && this.displayNameControl.valid
         && this.unitControl.valid
+        && this.secondaryUnitsControl.valid
         && this.notesUrlControl.valid
         && this.maxCommitPctControl.valid;
   }

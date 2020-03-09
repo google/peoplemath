@@ -29,6 +29,7 @@ import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.component';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 let TEST_TEAM = new Team('teamid', 'Team Name');
 let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
@@ -49,6 +50,7 @@ let TEST_PERIOD: Period = {
   id: 'periodid',
   displayName: 'Period Name',
   unit: 'units',
+  secondaryUnits: [],
   notesURL: '',
   maxCommittedPercentage: 50,
   buckets: BUCKETS,
@@ -67,6 +69,7 @@ describe('PeriodSummaryComponent', () => {
         PeriodSummaryComponent,
         BucketSummaryComponent,
         ObjectiveSummaryComponent,
+        ResourceQuantityComponent,
       ],
       imports: [
         RouterTestingModule,

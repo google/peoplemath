@@ -19,6 +19,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TagSummaryComponent } from './tag-summary.component';
 import { Period } from '../period';
 import { MaterialModule } from '../material/material.module';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('TagSummaryComponent', () => {
   let component: TagSummaryComponent;
@@ -28,6 +29,7 @@ describe('TagSummaryComponent', () => {
     displayName: 'Period',
     maxCommittedPercentage: 50,
     unit: 'things',
+    secondaryUnits: [],
     notesURL: '',
     buckets: [],
     people: [],
@@ -36,7 +38,10 @@ describe('TagSummaryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TagSummaryComponent ],
+      declarations: [
+        TagSummaryComponent,
+        ResourceQuantityComponent,
+      ],
       imports: [
         MaterialModule,
       ],

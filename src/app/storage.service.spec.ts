@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ describe('StorageService', () => {
     id: 'testperiod',
     displayName: 'Test period',
     unit: 'units',
+    secondaryUnits: [],
     notesURL: '',
     maxCommittedPercentage: 50,
     people: [],
@@ -146,6 +147,7 @@ describe('StorageService', () => {
       id: 'p' + i,
       displayName: 'Pd ' + i,
       unit: 'units',
+      secondaryUnits: [],
       notesURL: '',
       maxCommittedPercentage: 50,
       people: [],

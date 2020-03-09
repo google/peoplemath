@@ -40,13 +40,14 @@ type Team struct {
 
 // Period model struct
 type Period struct {
-	ID                     string   `json:"id"`
-	DisplayName            string   `json:"displayName"`
-	Unit                   string   `json:"unit"`
-	NotesURL               string   `json:"notesURL"`
-	MaxCommittedPercentage float64  `json:"maxCommittedPercentage"`
-	Buckets                []Bucket `json:"buckets"`
-	People                 []Person `json:"people"`
+	ID                     string          `json:"id"`
+	DisplayName            string          `json:"displayName"`
+	Unit                   string          `json:"unit"`
+	NotesURL               string          `json:"notesURL"`
+	MaxCommittedPercentage float64         `json:"maxCommittedPercentage"`
+	Buckets                []Bucket        `json:"buckets"`
+	People                 []Person        `json:"people"`
+	SecondaryUnits         []SecondaryUnit `json:"secondaryUnits"`
 	// UUID for simple optimistic concurrency control
 	LastUpdateUUID string `json:"lastUpdateUUID"`
 }
@@ -78,6 +79,12 @@ type ObjectiveGroup struct {
 // ObjectiveTag model struct
 type ObjectiveTag struct {
 	Name string `json:"name"`
+}
+
+// SecondaryUnit model struct
+type SecondaryUnit struct {
+	Name             string  `json:"name"`
+	ConversionFactor float64 `json:"conversionFactor"`
 }
 
 // Valid commitment types for assignments

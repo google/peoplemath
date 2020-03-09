@@ -203,6 +203,9 @@ func scrubLoadedPeriod(period *Period) {
 	if period.Buckets == nil {
 		period.Buckets = []Bucket{}
 	}
+	if period.SecondaryUnits == nil {
+		period.SecondaryUnits = []SecondaryUnit{}
+	}
 	for i := range period.Buckets {
 		if period.Buckets[i].Objectives == nil {
 			period.Buckets[i].Objectives = []Objective{}

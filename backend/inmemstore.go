@@ -238,9 +238,15 @@ func makeFakePeriod(id string) Period {
 		},
 	}
 	return Period{
-		ID:                     id,
-		DisplayName:            strings.ToUpper(id),
-		Unit:                   "person weeks",
+		ID:          id,
+		DisplayName: strings.ToUpper(id),
+		Unit:        "person weeks",
+		SecondaryUnits: []SecondaryUnit{
+			SecondaryUnit{
+				Name:             "person years",
+				ConversionFactor: 7.0 / 365.0,
+			},
+		},
 		NotesURL:               "https://github.com/google/peoplemath",
 		MaxCommittedPercentage: 50,
 		Buckets:                buckets,

@@ -28,6 +28,7 @@ describe('GroupSummaryComponent', () => {
     id: 'p',
     displayName: 'Period',
     unit: 'things',
+    secondaryUnits: [],
     maxCommittedPercentage: 50,
     buckets: [
       {

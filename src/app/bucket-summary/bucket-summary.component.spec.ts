@@ -22,6 +22,7 @@ import { Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('BucketSummaryComponent', () => {
   let component: BucketSummaryComponent;
@@ -44,6 +45,7 @@ describe('BucketSummaryComponent', () => {
       declarations: [
         BucketSummaryComponent,
         ObjectiveSummaryComponent,
+        ResourceQuantityComponent,
       ],
       imports: [
         MaterialModule,
