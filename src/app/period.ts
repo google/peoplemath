@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
 import { Bucket, bucketResourcesAllocated } from "./bucket";
 import { Person } from "./person";
 
-export class Period {
-  constructor(
-    public id: string,
-    public displayName: string,
-    public unit: string = 'person weeks',
-    public notesURL: string,
-    public maxCommittedPercentage: number,
-    public buckets: Bucket[] = [],
-    public people: Person[] = [],
-    public lastUpdateUUID: string,
-  ) {}
+export interface Period {
+  id: string,
+  displayName: string,
+  unit: string,
+  notesURL: string,
+  maxCommittedPercentage: number,
+  buckets: Bucket[],
+  people: Person[],
+  lastUpdateUUID: string,
 }
 
 /**

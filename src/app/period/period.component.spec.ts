@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,16 @@ describe('PeriodComponent', () => {
   let fixture: ComponentFixture<PeriodComponent>;
   let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
   let TEST_TEAM = new Team('testTeam', 'My test team');
-  let TEST_PERIOD = new Period('testPeriod', 'My test period', 'person weeks', '', 0, [], [], '');
+  let TEST_PERIOD: Period = {
+    id: 'testPeriod',
+    displayName: 'My test period',
+    unit: 'person weeks',
+    notesURL: '',
+    maxCommittedPercentage: 0,
+    people: [],
+    buckets: [],
+    lastUpdateUUID: '',
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

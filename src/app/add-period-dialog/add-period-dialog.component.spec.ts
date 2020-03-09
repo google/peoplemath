@@ -18,7 +18,6 @@ import { AddPeriodDialogComponent, AddPeriodDialogData, CreateMethod } from './a
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Period } from '../period';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddPeriodDialogComponent', () => {
@@ -26,7 +25,16 @@ describe('AddPeriodDialogComponent', () => {
   let fixture: ComponentFixture<AddPeriodDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   let DIALOG_DATA: AddPeriodDialogData = {
-    period: new Period('test', 'Test Period', 'person weeks', '', 0, [], [], ''),
+    period: {
+      id: 'test',
+      displayName: 'Test Period',
+      unit: 'person weeks',
+      notesURL: '',
+      maxCommittedPercentage: 0,
+      people: [],
+      buckets: [],
+      lastUpdateUUID: '',
+    },
     createMethod: CreateMethod.Blank,
     existingPeriods: [],
     copyFromPeriodID: '',

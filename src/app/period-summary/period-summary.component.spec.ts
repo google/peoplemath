@@ -45,7 +45,16 @@ let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
 let BUCKETS = [new Bucket('Bucket 1', 100, [
   NO_COMMITMENTTYPE_OBJECTIVE,
 ])];
-let TEST_PERIOD = new Period('periodid', 'Period Name', 'units', '', 50, BUCKETS, [], '');
+let TEST_PERIOD: Period = {
+  id: 'periodid',
+  displayName: 'Period Name',
+  unit: 'units',
+  notesURL: '',
+  maxCommittedPercentage: 50,
+  buckets: BUCKETS,
+  people: [],
+  lastUpdateUUID: '',
+};
 let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
 
 describe('PeriodSummaryComponent', () => {

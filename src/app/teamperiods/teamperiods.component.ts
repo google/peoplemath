@@ -87,7 +87,16 @@ export class TeamPeriodsComponent implements OnInit {
     }
     const existingPeriods = this.sortedPeriods();
     const dialogData: AddPeriodDialogData = {
-      period: new Period('', '', 'person weeks', '', DEFAULT_MAX_COMMITTED_PERCENTAGE, [], [], ''),
+      period: {
+        id: '',
+        displayName: '',
+        unit: 'person weeks',
+        notesURL: '',
+        maxCommittedPercentage: DEFAULT_MAX_COMMITTED_PERCENTAGE,
+        people: [],
+        buckets: [],
+        lastUpdateUUID: '',
+      },
       createMethod: CreateMethod.Blank,
       existingPeriods: existingPeriods,
       copyFromPeriodID: existingPeriods[0].id,
@@ -111,12 +120,16 @@ export class TeamPeriodsComponent implements OnInit {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
         }
-        newPeriod = new Period(data.period.id, data.period.displayName,
-          data.copyUnit ? copiedPeriod.unit : data.period.unit, data.period.notesURL,
-          data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
-          data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
-          data.copyPeople ? copiedPeriod.people : [],
-          '');
+        newPeriod = {
+          id: data.period.id,
+          displayName: data.period.displayName,
+          unit: data.copyUnit ? copiedPeriod.unit : data.period.unit,
+          notesURL: data.period.notesURL,
+          maxCommittedPercentage: data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
+          buckets: data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
+          people: data.copyPeople ? copiedPeriod.people : [],
+          lastUpdateUUID: '',
+        };
       } else {
         console.error('Unexpected createMethod "' + data.createMethod + '"');
         return;
@@ -163,7 +176,16 @@ export class TeamPeriodsComponent implements OnInit {
 
   addBlankPeriod(): void {
     const dialogData: EditPeriodDialogData = {
-      period: new Period('', '', 'person weeks', '', DEFAULT_MAX_COMMITTED_PERCENTAGE, [], [], ''),
+      period: {
+        id: '',
+        displayName: '',
+        unit: 'person weeks',
+        notesURL: '',
+        maxCommittedPercentage: DEFAULT_MAX_COMMITTED_PERCENTAGE,
+        people: [],
+        buckets: [],
+        lastUpdateUUID: '',
+      },
       title: 'New Period',
       okAction: 'Add',
       allowEditID: true,

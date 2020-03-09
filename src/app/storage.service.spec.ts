@@ -24,6 +24,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 describe('StorageService', () => {
   let httpTestingController: HttpTestingController;
   let service: StorageService;
+  let PERIOD: Period = {
+    id: 'testperiod',
+    displayName: 'Test period',
+    unit: 'units',
+    notesURL: '',
+    maxCommittedPercentage: 50,
+    people: [],
+    buckets: [],
+    lastUpdateUUID: '',
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -96,49 +106,52 @@ describe('StorageService', () => {
   });
 
   it('should be able to POST a period', () => {
-    const period = new Period('testperiod', 'Test period', 'units', '', 50, [], [], '');
     const response: ObjectUpdateResponse = {lastUpdateUUID: 'newuuid'};
-    service.addPeriod('testteam', period).subscribe(data => expect(data).toEqual(response));
+    service.addPeriod('testteam', PERIOD).subscribe(data => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');
 
     expect(req.request.method).toEqual('POST');
     expect(req.request.headers.get('Content-Type')).toEqual('application/json');
-    expect(req.request.body).toEqual(period);
+    expect(req.request.body).toEqual(PERIOD);
 
     req.flush(response);
   });
 
   it('should be able to PUT a period', () => {
-    const period = new Period('testperiod', 'Test period', 'units', '', 50, [], [], '');
     const response: ObjectUpdateResponse = {lastUpdateUUID: 'newuuid'};
-    service.updatePeriod('testteam', period).subscribe(data => expect(data).toEqual(response));
+    service.updatePeriod('testteam', PERIOD).subscribe(data => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
 
     expect(req.request.method).toEqual('PUT');
     expect(req.request.headers.get('Content-Type')).toEqual('application/json');
-    expect(req.request.body).toEqual(period);
+    expect(req.request.body).toEqual(PERIOD);
 
     req.flush(response);
   });
 
   it('should be able to GET a period', () => {
-    const period = new Period('testperiod', 'Test period', 'units', '', 50, [], [], '');
-    service.getPeriod('testteam', 'testperiod').subscribe(data => expect(data).toEqual(period));
+    service.getPeriod('testteam', 'testperiod').subscribe(data => expect(data).toEqual(PERIOD));
 
     const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
 
     expect(req.request.method).toEqual('GET');
     
-    req.flush(period);
+    req.flush(PERIOD);
   });
 
   it('should be able to GET all periods for a team', () => {
-    const periods = [
-      new Period('p1', 'Pd 1', 'units', '', 50, [], [], ''),
-      new Period('p2', 'Pd 2', 'units', '', 50, [], [], ''),
-    ];
+    const periods: Period[] = [1, 2].map(i => { return {
+      id: 'p' + i,
+      displayName: 'Pd ' + i,
+      unit: 'units',
+      notesURL: '',
+      maxCommittedPercentage: 50,
+      people: [],
+      buckets: [],
+      lastUpdateUUID: '',
+    }});
     service.getPeriods('testteam').subscribe(data => expect(data).toEqual(periods));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');

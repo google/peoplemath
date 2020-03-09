@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,16 @@ describe('AssignmentsByPersonComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentsByPersonComponent);
     component = fixture.componentInstance;
-    component.period = new Period('test', 'Test Period', 'person weeks', '', 0, [], [], '');
+    component.period = {
+      id: 'test',
+      displayName: 'Test Period',
+      unit: 'person weeks',
+      notesURL: '',
+      maxCommittedPercentage: 0,
+      buckets: [],
+      people: [],
+      lastUpdateUUID: '',
+    };
     fixture.detectChanges();
   });
 
