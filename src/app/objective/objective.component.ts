@@ -125,4 +125,8 @@ export class ObjectiveComponent implements OnInit {
       default: return "";
     }
   }
+
+  enableAssignButton(): boolean {
+    return this.isEditingEnabled && this.objective.resourceEstimate > 0;
+  }
 }

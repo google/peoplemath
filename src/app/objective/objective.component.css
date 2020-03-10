@@ -5,5 +5,7 @@
 .assignments { margin-left: 10px; font-weight: bold }
 .unassigned { color: grey }
 .fully-allocated { color: green }
-.order-buttons { margin-right: 10px }
-.mat-icon-button { width: 30px }
+.assign-button { font-weight: bold; }
+.assign-button-enabled a { color: #674ab7; text-decoration: none; }
+.assign-button-enabled a:hover { text-decoration: underline; }
+.assign-button-disabled { color: grey; }
