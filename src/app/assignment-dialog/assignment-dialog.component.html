@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Assign "{{data.objective.name}}"</h1>
+<h1 mat-dialog-title class="ellipsis-title">Assign "{{data.objective.name}}"</h1>
 <div mat-dialog-content>
     <p [class.error]="unassignedTime() < 0">Unassigned: {{unassignedTime()}} {{data.unit}}</p>
     <table mat-table [dataSource]="data.people">
