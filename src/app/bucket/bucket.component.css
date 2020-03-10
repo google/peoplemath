@@ -2,3 +2,4 @@
 .order-buttons { margin-right: 10px }
 .mat-icon-button { width: 30px }
 .reorder-icon { vertical-align: middle; padding-right: 10px }
+.app-mat-list .mat-list-item { height: auto; min-height: 40px; }
