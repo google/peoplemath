@@ -49,17 +49,20 @@ export class AssignmentsClassifyComponent implements OnInit {
     let obsByGroup = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        if (o.assignments.length > 0) {
-          let mgs = o.groups.filter(g => g.groupType == this.groupType);
-          if (mgs.length > 0) {
-            let groupName = mgs[0].groupName;
-            let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName) : [];
-            obs.push(o);
-            obsByGroup.set(groupName, obs);
+        let mgs = o.groups.filter(g => g.groupType == this.groupType);
+        if (mgs.length > 0) {
+          let groupName = mgs[0].groupName;
+          if (obsByGroup.has(groupName)) {
+            obsByGroup.get(groupName).push(o);
+          } else {
+            obsByGroup.set(groupName, [o]);
           }
         }
       });
     });
+    for (let [_g, obs] of obsByGroup) {
+      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+    }
     let result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
       let resources1 = this.totalAssignedResources(obs1);
@@ -73,15 +76,18 @@ export class AssignmentsClassifyComponent implements OnInit {
     let obsByTag = new Map<string, Objective[]>();
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        if (o.assignments.length > 0) {
-          o.tags.forEach(t => {
-            let obs = obsByTag.has(t.name) ? obsByTag.get(t.name) : [];
-            obs.push(o);
-            obsByTag.set(t.name, obs);
-          });
-        }
+        o.tags.forEach(t => {
+          if (obsByTag.has(t.name)) {
+            obsByTag.get(t.name).push(o);
+          } else {
+            obsByTag.set(t.name, [o]);
+          }
+        });
       });
     });
+    for (let [_g, obs] of obsByTag) {
+      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+    }
     let result = Array.from(obsByTag.entries());
     result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
     return result;
@@ -109,7 +115,6 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   renameClass(cname: string) {
-    console.log(cname);
     let data: RenameClassDialogData = {
       classType: this.aggregateBy,
       currentName: cname,

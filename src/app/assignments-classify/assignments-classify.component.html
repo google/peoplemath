@@ -11,7 +11,8 @@
                         <app-assignment
                             [objective]="objective"
                             [assignedResources]="assignedResources(objective)"
-                            [unit]="period.unit">
+                            [unit]="period.unit"
+                            [class.no-resources-assigned]="assignedResources(objective) <= 0">
                         </app-assignment>
                     </li>
                     <li *ngIf="classobjs[1].length > 1">
