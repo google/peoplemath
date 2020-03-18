@@ -46,6 +46,7 @@ import { BucketSummaryComponent } from './bucket-summary/bucket-summary.componen
 import { GroupSummaryComponent } from './group-summary/group-summary.component';
 import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
+import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { ResourceQuantityComponent } from './resource-quantity/resource-quantity
     GroupSummaryComponent,
     TagSummaryComponent,
     ResourceQuantityComponent,
+    RenameClassDialog,
   ],
   imports: [
     BrowserModule,
@@ -93,6 +95,7 @@ import { ResourceQuantityComponent } from './resource-quantity/resource-quantity
     EditPeriodDialogComponent,
     EditTeamDialogComponent,
     AddPeriodDialogComponent,
+    RenameClassDialog,
   ],
   providers: [
     StorageService,

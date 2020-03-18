@@ -4,8 +4,8 @@
     </mat-card-header>
     <mat-card-content>
         <div class="assignments">
-            <div *ngFor="let classobjs of objectivesByClass()">
-                <h3>{{classobjs[0]}}</h3>
+            <div *ngFor="let classobjs of objectivesByClass(); trackBy: classTrackBy">
+                <h3>{{classobjs[0]}}<span *ngIf="isEditingEnabled"> (<span class="rename-button"><a (click)="renameClass(classobjs[0])">Rename</a></span>)</span></h3>
                 <ul>
                     <li *ngFor="let objective of classobjs[1]">
                         <app-assignment
