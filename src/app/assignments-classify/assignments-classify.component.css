@@ -4,3 +4,4 @@ app-resource-quantity { margin-left: 0.5em; }
 .rename-button { font-weight: bold; }
 .rename-button a { color: #674ab7; text-decoration: none; }
 .rename-button a:hover { text-decoration: underline; }
+.no-resources-assigned { color: grey; }
