@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Rename {{data.classType}} {{data.currentName}}</h1>
+
+<div mat-dialog-content>
+    <p>New name</p>
+    <mat-form-field>
+        <input matInput [(ngModel)]="newName">
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="save()" color="warn">Rename</button>
+    <button mat-raised-button (click)="cancel()">Cancel</button>
+</div>

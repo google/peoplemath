@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Period } from '../period';
 import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
+import { MatDialog } from '@angular/material/dialog';
+import { RenameClassDialog, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
 
 enum AggregateBy {
   Group = 'group',
@@ -33,8 +35,12 @@ export class AssignmentsClassifyComponent implements OnInit {
   @Input() aggregateBy: AggregateBy;
   @Input() groupType: string;
   @Input() title: string;
+  @Input() isEditingEnabled: boolean;
+  @Output() onRename = new EventEmitter<[string, string]>();
 
-  constructor() { }
+  constructor(
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
   }
@@ -90,11 +96,29 @@ export class AssignmentsClassifyComponent implements OnInit {
     }
   }
 
+  classTrackBy(classobj: [string, Objective[]]): string {
+    return classobj[0];
+  }
+
   assignedResources(objective: Objective): number {
     return objectiveResourcesAllocated(objective);
   }
 
   totalAssignedResources(objectives: Objective[]): number {
     return totalResourcesAllocated(objectives);
+  }
+
+  renameClass(cname: string) {
+    console.log(cname);
+    let data: RenameClassDialogData = {
+      classType: this.aggregateBy,
+      currentName: cname,
+    };
+    let dialog = this.dialog.open(RenameClassDialog, {data: data});
+    dialog.afterClosed().subscribe(newName => {
+      if (newName) {
+        this.onRename.emit([cname, newName]);
+      }
+    });
   }
 }

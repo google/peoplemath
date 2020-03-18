@@ -61,9 +61,14 @@
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
 <app-assignments-classify *ngFor="let groupType of groupTypesWithAssignments()"
     [period]="period" aggregateBy="group" [groupType]="groupType"
+    [isEditingEnabled]="isEditingEnabled"
+    (onRename)="renameGroup($event[0], $event[1])"
     title="Assignments by {{groupType}}"></app-assignments-classify>
 <app-assignments-classify *ngIf="hasTagsWithAssignments()"
-    [period]="period" aggregateBy="tag" title="Assignments by tag"></app-assignments-classify>
+    [period]="period" aggregateBy="tag"
+    [isEditingEnabled]="isEditingEnabled"
+    (onRename)="renameTag($event[0], $event[1])"
+    title="Assignments by tag"></app-assignments-classify>
 </span>
 
 </div>

@@ -209,6 +209,40 @@ export class PeriodComponent implements OnInit {
     return false;
   }
 
+  renameGroup(oldName: string, newName: string) {
+    let changed = false;
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.groups.forEach(g => {
+          if (g.groupName == oldName) {
+            g.groupName = newName;
+            changed = true;
+          }
+        });
+      });
+    });
+    if (changed) {
+      this.save();
+    }
+  }
+
+  renameTag(oldName: string, newName: string) {
+    let changed = false;
+    this.period.buckets.forEach(b => {
+      b.objectives.forEach(o => {
+        o.tags.forEach(t => {
+          if (t.name == oldName) {
+            t.name = newName;
+            changed = true;
+          }
+        });
+      });
+    });
+    if (changed) {
+      this.save();
+    }
+  }
+
   loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;
