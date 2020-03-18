@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Objective, objectiveResourcesAllocated } from '../objective';
+import { Objective, objectiveResourcesAllocated, CommitmentType } from '../objective';
 import { SecondaryUnit } from '../period';
 
 @Component({
@@ -53,5 +53,10 @@ export class ObjectiveSummaryComponent implements OnInit {
 
   isPartiallyAllocated(): boolean {
     return !this.isRejected() && this.allocatedResources() < this.objective.resourceEstimate;
+  }
+
+  isCommittedAndFullyAllocated(): boolean {
+    return this.objective.commitmentType == CommitmentType.Committed &&
+      this.allocatedResources() >= this.objective.resourceEstimate;
   }
 }
