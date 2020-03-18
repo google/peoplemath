@@ -55,12 +55,9 @@ export class GroupSummaryComponent implements OnInit {
       }
     });
 
-    // Sort objectives in each group by descending allocation
-    for (let [_, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
-    }
-    noGroup.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
-    
+    // We don't change the sort order of objectives within each group here,
+    // as we want objectives to remain in priority order
+
     let result: Array<[string, Objective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
@@ -85,6 +82,7 @@ export class GroupSummaryComponent implements OnInit {
       });
     });
 
+    // Sort objectives in each group by descending allocation
     for (let [_, obs] of obsByGroup) {
       obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
     }
