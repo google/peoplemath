@@ -62,6 +62,10 @@ export class AssignmentsByPersonComponent implements OnInit {
   personDisplayNameWithUsername(person: Person): string {
     return personDisplayNameWithUsername(person);
   }
+
+  personTrackBy(person: Person): string {
+    return person.id;
+  }
 }
 
 class ObjectiveAssignment {
