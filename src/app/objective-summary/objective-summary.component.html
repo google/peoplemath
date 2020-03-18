@@ -1,4 +1,4 @@
-{{objective.name}}
+<span *ngIf="isCommittedAndFullyAllocated()" class="committed-mark">[C]</span>{{objective.name}}
 <span class="resources" [class.rejected]="isRejected()" [class.partialalloc]="isPartiallyAllocated()">
     <app-resource-quantity
         [quantity]="allocatedResources()"

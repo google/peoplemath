@@ -99,14 +99,9 @@ export class GroupSummaryComponent implements OnInit {
   }
 
   summaryObjective(groupName: string, objectives: Objective[]): Objective {
-    let commitmentTypes = new Set<CommitmentType>(objectives.map(o => o.commitmentType));
-    let commitmentType = CommitmentType.Aspirational;
-    if (commitmentTypes.size == 1 && commitmentTypes.has(CommitmentType.Committed)) {
-      commitmentType = CommitmentType.Committed;
-    }
     return {
       name: groupName,
-      commitmentType: commitmentType,
+      commitmentType: undefined,
       resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
       assignments: [{personId: undefined, commitment: totalResourcesAllocated(objectives)}],
       notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,

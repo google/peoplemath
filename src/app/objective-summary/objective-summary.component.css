@@ -1,4 +1,5 @@
 .resources { font-style: italic }
 .rejected { color: grey }
 .partialalloc { color: orange }
+.committed-mark { font-weight: bold; color: #673ab7; margin-right: 0.5em; }
 app-resource-quantity { margin-left: 1em; }
