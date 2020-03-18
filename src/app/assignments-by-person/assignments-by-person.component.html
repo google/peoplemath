@@ -6,7 +6,7 @@
   <div *ngFor="let person of period.people; trackBy: personTrackBy" class="personassignment">
     <h3>{{personDisplayNameWithUsername(person)}}</h3>
     <ul *ngIf="hasAssignments(person)">
-      <li *ngFor="let oa of assignmentsFor(person)">
+      <li *ngFor="let oa of assignmentsFor(person); trackBy: assignmentsTrackBy">
         <app-assignment
           [objective]="oa.objective"
           [assignedResources]="oa.assignment.commitment"

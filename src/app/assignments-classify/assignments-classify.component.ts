@@ -96,7 +96,7 @@ export class AssignmentsClassifyComponent implements OnInit {
     }
   }
 
-  classTrackBy(classobj: [string, Objective[]]): string {
+  classTrackBy(_index: number, classobj: [string, Objective[]]): string {
     return classobj[0];
   }
 
