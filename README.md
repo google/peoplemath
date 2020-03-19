@@ -11,16 +11,37 @@ The fundamental entity in PeopleMath is the *period*, which can be any length of
 * What is the relative priority order of the objectives, within each bucket?
 * How much (of your resource units) do you expect each person on your team to have available during the period?
 * How much of each person's available resources do you intend to allocate to each objective?
-* Therefore, what is your level of confidence in the completion of each objective?
 
-The tool also supports a distinction between "committed" and "aspirational" objectives:
+The tool aims to make it easy for users to see how the team is expected to spend its time, the assumptions (e.g. priority stack-ranking) that led to that decision, and what level of confidence they should have in the completion of each objective.
+
+This is not an officially supported Google product.
+
+## Features
+
+### Commitment types
+
+The tool supports a distinction between "committed" and "aspirational" objectives:
 
 * A *committed* objective is one which your team is making a firm promise to complete within the period; perhaps some other team or a customer is depending on it.
 * An *aspirational* objective is one you would like to achieve if possible, but something you would be willing to sacrifice for a committed objective if necessary.
 
 It's generally a good idea to keep an eye on the fraction of your team's resources allocated to committed objectives. Too little, and your team is promising too little to its stakeholders; too much, and you are at risk of breaking your promises, as there is nothing you can safely drop if you find yourself behind on a committed objective. PeopleMath allows you to set a target "commit ratio", and tells you how your plan compares to that target.
 
-This is not an officially supported Google product.
+### Summary view
+
+There is a read-only "period summary" view that shows which objectives are committed, aspirational and rejected in each bucket. This is useful for sharing with stakeholders, as it will always stay up-to-date with your plan.
+
+### Grouping and tagging
+
+Sometimes it is helpful to work at a less granular level than individual objectives.
+
+For example, when working with more senior stakeholders to prioritise work, it may be helpful to group objectives together, for example by project, so users can easily see how a team's resources are being split between projects, and discuss priorities at a higher level.
+
+For this use case, PeopleMath supports arbitrary grouping for objectives. Each objective can be marked with a set of key-value pairs, e.g. `project:X, program:Y`. For each key, you will then get a breakdown of objectives by the values, both on the right-hand side of the main period view and in the "period summary" view. The latter allows the individual objectives to be toggled on and off, and also allows you to toggle between a stack-ranked per-bucket view and an aggregate view across all buckets (in descending order of resources allocated, since objectives from different buckets cannot be compared in priority by definition).
+
+It is also useful to be able to mark objectives with particular themes. For this, PeopleMath supports tagging: each objective can be marked with a list of tags, e.g. `KeepTheLightsOn, TechDebtReduction`. For each tag, you get a breakdown of the objectives marked with that tag.
+
+Groups are a mutually-exclusive concept: for a single grouping key, each objective is a member of at most one group. Tags, by contrast, have a free many-to-many relationship with objectives.
 
 ## Implementation
 
