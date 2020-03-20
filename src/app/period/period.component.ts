@@ -209,12 +209,12 @@ export class PeriodComponent implements OnInit {
     return false;
   }
 
-  renameGroup(oldName: string, newName: string) {
+  renameGroup(groupType: string, oldName: string, newName: string) {
     let changed = false;
     this.period.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.groups.forEach(g => {
-          if (g.groupName == oldName) {
+          if (g.groupType == groupType && g.groupName == oldName) {
             g.groupName = newName;
             changed = true;
           }
