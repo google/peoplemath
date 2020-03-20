@@ -62,7 +62,7 @@
 <app-assignments-classify *ngFor="let groupType of groupTypesWithAssignments()"
     [period]="period" aggregateBy="group" [groupType]="groupType"
     [isEditingEnabled]="isEditingEnabled"
-    (onRename)="renameGroup($event[0], $event[1])"
+    (onRename)="renameGroup(groupType, $event[0], $event[1])"
     title="Assignments by {{groupType}}"></app-assignments-classify>
 <app-assignments-classify *ngIf="hasTagsWithAssignments()"
     [period]="period" aggregateBy="tag"
