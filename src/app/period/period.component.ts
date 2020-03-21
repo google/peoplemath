@@ -57,10 +57,20 @@ export class PeriodComponent implements OnInit {
 
   enableEditing(): void {
     this.isEditingEnabled = true;
+    this.showOrderButtons = false;
   }
 
   disableEditing(): void {
     this.isEditingEnabled = false;
+    this.showOrderButtons = false;
+  }
+
+  toggleReordering(): void {
+    this.showOrderButtons = !this.showOrderButtons;
+  }
+
+  reorderButtonColour(): string {
+    return this.showOrderButtons ? "accent" : "";
   }
 
   /**
