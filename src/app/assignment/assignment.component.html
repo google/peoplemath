@@ -1,3 +1,1 @@
-<span matBadge="{{commitmentTypeBadge()}}"
-    matBadgePosition="above before"
-    matBadgeOverlap="false">{{objective.name}}</span>: {{assignedResources}} {{unit}}
+<app-pill *ngIf="isCommitted()">C</app-pill>{{objective.name}}: {{assignedResources}} {{unit}}

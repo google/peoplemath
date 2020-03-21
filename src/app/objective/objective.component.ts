@@ -108,22 +108,8 @@ export class ObjectiveComponent implements OnInit {
     });
   }
 
-  commitmentTypeBadge(): string {
-    // The commitment type badge overlaps the reordering button, so hide it
-    if (this.isReorderingEnabled) {
-      return "";
-    }
-    switch (this.objective.commitmentType) {
-      case CommitmentType.Committed: return "C";
-      default: return "";
-    }
-  }
-
-  commitmentTypeBadgeColour(): string {
-    switch (this.objective.commitmentType) {
-      case CommitmentType.Committed: return "primary";
-      default: return "";
-    }
+  isCommitted(): boolean {
+    return this.objective.commitmentType == CommitmentType.Committed;
   }
 
   enableAssignButton(): boolean {
