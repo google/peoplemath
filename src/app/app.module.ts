@@ -47,6 +47,7 @@ import { GroupSummaryComponent } from './group-summary/group-summary.component';
 import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
 import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
+import { PillComponent } from './pill/pill.component';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.com
     TagSummaryComponent,
     ResourceQuantityComponent,
     RenameClassDialog,
+    PillComponent,
   ],
   imports: [
     BrowserModule,

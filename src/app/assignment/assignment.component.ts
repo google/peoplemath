@@ -32,10 +32,7 @@ export class AssignmentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  commitmentTypeBadge(): string {
-    switch (this.objective.commitmentType) {
-      case CommitmentType.Committed: return "C";
-      default: return "";
-    }
+  isCommitted(): boolean {
+    return this.objective.commitmentType == CommitmentType.Committed;
   }
 }

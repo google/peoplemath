@@ -15,7 +15,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -41,7 +40,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     DragDropModule,
-    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -64,7 +62,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   exports: [
     DragDropModule,
-    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
