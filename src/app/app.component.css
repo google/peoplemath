@@ -1,3 +1,6 @@
 .mat-toolbar h1 a { color: white; text-decoration: none; font-weight: bold }
 .flex-spacer { flex-grow: 1; }
-.mat-sidenav-container { height: 100% }
+/* The following breaks printing */
+@media screen {
+    .mat-sidenav-container { height: 100% }
+}
