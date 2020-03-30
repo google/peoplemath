@@ -20,6 +20,7 @@ import { GroupSummaryComponent } from './group-summary.component';
 import { Period } from '../period';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('GroupSummaryComponent', () => {
   let component: GroupSummaryComponent;
@@ -44,7 +45,10 @@ describe('GroupSummaryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupSummaryComponent ],
+      declarations: [
+        GroupSummaryComponent,
+        ResourceQuantityComponent,
+      ],
       imports: [
         MaterialModule,
         FormsModule,

@@ -24,6 +24,10 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="total"><b>Total:</b> <app-resource-quantity
+                        [quantity]="totalResourcesAllocated(bucket.objectives)"
+                        [primaryUnit]="period.unit"
+                        [secondaryUnits]="period.secondaryUnits"></app-resource-quantity></li>
                 </ul>
             </div>
         </div>

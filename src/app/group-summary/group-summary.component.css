@@ -1,3 +1,4 @@
 .titlealign { padding: 0 16px }
 .viewoptions { margin: 0 0 16px; }
 .viewoptions mat-slide-toggle { margin-right: 16px; }
+.total app-resource-quantity { margin-left: 0.5em; }
