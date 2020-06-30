@@ -49,6 +49,7 @@ export class PeopleComponent implements OnInit {
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
   @Input() isEditingEnabled: boolean;
+  @Input() showLocation: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
   displayedColumns: string[] = ["personDesc", "personLocation", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
@@ -150,6 +151,15 @@ export class PeopleComponent implements OnInit {
         this.onChanged.emit(person);
       }
     });
+  }
+
+  changeLocationVisibility(): void {
+    this.showLocation = !this.showLocation;
+    if (this.showLocation) {
+      this.displayedColumns = ["personDesc", "personLocation", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
+    } else {
+      this.displayedColumns =  ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
+    }
   }
 
   editPerson(p: Person): void {

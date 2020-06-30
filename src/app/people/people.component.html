@@ -7,7 +7,7 @@
     <td mat-cell *matCellDef="let element">{{element.personDesc}}</td>
     <td mat-footer-cell *matFooterCellDef>Total</td>
   </ng-container>
-  <ng-container matColumnDef="personLocation">
+  <ng-container *ngIf="showLocation" matColumnDef="personLocation">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
     <td mat-cell *matCellDef="let element">{{element.personLocation}}</td>
     <td mat-footer-cell *matFooterCellDef></td>
@@ -42,6 +42,10 @@
   <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
 </table>
 </div>
-<p><button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button></p>
+<p>
+  <button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button>
+  <button (click)="changeLocationVisibility()" mat-button color="primary">
+    {{(showLocation) ? "Hide" : "Show"}} Location</button>
+</p>
 </mat-card-content>
 </mat-card>
