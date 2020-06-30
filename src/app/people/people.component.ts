@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import { FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/
 class PersonData {
   constructor(
       public personDesc: string,
-      public personLocation: string,
+      public location: string,
       public availability: number,
       public allocated: number,
       public unallocated: number,
@@ -49,15 +49,22 @@ export class PeopleComponent implements OnInit {
   @Input() totalAssignmentCount: number;
   @Input() unit: string;
   @Input() isEditingEnabled: boolean;
-  @Input() showLocation: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
-  displayedColumns: string[] = ["personDesc", "personLocation", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  displayedColumns(): string[] {
+    let columnLabels = ['personDesc'];
+    if (this.people.find(p => p.location)) {
+      columnLabels.push('location');
+    }
+    columnLabels = columnLabels.concat(['availability', 'allocated', 'unallocated', 'assignmentCount', 'commitFraction']);
+    return columnLabels;
   }
 
   tableData(): MatTableDataSource<PersonData> {
@@ -151,15 +158,6 @@ export class PeopleComponent implements OnInit {
         this.onChanged.emit(person);
       }
     });
-  }
-
-  changeLocationVisibility(): void {
-    this.showLocation = !this.showLocation;
-    if (this.showLocation) {
-      this.displayedColumns = ["personDesc", "personLocation", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
-    } else {
-      this.displayedColumns =  ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
-    }
   }
 
   editPerson(p: Person): void {

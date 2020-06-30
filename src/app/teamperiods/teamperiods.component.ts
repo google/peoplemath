@@ -143,7 +143,7 @@ export class TeamPeriodsComponent implements OnInit {
   copyPeople(orig: Person[]): Person[] {
     let result = [];
     for (let p of orig) {
-      result.push(new Person(p.id, p.location, p.displayName, p.availability));
+      result.push(new Person(p.id, p.displayName, p.location, p.availability));
     }
     return result;
   }
