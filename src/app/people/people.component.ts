@@ -22,6 +22,7 @@ import { FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/
 class PersonData {
   constructor(
       public personDesc: string,
+      public personLocation: string,
       public availability: number,
       public allocated: number,
       public unallocated: number,
@@ -50,16 +51,16 @@ export class PeopleComponent implements OnInit {
   @Input() isEditingEnabled: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
-  displayedColumns: string[] = ["personDesc", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
+  displayedColumns: string[] = ["personDesc", "personLocation", "availability", "allocated", "unallocated", "assignmentCount", "commitFraction"];
   @ViewChild(MatSort) sort: MatSort;
-  
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
   tableData(): MatTableDataSource<PersonData> {
-    let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.availability,
+    let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.location, p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
       this.personCommitFraction(p), this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
@@ -134,7 +135,7 @@ export class PeopleComponent implements OnInit {
     if (!this.isEditingEnabled) {
       return;
     }
-    const person = new Person('', '', this.defaultPersonAvailability());
+    const person = new Person('', '', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
       person: person, unit: this.unit, title: "Add person", okAction: "Add",
       existingUserIDs: this.people.map(p => p.id),
@@ -145,7 +146,7 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
         this.people.push(person);
-        this.people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
+        this.people.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
         this.onChanged.emit(person);
       }
     });
@@ -189,6 +190,7 @@ export interface EditPersonDialogData {
 })
 export class EditPersonDialog {
   userIdControl: FormControl;
+  locationControl: FormControl;
   displayNameControl: FormControl;
   availabilityControl: FormControl;
 
@@ -196,6 +198,7 @@ export class EditPersonDialog {
     public dialogRef: MatDialogRef<EditPersonDialog>,
     @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {
       this.userIdControl = new FormControl(data.person.id, [this.validateUserId, Validators.required]);
+      this.locationControl = new FormControl(data.person.location);
       this.displayNameControl = new FormControl(data.person.displayName);
       this.availabilityControl = new FormControl(data.person.availability);
   }
@@ -216,6 +219,7 @@ export class EditPersonDialog {
 
   onOK(): void {
     this.data.person.id = this.userIdControl.value;
+    this.data.person.location = this.locationControl.value;
     this.data.person.displayName = this.displayNameControl.value;
     this.data.person.availability = this.availabilityControl.value;
     this.dialogRef.close(true);

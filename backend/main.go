@@ -103,6 +103,7 @@ type Assignment struct {
 type Person struct {
 	ID           string  `json:"id"`
 	DisplayName  string  `json:"displayName"`
+	Location     string  `json:"location"`
 	Availability float64 `json:"availability"`
 }
 
