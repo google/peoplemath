@@ -224,19 +224,19 @@ func makeFakePeriod(id string) Period {
 		Person{
 			ID:           "alice",
 			DisplayName:  "Alice Atkins",
-			Location:     "London 6PS",
+			Location:     "UK, London",
 			Availability: 5,
 		},
 		Person{
 			ID:           "bob",
 			DisplayName:  "Bob Brewster",
-			Location:     "London 6PS",
+			Location:     "UK, London",
 			Availability: 7,
 		},
 		Person{
 			ID:           "charlie",
 			DisplayName:  "Charlie Case",
-			Location:     "Sunnyvale",
+			Location:     "US, Sunnyvale",
 			Availability: 8,
 		},
 	}
