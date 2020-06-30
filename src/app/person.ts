@@ -16,6 +16,7 @@ export class Person {
     constructor(
         public id: string,
         public displayName: string,
+        public location: string,
         public availability: number,
     ) {}
 }

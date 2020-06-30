@@ -13,6 +13,10 @@
     <mat-form-field>
         <input matInput [formControl]="displayNameControl">
     </mat-form-field>
+    <p>Location (optional)</p>
+    <mat-form-field>
+      <input matInput [formControl]="locationControl">
+    </mat-form-field>
     <p>Availability ({{data.unit}})</p>
     <mat-form-field>
         <input matInput [formControl]="availabilityControl" type="number">
