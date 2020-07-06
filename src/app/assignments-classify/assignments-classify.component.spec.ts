@@ -16,7 +16,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssignmentsClassifyComponent } from './assignments-classify.component';
+import { AssignmentsClassifyComponent, AggregateBy } from './assignments-classify.component';
 import { MaterialModule } from '../material/material.module';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -40,6 +40,18 @@ describe('AssignmentsClassifyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentsClassifyComponent);
     component = fixture.componentInstance;
+    component.aggregateBy = AggregateBy.Group;
+    component.period = {
+      id: 'test',
+      displayName: 'Test Period',
+      unit: 'things',
+      secondaryUnits: [],
+      notesURL: '',
+      maxCommittedPercentage: 10,
+      buckets: [],
+      people: [],
+      lastUpdateUUID: '',
+    };
     fixture.detectChanges();
   });
 
