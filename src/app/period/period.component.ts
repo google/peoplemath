@@ -130,7 +130,7 @@ export class PeriodComponent implements OnInit {
 
   peopleAllocations(): Map<string, number> {
     return this.sumAssignmentValByPerson(o => true, (a: Assignment) => a.commitment);
-  }s
+  }
 
   peopleCommittedAllocations(): Map<string, number> {
     return this.sumAssignmentValByPerson(
