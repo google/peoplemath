@@ -17,11 +17,11 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute } from '@angular/router';
-import { Period, periodResourcesAllocated } from '../period';
+import { ImmutablePeriod, periodResourcesAllocatedI } from '../period';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { Team } from '../team';
-import { Bucket, bucketResourcesAllocated } from '../bucket';
+import { ImmutableTeam } from '../team';
+import { ImmutableBucket, bucketResourcesAllocatedI } from '../bucket';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -30,8 +30,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./period-summary.component.css']
 })
 export class PeriodSummaryComponent implements OnInit {
-  team?: Team;
-  period?: Period;
+  team?: ImmutableTeam;
+  period?: ImmutablePeriod;
 
   constructor(
     private storage: StorageService,
@@ -49,9 +49,9 @@ export class PeriodSummaryComponent implements OnInit {
     });
   }
 
-  bucketAllocationFraction(bucket: Bucket): number {
-    const total = periodResourcesAllocated(this.period!);
-    return (total == 0) ? 0 : bucketResourcesAllocated(bucket) / total;
+  bucketAllocationFraction(bucket: ImmutableBucket): number {
+    const total = periodResourcesAllocatedI(this.period!);
+    return (total == 0) ? 0 : bucketResourcesAllocatedI(bucket) / total;
   }
 
   allGroupTypes(): string[] {
@@ -89,7 +89,13 @@ export class PeriodSummaryComponent implements OnInit {
         console.error(err);
         return of(undefined);
       })
-    ).subscribe(team => this.team = team);
+    ).subscribe(team => {
+      if (team) {
+        this.team = new ImmutableTeam(team);
+      } else {
+        this.team = undefined;
+      }
+    });
 
     this.storage.getPeriod(teamId, periodId).pipe(
       catchError(err => {
@@ -97,7 +103,13 @@ export class PeriodSummaryComponent implements OnInit {
         console.error(err);
         return of(undefined);
       })
-    ).subscribe(period => this.period = period);
+    ).subscribe(period => {
+      if (period) {
+        this.period = new ImmutablePeriod(period);
+      } else {
+        this.period = undefined;
+      }
+    });
   }
 
   isLoaded(): boolean {
