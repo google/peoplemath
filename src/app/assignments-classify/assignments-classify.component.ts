@@ -20,7 +20,7 @@ import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from 
 import { MatDialog } from '@angular/material/dialog';
 import { RenameClassDialog, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
 
-enum AggregateBy {
+export enum AggregateBy {
   Group = 'group',
   Tag = 'tag',
 }
