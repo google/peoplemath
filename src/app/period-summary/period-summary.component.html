@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="!isLoaded()"></mat-spinner>
 <div *ngIf="isLoaded()" class="grid-container">
-    <h1 mat-h1>{{team.displayName}} {{period.displayName}} (<a routerLink="/team/{{team.id}}/period/{{period.id}}">Full report</a>)</h1>
+    <h1 mat-h1>{{team?.displayName}} {{period?.displayName}} (<a routerLink="/team/{{team!.id}}/period/{{period!.id}}">Full report</a>)</h1>
 
     <div fxLayout="column" fxLayoutGap="20px" width="100%">
         <app-group-summary *ngFor="let groupType of allGroupTypes()"
@@ -9,9 +9,9 @@
         <app-tag-summary *ngFor="let tag of allTags()"
             [period]="period" [tag]="tag"></app-tag-summary>
             
-        <app-bucket-summary *ngFor="let bucket of period.buckets"
+        <app-bucket-summary *ngFor="let bucket of period!.buckets"
             [bucket]="bucket"
             [bucketAllocationFraction]="bucketAllocationFraction(bucket)"
-            [unit]="period.unit"></app-bucket-summary>
+            [unit]="period?.unit"></app-bucket-summary>
     </div>
 </div>

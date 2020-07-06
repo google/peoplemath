@@ -3,14 +3,14 @@
 <mat-card-title>Assignments by person</mat-card-title>
 </mat-card-header>
 <mat-card-content>
-  <div *ngFor="let person of period.people; trackBy: personTrackBy" class="personassignment">
+  <div *ngFor="let person of period!.people; trackBy: personTrackBy" class="personassignment">
     <h3>{{personDisplayNameWithUsername(person)}}</h3>
     <ul *ngIf="hasAssignments(person)">
       <li *ngFor="let oa of assignmentsFor(person); trackBy: assignmentsTrackBy">
         <app-assignment
           [objective]="oa.objective"
           [assignedResources]="oa.assignment.commitment"
-          [unit]="period.unit"></app-assignment>
+          [unit]="period?.unit"></app-assignment>
       </li>
     </ul>
     <p *ngIf="!hasAssignments(person)" class="noassignments">No assignments</p>

@@ -21,7 +21,7 @@ import { Assignment } from '../assignment';
 export interface EditedObjective {
   name: string;
   resourceEstimate: number;
-  commitmentType: CommitmentType;
+  commitmentType?: CommitmentType;
   groups: string;
   tags: string;
   notes: string;
@@ -30,13 +30,13 @@ export interface EditedObjective {
 
 export interface EditObjectiveDialogData {
   objective: EditedObjective;
-  original: Objective;
+  original?: Objective;
   title: string;
   okAction: string;
   unit: string;
   otherBuckets: Bucket[];
-  onMoveBucket: EventEmitter<[Objective, Objective, Bucket]>;
-  onDelete: EventEmitter<Objective>;
+  onMoveBucket?: EventEmitter<[Objective, Objective, Bucket]>;
+  onDelete?: EventEmitter<Objective>;
 }
 
 export function makeEditedObjective(objective: Objective): EditedObjective {
@@ -111,7 +111,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    return this.data.objective.name && this.data.objective.resourceEstimate >= 0;
+    return !!this.data.objective.name && this.data.objective.resourceEstimate >= 0;
   }
 
   onSave(): void {
@@ -124,7 +124,7 @@ export class EditObjectiveDialogComponent implements OnInit {
 
   onMove(newBucket: Bucket): void {
     let newObjective = makeObjective(this.data.objective);
-    this.data.onMoveBucket.emit([this.data.original, newObjective, newBucket]);
+    this.data.onMoveBucket!.emit([this.data.original!, newObjective, newBucket]);
     this.dialogRef.close();
   }
 
@@ -133,7 +133,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onConfirmDelete(): void {
-    this.data.onDelete.emit(this.data.original);
+    this.data.onDelete!.emit(this.data.original);
     this.dialogRef.close();
   }
 

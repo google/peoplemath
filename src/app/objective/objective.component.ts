@@ -26,12 +26,12 @@ import { Bucket } from '../bucket';
   styleUrls: ['./objective.component.css']
 })
 export class ObjectiveComponent implements OnInit {
-  @Input() objective: Objective;
-  @Input() unit: string;
-  @Input() unallocatedTime: Map<string, number>;
-  @Input() isEditingEnabled: boolean;
-  @Input() isReorderingEnabled: boolean;
-  @Input() otherBuckets: Bucket[];
+  @Input() objective?: Objective;
+  @Input() unit?: string;
+  @Input() unallocatedTime?: Map<string, number>;
+  @Input() isEditingEnabled?: boolean;
+  @Input() isReorderingEnabled?: boolean;
+  @Input() otherBuckets?: Bucket[];
   @Output() onMoveBucket = new EventEmitter<[Objective, Objective, Bucket]>();
   @Output() onDelete = new EventEmitter<Objective>();
   @Output() onChanged = new EventEmitter<[Objective, Objective]>();
@@ -42,18 +42,18 @@ export class ObjectiveComponent implements OnInit {
   }
 
   isFullyAllocated(): boolean {
-    let assigned = this.objective.assignments.map(a => a.commitment)
+    let assigned = this.objective!.assignments.map(a => a.commitment)
         .reduce((sum, current) => sum + current, 0);
-    return assigned >= this.objective.resourceEstimate;
+    return assigned >= this.objective!.resourceEstimate;
   }
 
   assignmentSummary(): string {
-    return this.objective.assignments.filter(a => a.commitment > 0)
+    return this.objective!.assignments.filter(a => a.commitment > 0)
         .map(a => a.personId + ": " + a.commitment).join(", ");
   }
 
   currentAssignment(personId: string): number {
-    return this.objective.assignments.filter(a => a.personId === personId)
+    return this.objective!.assignments.filter(a => a.personId === personId)
         .map(a => a.commitment)
         .reduce((sum, current) => sum + current, 0);
   }
@@ -62,16 +62,16 @@ export class ObjectiveComponent implements OnInit {
     if (!this.isEditingEnabled) {
       return;
     }
-    let assignmentData = [];
-    this.unallocatedTime.forEach((unallocated, personId) => {
+    let assignmentData: PersonAssignmentData[] = [];
+    this.unallocatedTime!.forEach((unallocated, personId) => {
       let currentAssignment = this.currentAssignment(personId);
       assignmentData.push(new PersonAssignmentData(
         personId, unallocated + currentAssignment, currentAssignment));
     });
     const dialogData: AssignmentDialogData = {
-      'objective': this.objective,
+      'objective': this.objective!,
       'people': assignmentData,
-      'unit': this.unit,
+      'unit': this.unit!,
       'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
       'width': '700px',
@@ -80,9 +80,9 @@ export class ObjectiveComponent implements OnInit {
       if (!result) {
         return;
       }
-      this.objective.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
+      this.objective!.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
           .map((pad: PersonAssignmentData) => new Assignment(pad.username, pad.assign));
-      this.onChanged.emit([this.objective, this.objective]);
+      this.onChanged.emit([this.objective!, this.objective!]);
     });
   }
 
@@ -91,28 +91,32 @@ export class ObjectiveComponent implements OnInit {
       return;
     }
     const dialogData: EditObjectiveDialogData = {
-      objective: makeEditedObjective(this.objective),
-      original: this.objective,
+      objective: makeEditedObjective(this.objective!),
+      original: this.objective!,
       title: 'Edit Objective',
       okAction: 'OK',
-      unit: this.unit,
-      otherBuckets: this.otherBuckets,
+      unit: this.unit!,
+      otherBuckets: this.otherBuckets!,
       onMoveBucket: this.onMoveBucket,
       onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(newObjective => {
       if (newObjective) {
-        this.onChanged.emit([this.objective, newObjective]);
+        this.onChanged.emit([this.objective!, newObjective]);
       }
     });
   }
 
   isCommitted(): boolean {
-    return this.objective.commitmentType == CommitmentType.Committed;
+    return this.objective!.commitmentType == CommitmentType.Committed;
+  }
+
+  showAssignButton(): boolean {
+    return !this.objective?.assignments.length;
   }
 
   enableAssignButton(): boolean {
-    return this.isEditingEnabled && this.objective.resourceEstimate > 0;
+    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0;
   }
 }

@@ -5,8 +5,8 @@
         <button (click)="moveBucketUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
         <button (click)="moveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
     </span>
-    <span (click)="edit()">{{bucket.displayName}}
-    <span [class.error]="totalAllocationPercentage > 100"> ({{bucket.allocationPercentage}}%)</span>
+    <span (click)="edit()">{{bucket?.displayName}}
+    <span [class.error]="isOverAllocated()"> ({{bucket?.allocationPercentage}}%)</span>
     </span>
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
@@ -14,14 +14,14 @@
   <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
     {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
   </span>
-  <span [class.warning]="commitRatio() * 100 > maxCommittedPercentage">
+  <span [class.warning]="isOverCommitted()">
     ({{commitRatio() | percent}} committed)
   </span>
 </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
 <mat-list dense *ngIf="!showOrderButtons" class="app-mat-list">
-    <mat-list-item *ngFor="let objective of bucket.objectives">
+    <mat-list-item *ngFor="let objective of bucket!.objectives">
     <app-objective
         [objective]="objective" [unit]="unit"
         [unallocatedTime]="unallocatedTime"
@@ -34,7 +34,7 @@
     </mat-list-item>
 </mat-list>
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)" class="app-mat-list">
-    <mat-list-item *ngFor="let objective of bucket.objectives" cdkDrag>
+    <mat-list-item *ngFor="let objective of bucket!.objectives" cdkDrag>
         <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
         <app-objective
             [objective]="objective" [unit]="unit"
