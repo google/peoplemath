@@ -27,7 +27,7 @@ import { of } from 'rxjs';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
-  teams: Team[];
+  teams?: Team[];
 
   constructor(
     private storage: StorageService,
@@ -74,7 +74,7 @@ export class TeamsComponent implements OnInit {
         }),
       ).subscribe(res => {
         if (res != "error") {
-          this.teams.push(team);
+          this.teams!.push(team);
         }
       });
     });

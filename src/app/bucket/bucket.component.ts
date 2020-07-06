@@ -27,15 +27,15 @@ import { ObjectiveComponent } from '../objective/objective.component';
   styleUrls: ['./bucket.component.css']
 })
 export class BucketComponent implements OnInit {
-  @Input() bucket: Bucket;
-  @Input() unit: string;
-  @Input() totalAllocationPercentage: number;
-  @Input() globalResourcesAvailable: number;
-  @Input() maxCommittedPercentage: number;
-  @Input() unallocatedTime: Map<string, number>;
-  @Input() showOrderButtons: boolean;
-  @Input() isEditingEnabled: boolean;
-  @Input() otherBuckets: Bucket[];
+  @Input() bucket?: Bucket;
+  @Input() unit?: string;
+  @Input() totalAllocationPercentage?: number;
+  @Input() globalResourcesAvailable?: number;
+  @Input() maxCommittedPercentage?: number;
+  @Input() unallocatedTime?: Map<string, number>;
+  @Input() showOrderButtons?: boolean;
+  @Input() isEditingEnabled?: boolean;
+  @Input() otherBuckets?: Bucket[];
   @Output() onMoveBucketUp = new EventEmitter<Bucket>();
   @Output() onMoveBucketDown = new EventEmitter<Bucket>();
   @Output() onChanged = new EventEmitter<any>();
@@ -50,7 +50,7 @@ export class BucketComponent implements OnInit {
    * based on total available and the percentage the user has set for this bucket.
    */
   bucketAllocationLimit(): number {
-    return this.globalResourcesAvailable * this.bucket.allocationPercentage / 100;
+    return this.globalResourcesAvailable! * this.bucket!.allocationPercentage / 100;
   }
 
   edit(): void {
@@ -58,8 +58,8 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditBucketDialogData = {
-      'bucket': this.bucket, 'okAction': 'OK', 'allowCancel': false,
-      'title': 'Edit bucket "' + this.bucket.displayName + '"',
+      'bucket': this.bucket!, 'okAction': 'OK', 'allowCancel': false,
+      'title': 'Edit bucket "' + this.bucket!.displayName + '"',
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.bucket));
@@ -82,7 +82,7 @@ export class BucketComponent implements OnInit {
       original: undefined,
       title: 'Add Objective',
       okAction: 'Add',
-      unit: this.unit,
+      unit: this.unit!,
       otherBuckets: [],
       onMoveBucket: undefined,
       onDelete: undefined,
@@ -92,13 +92,13 @@ export class BucketComponent implements OnInit {
       if (!objective) {
         return;
       }
-      this.bucket.objectives.push(objective);
+      this.bucket!.objectives.push(objective);
       this.onChanged.emit(this.bucket);
     });
   }
 
   private objectiveIndex(objective: Objective): number {
-    return this.bucket.objectives.findIndex(o => o === objective);
+    return this.bucket!.objectives.findIndex(o => o === objective);
   }
 
   moveObjective(original: Objective, newObjective: Objective, newBucket: Bucket) {
@@ -109,12 +109,12 @@ export class BucketComponent implements OnInit {
 
   deleteObjective(objective: Objective): void {
     const index = this.objectiveIndex(objective);
-    this.bucket.objectives.splice(index, 1);
+    this.bucket!.objectives.splice(index, 1);
     this.onChanged.emit(this.bucket);
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>) {
-    moveItemInArray(this.bucket.objectives, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.bucket!.objectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex != event.currentIndex) {
       this.onChanged.emit(this.bucket);
     }
@@ -122,7 +122,7 @@ export class BucketComponent implements OnInit {
 
   onObjectiveChanged(original: Objective, newObjective: Objective): void {
     const index = this.objectiveIndex(original);
-    this.bucket.objectives[index] = newObjective;
+    this.bucket!.objectives[index] = newObjective;
     this.onChanged.emit(this.bucket);
   }
 
@@ -135,11 +135,19 @@ export class BucketComponent implements OnInit {
   }
 
   resourcesAllocated(): number {
-    return bucketResourcesAllocated(this.bucket);
+    return bucketResourcesAllocated(this.bucket!);
+  }
+
+  isOverAllocated(): boolean {
+    return this.totalAllocationPercentage! > 100;
   }
 
   committedResourcesAllocated(): number {
-    return bucketCommittedResourcesAllocated(this.bucket);
+    return bucketCommittedResourcesAllocated(this.bucket!);
+  }
+
+  isOverCommitted(): boolean {
+    return this.commitRatio() * 100 > this.maxCommittedPercentage!;
   }
 
   /**

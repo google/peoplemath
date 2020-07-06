@@ -4,13 +4,13 @@
 <div fxLayout="row" fxLayoutGap="20px" width="100%">
 <div fxLayout="column" fxFlex="calc(70%-20px)" fxFlex.lt-md="100%">
     <h2 class="mat-h2 period-title">
-        <a routerLink="/team/{{team.id}}">{{team.displayName}}</a> : <span (click)="edit()">{{period.displayName}}</span>
+        <a routerLink="/team/{{team!.id}}">{{team!.displayName}}</a> : <span (click)="edit()">{{period?.displayName}}</span>
         <span class="title-buttons">
-            <a mat-raised-button routerLink="/team/{{team.id}}/periodsummary/{{period.id}}" target="_blank" rel="noopener noreferrer" color="primary">View Summary</a>
-            <a mat-raised-button *ngIf="period.notesURL" href="{{period.notesURL}}" target="_blank" rel="noopener noreferrer" color="primary">View Notes</a>
+            <a mat-raised-button routerLink="/team/{{team!.id}}/periodsummary/{{period!.id}}" target="_blank" rel="noopener noreferrer" color="primary">View Summary</a>
+            <a mat-raised-button *ngIf="period?.notesURL" href="{{period!.notesURL}}" target="_blank" rel="noopener noreferrer" color="primary">View Notes</a>
         </span>
     </h2>
-    <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.0-1'}} of {{totalAllocated() | number:'1.0-1'}} {{period.unit}})</h4>
+    <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.0-1'}} of {{totalAllocated() | number:'1.0-1'}} {{period?.unit}})</h4>
 </div>
 <div fxLayout="column" fxFlex="calc(30%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <div class="editor-options">
@@ -28,10 +28,10 @@
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
 
 <div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
-<app-bucket *ngFor="let bucket of period.buckets" [bucket]="bucket" [unit]="period.unit"
+<app-bucket *ngFor="let bucket of period!.buckets" [bucket]="bucket" [unit]="period?.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
-    [maxCommittedPercentage]="period.maxCommittedPercentage"
+    [maxCommittedPercentage]="period?.maxCommittedPercentage"
     [unallocatedTime]="unallocatedTime()"
     [showOrderButtons]="showOrderButtons && isEditingEnabled"
     [isEditingEnabled]="isEditingEnabled"
@@ -45,7 +45,7 @@
 </div>
 
 <span fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
-<app-people [people]="period.people"
+<app-people [people]="period?.people"
     [peopleAllocations]="peopleAllocations()"
     [peopleCommittedAllocations]="peopleCommittedAllocations()"
     [peopleAssignmentCounts]="peopleAssignmentCounts()"
@@ -53,7 +53,7 @@
     [totalAllocated]="totalAllocated()"
     [totalUnallocated]="totalUnallocated()"
     [totalAssignmentCount]="totalAssignmentCount()"
-    [unit]="period.unit"
+    [unit]="period?.unit"
     [isEditingEnabled]="isEditingEnabled"
     (onChanged)="save()"
     (onDelete)="deletePerson($event)">

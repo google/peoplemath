@@ -25,8 +25,8 @@ import { Objective, totalResourcesAllocated, CommitmentType, objectiveResourcesA
   styleUrls: ['./group-summary.component.css']
 })
 export class GroupSummaryComponent implements OnInit {
-  @Input() period: Period;
-  @Input() groupType: string;
+  @Input() period?: Period;
+  @Input() groupType?: string;
   showObjectives: boolean = false;
   showByBucket: boolean = true;
 
@@ -45,7 +45,7 @@ export class GroupSummaryComponent implements OnInit {
       if (gs.length > 0) {
         let groupName = gs[0].groupName;
         if (obsByGroup.has(groupName)) {
-          obsByGroup.get(groupName).push(o);
+          obsByGroup.get(groupName)!.push(o);
         } else {
           obsByGroup.set(groupName, [o]);
           groupOrder.push(groupName);
@@ -58,7 +58,7 @@ export class GroupSummaryComponent implements OnInit {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    let result: Array<[string, Objective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)]);
+    let result: Array<[string, Objective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
@@ -68,12 +68,12 @@ export class GroupSummaryComponent implements OnInit {
   allObjectivesByGroup(): Array<[string, Objective[]]> {
     let obsByGroup = new Map<string, Objective[]>();
     let noGroup: Objective[] = [];
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         let gs = o.groups.filter(g => g.groupType == this.groupType);
         if (gs.length > 0) {
           let groupName = gs[0].groupName;
-          let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName) : [];
+          let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
           obs.push(o);
           obsByGroup.set(groupName, obs);
         } else {
@@ -103,7 +103,7 @@ export class GroupSummaryComponent implements OnInit {
       name: groupName,
       commitmentType: undefined,
       resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
-      assignments: [{personId: undefined, commitment: totalResourcesAllocated(objectives)}],
+      assignments: [{personId: '', commitment: totalResourcesAllocated(objectives)}],
       notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,
       groups: [],
       tags: [],

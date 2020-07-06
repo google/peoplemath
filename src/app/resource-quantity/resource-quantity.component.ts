@@ -23,10 +23,10 @@ import { SecondaryUnit } from '../period';
   styleUrls: ['./resource-quantity.component.css']
 })
 export class ResourceQuantityComponent implements OnInit {
-  @Input() quantity: number;
+  @Input() quantity?: number;
   @Input() ofQuantity?: number;
-  @Input() primaryUnit: string;
-  @Input() secondaryUnits: SecondaryUnit[];
+  @Input() primaryUnit?: string;
+  @Input() secondaryUnits?: SecondaryUnit[];
 
   constructor() { }
 

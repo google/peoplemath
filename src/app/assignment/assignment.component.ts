@@ -23,9 +23,9 @@ import { Objective, CommitmentType } from '../objective';
   styleUrls: ['./assignment.component.css']
 })
 export class AssignmentComponent implements OnInit {
-  @Input() objective: Objective;
-  @Input() assignedResources: number;
-  @Input() unit: string;
+  @Input() objective?: Objective;
+  @Input() assignedResources?: number;
+  @Input() unit?: string;
 
   constructor() { }
 
@@ -33,6 +33,6 @@ export class AssignmentComponent implements OnInit {
   }
 
   isCommitted(): boolean {
-    return this.objective.commitmentType == CommitmentType.Committed;
+    return this.objective?.commitmentType == CommitmentType.Committed;
   }
 }
