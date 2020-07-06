@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Period } from '../period';
-import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutablePeriod } from '../period';
+import { ImmutableObjective, objectiveResourcesAllocatedI, totalResourcesAllocatedI } from '../objective';
 
 @Component({
   selector: 'app-tag-summary',
   templateUrl: './tag-summary.component.html',
-  styleUrls: ['./tag-summary.component.css']
+  styleUrls: ['./tag-summary.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagSummaryComponent implements OnInit {
-  @Input() period?: Period;
+  @Input() period?: ImmutablePeriod;
   @Input() tag?: string;
 
   constructor() { }
@@ -32,8 +34,8 @@ export class TagSummaryComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  taggedObjectives(): Objective[] {
-    let result: Objective[] = [];
+  taggedObjectives(): ImmutableObjective[] {
+    let result: ImmutableObjective[] = [];
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.tags.map(t => t.name).includes(this.tag!)) {
@@ -41,11 +43,11 @@ export class TagSummaryComponent implements OnInit {
         }
       });
     });
-    result.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+    result.sort((o1, o2) => objectiveResourcesAllocatedI(o2) - objectiveResourcesAllocatedI(o1));
     return result;
   }
 
   totalAllocationsForTag(): number {
-    return totalResourcesAllocated(this.taggedObjectives());
+    return totalResourcesAllocatedI(this.taggedObjectives());
   }
 }

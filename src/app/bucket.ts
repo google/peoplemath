@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Objective, objectiveResourcesAllocated, CommitmentType } from "./objective";
+import { Objective, objectiveResourcesAllocated, CommitmentType, ImmutableObjective, objectiveResourcesAllocatedI } from "./objective";
+import { List } from 'immutable';
 
 export class Bucket {
   constructor(
@@ -22,13 +23,44 @@ export class Bucket {
   ) {}
 };
 
+export class ImmutableBucket {
+  // The List means ImmutableBucket should not be assignable to Bucket,
+  // so we can save typing on getters here.
+  readonly displayName: string;
+  readonly allocationPercentage: number;
+  readonly objectives: List<ImmutableObjective>;
+
+  constructor(bucket: Bucket) {
+    this.displayName = bucket.displayName;
+    this.allocationPercentage = bucket.allocationPercentage;
+    this.objectives = List(bucket.objectives.map(o => new ImmutableObjective(o)));
+  }
+
+  toOriginal(): Bucket {
+    return new Bucket(
+      this.displayName, this.allocationPercentage,
+      this.objectives.toArray().map(o => o.toOriginal()));
+  }
+}
+
 /**
  * Sum of resources allocated to the bucket.
  * Not a member function to avoid problems with JSON (de)serialization.
+ * @deprecated To be removed when we use ImmutableBucket everywhere.
  */
 export function bucketResourcesAllocated(bucket: Bucket): number {
   return bucket.objectives
     .map(objectiveResourcesAllocated)
+    .reduce((sum, current) => sum + current, 0);
+}
+
+/**
+ * Sum of resources allocated to the bucket.
+ * Not a member function to avoid problems with JSON (de)serialization.
+ */
+export function bucketResourcesAllocatedI(bucket: ImmutableBucket): number {
+  return bucket.objectives
+    .map(objectiveResourcesAllocatedI)
     .reduce((sum, current) => sum + current, 0);
 }
 

@@ -17,7 +17,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TagSummaryComponent } from './tag-summary.component';
-import { Period } from '../period';
+import { Period, ImmutablePeriod } from '../period';
 import { MaterialModule } from '../material/material.module';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -52,7 +52,7 @@ describe('TagSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TagSummaryComponent);
     component = fixture.componentInstance;
-    component.period = PERIOD;
+    component.period = new ImmutablePeriod(PERIOD);
     fixture.detectChanges();
   });
 
