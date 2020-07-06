@@ -24,9 +24,9 @@ import { Objective, CommitmentType, objectiveResourcesAllocated } from '../objec
   styleUrls: ['./bucket-summary.component.css']
 })
 export class BucketSummaryComponent implements OnInit {
-  @Input() bucket: Bucket;
-  @Input() bucketAllocationFraction: number;
-  @Input() unit: string;
+  @Input() bucket?: Bucket;
+  @Input() bucketAllocationFraction?: number;
+  @Input() unit?: string;
 
   constructor() { }
 
@@ -38,7 +38,7 @@ export class BucketSummaryComponent implements OnInit {
   }
 
   committedObjectives(): Objective[] {
-    return this.bucket.objectives.filter(
+    return this.bucket!.objectives.filter(
       o => o.commitmentType == CommitmentType.Committed &&
       objectiveResourcesAllocated(o) > 0);
   }
@@ -48,7 +48,7 @@ export class BucketSummaryComponent implements OnInit {
   }
 
   aspirationalObjectives(): Objective[] {
-    return this.bucket.objectives.filter(
+    return this.bucket!.objectives.filter(
       o => o.commitmentType != CommitmentType.Committed &&
       objectiveResourcesAllocated(o) > 0);
   }
@@ -58,6 +58,6 @@ export class BucketSummaryComponent implements OnInit {
   }
 
   rejectedObjectives(): Objective[] {
-    return this.bucket.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
+    return this.bucket!.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
   }
 }

@@ -8,26 +8,26 @@
             <mat-slide-toggle [(ngModel)]="showObjectives">Show objectives</mat-slide-toggle>
         </div>
         <div *ngIf="showByBucket">
-            <div *ngFor="let bucket of period.buckets" class="titlealign">
+            <div *ngFor="let bucket of period!.buckets" class="titlealign">
                 <h3>{{bucket.displayName}}</h3>
                 <ul>
                     <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)">
                         <app-objective-summary
                             [objective]="summaryObjective(groupobs[0], groupobs[1])"
-                            [unit]="period.unit"
-                            [secondaryUnits]="period.secondaryUnits"></app-objective-summary>
+                            [unit]="period?.unit"
+                            [secondaryUnits]="period?.secondaryUnits"></app-objective-summary>
                         <ul *ngIf="showObjectives">
                             <li *ngFor="let ob of groupobs[1]">
                                 <app-objective-summary
                                     [objective]="ob"
-                                    [unit]="period.unit"></app-objective-summary>
+                                    [unit]="period?.unit"></app-objective-summary>
                             </li>
                         </ul>
                     </li>
                     <li class="total"><b>Total:</b> <app-resource-quantity
                         [quantity]="totalResourcesAllocated(bucket.objectives)"
-                        [primaryUnit]="period.unit"
-                        [secondaryUnits]="period.secondaryUnits"></app-resource-quantity></li>
+                        [primaryUnit]="period?.unit"
+                        [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity></li>
                 </ul>
             </div>
         </div>
@@ -36,13 +36,13 @@
                 <li *ngFor="let groupobs of allObjectivesByGroup()">
                     <app-objective-summary
                         [objective]="summaryObjective(groupobs[0], groupobs[1])"
-                        [unit]="period.unit"
-                        [secondaryUnits]="period.secondaryUnits"></app-objective-summary>
+                        [unit]="period?.unit"
+                        [secondaryUnits]="period?.secondaryUnits"></app-objective-summary>
                     <ul *ngIf="showObjectives">
                         <li *ngFor="let ob of groupobs[1]">
                             <app-objective-summary
                                 [objective]="ob"
-                                [unit]="period.unit"></app-objective-summary>
+                                [unit]="period?.unit"></app-objective-summary>
                         </li>
                     </ul>
                 </li>

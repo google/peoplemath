@@ -28,7 +28,7 @@ export interface RenameClassDialogData {
   styleUrls: ['./rename-class-dialog.component.css']
 })
 export class RenameClassDialog implements OnInit {
-  newName: string;
+  newName: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<RenameClassDialog>,

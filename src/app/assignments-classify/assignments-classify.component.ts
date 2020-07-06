@@ -31,11 +31,11 @@ enum AggregateBy {
   styleUrls: ['./assignments-classify.component.css']
 })
 export class AssignmentsClassifyComponent implements OnInit {
-  @Input() period: Period;
-  @Input() aggregateBy: AggregateBy;
-  @Input() groupType: string;
-  @Input() title: string;
-  @Input() isEditingEnabled: boolean;
+  @Input() period?: Period;
+  @Input() aggregateBy?: AggregateBy;
+  @Input() groupType?: string;
+  @Input() title?: string;
+  @Input() isEditingEnabled?: boolean;
   @Output() onRename = new EventEmitter<[string, string]>();
 
   constructor(
@@ -47,13 +47,13 @@ export class AssignmentsClassifyComponent implements OnInit {
 
   objectivesByGroup(): Array<[string, Objective[]]> {
     let obsByGroup = new Map<string, Objective[]>();
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         let mgs = o.groups.filter(g => g.groupType == this.groupType);
         if (mgs.length > 0) {
           let groupName = mgs[0].groupName;
           if (obsByGroup.has(groupName)) {
-            obsByGroup.get(groupName).push(o);
+            obsByGroup.get(groupName)!.push(o);
           } else {
             obsByGroup.set(groupName, [o]);
           }
@@ -74,11 +74,11 @@ export class AssignmentsClassifyComponent implements OnInit {
 
   objectivesByTag(): Array<[string, Objective[]]> {
     let obsByTag = new Map<string, Objective[]>();
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.tags.forEach(t => {
           if (obsByTag.has(t.name)) {
-            obsByTag.get(t.name).push(o);
+            obsByTag.get(t.name)!.push(o);
           } else {
             obsByTag.set(t.name, [o]);
           }
@@ -100,6 +100,8 @@ export class AssignmentsClassifyComponent implements OnInit {
       case AggregateBy.Tag:
         return this.objectivesByTag();
     }
+    console.error('Unsupported aggregateBy "' + this.aggregateBy + '"');
+    return [];
   }
 
   classTrackBy(_index: number, classobj: [string, Objective[]]): string {
@@ -116,7 +118,7 @@ export class AssignmentsClassifyComponent implements OnInit {
 
   renameClass(cname: string) {
     let data: RenameClassDialogData = {
-      classType: this.aggregateBy,
+      classType: this.aggregateBy || '',
       currentName: cname,
     };
     let dialog = this.dialog.open(RenameClassDialog, {data: data});

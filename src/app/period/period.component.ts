@@ -35,10 +35,10 @@ import { Assignment } from '../assignment';
   styleUrls: ['./period.component.css'],
 })
 export class PeriodComponent implements OnInit {
-  team: Team;
-  period: Period;
-  isEditingEnabled: boolean;
-  showOrderButtons: boolean;
+  team?: Team;
+  period?: Period;
+  isEditingEnabled: boolean = false;
+  showOrderButtons: boolean = false;
   eventsRequiringSave = new Subject<any>();
  
   constructor(
@@ -51,7 +51,13 @@ export class PeriodComponent implements OnInit {
   ngOnInit() {
     this.isEditingEnabled = false;
     this.showOrderButtons = false;
-    this.route.paramMap.subscribe(m => this.loadDataFor(m.get('team'), m.get('period')));
+    this.route.paramMap.subscribe(m => {
+      const teamId = m.get('team');
+      const periodId = m.get('period');
+      if (teamId && periodId) {
+        this.loadDataFor(teamId, periodId);
+      }
+    });
     this.eventsRequiringSave.pipe(debounceTime(2000)).subscribe(_ => this.performSave());
   }
 
@@ -77,13 +83,13 @@ export class PeriodComponent implements OnInit {
    * Total resources available for the period across all people
    */
   totalAvailable(): number {
-    return this.period.people
+    return this.period!.people
         .map(person => person.availability)
         .reduce((sum, current) => sum + current, 0);
   }
 
   totalAllocated(): number {
-    return periodResourcesAllocated(this.period);
+    return periodResourcesAllocated(this.period!);
   }
 
   /**
@@ -97,22 +103,22 @@ export class PeriodComponent implements OnInit {
    * Sum of bucket allocation percentages. Should generally be 100 (and never more).
    */
   totalAllocationPercentage(): number {
-    return this.period.buckets
+    return this.period!.buckets
         .map(bucket => bucket.allocationPercentage)
         .reduce((sum, current) => sum + current, 0);
   }
 
   totalAssignmentCount(): number {
-    return this.period.buckets.map(
+    return this.period!.buckets.map(
       bucket => bucket.objectives.map(
         objective => objective.assignments.length).reduce(
           (sum, current) => sum + current, 0)).reduce(
             (sum, current) => sum + current, 0);
   }
 
-  sumAssignmentValByPerson(objPred: (Objective) => boolean, valFunc: (Assignment) => number): Map<string, number> {
+  sumAssignmentValByPerson(objPred: (o: Objective) => boolean, valFunc: (a: Assignment) => number): Map<string, number> {
     let result: Map<string, number> = new Map();
-    this.period.buckets.forEach(bucket => {
+    this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
         if (objPred(objective)) {
           objective.assignments.forEach(assignment => {
@@ -120,7 +126,7 @@ export class PeriodComponent implements OnInit {
             if (!result.has(personId)) {
               result.set(personId, 0);
             }
-            result.set(personId, result.get(personId) + valFunc(assignment));
+            result.set(personId, result.get(personId)! + valFunc(assignment));
           })
         }
       })
@@ -147,8 +153,8 @@ export class PeriodComponent implements OnInit {
    */
   unallocatedTime(): Map<string,number> {
     let result = new Map();
-    this.period.people.forEach(p => result.set(p.id, p.availability));
-    this.period.buckets.forEach(b => {
+    this.period!.people.forEach(p => result.set(p.id, p.availability));
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.assignments.forEach(a => {
           result.set(a.personId, result.get(a.personId) - a.commitment);
@@ -163,7 +169,7 @@ export class PeriodComponent implements OnInit {
    */
   committedAllocations(): number {
     let totalCommitted = 0;
-    this.period.buckets.forEach(bucket => {
+    this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(o => {
         if (o.commitmentType == CommitmentType.Committed) {
           o.assignments.forEach(a => {
@@ -187,16 +193,16 @@ export class PeriodComponent implements OnInit {
   }
 
   committedAllocationsTooHigh(): boolean {
-    return (this.committedAllocationRatio() * 100) > this.period.maxCommittedPercentage;
+    return (this.committedAllocationRatio() * 100) > this.period!.maxCommittedPercentage;
   }
 
   otherBuckets(bucket: Bucket): Bucket[] {
-    return this.period.buckets.filter(b => b !== bucket);
+    return this.period!.buckets.filter(b => b !== bucket);
   }
 
   groupTypesWithAssignments(): string[] {
     let result = new Set<string>();
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.assignments.length > 0) {
           o.groups.forEach(g => {
@@ -209,7 +215,7 @@ export class PeriodComponent implements OnInit {
   }
 
   hasTagsWithAssignments(): boolean {
-    for (let bucket of this.period.buckets) {
+    for (let bucket of this.period!.buckets) {
       for (let objective of bucket.objectives) {
         if (objective.assignments.length > 0 && objective.tags.length > 0) {
           return true;
@@ -219,9 +225,9 @@ export class PeriodComponent implements OnInit {
     return false;
   }
 
-  renameGroup(groupType: string, oldName: string, newName: string) {
+  renameGroup(groupType: string, oldName: string, newName: string): void {
     let changed = false;
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.groups.forEach(g => {
           if (g.groupType == groupType && g.groupName == oldName) {
@@ -238,7 +244,7 @@ export class PeriodComponent implements OnInit {
 
   renameTag(oldName: string, newName: string) {
     let changed = false;
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.tags.forEach(t => {
           if (t.name == oldName) {
@@ -295,9 +301,9 @@ export class PeriodComponent implements OnInit {
 
   deletePerson(person: Person): void {
     // Deleting a person requires ensuring their assignments are deleted as well
-    const index = this.period.people.findIndex(p => p === person);
-    this.period.people.splice(index, 1);
-    this.period.buckets.forEach(b => {
+    const index = this.period!.people.findIndex(p => p === person);
+    this.period!.people.splice(index, 1);
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.assignments = o.assignments.filter(a => a.personId != person.id);
       });
@@ -306,6 +312,10 @@ export class PeriodComponent implements OnInit {
   }
 
   performSave(): void {
+    if (!(this.team && this.period)) {
+      console.error('performSave() called with team=' + this.team + ', period=' + this.period);
+      return;
+    }
     this.storage.updatePeriod(this.team.id, this.period).pipe(
       catchError(error => {
         if (error.status == 409) {
@@ -319,7 +329,7 @@ export class PeriodComponent implements OnInit {
     ).subscribe(updateResponse => {
       if (updateResponse) {
         this.snackBar.open('Saved', '', {duration: 2000});
-        this.period.lastUpdateUUID = updateResponse.lastUpdateUUID;
+        this.period!.lastUpdateUUID = updateResponse.lastUpdateUUID;
       }
     });
   }
@@ -329,7 +339,7 @@ export class PeriodComponent implements OnInit {
       return;
     }
     const dialogData: EditPeriodDialogData = {
-      period: this.period, title: 'Edit Period "' + this.period.id + '"',
+      period: this.period!, title: 'Edit Period "' + this.period!.id + '"',
       okAction: 'OK', allowEditID: false,
     };
     const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
@@ -352,25 +362,25 @@ export class PeriodComponent implements OnInit {
       if (!bucket) {
         return;
       }
-      this.period.buckets.push(bucket);
+      this.period!.buckets.push(bucket);
       this.save();
     });
   }
 
   moveBucketUpOne(bucket: Bucket): void {
-    let index = this.period.buckets.findIndex(b => b === bucket);
+    let index = this.period!.buckets.findIndex(b => b === bucket);
     if (index > 0) {
-      this.period.buckets[index] = this.period.buckets[index - 1];
-      this.period.buckets[index - 1] = bucket;
+      this.period!.buckets[index] = this.period!.buckets[index - 1];
+      this.period!.buckets[index - 1] = bucket;
     }
     this.save();
   }
 
   moveBucketDownOne(bucket: Bucket): void {
-    let index = this.period.buckets.findIndex(b => b === bucket);
-    if (index >= 0 && index < this.period.buckets.length - 1) {
-      this.period.buckets[index] = this.period.buckets[index + 1];
-      this.period.buckets[index + 1] = bucket;
+    let index = this.period!.buckets.findIndex(b => b === bucket);
+    if (index >= 0 && index < this.period!.buckets.length - 1) {
+      this.period!.buckets[index] = this.period!.buckets[index + 1];
+      this.period!.buckets[index + 1] = bucket;
     }
     this.save();
   }

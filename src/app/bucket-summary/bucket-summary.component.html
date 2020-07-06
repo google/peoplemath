@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>Objectives: {{bucket.displayName}} ({{bucketAllocationFraction | percent}})</mat-card-title>
+        <mat-card-title>Objectives: {{bucket?.displayName}} ({{bucketAllocationFraction | percent}})</mat-card-title>
     </mat-card-header>
     <mat-card-content><div class="titlealign">
         <div *ngIf="hasCommittedObjectives()">
