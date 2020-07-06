@@ -44,8 +44,8 @@ describe('StorageService', () => {
       ],
     });
 
-    httpTestingController = TestBed.get(HttpTestingController);
-    service = TestBed.get(StorageService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(StorageService);
   });
 
   afterEach(() => {

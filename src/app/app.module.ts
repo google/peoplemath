@@ -89,16 +89,6 @@ import { PillComponent } from './pill/pill.component';
     FlexLayoutModule,
     HttpClientModule,
   ],
-  entryComponents: [
-    EditPersonDialog,
-    AssignmentDialogComponent,
-    EditObjectiveDialogComponent,
-    EditBucketDialogComponent,
-    EditPeriodDialogComponent,
-    EditTeamDialogComponent,
-    AddPeriodDialogComponent,
-    RenameClassDialog,
-  ],
   providers: [
     StorageService,
   ],
