@@ -28,6 +28,8 @@ import { of, Subject } from 'rxjs';
 import { Person } from '../person';
 import { CommitmentType, Objective } from '../objective';
 import { Assignment } from '../assignment';
+import { AggregateBy } from '../assignments-classify/assignments-classify.component';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-period',
@@ -40,6 +42,8 @@ export class PeriodComponent implements OnInit {
   isEditingEnabled: boolean = false;
   showOrderButtons: boolean = false;
   eventsRequiringSave = new Subject<any>();
+  // To enable access to this enum from the template
+  AggregateBy = AggregateBy;
  
   constructor(
     private storage: StorageService,
@@ -75,8 +79,8 @@ export class PeriodComponent implements OnInit {
     this.showOrderButtons = !this.showOrderButtons;
   }
 
-  reorderButtonColour(): string {
-    return this.showOrderButtons ? "accent" : "";
+  reorderButtonColour(): ThemePalette {
+    return this.showOrderButtons ? "accent" : undefined;
   }
 
   /**
