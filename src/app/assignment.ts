@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,4 +17,21 @@ export class Assignment {
         public personId: string,
         public commitment: number,
     ) {}
+}
+
+export class ImmutableAssignment {
+    private _personId: string;
+    private _commitment: number;
+
+    get personId(): string { return this._personId; }
+    get commitment(): number { return this._commitment; }
+
+    constructor(a: Assignment) {
+        this._personId = a.personId;
+        this._commitment = a.commitment;
+    }
+
+    toOriginal(): Assignment {
+        return new Assignment(this.personId, this.commitment);
+    }
 }

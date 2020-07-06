@@ -17,7 +17,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ObjectiveSummaryComponent } from './objective-summary.component';
-import { CommitmentType } from '../objective';
+import { CommitmentType, ImmutableObjective } from '../objective';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('ObjectiveSummaryComponent', () => {
@@ -37,7 +37,7 @@ describe('ObjectiveSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveSummaryComponent);
     component = fixture.componentInstance;
-    component.objective = {
+    component.objective = new ImmutableObjective({
       name: '',
       resourceEstimate: 0,
       commitmentType: CommitmentType.Aspirational,
@@ -45,7 +45,7 @@ describe('ObjectiveSummaryComponent', () => {
       tags: [],
       notes: '',
       assignments: [],
-    };
+    });
     component.unit = '';
     fixture.detectChanges();
   });

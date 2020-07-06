@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,4 +17,21 @@ export class Team {
         public id: string,
         public displayName: string
     ) {}
+}
+
+export class ImmutableTeam {
+    private readonly _id: string;
+    private readonly _displayName: string;
+
+    get id(): string { return this._id; }
+    get displayName(): string { return this._displayName; }
+
+    constructor(t: Team) {
+        this._id = t.id;
+        this._displayName = t.displayName;
+    }
+
+    toOriginal(): Team {
+        return new Team(this.id, this.displayName);
+    }
 }
