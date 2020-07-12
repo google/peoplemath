@@ -23,7 +23,6 @@ import { Objective, ImmutableObjective } from '../objective';
 import { Assignment } from '../assignment';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
-import { List } from 'immutable';
 
 describe('BucketSummaryComponent', () => {
   let component: BucketSummaryComponent;
@@ -69,7 +68,7 @@ describe('BucketSummaryComponent', () => {
   });
 
   it('should classify objective with no commitment type as aspirational', () => {
-    const actual = component.aspirationalObjectives().toArray().map(o => o.toOriginal());
+    const actual = component.aspirationalObjectives().map(o => o.toOriginal());
     expect(actual).toEqual([NO_COMMITMENTTYPE_OBJECTIVE]);
   });
 });

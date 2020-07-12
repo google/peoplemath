@@ -17,7 +17,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective, objectiveResourcesAllocatedI } from '../objective';
 import { ImmutableSecondaryUnit } from '../period';
-import { List } from 'immutable';
 
 @Component({
   selector: 'app-objective-summary',
@@ -29,7 +28,7 @@ import { List } from 'immutable';
 export class ObjectiveSummaryComponent implements OnInit {
   @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
-  @Input() secondaryUnits?: List<ImmutableSecondaryUnit>;
+  @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
   constructor() { }
 
