@@ -57,7 +57,7 @@ describe('BucketSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BucketSummaryComponent);
     component = fixture.componentInstance;
-    component.bucket = new ImmutableBucket(BUCKET);
+    component.bucket = ImmutableBucket.fromBucket(BUCKET);
     component.bucketAllocationFraction = 50;
     component.unit = 'things';
     fixture.detectChanges();

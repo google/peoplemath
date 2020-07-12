@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { CommitmentType, ImmutableObjective, objectiveResourcesAllocatedI } from '../objective';
+import { CommitmentType, ImmutableObjective, objectiveResourcesAllocated } from '../objective';
 import { ImmutableSecondaryUnit } from '../period';
 
 @Component({
@@ -36,7 +36,7 @@ export class ObjectiveSummaryComponent implements OnInit {
   }
 
   allocatedResources(): number {
-    return objectiveResourcesAllocatedI(this.objective!);
+    return objectiveResourcesAllocated(this.objective!);
   }
 
   allocationSummary(): string {

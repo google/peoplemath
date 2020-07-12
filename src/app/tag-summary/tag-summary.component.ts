@@ -16,7 +16,7 @@
 
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
-import { ImmutableObjective, objectiveResourcesAllocatedI, totalResourcesAllocatedI } from '../objective';
+import { ImmutableObjective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-tag-summary',
@@ -43,11 +43,11 @@ export class TagSummaryComponent implements OnInit {
         }
       });
     });
-    result.sort((o1, o2) => objectiveResourcesAllocatedI(o2) - objectiveResourcesAllocatedI(o1));
+    result.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
     return result;
   }
 
   totalAllocationsForTag(): number {
-    return totalResourcesAllocatedI(this.taggedObjectives());
+    return totalResourcesAllocated(this.taggedObjectives());
   }
 }

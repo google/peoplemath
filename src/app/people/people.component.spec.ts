@@ -18,6 +18,7 @@ import { PeopleComponent } from './people.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ImmutablePerson } from '../person';
 
 describe('PeopleComponent', () => {
   let component: PeopleComponent;
@@ -57,7 +58,7 @@ describe('PeopleComponent', () => {
         location: 'GHI',
         availability: 6,
       }
-    ];
+    ].map(p => new ImmutablePerson(p));
     component.peopleAllocations = new Map();
     component.peopleAssignmentCounts = new Map();
     fixture.detectChanges();

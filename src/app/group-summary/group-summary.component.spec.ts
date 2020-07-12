@@ -60,7 +60,7 @@ describe('GroupSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupSummaryComponent);
     component = fixture.componentInstance;
-    component.period = new ImmutablePeriod(PERIOD);
+    component.period = ImmutablePeriod.fromPeriod(PERIOD);
     fixture.detectChanges();
   });
 

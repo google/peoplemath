@@ -18,14 +18,14 @@ import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObject
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CommitmentType, Objective } from '../objective';
+import { CommitmentType, ImmutableObjective } from '../objective';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditObjectiveDialogComponent', () => {
   let component: EditObjectiveDialogComponent;
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let objective: Objective = {
+  let objective = ImmutableObjective.fromObjective({
     name: 'My test objective',
     resourceEstimate: 17,
     commitmentType: CommitmentType.Aspirational,
@@ -38,7 +38,7 @@ describe('EditObjectiveDialogComponent', () => {
     ],
     notes: '',
     assignments: [],
-  };
+  });
   let DIALOG_DATA: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
     original: objective,

@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Period } from '../period';
-import { Objective, CommitmentType } from '../objective';
-import { Assignment } from '../assignment';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutablePeriod } from '../period';
+import { ImmutableObjective } from '../objective';
+import { ImmutableAssignment } from '../assignment';
 import { Person, personDisplayNameWithUsername } from '../person';
 
 @Component({
   selector: 'app-assignments-by-person',
   templateUrl: './assignments-by-person.component.html',
-  styleUrls: ['./assignments-by-person.component.css']
+  styleUrls: ['./assignments-by-person.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentsByPersonComponent implements OnInit {
-  @Input() period?: Period;
+  @Input() period?: ImmutablePeriod;
 
   constructor() { }
 
@@ -50,7 +52,7 @@ export class AssignmentsByPersonComponent implements OnInit {
       bucket.objectives.forEach(objective => {
         objective.assignments.filter(assignment => assignment.personId === person.id)
                              .forEach(assignment => {
-          result.push(new ObjectiveAssignment(objective, assignment));
+          result.push({objective: objective, assignment: assignment});
         });
       });
     });
@@ -72,9 +74,7 @@ export class AssignmentsByPersonComponent implements OnInit {
   }
 }
 
-class ObjectiveAssignment {
-  constructor(
-    public objective: Objective,
-    public assignment: Assignment,
-  ) {}
+interface ObjectiveAssignment {
+  objective: ImmutableObjective,
+  assignment: ImmutableAssignment,
 }

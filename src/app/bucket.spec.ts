@@ -29,7 +29,7 @@ describe('ImmutableBucket', () => {
             assignments: [],
         }
     ]);
-    const bucket = new ImmutableBucket(_mut);
+    const bucket = ImmutableBucket.fromBucket(_mut);
 
     it('should convert', () => {
         expect(bucket.toOriginal()).toEqual(_mut);

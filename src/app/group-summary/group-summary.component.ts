@@ -17,7 +17,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
-import { ImmutableObjective, objectiveResourcesAllocatedI, totalResourcesAllocatedI } from '../objective';
+import { ImmutableObjective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-group-summary',
@@ -86,13 +86,13 @@ export class GroupSummaryComponent implements OnInit {
 
     // Sort objectives in each group by descending allocation
     for (let [_, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocatedI(o2) - objectiveResourcesAllocatedI(o1));
+      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
     }
-    noGroup.sort((o1, o2) => objectiveResourcesAllocatedI(o2) - objectiveResourcesAllocatedI(o1));
+    noGroup.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
 
     let result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) =>
-      (totalResourcesAllocatedI(obs2) - totalResourcesAllocatedI(obs1)) || g1.localeCompare(g2));
+      (totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1)) || g1.localeCompare(g2));
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
@@ -101,11 +101,11 @@ export class GroupSummaryComponent implements OnInit {
   }
 
   summaryObjective(groupName: string, objectives: ImmutableObjective[]): ImmutableObjective {
-    return new ImmutableObjective({
+    return ImmutableObjective.fromObjective({
       name: groupName,
       commitmentType: undefined,
       resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
-      assignments: [{personId: '', commitment: totalResourcesAllocatedI(objectives)}],
+      assignments: [{personId: '', commitment: totalResourcesAllocated(objectives)}],
       notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,
       groups: [],
       tags: [],
@@ -113,6 +113,6 @@ export class GroupSummaryComponent implements OnInit {
   }
 
   totalResourcesAllocated(objectives: readonly ImmutableObjective[]) {
-    return totalResourcesAllocatedI(objectives);
+    return totalResourcesAllocated(objectives);
   }
 }
