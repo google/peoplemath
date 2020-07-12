@@ -16,7 +16,7 @@
 
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
-import { CommitmentType, ImmutableObjective, objectiveResourcesAllocatedI } from '../objective';
+import { CommitmentType, ImmutableObjective, objectiveResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-bucket-summary',
@@ -42,7 +42,7 @@ export class BucketSummaryComponent implements OnInit {
   committedObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
       o => o.commitmentType == CommitmentType.Committed &&
-      objectiveResourcesAllocatedI(o) > 0);
+      objectiveResourcesAllocated(o) > 0);
   }
 
   hasAspirationalObjectives(): boolean {
@@ -52,7 +52,7 @@ export class BucketSummaryComponent implements OnInit {
   aspirationalObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
       o => o.commitmentType != CommitmentType.Committed &&
-      objectiveResourcesAllocatedI(o) > 0);
+      objectiveResourcesAllocated(o) > 0);
   }
 
   hasRejectedObjectives(): boolean {
@@ -60,6 +60,6 @@ export class BucketSummaryComponent implements OnInit {
   }
 
   rejectedObjectives(): ImmutableObjective[] {
-    return this.bucket!.objectives.filter(o => objectiveResourcesAllocatedI(o) <= 0);
+    return this.bucket!.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
   }
 }

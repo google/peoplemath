@@ -15,6 +15,7 @@
  */
 
 import { Period, ImmutablePeriod, SecondaryUnit, ImmutableSecondaryUnit } from "./period";
+import { Bucket, ImmutableBucket } from './bucket';
 
 describe('ImmutableSecondaryUnit', () => {
     const _mut: SecondaryUnit = {
@@ -54,11 +55,24 @@ describe('ImmutablePeriod', () => {
         people: [],
         lastUpdateUUID: 'uuid',
     };
-    const period = new ImmutablePeriod(_mut);
+    const period = ImmutablePeriod.fromPeriod(_mut);
 
     it('should convert back', () => {
         const orig = period.toOriginal();
         expect(orig).toEqual(_mut);
+    });
+
+    it('should facilitate lastUpdateUUID changes', () => {
+        const updated = period.withNewLastUpdateUUID('newuuid');
+        const expected: Period = {..._mut, lastUpdateUUID: 'newuuid'};
+        expect(updated.toOriginal()).toEqual(expected);
+    });
+
+    it('should facilitate new buckets', () => {
+        const newBucket: Bucket = new Bucket('New bucket', 50, []);
+        const updated = period.withNewBucket(ImmutableBucket.fromBucket(newBucket));
+        const expected: Period = {..._mut, buckets: [newBucket]};
+        expect(updated.toOriginal()).toEqual(expected);
     });
 
     it('should be immutable', () => {
@@ -68,4 +82,6 @@ describe('ImmutablePeriod', () => {
 
         //const p: Period = period;
     });
+
+    // TODO: Test every "with" method
 });

@@ -25,10 +25,10 @@ import { AssignmentsByPersonComponent } from '../assignments-by-person/assignmen
 import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
-import { Period } from '../period';
+import { Period, ImmutablePeriod } from '../period';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommitmentType } from '../objective';
+import { CommitmentType, ImmutableObjectiveGroup } from '../objective';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -85,29 +85,30 @@ describe('PeriodComponent', () => {
   });
 
   it('should only rename groups of the same group type', () => {
-    component.period = TEST_PERIOD;
-    component.period.buckets.push({
-      allocationPercentage: 100,
-      displayName: 'Sole bucket',
-      objectives: [
-        {
-          name: 'Sole objective',
-          commitmentType: CommitmentType.Aspirational,
-          resourceEstimate: 2,
-          notes: '',
-          assignments: [],
-          tags: [],
-          groups: [
-            {groupType: 'type1', groupName: 'thename'},
-            {groupType: 'type2', groupName: 'thename'},
-          ],
-        },
-      ],
-    });
+    component.period = ImmutablePeriod.fromPeriod({...TEST_PERIOD, buckets: [
+      {
+        allocationPercentage: 100,
+        displayName: 'Sole bucket',
+        objectives: [
+          {
+            name: 'Sole objective',
+            commitmentType: CommitmentType.Aspirational,
+            resourceEstimate: 2,
+            notes: '',
+            assignments: [],
+            tags: [],
+            groups: [
+              {groupType: 'type1', groupName: 'thename'},
+              {groupType: 'type2', groupName: 'thename'},
+            ],
+          },
+        ],
+      }
+    ]});
     component.renameGroup('type1', 'thename', 'thenewname');
     expect(component.period.buckets[0].objectives[0].groups).toEqual([
-      {groupType: 'type1', groupName: 'thenewname'},
-      {groupType: 'type2', groupName: 'thename'},
+      new ImmutableObjectiveGroup({groupType: 'type1', groupName: 'thenewname'}),
+      new ImmutableObjectiveGroup({groupType: 'type2', groupName: 'thename'}),
     ]);
   });
 });

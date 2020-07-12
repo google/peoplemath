@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit } from '@angular/core';
-import { Team } from '../team';
+import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,7 +27,7 @@ import { of } from 'rxjs';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
-  teams?: Team[];
+  teams?: readonly ImmutableTeam[];
 
   constructor(
     private storage: StorageService,
@@ -46,7 +46,13 @@ export class TeamsComponent implements OnInit {
         console.log(error);
         return of([])
       })
-    ).subscribe(teams => this.teams = teams);
+    ).subscribe((teams?: Team[]) => {
+      if (teams) {
+        this.teams = teams.map(t => new ImmutableTeam(t));
+      } else {
+        this.teams = undefined;
+      }
+    });
   }
 
   isLoaded(): boolean {
@@ -74,7 +80,7 @@ export class TeamsComponent implements OnInit {
         }),
       ).subscribe(res => {
         if (res != "error") {
-          this.teams!.push(team);
+          this.teams = this.teams!.concat(new ImmutableTeam(team));
         }
       });
     });

@@ -37,7 +37,7 @@ describe('ObjectiveSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectiveSummaryComponent);
     component = fixture.componentInstance;
-    component.objective = new ImmutableObjective({
+    component.objective = ImmutableObjective.fromObjective({
       name: '',
       resourceEstimate: 0,
       commitmentType: CommitmentType.Aspirational,

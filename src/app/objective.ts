@@ -66,6 +66,17 @@ export interface Objective {
   assignments: Assignment[],
 }
 
+// Boilerplate avoidance device
+interface ImmutableObjectiveIF {
+  readonly name: string;
+  readonly resourceEstimate: number;
+  readonly commitmentType?: CommitmentType;
+  readonly notes: string;
+  readonly groups: readonly ImmutableObjectiveGroup[];
+  readonly tags: readonly ImmutableObjectiveTag[];
+  readonly assignments: readonly ImmutableAssignment[];
+}
+
 export class ImmutableObjective {
   // The readonly arrays here mean we don't need getter boilerplate
   // to avoid ImmutableObjective being assignable to Objective.
@@ -77,14 +88,26 @@ export class ImmutableObjective {
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
   
-  constructor(o: Objective) {
+  private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
     this.resourceEstimate = o.resourceEstimate;
     this.commitmentType = o.commitmentType;
     this.notes = o.notes;
-    this.groups = o.groups.map(g => new ImmutableObjectiveGroup(g));
-    this.tags = o.tags.map(t => new ImmutableObjectiveTag(t));
-    this.assignments = o.assignments.map(a => new ImmutableAssignment(a));
+    this.groups = o.groups;
+    this.tags = o.tags;
+    this.assignments = o.assignments;
+  }
+
+  static fromObjective(objective: Objective): ImmutableObjective {
+    return new ImmutableObjective({
+      name: objective.name,
+      resourceEstimate: objective.resourceEstimate,
+      commitmentType: objective.commitmentType,
+      notes: objective.notes,
+      groups: objective.groups.map(g => new ImmutableObjectiveGroup(g)),
+      tags: objective.tags.map(t => new ImmutableObjectiveTag(t)),
+      assignments: objective.assignments.map(a => new ImmutableAssignment(a)),
+    });
   }
 
   toOriginal(): Objective {
@@ -98,24 +121,17 @@ export class ImmutableObjective {
       assignments: this.assignments.map(a => a.toOriginal()),
     };
   }
-}
 
-/**
- * Sum of resources allocated to the given objective.
- * Not a member function to avoid problems with (de)serialization.
- * @deprecated To be removed when we use ImmutableObjective everywhere.
- */
-export function objectiveResourcesAllocated(objective: Objective): number {
-  return objective.assignments
-    .map(assignment => assignment.commitment)
-    .reduce((sum, current) => sum + current, 0);
+  withAssignments(newAssignments: readonly ImmutableAssignment[]): ImmutableObjective {
+    return new ImmutableObjective({...this, assignments: newAssignments});
+  }
 }
 
 /**
  * Sum of resources allocated to the given objective.
  * Not a member function to avoid problems with (de)serialization.
  */
-export function objectiveResourcesAllocatedI(objective: ImmutableObjective): number {
+export function objectiveResourcesAllocated(objective: ImmutableObjective): number {
   return objective.assignments
     .map(assignment => assignment.commitment)
     .reduce((sum, current) => sum + current, 0);
@@ -123,15 +139,7 @@ export function objectiveResourcesAllocatedI(objective: ImmutableObjective): num
 
 /**
  * Sum of resources allocated to a number of objectives.
- * @deprecated To be removed when we use ImmutableObjective everywhere.
  */
-export function totalResourcesAllocated(objectives: Objective[]): number {
+export function totalResourcesAllocated(objectives: readonly ImmutableObjective[]): number {
   return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
-}
-
-/**
- * Sum of resources allocated to a number of objectives.
- */
-export function totalResourcesAllocatedI(objectives: readonly ImmutableObjective[]): number {
-  return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocatedI(ob), 0);
 }

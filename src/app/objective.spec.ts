@@ -62,7 +62,7 @@ describe('ImmutableObjective', () => {
         tags: [{name: 'tag1'}, {name: 'tag2'}],
         assignments: [new Assignment('alice', 1)],
     };
-    const obj = new ImmutableObjective(_mut);
+    const obj = ImmutableObjective.fromObjective(_mut);
 
     it('should convert', () => {
         expect(obj.toOriginal()).toEqual(_mut);
