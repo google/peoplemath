@@ -26,7 +26,7 @@ export class ResourceQuantityComponent implements OnInit {
   @Input() quantity?: number;
   @Input() ofQuantity?: number;
   @Input() primaryUnit?: string;
-  @Input() secondaryUnits?: SecondaryUnit[];
+  @Input() secondaryUnits?: readonly SecondaryUnit[];
 
   constructor() { }
 

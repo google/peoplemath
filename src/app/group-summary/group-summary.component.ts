@@ -18,7 +18,6 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
 import { ImmutableObjective, objectiveResourcesAllocatedI, totalResourcesAllocatedI } from '../objective';
-import { List } from 'immutable';
 
 @Component({
   selector: 'app-group-summary',
@@ -45,8 +44,8 @@ export class GroupSummaryComponent implements OnInit {
     let noGroup: ImmutableObjective[] = [];
     bucket.objectives.forEach(o => {
       let gs = o.groups.filter(g => g.groupType == this.groupType);
-      if (!gs.isEmpty()) {
-        let groupName = gs.get(0)!.groupName;
+      if (gs.length > 0) {
+        let groupName = gs[0].groupName;
         if (obsByGroup.has(groupName)) {
           obsByGroup.get(groupName)!.push(o);
         } else {
@@ -74,8 +73,8 @@ export class GroupSummaryComponent implements OnInit {
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         let gs = o.groups.filter(g => g.groupType == this.groupType);
-        if (!gs.isEmpty()) {
-          let groupName = gs.get(0)!.groupName;
+        if (gs.length > 0) {
+          let groupName = gs[0].groupName;
           let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
           obs.push(o);
           obsByGroup.set(groupName, obs);
@@ -113,7 +112,7 @@ export class GroupSummaryComponent implements OnInit {
     });
   }
 
-  totalResourcesAllocated(objectives: List<ImmutableObjective>) {
-    return totalResourcesAllocatedI(objectives.toArray());
+  totalResourcesAllocated(objectives: readonly ImmutableObjective[]) {
+    return totalResourcesAllocatedI(objectives);
   }
 }

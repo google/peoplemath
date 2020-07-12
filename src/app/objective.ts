@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { Assignment, ImmutableAssignment } from "./assignment";
-import { List } from 'immutable';
 
 export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
 
@@ -68,22 +67,24 @@ export interface Objective {
 }
 
 export class ImmutableObjective {
+  // The readonly arrays here mean we don't need getter boilerplate
+  // to avoid ImmutableObjective being assignable to Objective.
   readonly name: string;
   readonly resourceEstimate: number;
   readonly commitmentType?: CommitmentType;
   readonly notes: string;
-  readonly groups: List<ImmutableObjectiveGroup>;
-  readonly tags: List<ImmutableObjectiveTag>;
-  readonly assignments: List<ImmutableAssignment>;
+  readonly groups: readonly ImmutableObjectiveGroup[];
+  readonly tags: readonly ImmutableObjectiveTag[];
+  readonly assignments: readonly ImmutableAssignment[];
   
   constructor(o: Objective) {
     this.name = o.name;
     this.resourceEstimate = o.resourceEstimate;
     this.commitmentType = o.commitmentType;
     this.notes = o.notes;
-    this.groups = List(o.groups.map(g => new ImmutableObjectiveGroup(g)));
-    this.tags = List(o.tags.map(t => new ImmutableObjectiveTag(t)));
-    this.assignments = List(o.assignments.map(a => new ImmutableAssignment(a)));
+    this.groups = o.groups.map(g => new ImmutableObjectiveGroup(g));
+    this.tags = o.tags.map(t => new ImmutableObjectiveTag(t));
+    this.assignments = o.assignments.map(a => new ImmutableAssignment(a));
   }
 
   toOriginal(): Objective {
@@ -92,9 +93,9 @@ export class ImmutableObjective {
       resourceEstimate: this.resourceEstimate,
       commitmentType: this.commitmentType,
       notes: this.notes,
-      groups: this.groups.toArray().map(g => g.toOriginal()),
-      tags: this.tags.toArray().map(t => t.toOriginal()),
-      assignments: this.assignments.toArray().map(a => a.toOriginal()),
+      groups: this.groups.map(g => g.toOriginal()),
+      tags: this.tags.map(t => t.toOriginal()),
+      assignments: this.assignments.map(a => a.toOriginal()),
     };
   }
 }
@@ -131,6 +132,6 @@ export function totalResourcesAllocated(objectives: Objective[]): number {
 /**
  * Sum of resources allocated to a number of objectives.
  */
-export function totalResourcesAllocatedI(objectives: ImmutableObjective[]): number {
+export function totalResourcesAllocatedI(objectives: readonly ImmutableObjective[]): number {
   return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocatedI(ob), 0);
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { Objective, objectiveResourcesAllocated, CommitmentType, ImmutableObjective, objectiveResourcesAllocatedI } from "./objective";
-import { List } from 'immutable';
 
 export class Bucket {
   constructor(
@@ -24,22 +23,22 @@ export class Bucket {
 };
 
 export class ImmutableBucket {
-  // The List means ImmutableBucket should not be assignable to Bucket,
+  // The readonly array means ImmutableBucket should not be assignable to Bucket,
   // so we can save typing on getters here.
   readonly displayName: string;
   readonly allocationPercentage: number;
-  readonly objectives: List<ImmutableObjective>;
+  readonly objectives: readonly ImmutableObjective[];
 
   constructor(bucket: Bucket) {
     this.displayName = bucket.displayName;
     this.allocationPercentage = bucket.allocationPercentage;
-    this.objectives = List(bucket.objectives.map(o => new ImmutableObjective(o)));
+    this.objectives = bucket.objectives.map(o => new ImmutableObjective(o));
   }
 
   toOriginal(): Bucket {
     return new Bucket(
       this.displayName, this.allocationPercentage,
-      this.objectives.toArray().map(o => o.toOriginal()));
+      this.objectives.map(o => o.toOriginal()));
   }
 }
 

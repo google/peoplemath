@@ -14,7 +14,6 @@
 
 import { Bucket, bucketResourcesAllocated, ImmutableBucket, bucketResourcesAllocatedI } from "./bucket";
 import { Person, ImmutablePerson } from "./person";
-import { List } from "immutable";
 
 export interface SecondaryUnit {
   name: string,
@@ -51,15 +50,15 @@ export interface Period {
 }
 
 export class ImmutablePeriod {
-  // We can save typing on getters here since the Lists mean ImmutablePeriod isn't assignable to Period
+  // We can save typing on getters here since the readonly arrays mean ImmutablePeriod isn't assignable to Period
   readonly id: string;
   readonly displayName: string;
   readonly unit: string;
   readonly notesURL: string;
   readonly maxCommittedPercentage: number;
-  readonly buckets: List<ImmutableBucket>;
-  readonly people: List<ImmutablePerson>;
-  readonly secondaryUnits: List<ImmutableSecondaryUnit>;
+  readonly buckets: readonly ImmutableBucket[];
+  readonly people: readonly ImmutablePerson[];
+  readonly secondaryUnits:  readonly ImmutableSecondaryUnit[];
   readonly lastUpdateUUID: string;
 
   constructor(period: Period) {
@@ -68,9 +67,9 @@ export class ImmutablePeriod {
     this.unit = period.unit;
     this.notesURL = period.notesURL;
     this.maxCommittedPercentage = period.maxCommittedPercentage;
-    this.buckets = List(period.buckets.map(b => new ImmutableBucket(b)));
-    this.people = List(period.people.map(p => new ImmutablePerson(p)));
-    this.secondaryUnits = List(period.secondaryUnits.map(su => new ImmutableSecondaryUnit(su)));
+    this.buckets = period.buckets.map(b => new ImmutableBucket(b));
+    this.people = period.people.map(p => new ImmutablePerson(p));
+    this.secondaryUnits = period.secondaryUnits.map(su => new ImmutableSecondaryUnit(su));
     this.lastUpdateUUID = period.lastUpdateUUID;
   }
 
@@ -81,9 +80,9 @@ export class ImmutablePeriod {
       unit: this.unit,
       notesURL: this.notesURL,
       maxCommittedPercentage: this.maxCommittedPercentage,
-      buckets: this.buckets.toArray().map(b => b.toOriginal()),
-      people: this.people.toArray().map(p => p.toOriginal()),
-      secondaryUnits: this.secondaryUnits.toArray().map(su => su.toOriginal()),
+      buckets: this.buckets.map(b => b.toOriginal()),
+      people: this.people.map(p => p.toOriginal()),
+      secondaryUnits: this.secondaryUnits.map(su => su.toOriginal()),
       lastUpdateUUID: this.lastUpdateUUID,
     };
   }
