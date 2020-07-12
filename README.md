@@ -63,7 +63,7 @@ To persist the API data and exercise the Cloud Datastore persistence layer, the 
 
 To deploy the app to Google App Engine:
 
-* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go112/quickstart)
+* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go/quickstart)
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
