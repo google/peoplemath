@@ -52,7 +52,7 @@ describe('TagSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TagSummaryComponent);
     component = fixture.componentInstance;
-    component.period = new ImmutablePeriod(PERIOD);
+    component.period = ImmutablePeriod.fromPeriod(PERIOD);
     fixture.detectChanges();
   });
 

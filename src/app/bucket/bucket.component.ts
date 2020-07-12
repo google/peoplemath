@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Bucket, bucketResourcesAllocated, bucketCommittedResourcesAllocated } from '../bucket';
-import { Objective, CommitmentType } from '../objective';
+import { Bucket, ImmutableBucket, bucketResourcesAllocated, bucketCommittedResourcesAllocated } from '../bucket';
+import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-dialog/edit-bucket-dialog.component';
@@ -27,18 +27,18 @@ import { ObjectiveComponent } from '../objective/objective.component';
   styleUrls: ['./bucket.component.css']
 })
 export class BucketComponent implements OnInit {
-  @Input() bucket?: Bucket;
+  @Input() bucket?: ImmutableBucket;
   @Input() unit?: string;
   @Input() totalAllocationPercentage?: number;
   @Input() globalResourcesAvailable?: number;
   @Input() maxCommittedPercentage?: number;
-  @Input() unallocatedTime?: Map<string, number>;
+  @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() showOrderButtons?: boolean;
   @Input() isEditingEnabled?: boolean;
-  @Input() otherBuckets?: Bucket[];
-  @Output() onMoveBucketUp = new EventEmitter<Bucket>();
-  @Output() onMoveBucketDown = new EventEmitter<Bucket>();
-  @Output() onChanged = new EventEmitter<any>();
+  @Input() otherBuckets?: readonly ImmutableBucket[];
+  @Output() onMoveBucketUp = new EventEmitter<ImmutableBucket>();
+  @Output() onMoveBucketDown = new EventEmitter<ImmutableBucket>();
+  @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
 
   constructor(public dialog: MatDialog) { }
 
@@ -58,11 +58,15 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditBucketDialogData = {
-      'bucket': this.bucket!, 'okAction': 'OK', 'allowCancel': false,
+      'bucket': this.bucket!.toOriginal(), 'okAction': 'OK', 'allowCancel': false,
       'title': 'Edit bucket "' + this.bucket!.displayName + '"',
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(_ => this.onChanged.emit(this.bucket));
+    dialogRef.afterClosed().subscribe((bucket?: Bucket) => {
+      if (bucket) {
+        this.onChanged.emit([this.bucket!, ImmutableBucket.fromBucket(bucket)]);
+      }
+    });
   }
 
   addObjective(): void {
@@ -92,38 +96,29 @@ export class BucketComponent implements OnInit {
       if (!objective) {
         return;
       }
-      this.bucket!.objectives.push(objective);
-      this.onChanged.emit(this.bucket);
+      this.onChanged.emit([this.bucket!, this.bucket!.withNewObjective(objective)]);
     });
   }
 
-  private objectiveIndex(objective: Objective): number {
-    return this.bucket!.objectives.findIndex(o => o === objective);
-  }
-
-  moveObjective(original: Objective, newObjective: Objective, newBucket: Bucket) {
+  moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket) {
     this.deleteObjective(original);
-    newBucket.objectives.push(newObjective);
-    this.onChanged.emit(newBucket);
+    this.onChanged.emit([newBucket, newBucket.withNewObjective(newObjective)]);
   }
 
-  deleteObjective(objective: Objective): void {
-    const index = this.objectiveIndex(objective);
-    this.bucket!.objectives.splice(index, 1);
-    this.onChanged.emit(this.bucket);
+  deleteObjective(objective: ImmutableObjective): void {
+    this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveDeleted(objective)]);
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>) {
-    moveItemInArray(this.bucket!.objectives, event.previousIndex, event.currentIndex);
+    const newObjectives = [...this.bucket!.objectives];
+    moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex != event.currentIndex) {
-      this.onChanged.emit(this.bucket);
+      this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
     }
   }
 
-  onObjectiveChanged(original: Objective, newObjective: Objective): void {
-    const index = this.objectiveIndex(original);
-    this.bucket!.objectives[index] = newObjective;
-    this.onChanged.emit(this.bucket);
+  onObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): void {
+    this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
   }
 
   moveBucketUp(): void {

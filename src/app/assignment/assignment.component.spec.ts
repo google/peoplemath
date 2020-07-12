@@ -18,7 +18,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentComponent } from './assignment.component';
 import { MaterialModule } from '../material/material.module';
-import { CommitmentType } from '../objective';
+import { CommitmentType, ImmutableObjective } from '../objective';
 
 describe('AssignmentComponent', () => {
   let component: AssignmentComponent;
@@ -37,7 +37,7 @@ describe('AssignmentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentComponent);
     component = fixture.componentInstance;
-    component.objective = {
+    component.objective = ImmutableObjective.fromObjective({
       name: 'Thing',
       resourceEstimate: 3,
       commitmentType: CommitmentType.Aspirational,
@@ -47,7 +47,7 @@ describe('AssignmentComponent', () => {
       assignments: [
         {commitment: 5, personId: 'alice'},
       ],
-    };
+    });
     fixture.detectChanges();
   });
 

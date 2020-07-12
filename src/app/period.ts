@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Bucket, bucketResourcesAllocated, ImmutableBucket, bucketResourcesAllocatedI } from "./bucket";
+import { Bucket, ImmutableBucket, bucketResourcesAllocated } from "./bucket";
 import { Person, ImmutablePerson } from "./person";
 
 export interface SecondaryUnit {
@@ -49,7 +49,20 @@ export interface Period {
   lastUpdateUUID: string,
 }
 
-export class ImmutablePeriod {
+// Boilerplate-reduction device
+interface ImmutablePeriodIF {
+  readonly id: string;
+  readonly displayName: string;
+  readonly unit: string;
+  readonly notesURL: string;
+  readonly maxCommittedPercentage: number;
+  readonly buckets: readonly ImmutableBucket[];
+  readonly people: readonly ImmutablePerson[];
+  readonly secondaryUnits:  readonly ImmutableSecondaryUnit[];
+  readonly lastUpdateUUID: string;
+}
+
+export class ImmutablePeriod implements ImmutablePeriodIF {
   // We can save typing on getters here since the readonly arrays mean ImmutablePeriod isn't assignable to Period
   readonly id: string;
   readonly displayName: string;
@@ -61,16 +74,30 @@ export class ImmutablePeriod {
   readonly secondaryUnits:  readonly ImmutableSecondaryUnit[];
   readonly lastUpdateUUID: string;
 
-  constructor(period: Period) {
-    this.id = period.id;
-    this.displayName = period.displayName;
-    this.unit = period.unit;
-    this.notesURL = period.notesURL;
-    this.maxCommittedPercentage = period.maxCommittedPercentage;
-    this.buckets = period.buckets.map(b => new ImmutableBucket(b));
-    this.people = period.people.map(p => new ImmutablePerson(p));
-    this.secondaryUnits = period.secondaryUnits.map(su => new ImmutableSecondaryUnit(su));
-    this.lastUpdateUUID = period.lastUpdateUUID;
+  private constructor(from: ImmutablePeriodIF) {
+      this.id = from.id;
+      this.displayName = from.displayName;
+      this.unit = from.unit;
+      this.notesURL = from.notesURL;
+      this.maxCommittedPercentage = from.maxCommittedPercentage;
+      this.buckets = from.buckets;
+      this.people = from.people;
+      this.secondaryUnits = from.secondaryUnits;
+      this.lastUpdateUUID = from.lastUpdateUUID;
+  }
+
+  static fromPeriod(period: Period): ImmutablePeriod {
+    return new ImmutablePeriod({
+      id: period.id,
+      displayName: period.displayName,
+      unit: period.unit,
+      notesURL: period.notesURL,
+      maxCommittedPercentage: period.maxCommittedPercentage,
+      buckets: period.buckets.map(b => ImmutableBucket.fromBucket(b)),
+      people: period.people.map(p => new ImmutablePerson(p)),
+      secondaryUnits: period.secondaryUnits.map(su => new ImmutableSecondaryUnit(su)),
+      lastUpdateUUID: period.lastUpdateUUID,
+    });
   }
 
   toOriginal(): Period {
@@ -86,23 +113,51 @@ export class ImmutablePeriod {
       lastUpdateUUID: this.lastUpdateUUID,
     };
   }
+
+  withNewLastUpdateUUID(lastUpdateUUID: string): ImmutablePeriod {
+    return new ImmutablePeriod({...this, lastUpdateUUID: lastUpdateUUID});
+  }
+
+  withNewBucket(bucket: ImmutableBucket): ImmutablePeriod {
+    return new ImmutablePeriod({...this, buckets: this.buckets.concat([bucket])});
+  }
+
+  withBucketMovedUpOne(bucket: ImmutableBucket): ImmutablePeriod {
+    let index = this.buckets.findIndex(b => b === bucket);
+    let newBuckets: ImmutableBucket[] = [...this.buckets];
+    if (index > 0) {
+      newBuckets[index] = newBuckets[index - 1];
+      newBuckets[index - 1] = bucket;
+    }
+    return new ImmutablePeriod({...this, buckets: newBuckets});
+  }
+
+  withBucketMovedDownOne(bucket: ImmutableBucket): ImmutablePeriod {
+    let index = this.buckets.findIndex(b => b === bucket);
+    let newBuckets: ImmutableBucket[] = [...this.buckets];
+    if (index >= 0 && index < this.buckets.length - 1) {
+      newBuckets[index] = newBuckets[index + 1];
+      newBuckets[index + 1] = bucket;
+    }
+    return new ImmutablePeriod({...this, buckets: newBuckets});
+  }
+
+  withBucketChanged(from: ImmutableBucket, to: ImmutableBucket): ImmutablePeriod {
+    let newBuckets = this.buckets.map(b => (b == from) ? to : b);
+    return new ImmutablePeriod({...this, buckets: newBuckets});
+  }
+
+  withNewPeople(people: readonly ImmutablePerson[]): ImmutablePeriod {
+    return new ImmutablePeriod({...this, people: people});
+  }
 }
 
 /**
  * Total resources for this period which have been allocated to objectives
- * @deprecated To be removed when we are using ImmutablePeriod everywhere
+ * TODO: Consider making this and similar cases into member functions on the Immutable classes
  */
-export function periodResourcesAllocated(period: Period): number {
+export function periodResourcesAllocated(period: ImmutablePeriod): number {
   return period.buckets
       .map(bucketResourcesAllocated)
-      .reduce((sum, prev) => sum + prev, 0);
-}
-
-/**
- * Total resources for this period which have been allocated to objectives
- */
-export function periodResourcesAllocatedI(period: ImmutablePeriod): number {
-  return period.buckets
-      .map(bucketResourcesAllocatedI)
       .reduce((sum, prev) => sum + prev, 0);
 }

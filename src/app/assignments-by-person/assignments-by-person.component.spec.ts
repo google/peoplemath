@@ -15,7 +15,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentsByPersonComponent } from './assignments-by-person.component';
-import { Period } from '../period';
+import { ImmutablePeriod } from '../period';
 import { MaterialModule } from '../material/material.module';
 
 describe('AssignmentsByPersonComponent', () => {
@@ -33,7 +33,7 @@ describe('AssignmentsByPersonComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignmentsByPersonComponent);
     component = fixture.componentInstance;
-    component.period = {
+    component.period = ImmutablePeriod.fromPeriod({
       id: 'test',
       displayName: 'Test Period',
       unit: 'person weeks',
@@ -43,7 +43,7 @@ describe('AssignmentsByPersonComponent', () => {
       buckets: [],
       people: [],
       lastUpdateUUID: '',
-    };
+    });
     fixture.detectChanges();
   });
 

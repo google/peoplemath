@@ -14,7 +14,7 @@
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Period } from '../period';
+import { Period, ImmutablePeriod } from '../period';
 
 export enum CreateMethod {
   Blank = 'blank',
@@ -24,7 +24,7 @@ export enum CreateMethod {
 export interface AddPeriodDialogData {
   period: Period;
   createMethod: CreateMethod;
-  existingPeriods: Period[];
+  existingPeriods: readonly ImmutablePeriod[];
   copyFromPeriodID: string;
   copyUnit: boolean;
   copyPeople: boolean;

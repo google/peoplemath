@@ -17,11 +17,11 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute } from '@angular/router';
-import { ImmutablePeriod, periodResourcesAllocatedI } from '../period';
+import { ImmutablePeriod, periodResourcesAllocated } from '../period';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ImmutableTeam } from '../team';
-import { ImmutableBucket, bucketResourcesAllocatedI } from '../bucket';
+import { ImmutableBucket, bucketResourcesAllocated } from '../bucket';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -50,8 +50,8 @@ export class PeriodSummaryComponent implements OnInit {
   }
 
   bucketAllocationFraction(bucket: ImmutableBucket): number {
-    const total = periodResourcesAllocatedI(this.period!);
-    return (total == 0) ? 0 : bucketResourcesAllocatedI(bucket) / total;
+    const total = periodResourcesAllocated(this.period!);
+    return (total == 0) ? 0 : bucketResourcesAllocated(bucket) / total;
   }
 
   allGroupTypes(): string[] {
@@ -105,7 +105,7 @@ export class PeriodSummaryComponent implements OnInit {
       })
     ).subscribe(period => {
       if (period) {
-        this.period = new ImmutablePeriod(period);
+        this.period = ImmutablePeriod.fromPeriod(period);
       } else {
         this.period = undefined;
       }

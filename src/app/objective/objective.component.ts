@@ -12,29 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Objective, CommitmentType } from '../objective';
-import { Assignment } from '../assignment';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
+import { CommitmentType, ImmutableObjective } from '../objective';
+import { Assignment, ImmutableAssignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective } from '../edit-objective-dialog/edit-objective-dialog.component';
-import { Bucket } from '../bucket';
+import { ImmutableBucket } from '../bucket';
 
 @Component({
   selector: 'app-objective',
   templateUrl: './objective.component.html',
-  styleUrls: ['./objective.component.css']
+  styleUrls: ['./objective.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectiveComponent implements OnInit {
-  @Input() objective?: Objective;
+  @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
-  @Input() unallocatedTime?: Map<string, number>;
+  @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() isEditingEnabled?: boolean;
   @Input() isReorderingEnabled?: boolean;
-  @Input() otherBuckets?: Bucket[];
-  @Output() onMoveBucket = new EventEmitter<[Objective, Objective, Bucket]>();
-  @Output() onDelete = new EventEmitter<Objective>();
-  @Output() onChanged = new EventEmitter<[Objective, Objective]>();
+  @Input() otherBuckets?: readonly ImmutableBucket[];
+  @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
+  @Output() onDelete = new EventEmitter<ImmutableObjective>();
+  @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
   
   constructor(public dialog: MatDialog) { }
 
@@ -69,20 +71,22 @@ export class ObjectiveComponent implements OnInit {
         personId, unallocated + currentAssignment, currentAssignment));
     });
     const dialogData: AssignmentDialogData = {
-      'objective': this.objective!,
+      'objective': this.objective!.toOriginal(),
       'people': assignmentData,
       'unit': this.unit!,
       'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
       'width': '700px',
       'data': dialogData});
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result?: AssignmentDialogData) => {
       if (!result) {
         return;
       }
-      this.objective!.assignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
-          .map((pad: PersonAssignmentData) => new Assignment(pad.username, pad.assign));
-      this.onChanged.emit([this.objective!, this.objective!]);
+      const newAssignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
+          .map((pad: PersonAssignmentData) => new ImmutableAssignment(
+            new Assignment(pad.username, pad.assign)));
+      const newObjective = this.objective!.withAssignments(newAssignments);
+      this.onChanged.emit([this.objective!, newObjective]);
     });
   }
 

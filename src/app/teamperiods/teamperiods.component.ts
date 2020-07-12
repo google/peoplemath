@@ -14,8 +14,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Period } from '../period';
-import { Team } from '../team';
+import { Period, ImmutablePeriod } from '../period';
+import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,9 +24,10 @@ import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AddPeriodDialogData, AddPeriodDialogComponent, CreateMethod } from '../add-period-dialog/add-period-dialog.component';
-import { Bucket } from '../bucket';
+import { Bucket, ImmutableBucket } from '../bucket';
 import { Person } from '../person';
 import { Assignment } from '../assignment';
+import { Objective } from '../objective';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
@@ -36,8 +37,8 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   styleUrls: ['./teamperiods.component.css']
 })
 export class TeamPeriodsComponent implements OnInit {
-  team?: Team;
-  periods?: Period[];
+  team?: ImmutableTeam;
+  periods?: readonly ImmutablePeriod[];
 
   constructor(
     private storage: StorageService,
@@ -64,7 +65,13 @@ export class TeamPeriodsComponent implements OnInit {
         console.log(error);
         return of(new Team('', ''));
       })
-    ).subscribe(team => this.team = team);
+    ).subscribe((team?: Team) => {
+      if (team) {
+        this.team = new ImmutableTeam(team);
+      } else {
+        this.team = undefined;
+      }
+    });
 
     this.storage.getPeriods(teamId).pipe(
       catchError(error => {
@@ -72,14 +79,20 @@ export class TeamPeriodsComponent implements OnInit {
         console.log(error);
         return of([])
       })
-    ).subscribe(periods => this.periods = periods);
+    ).subscribe((periods?: Period[]) => {
+      if (periods) {
+        this.periods = periods.map(p => ImmutablePeriod.fromPeriod(p));
+      } else {
+        this.periods = undefined;
+      }
+    });
   }
 
   isLoaded(): boolean {
     return this.team != undefined && this.periods != undefined;
   }
 
-  sortedPeriods(): Period[] {
+  sortedPeriods(): ImmutablePeriod[] {
     let result = this.periods!.slice();
     result.sort((a, b) => a.displayName < b.displayName ? 1 : (a.displayName > b.displayName ? -1 : 0));
     return result;
@@ -134,7 +147,7 @@ export class TeamPeriodsComponent implements OnInit {
           notesURL: data.period.notesURL,
           maxCommittedPercentage: data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
           buckets: data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
-          people: data.copyPeople ? copiedPeriod.people : [],
+          people: data.copyPeople ? copiedPeriod.people.map(p => p.toOriginal()) : [],
           lastUpdateUUID: '',
         };
       } else {
@@ -153,10 +166,10 @@ export class TeamPeriodsComponent implements OnInit {
     return result;
   }
 
-  copyBuckets(orig: Bucket[], copyObjectives: boolean, copyAssignments: boolean): Bucket[] {
+  copyBuckets(orig: readonly ImmutableBucket[], copyObjectives: boolean, copyAssignments: boolean): Bucket[] {
     let result = [];
     for (let b of orig) {
-      let objectives = [];
+      let objectives: Objective[] = [];
       if (copyObjectives) {
         for (let o of b.objectives) {
           let assignments = [];
@@ -170,8 +183,8 @@ export class TeamPeriodsComponent implements OnInit {
             resourceEstimate: o.resourceEstimate,
             commitmentType: o.commitmentType,
             notes: o.notes,
-            groups: o.groups,
-            tags: o.tags,
+            groups: o.groups.map(g => g.toOriginal()),
+            tags: o.tags.map(t => t.toOriginal()),
             assignments: assignments,
           });
         }
@@ -216,14 +229,14 @@ export class TeamPeriodsComponent implements OnInit {
     ).subscribe(updateResponse => {
       if (updateResponse) {
         period.lastUpdateUUID = updateResponse.lastUpdateUUID;
-        this.periods!.push(period);
+        this.periods = this.periods!.concat([ImmutablePeriod.fromPeriod(period)]);
       }
     });
   }
 
   editTeam(): void {
     const dialogData: EditTeamDialogData = {
-      team: this.team!,
+      team: this.team!.toOriginal(),
       title: 'Edit Team "' + this.team!.id + '"',
       okAction: 'OK',
       allowCancel: false,
@@ -240,6 +253,7 @@ export class TeamPeriodsComponent implements OnInit {
       ).subscribe(res => {
         if (res != "error") {
           this.snackBar.open('Saved', '', {duration: 2000});
+          this.team = new ImmutableTeam(team);
         }
       });
     });
