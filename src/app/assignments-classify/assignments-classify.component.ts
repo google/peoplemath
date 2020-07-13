@@ -16,7 +16,7 @@
 
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
-import { ImmutableObjective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
+import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { RenameClassDialog, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
 
@@ -63,7 +63,7 @@ export class AssignmentsClassifyComponent implements OnInit {
       });
     });
     for (let [_g, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     let result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
@@ -88,7 +88,7 @@ export class AssignmentsClassifyComponent implements OnInit {
       });
     });
     for (let [_g, obs] of obsByTag) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     let result = Array.from(obsByTag.entries());
     result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
@@ -111,7 +111,7 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   assignedResources(objective: ImmutableObjective): number {
-    return objectiveResourcesAllocated(objective);
+    return objective.resourcesAllocated();
   }
 
   totalAssignedResources(objectives: readonly ImmutableObjective[]): number {

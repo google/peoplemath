@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Objective, CommitmentType, ImmutableObjective, objectiveResourcesAllocated } from "./objective";
+import { Objective, CommitmentType, ImmutableObjective } from "./objective";
+import { ImmutablePerson } from './person';
 
 export class Bucket {
   constructor(
@@ -63,6 +64,9 @@ export class ImmutableBucket {
 
   withObjectiveDeleted(objective: ImmutableObjective): ImmutableBucket {
     const index = this.objectiveIndex(objective);
+    if (index < 0) {
+      return this;
+    }
     const newObjectives = [...this.objectives];
     newObjectives.splice(index, 1);
     return this.withNewObjectives(newObjectives);
@@ -70,28 +74,44 @@ export class ImmutableBucket {
 
   withObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): ImmutableBucket {
     const index = this.objectiveIndex(original);
+    if (index < 0) {
+      return this;
+    }
     const newObjectives = [...this.objectives];
     newObjectives[index] = newObjective;
     return this.withNewObjectives(newObjectives);
   }
-}
 
-/**
- * Sum of resources allocated to the bucket.
- * Not a member function to avoid problems with JSON (de)serialization.
- */
-export function bucketResourcesAllocated(bucket: ImmutableBucket): number {
-  return bucket.objectives
-    .map(objectiveResourcesAllocated)
-    .reduce((sum, current) => sum + current, 0);
-}
+  withPersonDeleted(person: ImmutablePerson): ImmutableBucket {
+    const newObjectives = this.objectives.map(o => o.withPersonDeleted(person));
+    return this.withNewObjectives(newObjectives);
+  }
 
-/**
- * Sum of resources allocated to committed resources within the bucket.
- * Not a member function to avoid problems with JSON (de)serialization.
- */
-export function bucketCommittedResourcesAllocated(bucket: ImmutableBucket): number {
-  return bucket.objectives.filter(o => o.commitmentType == CommitmentType.Committed)
-      .map(objectiveResourcesAllocated)
+  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutableBucket {
+    const newObjectives = this.objectives.map(o => o.withGroupRenamed(groupType, oldName, newName));
+    return this.withNewObjectives(newObjectives);
+  }
+
+  withTagRenamed(oldName: string, newName: string): ImmutableBucket {
+    const newObjectives = this.objectives.map(o => o.withTagRenamed(oldName, newName));
+    return this.withNewObjectives(newObjectives);
+  }
+
+  /**
+   * Sum of resources allocated to the bucket.
+   */
+  resourcesAllocated(): number {
+    return this.objectives
+      .map(o => o.resourcesAllocated())
       .reduce((sum, current) => sum + current, 0);
+  }
+
+  /**
+   * Sum of resources allocated to committed resources within the bucket.
+   */
+  committedResourcesAllocated(): number {
+    return this.objectives.filter(o => o.commitmentType == CommitmentType.Committed)
+        .map(o => o.resourcesAllocated())
+        .reduce((sum, current) => sum + current, 0);
+  }
 }

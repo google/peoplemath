@@ -16,7 +16,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
-import { Person, personDisplayNameWithUsername } from '../person';
+import { ImmutablePerson } from '../person';
 
 @Component({
   selector: 'app-assignments-by-person',
@@ -33,7 +33,7 @@ export class AssignmentsByPersonComponent implements OnInit {
   ngOnInit() {
   }
 
-  hasAssignments(person: Person): boolean {
+  hasAssignments(person: ImmutablePerson): boolean {
     for (let bucket of this.period!.buckets) {
       for (let objective of bucket.objectives) {
         for (let assignment of objective.assignments) {
@@ -46,7 +46,7 @@ export class AssignmentsByPersonComponent implements OnInit {
     return false;
   }
 
-  assignmentsFor(person: Person): ObjectiveAssignment[] {
+  assignmentsFor(person: ImmutablePerson): ObjectiveAssignment[] {
     const result: ObjectiveAssignment[] = [];
     this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
@@ -61,11 +61,11 @@ export class AssignmentsByPersonComponent implements OnInit {
     return result;
   }
 
-  personDisplayNameWithUsername(person: Person): string {
-    return personDisplayNameWithUsername(person);
+  personDisplayNameWithUsername(person: ImmutablePerson): string {
+    return person.displayNameWithUsername();
   }
 
-  personTrackBy(_index: number, person: Person): string {
+  personTrackBy(_index: number, person: ImmutablePerson): string {
     return person.id;
   }
 

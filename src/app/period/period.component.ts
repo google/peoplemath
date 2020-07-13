@@ -16,7 +16,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Bucket, ImmutableBucket } from '../bucket';
-import { Period, ImmutablePeriod, periodResourcesAllocated } from '../period';
+import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -93,7 +93,7 @@ export class PeriodComponent implements OnInit {
   }
 
   totalAllocated(): number {
-    return periodResourcesAllocated(this.period!);
+    return this.period!.resourcesAllocated();
   }
 
   /**
@@ -232,39 +232,17 @@ export class PeriodComponent implements OnInit {
   }
 
   renameGroup(groupType: string, oldName: string, newName: string): void {
-    let changed = false;
-    let period = this.period!.toOriginal();
-    period.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.groups.forEach(g => {
-          if (g.groupType == groupType && g.groupName == oldName) {
-            g.groupName = newName;
-            changed = true;
-          }
-        });
-      });
-    });
-    if (changed) {
-      this.period = ImmutablePeriod.fromPeriod(period);
+    const newPeriod = this.period!.withGroupRenamed(groupType, oldName, newName);
+    if (newPeriod !== this.period) {
+      this.period = newPeriod;
       this.save();
     }
   }
 
   renameTag(oldName: string, newName: string) {
-    let changed = false;
-    let period = this.period!.toOriginal();
-    period.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.tags.forEach(t => {
-          if (t.name == oldName) {
-            t.name = newName;
-            changed = true;
-          }
-        });
-      });
-    });
-    if (changed) {
-      this.period = ImmutablePeriod.fromPeriod(period);
+    const newPeriod = this.period!.withTagRenamed(oldName, newName);
+    if (newPeriod !== this.period) {
+      this.period = newPeriod;
       this.save();
     }
   }
@@ -322,30 +300,17 @@ export class PeriodComponent implements OnInit {
   }
 
   onNewPerson(person: ImmutablePerson): void {
-    let newPeople = [...this.period!.people];
-    newPeople.push(person);
-    newPeople.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
-    this.period = this.period!.withNewPeople(newPeople);
+    this.period = this.period!.withNewPerson(person);
+    this.save();
   }
 
   onChangedPerson(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): void {
-    let newPeople = this.period!.people.map(p => (p === oldPerson) ? newPerson : p);
-    newPeople.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
-    this.period = this.period!.withNewPeople(newPeople);
+    this.period = this.period!.withPersonChanged(oldPerson, newPerson);
+    this.save();
   }
 
   deletePerson(person: ImmutablePerson): void {
-    // Deleting a person requires ensuring their assignments are deleted as well
-    // TODO Consider making this and other similar cases first-class operations
-    const period = this.period!.toOriginal();
-    const index = period.people.findIndex(p => p === person);
-    period.people.splice(index, 1);
-    period.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.assignments = o.assignments.filter(a => a.personId != person.id);
-      });
-    });
-    this.period = ImmutablePeriod.fromPeriod(period);
+    this.period = this.period!.withPersonDeleted(person);
     this.save();
   }
 
