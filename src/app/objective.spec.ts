@@ -15,7 +15,7 @@
  */
 
 import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag, Objective, ImmutableObjective, CommitmentType } from "./objective";
-import { Assignment } from './assignment';
+import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableObjectiveGroup', () => {
     const _mut: ObjectiveGroup = {
@@ -73,5 +73,22 @@ describe('ImmutableObjective', () => {
         // However, I don't know how to assert it doesn't. :(
             
         //const shadow: Objective = obj;
+    });
+
+    it('should support new assignments', () => {
+        const assignment: Assignment = new Assignment('bob', 2);
+        const newObj = obj.withAssignments([new ImmutableAssignment(assignment)]);
+        const expected: Objective = {..._mut, assignments: [assignment]}
+        expect(newObj.toOriginal()).toEqual(expected);
+    });
+
+    it('should support tag rename', () => {
+        const updated = obj.withTagRenamed('tag2', 'tag3');
+        expect(updated.tags.map(t => t.name)).toEqual(['tag1', 'tag3']);
+    });
+
+    it('should keep tags unique under rename', () => {
+        const updated = obj.withTagRenamed('tag1', 'tag2');
+        expect(updated.tags.map(t => t.name)).toEqual(['tag2']);
     });
 });

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { Assignment, ImmutableAssignment } from "./assignment";
+import { ImmutablePerson } from './person';
 
 export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
 
@@ -125,21 +126,49 @@ export class ImmutableObjective {
   withAssignments(newAssignments: readonly ImmutableAssignment[]): ImmutableObjective {
     return new ImmutableObjective({...this, assignments: newAssignments});
   }
-}
 
-/**
- * Sum of resources allocated to the given objective.
- * Not a member function to avoid problems with (de)serialization.
- */
-export function objectiveResourcesAllocated(objective: ImmutableObjective): number {
-  return objective.assignments
-    .map(assignment => assignment.commitment)
-    .reduce((sum, current) => sum + current, 0);
+  withPersonDeleted(person: ImmutablePerson): ImmutableObjective {
+    return this.withAssignments(this.assignments.filter(a => a.personId != person.id));
+  }
+
+  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutableObjective {
+    const index = this.groups.findIndex(g => (g.groupType == groupType && g.groupName == oldName));
+    if (index < 0) {
+      return this;
+    }
+    const newGroups = [...this.groups];
+    newGroups[index] = new ImmutableObjectiveGroup({groupType: groupType, groupName: newName});
+    return new ImmutableObjective({...this, groups: newGroups});
+  }
+
+  withTagRenamed(oldName: string, newName: string): ImmutableObjective {
+    const index = this.tags.findIndex(t => t.name == oldName);
+    if (index < 0) {
+      return this;
+    }
+    const newTags = [...this.tags];
+    if (newTags.find(t => t.name == newName)) {
+      // Tag with the new name already exists. Just delete the old tag.
+      newTags.splice(index, 1);
+    } else {
+      newTags[index] = new ImmutableObjectiveTag({name: newName});
+    }
+    return new ImmutableObjective({...this, tags: newTags});
+  }
+
+  /**
+   * Sum of resources allocated to the given objective.
+   */
+  resourcesAllocated(): number {
+    return this.assignments
+      .map(assignment => assignment.commitment)
+      .reduce((sum, current) => sum + current, 0);
+  }
 }
 
 /**
  * Sum of resources allocated to a number of objectives.
  */
 export function totalResourcesAllocated(objectives: readonly ImmutableObjective[]): number {
-  return objectives.reduce((sum, ob) => sum + objectiveResourcesAllocated(ob), 0);
+  return objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);
 }

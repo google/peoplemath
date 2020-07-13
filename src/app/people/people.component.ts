@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Person, personDisplayNameWithUsername, ImmutablePerson } from '../person';
+import { Person, ImmutablePerson } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -69,7 +69,7 @@ export class PeopleComponent implements OnInit {
   }
 
   tableData(): MatTableDataSource<PersonData> {
-    let data = this.people!.map(p => new PersonData(personDisplayNameWithUsername(p), p.location, p.availability,
+    let data = this.people!.map(p => new PersonData(p.displayNameWithUsername(), p.location, p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
       this.personCommitFraction(p), this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
