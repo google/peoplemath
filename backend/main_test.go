@@ -20,12 +20,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"peoplemath/in_memory_storage"
+	"peoplemath/models"
 	"strings"
 	"testing"
 )
 
 func addTeam(handler http.Handler, teamID string, t *testing.T) {
-	team := Team{ID: teamID, DisplayName: teamID}
+	team := models.Team{ID: teamID, DisplayName: teamID}
 	b := new(bytes.Buffer)
 	enc := json.NewEncoder(b)
 	err := enc.Encode(team)
@@ -57,7 +59,7 @@ func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
 	}
 }
 
-func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *Period {
+func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *models.Period {
 	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/"+periodID, nil)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
@@ -65,7 +67,7 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *Per
 	if resp.StatusCode != http.StatusOK {
 		t.Fatalf("Expected response %v, got %v", http.StatusOK, resp.StatusCode)
 	}
-	p := Period{}
+	p := models.Period{}
 	dec := json.NewDecoder(resp.Body)
 	err := dec.Decode(&p)
 	if err != nil {
@@ -75,7 +77,7 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *Per
 }
 
 func TestPostPeriod(t *testing.T) {
-	server := Server{store: makeInMemStore()}
+	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -95,7 +97,7 @@ func TestPostPeriod(t *testing.T) {
 }
 
 func TestInvalidCommitmentType(t *testing.T) {
-	server := Server{store: makeInMemStore()}
+	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -117,7 +119,7 @@ func TestInvalidCommitmentType(t *testing.T) {
 }
 
 func TestMissingCommitmentType(t *testing.T) {
-	server := Server{store: makeInMemStore()}
+	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -134,7 +136,7 @@ func TestMissingCommitmentType(t *testing.T) {
 }
 
 func TestImprove(t *testing.T) {
-	server := Server{store: makeInMemStore()}
+	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
