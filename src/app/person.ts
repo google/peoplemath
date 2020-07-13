@@ -42,11 +42,11 @@ export class ImmutablePerson {
     toOriginal(): Person {
         return new Person(this.id, this.displayName, this.location, this.availability);
     }
-}
 
-export function personDisplayNameWithUsername(person: Person): string {
-    if (person.id == person.displayName || !person.displayName) {
-        return person.id;
+    displayNameWithUsername(): string {
+        if (this.id == this.displayName || !this.displayName) {
+            return this.id;
+        }
+        return this.displayName + " (" + this.id + ")";
     }
-    return person.displayName + " (" + person.id + ")";
 }

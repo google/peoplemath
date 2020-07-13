@@ -17,7 +17,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
-import { ImmutableObjective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
+import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-group-summary',
@@ -86,9 +86,9 @@ export class GroupSummaryComponent implements OnInit {
 
     // Sort objectives in each group by descending allocation
     for (let [_, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
-    noGroup.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+    noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
     let result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) =>

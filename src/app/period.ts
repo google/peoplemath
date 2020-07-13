@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Bucket, ImmutableBucket, bucketResourcesAllocated } from "./bucket";
+import { Bucket, ImmutableBucket } from "./bucket";
 import { Person, ImmutablePerson } from "./person";
 
 export interface SecondaryUnit {
@@ -143,21 +143,71 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withBucketChanged(from: ImmutableBucket, to: ImmutableBucket): ImmutablePeriod {
-    let newBuckets = this.buckets.map(b => (b == from) ? to : b);
+    let index = this.buckets.findIndex(b => b === from);
+    if (index < 0) {
+      return this;
+    }
+    let newBuckets = [...this.buckets];
+    newBuckets[index] = to;
     return new ImmutablePeriod({...this, buckets: newBuckets});
   }
 
-  withNewPeople(people: readonly ImmutablePerson[]): ImmutablePeriod {
+  private withNewPeople(people: ImmutablePerson[]): ImmutablePeriod {
+    people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
     return new ImmutablePeriod({...this, people: people});
   }
-}
 
-/**
- * Total resources for this period which have been allocated to objectives
- * TODO: Consider making this and similar cases into member functions on the Immutable classes
- */
-export function periodResourcesAllocated(period: ImmutablePeriod): number {
-  return period.buckets
-      .map(bucketResourcesAllocated)
-      .reduce((sum, prev) => sum + prev, 0);
+  withPersonChanged(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): ImmutablePeriod {
+    if (oldPerson.id != newPerson.id) {
+      // We aren't doing the assignment updates etc that would be necessary for this
+      throw Error('Cannot change person id');
+    }
+    let index = this.people.findIndex(p => p === oldPerson);
+    if (index < 0) {
+      return this;
+    }
+    let newPeople = [...this.people];
+    newPeople[index] = newPerson;
+    return this.withNewPeople(newPeople);
+  }
+
+  withNewPerson(person: ImmutablePerson): ImmutablePeriod {
+    if (this.people.find(p => p.id === person.id)) {
+      throw Error('A person with id ' + person.id + ' already exists');
+    }
+    let newPeople = [...this.people];
+    newPeople.push(person);
+    return this.withNewPeople(newPeople);
+  }
+
+  withPersonDeleted(person: ImmutablePerson): ImmutablePeriod {
+    const index = this.people.findIndex(p => p === person);
+    if (index < 0) {
+      return this;
+    }
+    const newPeople = [...this.people];
+    newPeople.splice(index, 1);
+    // Deleting a person requires ensuring their assignments are deleted as well
+    const newBuckets: ImmutableBucket[] = this.buckets.map(b => b.withPersonDeleted(person));
+    return new ImmutablePeriod({...this, people: newPeople, buckets: newBuckets});
+  }
+
+  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutablePeriod {
+    const newBuckets = this.buckets.map(b => b.withGroupRenamed(groupType, oldName, newName));
+    return {...this, buckets: newBuckets};
+  }
+
+  withTagRenamed(oldName: string, newName: string): ImmutablePeriod {
+    const newBuckets = this.buckets.map(b => b.withTagRenamed(oldName, newName));
+    return {...this, buckets: newBuckets};
+  }
+
+  /**
+   * Total resources for this period which have been allocated to objectives
+   */
+  resourcesAllocated(): number {
+    return this.buckets
+        .map(b => b.resourcesAllocated())
+        .reduce((sum, prev) => sum + prev, 0);
+  }
 }

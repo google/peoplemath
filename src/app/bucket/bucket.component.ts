@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Bucket, ImmutableBucket, bucketResourcesAllocated, bucketCommittedResourcesAllocated } from '../bucket';
+import { Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { EditObjectiveDialogComponent, EditObjectiveDialogData } from '../edit-objective-dialog/edit-objective-dialog.component';
@@ -130,7 +130,7 @@ export class BucketComponent implements OnInit {
   }
 
   resourcesAllocated(): number {
-    return bucketResourcesAllocated(this.bucket!);
+    return this.bucket!.resourcesAllocated();
   }
 
   isOverAllocated(): boolean {
@@ -138,7 +138,7 @@ export class BucketComponent implements OnInit {
   }
 
   committedResourcesAllocated(): number {
-    return bucketCommittedResourcesAllocated(this.bucket!);
+    return this.bucket!.committedResourcesAllocated();
   }
 
   isOverCommitted(): boolean {
