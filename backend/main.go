@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
 	"peoplemath/storage"
@@ -362,7 +363,7 @@ func main() {
 		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
 		ctx := context.Background()
 		var err error
-		store, err = makeGoogleCDSStore(ctx, gcloudProject)
+		store, err = google_cds_store.MakeGoogleCDSStore(ctx, gcloudProject)
 		if err != nil {
 			log.Fatalf("Could not instantiate datastore: %s", err)
 			return

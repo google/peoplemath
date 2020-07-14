@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package google_cds_store
 
 import (
 	"context"
@@ -41,7 +41,7 @@ type googleCDSStore struct {
 	client *datastore.Client
 }
 
-func makeGoogleCDSStore(ctx context.Context, projectID string) (storage.StorageService, error) {
+func MakeGoogleCDSStore(ctx context.Context, projectID string) (storage.StorageService, error) {
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
 		return nil, fmt.Errorf("Could not create datastore client: %s", err)
