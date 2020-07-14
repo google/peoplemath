@@ -24,7 +24,7 @@
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button (click)="onOK()" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
-    <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
+    <button mat-button (click)="onCancel()" color="warn">Cancel</button>
     <button *ngIf="data.allowDelete" mat-button (click)="delete()" color="warn">Delete</button>
     <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="cancelDelete()">Cancel Delete</button>
     <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="confirmDelete()" color="warn">Confirm Delete</button>
