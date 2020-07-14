@@ -362,11 +362,11 @@ export class PeriodComponent implements OnInit {
       bucket: new Bucket('', 0, []),
       okAction: 'Add', allowCancel: true, title: 'Add bucket'};
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(bucket => {
+    dialogRef.afterClosed().subscribe((bucket?: Bucket) => {
       if (!bucket) {
         return;
       }
-      this.period = this.period!.withNewBucket(bucket);
+      this.period = this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket));
       this.save();
     });
   }
