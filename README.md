@@ -59,6 +59,8 @@ The simplest way to run it is with `peoplemath --inmemstore`, which will use a s
 
 To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and run `peoplemath` with no arguments.
 
+The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
+
 ## Deployment to App Engine
 
 To deploy the app to Google App Engine:
