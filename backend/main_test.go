@@ -80,7 +80,7 @@ func TestPostPeriod(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"ID": "alice", "DisplayName": "Alice Atkins", "Location": "LON", "Availability": 5}]}`
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
 	addPeriod(handler, teamID, periodJSON, t)
 
 	p := getPeriod(handler, teamID, "2019q1", t)

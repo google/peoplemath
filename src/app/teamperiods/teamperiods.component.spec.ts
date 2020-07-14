@@ -54,9 +54,8 @@ describe('TeamPeriodsComponent', () => {
   });
 
   it('should copy people list correctly', () => {
-    const people = [];
-    people.push(new Person('alice', 'Alice Atkins', 'LON', 5),
-      new Person('peter', 'Peter Parker', 'USA', 10));
+    const people = [new Person('alice', 'Alice Atkins', 'LON', 5),
+      new Person('peter', 'Peter Parker', 'USA', 10)];
     expect(component.copyPeople(people)).toEqual(people);
   });
 });
