@@ -148,7 +148,7 @@ export class PeopleComponent implements OnInit {
     const dialogData: EditPersonDialogData = {
       person: person, unit: this.unit!, title: "Add person", okAction: "Add",
       existingUserIDs: this.people!.map(p => p.id),
-      allowCancel: true, allowDelete: false, showDeleteConfirm: false,
+      allowDelete: false, showDeleteConfirm: false,
       allowUsernameEdit: true, onDelete: undefined,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
@@ -166,7 +166,7 @@ export class PeopleComponent implements OnInit {
     const dialogData: EditPersonDialogData = {
       person: p.toOriginal(), original: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: "OK",
       existingUserIDs: [], // Doesn't matter for existing people
-      allowCancel: false, allowDelete: true, showDeleteConfirm: false,
+      allowDelete: true, showDeleteConfirm: false,
       allowUsernameEdit: false, onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
@@ -184,7 +184,6 @@ export interface EditPersonDialogData {
   unit: string;
   title: string;
   okAction: string;
-  allowCancel: boolean;
   allowDelete: boolean;
   showDeleteConfirm: boolean;
   allowUsernameEdit: boolean;
