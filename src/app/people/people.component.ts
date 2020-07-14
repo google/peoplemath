@@ -63,7 +63,7 @@ export class PeopleComponent implements OnInit {
     if (this.people.find(p => p.location)) {
       columnLabels.push('location');
     }
-    columnLabels = columnLabels.concat(['availability', 'allocated', 'unallocated', 'assignmentCount', 'commitFraction']);
+    columnLabels.push('availability', 'allocated', 'unallocated', 'assignmentCount', 'commitFraction');
     return columnLabels;
   }
 

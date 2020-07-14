@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,4 +45,18 @@ describe('PeopleComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /*
+  it('should create person correctly', () => {
+    component.addPerson();
+    document.getElementById('mat-input-3').innerText = 'alice';
+    document.getElementById('mat-input-0').innerText = 'Alice Atkins';
+    document.getElementById('mat-input-1').innerText = 'LON';
+    document.getElementById('mat-input-2').innerText = '5';
+    document.getElementById('ok-action-button').click();
+
+    const person = new Person('alice', 'Alice Atkins', 'LON', 5);
+    expect(component.people[0]).toEqual(person);
+  });
+   */
 });

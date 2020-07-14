@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { of } from 'rxjs';
+import {Person} from '../person';
 
 describe('TeamPeriodsComponent', () => {
   let component: TeamPeriodsComponent;
@@ -50,5 +51,12 @@ describe('TeamPeriodsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should copy people list correctly', () => {
+    const people = [];
+    people.push(new Person('alice', 'Alice Atkins', 'LON', 5),
+      new Person('peter', 'Peter Parker', 'USA', 10));
+    expect(component.copyPeople(people)).toEqual(people);
   });
 });
