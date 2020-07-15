@@ -161,12 +161,16 @@ describe('ImmutablePeriod', () => {
         const updated = period.withGroupRenamed('group', 'things', 'otherthings');
         expect(updated.buckets[1].objectives[0].groups).toEqual([
             new ImmutableObjectiveGroup({groupType: 'group', groupName: 'otherthings'})]);
+        // Make sure method exists and clone worked correctly
+        expect(updated.resourcesAllocated()).toEqual(period.resourcesAllocated());
     });
 
     it('should facilitate tag rename', () => {
         const updated = period.withTagRenamed('mytag', 'mynewtag');
         expect(updated.buckets[1].objectives[0].tags).toEqual([
             new ImmutableObjectiveTag({name: 'mynewtag'})]);
+        // Make sure method exists and clone worked correctly
+        expect(updated.resourcesAllocated()).toEqual(period.resourcesAllocated());
     });
 
     it('should be immutable', () => {
