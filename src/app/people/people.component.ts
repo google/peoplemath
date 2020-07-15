@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Person, ImmutablePerson } from '../person';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -36,7 +36,9 @@ class PersonData {
 @Component({
   selector: 'app-people',
   templateUrl: './people.component.html',
-  styleUrls: ['./people.component.css']
+  styleUrls: ['./people.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeopleComponent implements OnInit {
   @Input() people?: readonly ImmutablePerson[];
