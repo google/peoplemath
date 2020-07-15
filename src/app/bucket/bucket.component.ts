@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,9 @@ import { ObjectiveComponent } from '../objective/objective.component';
 @Component({
   selector: 'app-bucket',
   templateUrl: './bucket.component.html',
-  styleUrls: ['./bucket.component.css']
+  styleUrls: ['./bucket.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BucketComponent implements OnInit {
   @Input() bucket?: ImmutableBucket;
