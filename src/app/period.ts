@@ -194,12 +194,12 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
 
   withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutablePeriod {
     const newBuckets = this.buckets.map(b => b.withGroupRenamed(groupType, oldName, newName));
-    return {...this, buckets: newBuckets};
+    return new ImmutablePeriod({...this, buckets: newBuckets});
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutablePeriod {
     const newBuckets = this.buckets.map(b => b.withTagRenamed(oldName, newName));
-    return {...this, buckets: newBuckets};
+    return new ImmutablePeriod({...this, buckets: newBuckets});
   }
 
   /**
