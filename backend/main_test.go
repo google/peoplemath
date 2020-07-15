@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ func TestPostPeriod(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[]}`
+	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
 	addPeriod(handler, teamID, periodJSON, t)
 
 	p := getPeriod(handler, teamID, "2019q1", t)
@@ -94,6 +94,11 @@ func TestPostPeriod(t *testing.T) {
 	if readNotes != "some notes" {
 		t.Fatalf("Expected notes to persist, found %q", readNotes)
 	}
+
+	if p.People[0].Location != "LON" {
+		t.Fatalf("Expected location to be LON, found %q", p.People[0].Location)
+	}
+
 }
 
 func TestInvalidCommitmentType(t *testing.T) {

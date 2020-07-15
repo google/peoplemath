@@ -7,6 +7,11 @@
     <td mat-cell *matCellDef="let element">{{element.personDesc}}</td>
     <td mat-footer-cell *matFooterCellDef>Total</td>
   </ng-container>
+  <ng-container matColumnDef="location">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+    <td mat-cell *matCellDef="let element">{{element.location}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
   <ng-container matColumnDef="availability">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Available</th>
     <td mat-cell *matCellDef="let element">{{element.availability}}</td>
@@ -32,9 +37,9 @@
     <td mat-cell *matCellDef="let element">{{element.commitFraction | percent}}</td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editPerson(row.person)"></tr>
-  <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns();" (click)="editPerson(row.person)"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns(); sticky: true"></tr>
 </table>
 </div>
 <p><button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button></p>

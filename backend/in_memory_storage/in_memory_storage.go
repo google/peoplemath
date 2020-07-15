@@ -226,16 +226,19 @@ func makeFakePeriod(id string) models.Period {
 		models.Person{
 			ID:           "alice",
 			DisplayName:  "Alice Atkins",
+			Location:     "LON",
 			Availability: 5,
 		},
 		models.Person{
 			ID:           "bob",
 			DisplayName:  "Bob Brewster",
+			Location:     "LON",
 			Availability: 7,
 		},
 		models.Person{
 			ID:           "charlie",
 			DisplayName:  "Charlie Case",
+			Location:     "SVL",
 			Availability: 8,
 		},
 	}
