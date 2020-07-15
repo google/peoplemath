@@ -36,12 +36,6 @@ const (
 	defaultStoreTimeout = 5 * time.Second
 )
 
-// Valid commitment types for assignments
-const (
-	CommitmentTypeAspirational = "Aspirational"
-	CommitmentTypeCommitted    = "Committed"
-)
-
 // Server struct to handle incoming HTTP requests
 type Server struct {
 	store        storage.StorageService
@@ -319,7 +313,7 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, 
 	for _, bucket := range period.Buckets {
 		for _, objective := range bucket.Objectives {
 			if objective.CommitmentType != "" {
-				if objective.CommitmentType != CommitmentTypeCommitted && objective.CommitmentType != CommitmentTypeAspirational {
+				if objective.CommitmentType != models.CommitmentTypeCommitted && objective.CommitmentType != models.CommitmentTypeAspirational {
 					http.Error(w, fmt.Sprintf("Illegal commitment type '%s'", objective.CommitmentType), http.StatusBadRequest)
 					return period, false
 				}

@@ -69,6 +69,12 @@ type SecondaryUnit struct {
 	ConversionFactor float64 `json:"conversionFactor"`
 }
 
+// Valid commitment types for assignments
+const (
+	CommitmentTypeAspirational = "Aspirational"
+	CommitmentTypeCommitted    = "Committed"
+)
+
 // Assignment model struct
 type Assignment struct {
 	PersonID   string  `json:"personId"`
