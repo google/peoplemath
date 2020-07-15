@@ -26,114 +26,19 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"peoplemath/google_cds_store"
+	"peoplemath/in_memory_storage"
+	"peoplemath/models"
+	"peoplemath/storage"
 )
 
 const (
 	defaultStoreTimeout = 5 * time.Second
 )
 
-// Team model struct
-type Team struct {
-	ID          string `json:"id"`
-	DisplayName string `json:"displayName"`
-}
-
-// Period model struct
-type Period struct {
-	ID                     string          `json:"id"`
-	DisplayName            string          `json:"displayName"`
-	Unit                   string          `json:"unit"`
-	NotesURL               string          `json:"notesURL"`
-	MaxCommittedPercentage float64         `json:"maxCommittedPercentage"`
-	Buckets                []Bucket        `json:"buckets"`
-	People                 []Person        `json:"people"`
-	SecondaryUnits         []SecondaryUnit `json:"secondaryUnits"`
-	// UUID for simple optimistic concurrency control
-	LastUpdateUUID string `json:"lastUpdateUUID"`
-}
-
-// Bucket model struct
-type Bucket struct {
-	DisplayName          string      `json:"displayName"`
-	AllocationPercentage float64     `json:"allocationPercentage"`
-	Objectives           []Objective `json:"objectives"`
-}
-
-// Objective model struct
-type Objective struct {
-	Name             string           `json:"name"`
-	ResourceEstimate float64          `json:"resourceEstimate"`
-	Assignments      []Assignment     `json:"assignments"`
-	CommitmentType   string           `json:"commitmentType"`
-	Notes            string           `json:"notes"`
-	Groups           []ObjectiveGroup `json:"groups"`
-	Tags             []ObjectiveTag   `json:"tags"`
-}
-
-// ObjectiveGroup model struct
-type ObjectiveGroup struct {
-	GroupType string `json:"groupType"`
-	GroupName string `json:"groupName"`
-}
-
-// ObjectiveTag model struct
-type ObjectiveTag struct {
-	Name string `json:"name"`
-}
-
-// SecondaryUnit model struct
-type SecondaryUnit struct {
-	Name             string  `json:"name"`
-	ConversionFactor float64 `json:"conversionFactor"`
-}
-
-// Valid commitment types for assignments
-const (
-	CommitmentTypeAspirational = "Aspirational"
-	CommitmentTypeCommitted    = "Committed"
-)
-
-// Assignment model struct
-type Assignment struct {
-	PersonID   string  `json:"personId"`
-	Commitment float64 `json:"commitment"`
-}
-
-// Person model struct
-type Person struct {
-	ID           string  `json:"id"`
-	DisplayName  string  `json:"displayName"`
-	Location     string  `json:"location"`
-	Availability float64 `json:"availability"`
-}
-
-// ObjectUpdateResponse is returned to the browser after an insert or update (e.g. for concurrency control)
-type ObjectUpdateResponse struct {
-	LastUpdateUUID string `json:"lastUpdateUUID"`
-}
-
-// Settings holds stored configuration options
-type Settings struct {
-	ImproveURL string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility
-}
-
-// StorageService to represent the persistent store
-type StorageService interface {
-	GetAllTeams(ctx context.Context) ([]Team, error)
-	GetTeam(ctx context.Context, teamID string) (Team, bool, error)
-	CreateTeam(ctx context.Context, team Team) error
-	UpdateTeam(ctx context.Context, team Team) error
-	GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error)
-	GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error)
-	CreatePeriod(ctx context.Context, teamID string, period Period) error
-	UpdatePeriod(ctx context.Context, teamID string, period Period) error
-	GetSettings(ctx context.Context) (Settings, error)
-	Close() error
-}
-
 // Server struct to handle incoming HTTP requests
 type Server struct {
-	store        StorageService
+	store        storage.StorageService
 	storeTimeout time.Duration
 }
 
@@ -165,7 +70,7 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 	return true
 }
 
-func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (Period, bool) {
+func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (models.Period, bool) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	period, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
@@ -185,7 +90,7 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 	return period, true
 }
 
-func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, period, savedPeriod Period) bool {
+func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, period, savedPeriod models.Period) bool {
 	if savedPeriod.LastUpdateUUID != period.LastUpdateUUID {
 		msg := fmt.Sprintf("Concurrent modification: last saved UUID=%s, your last loaded UUID=%s",
 			savedPeriod.LastUpdateUUID, period.LastUpdateUUID)
@@ -279,9 +184,9 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func readTeamFromBody(w http.ResponseWriter, r *http.Request) (Team, bool) {
+func readTeamFromBody(w http.ResponseWriter, r *http.Request) (models.Team, bool) {
 	dec := json.NewDecoder(r.Body)
-	team := Team{}
+	team := models.Team{}
 	err := dec.Decode(&team)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
@@ -343,8 +248,8 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	}
 }
 
-func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period Period) {
-	response := ObjectUpdateResponse{LastUpdateUUID: period.LastUpdateUUID}
+func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period models.Period) {
+	response := models.ObjectUpdateResponse{LastUpdateUUID: period.LastUpdateUUID}
 	enc := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	enc.Encode(response)
@@ -397,9 +302,9 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID,
 	s.writePeriodUpdateResponse(w, r, period)
 }
 
-func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
+func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, bool) {
 	dec := json.NewDecoder(r.Body)
-	period := Period{}
+	period := models.Period{}
 	err := dec.Decode(&period)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
@@ -408,7 +313,7 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (Period, bool) {
 	for _, bucket := range period.Buckets {
 		for _, objective := range bucket.Objectives {
 			if objective.CommitmentType != "" {
-				if objective.CommitmentType != CommitmentTypeCommitted && objective.CommitmentType != CommitmentTypeAspirational {
+				if objective.CommitmentType != models.CommitmentTypeCommitted && objective.CommitmentType != models.CommitmentTypeAspirational {
 					http.Error(w, fmt.Sprintf("Illegal commitment type '%s'", objective.CommitmentType), http.StatusBadRequest)
 					return period, false
 				}
@@ -438,10 +343,10 @@ func main() {
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.Parse()
 
-	var store StorageService
+	var store storage.StorageService
 	if useInMemStore {
 		log.Printf("Using in-memory store per command-line flag")
-		store = makeInMemStore()
+		store = in_memory_storage.MakeInMemStore()
 	} else {
 		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 		if gcloudProject == "" {
@@ -452,7 +357,7 @@ func main() {
 		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
 		ctx := context.Background()
 		var err error
-		store, err = makeGoogleCDSStore(ctx, gcloudProject)
+		store, err = google_cds_store.MakeGoogleCDSStore(ctx, gcloudProject)
 		if err != nil {
 			log.Fatalf("Could not instantiate datastore: %s", err)
 			return

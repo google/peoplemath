@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package google_cds_store
 
 import (
 	"context"
 	"fmt"
+	"peoplemath/models"
+	"peoplemath/storage"
 
 	"google.golang.org/api/iterator"
 
@@ -39,7 +41,7 @@ type googleCDSStore struct {
 	client *datastore.Client
 }
 
-func makeGoogleCDSStore(ctx context.Context, projectID string) (StorageService, error) {
+func MakeGoogleCDSStore(ctx context.Context, projectID string) (storage.StorageService, error) {
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
 		return nil, fmt.Errorf("Could not create datastore client: %s", err)
@@ -55,12 +57,12 @@ func getPeriodKey(teamKey *datastore.Key, periodID string) *datastore.Key {
 	return datastore.NameKey(PeriodKind, periodID, teamKey)
 }
 
-func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]Team, error) {
+func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 	query := datastore.NewQuery(TeamKind).Order("DisplayName")
 	iter := s.client.Run(ctx, query)
-	result := []Team{}
+	result := []models.Team{}
 	for {
-		var t Team
+		var t models.Team
 		_, err := iter.Next(&t)
 		if err == iterator.Done {
 			break
@@ -73,9 +75,9 @@ func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]Team, error) {
 	return result, nil
 }
 
-func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (Team, bool, error) {
+func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (models.Team, bool, error) {
 	key := getTeamKey(teamID)
-	var team Team
+	var team models.Team
 	err := s.client.Get(ctx, key, &team)
 	if err == datastore.ErrNoSuchEntity {
 		return team, false, nil
@@ -86,10 +88,10 @@ func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (Team, bool
 	return team, true, nil
 }
 
-func (s *googleCDSStore) CreateTeam(ctx context.Context, team Team) error {
+func (s *googleCDSStore) CreateTeam(ctx context.Context, team models.Team) error {
 	key := getTeamKey(team.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		var empty Team
+		var empty models.Team
 		if err := tx.Get(key, &empty); err != datastore.ErrNoSuchEntity {
 			return fmt.Errorf("Expected no existing team '%s', found: %s", team.ID, err)
 		}
@@ -99,10 +101,10 @@ func (s *googleCDSStore) CreateTeam(ctx context.Context, team Team) error {
 	return err
 }
 
-func (s *googleCDSStore) UpdateTeam(ctx context.Context, team Team) error {
+func (s *googleCDSStore) UpdateTeam(ctx context.Context, team models.Team) error {
 	key := getTeamKey(team.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		var ignored Team
+		var ignored models.Team
 		if err := tx.Get(key, &ignored); err != nil {
 			return fmt.Errorf("Could not retrieve team '%s': %s", team.ID, err)
 		}
@@ -112,16 +114,16 @@ func (s *googleCDSStore) UpdateTeam(ctx context.Context, team Team) error {
 	return err
 }
 
-func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]Period, bool, error) {
+func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error) {
 	if _, ok, err := s.GetTeam(ctx, teamID); !ok || err != nil {
 		return nil, false, err
 	}
 	teamKey := getTeamKey(teamID)
 	query := datastore.NewQuery(PeriodKind).Ancestor(teamKey)
 	iter := s.client.Run(ctx, query)
-	result := []Period{}
+	result := []models.Period{}
 	for {
-		var p Period
+		var p models.Period
 		_, err := iter.Next(&p)
 		if err == iterator.Done {
 			break
@@ -135,10 +137,10 @@ func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]Pe
 	return result, true, nil
 }
 
-func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string) (Period, bool, error) {
+func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, periodID)
-	var period Period
+	var period models.Period
 	err := s.client.Get(ctx, periodKey, &period)
 	if err == datastore.ErrNoSuchEntity {
 		return period, false, nil
@@ -147,11 +149,11 @@ func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string)
 	return period, true, err
 }
 
-func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period Period) error {
+func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		var empty Period
+		var empty models.Period
 		if err := tx.Get(periodKey, &empty); err != datastore.ErrNoSuchEntity {
 			return fmt.Errorf("Expected no period '%s' for team '%s': %s", period.ID, teamID, err)
 		}
@@ -161,11 +163,11 @@ func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period
 	return err
 }
 
-func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period Period) error {
+func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		var ignored Period
+		var ignored models.Period
 		if err := tx.Get(periodKey, &ignored); err != nil {
 			return fmt.Errorf("Could not retrieve period '%s' for team '%s': %s", period.ID, teamID, err)
 		}
@@ -175,12 +177,12 @@ func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period
 	return err
 }
 
-func (s *googleCDSStore) GetSettings(ctx context.Context) (Settings, error) {
+func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, error) {
 	key := datastore.NameKey(SettingsKind, SettingsEntity, nil)
-	var result Settings
+	var result models.Settings
 	err := s.client.Get(ctx, key, &result)
 	if err == datastore.ErrNoSuchEntity {
-		result = Settings{}
+		result = models.Settings{}
 	} else if err != nil {
 		return result, err
 	}
@@ -196,29 +198,29 @@ func (s *googleCDSStore) Close() error {
 
 // Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
 // they may be nil. This function is to avoid clients having to deal with this.
-func scrubLoadedPeriod(period *Period) {
+func scrubLoadedPeriod(period *models.Period) {
 	if period.People == nil {
-		period.People = []Person{}
+		period.People = []models.Person{}
 	}
 	if period.Buckets == nil {
-		period.Buckets = []Bucket{}
+		period.Buckets = []models.Bucket{}
 	}
 	if period.SecondaryUnits == nil {
-		period.SecondaryUnits = []SecondaryUnit{}
+		period.SecondaryUnits = []models.SecondaryUnit{}
 	}
 	for i := range period.Buckets {
 		if period.Buckets[i].Objectives == nil {
-			period.Buckets[i].Objectives = []Objective{}
+			period.Buckets[i].Objectives = []models.Objective{}
 		}
 		for j := range period.Buckets[i].Objectives {
 			if period.Buckets[i].Objectives[j].Assignments == nil {
-				period.Buckets[i].Objectives[j].Assignments = []Assignment{}
+				period.Buckets[i].Objectives[j].Assignments = []models.Assignment{}
 			}
 			if period.Buckets[i].Objectives[j].Groups == nil {
-				period.Buckets[i].Objectives[j].Groups = []ObjectiveGroup{}
+				period.Buckets[i].Objectives[j].Groups = []models.ObjectiveGroup{}
 			}
 			if period.Buckets[i].Objectives[j].Tags == nil {
-				period.Buckets[i].Objectives[j].Tags = []ObjectiveTag{}
+				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
 			}
 		}
 	}
