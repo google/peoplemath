@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - local
+    container_name: backend
+    volumes:
+      - "./:${WORKING_DIR}"
+    working_dir: ${WORKING_DIR}
+    env_file:
+      - ".env"
+    expose:
+      - "8080"
+    ports:
+      - 8080:8080
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 4200:4200
+    container_name: frontend
+    working_dir: ${WORKING_DIR}
+    volumes:
+      - "./:${WORKING_DIR}"
+    networks:
+      - local
+
+networks:
+  local:

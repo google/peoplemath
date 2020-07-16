@@ -61,6 +61,33 @@ To persist the API data and exercise the Cloud Datastore persistence layer, the 
 
 The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
 
+## Docker dev environment
+
+This is an alternative way to run project in dev environment.
+
+[Install Docker](https://docs.docker.com/get-docker/)
+
+[Install docker-compose](https://docs.docker.com/compose/install/)
+
+Rename .env.dist -> .env
+
+Set correct WORKING_DIR env variable in .env (path to root folder of project)
+
+Run project
+```
+$ cd /path/to/project
+$ docker-compose up
+```
+
+Project should be available via the link http://localhost:4200
+
+Stop project
+```
+$ cd /path/to/project
+$ docker-compose down
+```
+
+
 ## Deployment to App Engine
 
 To deploy the app to Google App Engine:
