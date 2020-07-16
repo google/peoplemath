@@ -16,7 +16,9 @@ package in_memory_storage
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"math/rand"
 	"peoplemath/models"
 	"peoplemath/storage"
 	"strings"
@@ -38,6 +40,7 @@ func MakeInMemStore() storage.StorageService {
 		"team1": {
 			"2018q4": makeFakePeriod("2018q4"),
 			"2019q1": makeFakePeriod("2019q1"),
+			"2020q3": makeLargePeriod("2020q3", 30, 3, 50),
 		},
 		"team2": {
 			"2018q4": makeFakePeriod("2018q4"),
@@ -257,4 +260,144 @@ func makeFakePeriod(id string) models.Period {
 		Buckets:                buckets,
 		People:                 people,
 	}
+}
+
+type randomObjectiveFactory struct {
+	peopleTimeRemaining map[string]float64
+	allProjects         []string
+}
+
+func (f *randomObjectiveFactory) pickRandomPersonWithTimeLeft() (string, float64) {
+	chooseIdx := rand.Intn(len(f.peopleTimeRemaining))
+	idx := 0
+	for personID, remaining := range f.peopleTimeRemaining {
+		if idx == chooseIdx {
+			return personID, remaining
+		}
+		idx++
+	}
+	panic(fmt.Sprintf("Could not select a random person, chooseIdx = %v, len = %v", chooseIdx, len(f.peopleTimeRemaining)))
+}
+
+func (f *randomObjectiveFactory) randomCommitment(personTimeRemaining, resourcesRequired float64) float64 {
+	var commitment float64
+	if personTimeRemaining > 1 {
+		commitment = float64(rand.Intn(int(personTimeRemaining)-1) + 1)
+	} else {
+		commitment = 1
+	}
+	if commitment > resourcesRequired {
+		commitment = resourcesRequired
+	}
+	return commitment
+}
+
+func (f *randomObjectiveFactory) makeRandomObjective() models.Objective {
+	resourceEstimate := float64(rand.Intn(50))
+	var ctype string
+	if rand.Float64() < 0.3 {
+		ctype = models.CommitmentTypeCommitted
+	} else {
+		ctype = models.CommitmentTypeAspirational
+	}
+	assignmentCount := rand.Intn(3)
+	assignments := make([]models.Assignment, assignmentCount)
+	resourcesRequired := resourceEstimate
+	for i := 0; i < assignmentCount; i++ {
+		if len(f.peopleTimeRemaining) == 0 {
+			// Nobody has any time left
+			break
+		}
+		personID, personTimeRemaining := f.pickRandomPersonWithTimeLeft()
+		commitment := f.randomCommitment(personTimeRemaining, resourcesRequired)
+		assignments[i] = models.Assignment{
+			PersonID:   personID,
+			Commitment: commitment,
+		}
+		resourcesRequired -= commitment
+		f.peopleTimeRemaining[personID] -= commitment
+		if f.peopleTimeRemaining[personID] == 0 {
+			delete(f.peopleTimeRemaining, personID)
+		}
+		break
+	}
+
+	tags := make([]models.ObjectiveTag, 0, 1)
+	if rand.Float64() < 0.1 {
+		tags = append(tags, models.ObjectiveTag{Name: "mytag"})
+	}
+
+	return models.Objective{
+		Name:             fmt.Sprintf("%v the %v", makeRandomString(rand.Intn(20)+3), makeRandomString(rand.Intn(20)+3)),
+		ResourceEstimate: float64(resourceEstimate),
+		CommitmentType:   ctype,
+		Assignments:      assignments,
+		Groups: []models.ObjectiveGroup{
+			models.ObjectiveGroup{
+				GroupType: "Project",
+				GroupName: f.allProjects[rand.Intn(len(f.allProjects))],
+			},
+		},
+		Tags: tags,
+	}
+}
+
+// Make a period with lots of objectives, people, assignments etc.
+// This is useful for performance testing the UI at realistic scale.
+func makeLargePeriod(id string, personCount, bucketCount, objectivesPerBucket int) models.Period {
+	people := make([]models.Person, personCount)
+	for i := 0; i < personCount; i++ {
+		people[i] = models.Person{
+			ID:           makeRandomString(10),
+			DisplayName:  "",
+			Location:     strings.ToUpper(makeRandomString(3)),
+			Availability: 10,
+		}
+	}
+	timeRemaining := make(map[string]float64)
+	for _, person := range people {
+		timeRemaining[person.ID] = person.Availability
+	}
+
+	objFactory := randomObjectiveFactory{
+		peopleTimeRemaining: timeRemaining,
+		allProjects:         []string{"Project 1", "Project 2", "Project 3", "Project 4", "Project 5"},
+	}
+	buckets := make([]models.Bucket, bucketCount)
+	var allocRemaining int = 100
+	for i := 0; i < bucketCount; i++ {
+		allocPct := allocRemaining / (bucketCount - i)
+		objectives := make([]models.Objective, objectivesPerBucket)
+		for j := 0; j < objectivesPerBucket; j++ {
+			objectives[j] = objFactory.makeRandomObjective()
+		}
+		buckets[i] = models.Bucket{
+			DisplayName:          fmt.Sprintf("Bucket %v", i+1),
+			AllocationPercentage: float64(allocPct),
+			Objectives:           objectives,
+		}
+		allocRemaining -= allocPct
+	}
+
+	return models.Period{
+		ID:          id,
+		DisplayName: fmt.Sprintf("Large period %v for UI stress testing", strings.ToUpper(id)),
+		Unit:        "person weeks",
+		SecondaryUnits: []models.SecondaryUnit{
+			models.SecondaryUnit{Name: "person years", ConversionFactor: 7.0 / 365.0},
+		},
+		NotesURL:               "https://github.com/google/peoplemath",
+		MaxCommittedPercentage: 50,
+		Buckets:                buckets,
+		People:                 people,
+	}
+}
+
+func makeRandomString(length int) string {
+	const letters = "abcdefghijklmnopqrstuvwxyz"
+	b := make([]byte, length)
+	for i := 0; i < length; i++ {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
