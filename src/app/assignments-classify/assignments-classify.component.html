@@ -11,15 +11,15 @@
                         <app-assignment
                             [objective]="objective"
                             [assignedResources]="assignedResources(objective)"
-                            [unit]="period.unit"
+                            [unit]="period?.unit"
                             [class.no-resources-assigned]="assignedResources(objective) <= 0">
                         </app-assignment>
                     </li>
                     <li *ngIf="classobjs[1].length > 1">
                         <b>Total:</b> <app-resource-quantity
                             [quantity]="totalAssignedResources(classobjs[1])"
-                            [primaryUnit]="period.unit"
-                            [secondaryUnits]="period.secondaryUnits"></app-resource-quantity>
+                            [primaryUnit]="period?.unit"
+                            [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity>
                     </li>
                 </ul>
             </div>

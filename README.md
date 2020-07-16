@@ -53,17 +53,19 @@ The whole application was designed to run on [Google App Engine](https://cloud.g
 
 The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
 
-In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.12 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary.
+In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.12 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary. (You can do `go run .` in the `backend` directory as a shortcut to compile and run the backend in a single command.)
 
 The simplest way to run it is with `peoplemath --inmemstore`, which will use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
 
 To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and run `peoplemath` with no arguments.
 
+The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
+
 ## Deployment to App Engine
 
 To deploy the app to Google App Engine:
 
-* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go112/quickstart)
+* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go/quickstart)
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`

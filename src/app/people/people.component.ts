@@ -39,19 +39,19 @@ class PersonData {
   styleUrls: ['./people.component.css']
 })
 export class PeopleComponent implements OnInit {
-  @Input() people: Person[];
-  @Input() peopleAllocations: Map<string, number>;
-  @Input() peopleCommittedAllocations: Map<string, number>;
-  @Input() peopleAssignmentCounts: Map<string, number>;
-  @Input() totalAvailable: number;
-  @Input() totalAllocated: number;
-  @Input() totalUnallocated: number;
-  @Input() totalAssignmentCount: number;
-  @Input() unit: string;
-  @Input() isEditingEnabled: boolean;
+  @Input() people?: Person[];
+  @Input() peopleAllocations?: Map<string, number>;
+  @Input() peopleCommittedAllocations?: Map<string, number>;
+  @Input() peopleAssignmentCounts?: Map<string, number>;
+  @Input() totalAvailable?: number;
+  @Input() totalAllocated?: number;
+  @Input() totalUnallocated?: number;
+  @Input() totalAssignmentCount?: number;
+  @Input() unit?: string;
+  @Input() isEditingEnabled?: boolean;
   @Output() onChanged = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<Person>();
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort?: MatSort;
 
   constructor(public dialog: MatDialog) { }
 
@@ -60,7 +60,7 @@ export class PeopleComponent implements OnInit {
 
   displayedColumns(): string[] {
     let columnLabels = ['personDesc'];
-    if (this.people.find(p => p.location)) {
+    if (this.people!.find(p => p.location)) {
       columnLabels.push('location');
     }
     columnLabels.push('availability', 'allocated', 'unallocated', 'assignmentCount', 'commitFraction');
@@ -68,11 +68,11 @@ export class PeopleComponent implements OnInit {
   }
 
   tableData(): MatTableDataSource<PersonData> {
-    let data = this.people.map(p => new PersonData(personDisplayNameWithUsername(p), p.location, p.availability,
+    let data = this.people!.map(p => new PersonData(personDisplayNameWithUsername(p), p.location, p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
       this.personCommitFraction(p), this.isPersonOverallocated(p), p));
     let result = new MatTableDataSource(data);
-    result.sort = this.sort;
+    result.sort = this.sort!;
     return result;
   }
 
@@ -80,7 +80,7 @@ export class PeopleComponent implements OnInit {
    * Amount of the given person's resources allocated to objectives during this period.
    */
   personAllocated(person: Person): number {
-    return this.peopleAllocations.has(person.id) ? this.peopleAllocations.get(person.id) : 0;
+    return this.peopleAllocations!.has(person.id) ? this.peopleAllocations!.get(person.id)! : 0;
   }
 
   /**
@@ -94,7 +94,7 @@ export class PeopleComponent implements OnInit {
    * Number of distinct assignments for the person during this period.
    */
   personAssignmentCount(person: Person): number {
-    return this.peopleAssignmentCounts.has(person.id) ? this.peopleAssignmentCounts.get(person.id) : 0;
+    return this.peopleAssignmentCounts!.has(person.id) ? this.peopleAssignmentCounts!.get(person.id)! : 0;
   }
 
   /**
@@ -105,7 +105,7 @@ export class PeopleComponent implements OnInit {
     if (!totalAllocated) {
       return 0;
     }
-    let committed = this.peopleCommittedAllocations.has(person.id) ? this.peopleCommittedAllocations.get(person.id) : 0;
+    let committed = this.peopleCommittedAllocations!.has(person.id) ? this.peopleCommittedAllocations!.get(person.id)! : 0;
     return committed / totalAllocated;
   }
 
@@ -114,29 +114,29 @@ export class PeopleComponent implements OnInit {
   }
 
   isTeamOverallocated(): boolean {
-    return this.totalUnallocated < 0;
+    return this.totalUnallocated! < 0;
   }
 
   /**
    * Just calculate the modal availability
    */
   defaultPersonAvailability(): number {
-    var availCounts = {};
-    this.people.forEach(p => {
-      if (availCounts[p.availability] === undefined) {
-        availCounts[p.availability] = 0;
+    let availCounts = new Map<number, number>();
+    this.people!.forEach(p => {
+      if (!availCounts.get(p.availability)) {
+        availCounts.set(p.availability, 0);
       }
-      availCounts[p.availability] += 1;
+      availCounts.set(p.availability, availCounts.get(p.availability)! + 1);
     });
-    var maxFreq = 0;
-    var mode: string = "0";
-    for (var a in availCounts) {
-      if (availCounts[a] > maxFreq) {
-        maxFreq = availCounts[a];
+    let maxFreq = 0;
+    let mode = 0;
+    availCounts.forEach((freq, a) => {
+      if (freq > maxFreq) {
+        maxFreq = freq;
         mode = a;
       }
-    }
-    return parseInt(mode, 10);
+    })
+    return mode;
   }
 
   addPerson(): void {
@@ -145,16 +145,16 @@ export class PeopleComponent implements OnInit {
     }
     const person = new Person('', '', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
-      person: person, unit: this.unit, title: "Add person", okAction: "Add",
-      existingUserIDs: this.people.map(p => p.id),
+      person: person, unit: this.unit!, title: "Add person", okAction: "Add",
+      existingUserIDs: this.people!.map(p => p.id),
       allowCancel: true, allowDelete: false, showDeleteConfirm: false,
       allowUsernameEdit: true, onDelete: undefined,
     };
     const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
-        this.people.push(person);
-        this.people.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
+        this.people!.push(person);
+        this.people!.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
         this.onChanged.emit(person);
       }
     });
@@ -165,7 +165,7 @@ export class PeopleComponent implements OnInit {
       return;
     }
     const dialogData: EditPersonDialogData = {
-      person: p, unit: this.unit, title: 'Edit person "' + p.id + '"', okAction: "OK",
+      person: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: "OK",
       existingUserIDs: [], // Doesn't matter for existing people
       allowCancel: false, allowDelete: true, showDeleteConfirm: false,
       allowUsernameEdit: false, onDelete: this.onDelete,
@@ -189,7 +189,7 @@ export interface EditPersonDialogData {
   showDeleteConfirm: boolean;
   allowUsernameEdit: boolean;
   existingUserIDs: Array<String>;
-  onDelete: EventEmitter<Person>;
+  onDelete?: EventEmitter<Person>;
 }
 
 @Component({
@@ -248,7 +248,7 @@ export class EditPersonDialog {
   }
 
   confirmDelete(): void {
-    this.data.onDelete.emit(this.data.person);
+    this.data.onDelete!.emit(this.data.person);
     this.dialogRef.close(false);
   }
 }

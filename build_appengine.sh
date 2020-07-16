@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 #
-# Copyright 2019 Google LLC
+# Copyright 2019-2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,9 @@ fi
 
 mkdir appengine_dist
 
-ng build --prod
-cp backend/* appengine_dist
+npx ng build --prod
+pushd backend
+find . \( -name \*.go -o -name \*.mod -o -name \*.sum -o -name \*.yaml \) -exec cp --parents {} ../appengine_dist \;
+popd
 mkdir appengine_dist/static
 cp dist/peoplemath/* appengine_dist/static

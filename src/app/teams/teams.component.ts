@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import { of } from 'rxjs';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
-  teams: Team[];
+  teams?: Team[];
 
   constructor(
     private storage: StorageService,
@@ -74,7 +74,7 @@ export class TeamsComponent implements OnInit {
         }),
       ).subscribe(res => {
         if (res != "error") {
-          this.teams.push(team);
+          this.teams!.push(team);
         }
       });
     });

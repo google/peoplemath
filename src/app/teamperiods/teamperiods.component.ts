@@ -36,8 +36,8 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   styleUrls: ['./teamperiods.component.css']
 })
 export class TeamPeriodsComponent implements OnInit {
-  team: Team;
-  periods: Period[];
+  team?: Team;
+  periods?: Period[];
 
   constructor(
     private storage: StorageService,
@@ -47,7 +47,12 @@ export class TeamPeriodsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(m => this.loadDataFor(m.get('team')));
+    this.route.paramMap.subscribe(m => {
+      const teamId = m.get('team');
+      if (teamId) {
+        this.loadDataFor(teamId);
+      }
+    });
   }
 
   loadDataFor(teamId: string): void {
@@ -75,13 +80,13 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   sortedPeriods(): Period[] {
-    let result = this.periods.slice();
+    let result = this.periods!.slice();
     result.sort((a, b) => a.displayName < b.displayName ? 1 : (a.displayName > b.displayName ? -1 : 0));
     return result;
   }
 
   addPeriod(): void {
-    if (this.periods.length == 0) {
+    if (this.periods!.length == 0) {
       this.addBlankPeriod();
       return;
     }
@@ -116,7 +121,7 @@ export class TeamPeriodsComponent implements OnInit {
       if (data.createMethod == CreateMethod.Blank) {
         newPeriod = data.period;
       } else if (data.createMethod == CreateMethod.Copy) {
-        let copiedPeriod = this.periods.find(p => p.id == data.copyFromPeriodID);
+        let copiedPeriod = this.periods!.find(p => p.id == data.copyFromPeriodID);
         if (!copiedPeriod) {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
@@ -202,7 +207,7 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   storeNewPeriod(period: Period): void {
-    this.storage.addPeriod(this.team.id, period).pipe(
+    this.storage.addPeriod(this.team!.id, period).pipe(
       catchError(error => {
         this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
         console.log(error);
@@ -211,15 +216,15 @@ export class TeamPeriodsComponent implements OnInit {
     ).subscribe(updateResponse => {
       if (updateResponse) {
         period.lastUpdateUUID = updateResponse.lastUpdateUUID;
-        this.periods.push(period);
+        this.periods!.push(period);
       }
     });
   }
 
   editTeam(): void {
     const dialogData: EditTeamDialogData = {
-      team: this.team,
-      title: 'Edit Team "' + this.team.id + '"',
+      team: this.team!,
+      title: 'Edit Team "' + this.team!.id + '"',
       okAction: 'OK',
       allowCancel: false,
       allowEditID: false,

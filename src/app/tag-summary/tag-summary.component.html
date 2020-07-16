@@ -5,13 +5,13 @@
     <mat-card-content>
         <ul>
             <li *ngFor="let objective of taggedObjectives()">
-                <app-objective-summary [objective]="objective" [unit]="period.unit">
+                <app-objective-summary [objective]="objective" [unit]="period?.unit">
                 </app-objective-summary>
             </li>
             <li><b>Total:</b> <app-resource-quantity 
                 [quantity]="totalAllocationsForTag()"
-                [primaryUnit]="period.unit"
-                [secondaryUnits]="period.secondaryUnits"></app-resource-quantity></li>
+                [primaryUnit]="period?.unit"
+                [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity></li>
         </ul>
     </mat-card-content>
 </mat-card>

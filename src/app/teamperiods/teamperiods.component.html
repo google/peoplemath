@@ -2,11 +2,11 @@
 <div *ngIf="isLoaded()" class="grid-container">
 <mat-card>
 <mat-card-header>
-  <mat-card-title (click)="editTeam()">{{team.displayName}}: Periods</mat-card-title>
+  <mat-card-title (click)="editTeam()">{{team?.displayName}}: Periods</mat-card-title>
 </mat-card-header>
 <mat-card-content>
 <mat-list>
-  <mat-list-item *ngFor="let period of sortedPeriods()"><a routerLink="/team/{{team.id}}/period/{{period.id}}">{{period.displayName}}</a></mat-list-item>
+  <mat-list-item *ngFor="let period of sortedPeriods()"><a routerLink="/team/{{team!.id}}/period/{{period!.id}}">{{period?.displayName}}</a></mat-list-item>
 </mat-list>
 <button mat-raised-button (click)="addPeriod()" color="primary">Add Period</button>
 </mat-card-content>

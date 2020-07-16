@@ -24,8 +24,8 @@ import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from 
   styleUrls: ['./tag-summary.component.css']
 })
 export class TagSummaryComponent implements OnInit {
-  @Input() period: Period;
-  @Input() tag: string;
+  @Input() period?: Period;
+  @Input() tag?: string;
 
   constructor() { }
 
@@ -34,9 +34,9 @@ export class TagSummaryComponent implements OnInit {
 
   taggedObjectives(): Objective[] {
     let result: Objective[] = [];
-    this.period.buckets.forEach(b => {
+    this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        if (o.tags.map(t => t.name).includes(this.tag)) {
+        if (o.tags.map(t => t.name).includes(this.tag!)) {
           result.push(o);
         }
       });

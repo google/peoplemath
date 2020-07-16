@@ -28,7 +28,7 @@ export interface ObjectiveTag {
 export interface Objective {
   name: string,
   resourceEstimate: number,
-  commitmentType: CommitmentType,
+  commitmentType?: CommitmentType,
   notes: string,
   groups: ObjectiveGroup[],
   tags: ObjectiveTag[],

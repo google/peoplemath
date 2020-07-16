@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import { Person, personDisplayNameWithUsername } from '../person';
   styleUrls: ['./assignments-by-person.component.css']
 })
 export class AssignmentsByPersonComponent implements OnInit {
-  @Input() period: Period;
+  @Input() period?: Period;
 
   constructor() { }
 
@@ -32,7 +32,7 @@ export class AssignmentsByPersonComponent implements OnInit {
   }
 
   hasAssignments(person: Person): boolean {
-    for (let bucket of this.period.buckets) {
+    for (let bucket of this.period!.buckets) {
       for (let objective of bucket.objectives) {
         for (let assignment of objective.assignments) {
           if (assignment.personId === person.id) {
@@ -45,8 +45,8 @@ export class AssignmentsByPersonComponent implements OnInit {
   }
 
   assignmentsFor(person: Person): ObjectiveAssignment[] {
-    const result = [];
-    this.period.buckets.forEach(bucket => {
+    const result: ObjectiveAssignment[] = [];
+    this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
         objective.assignments.filter(assignment => assignment.personId === person.id)
                              .forEach(assignment => {
