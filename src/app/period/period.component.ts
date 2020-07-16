@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Bucket, ImmutableBucket } from '../bucket';
@@ -35,26 +35,28 @@ import { ThemePalette } from '@angular/material/core';
   selector: 'app-period',
   templateUrl: './period.component.html',
   styleUrls: ['./period.component.css'],
+  // Requires manual change detection to be called whenever we change a member without a DOM event
+  // This is ugly but it seems to make a HUGE performance difference
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeriodComponent implements OnInit {
   team?: ImmutableTeam;
   period?: ImmutablePeriod;
   isEditingEnabled: boolean = false;
   showOrderButtons: boolean = false;
-  eventsRequiringSave = new Subject<any>();
+  readonly eventsRequiringSave = new Subject<any>();
   // To enable access to this enum from the template
-  AggregateBy = AggregateBy;
+  readonly AggregateBy = AggregateBy;
  
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private changeDet: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
-    this.isEditingEnabled = false;
-    this.showOrderButtons = false;
     this.route.paramMap.subscribe(m => {
       const teamId = m.get('team');
       const periodId = m.get('period');
@@ -68,15 +70,24 @@ export class PeriodComponent implements OnInit {
   enableEditing(): void {
     this.isEditingEnabled = true;
     this.showOrderButtons = false;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   disableEditing(): void {
     this.isEditingEnabled = false;
     this.showOrderButtons = false;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   toggleReordering(): void {
     this.showOrderButtons = !this.showOrderButtons;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   reorderButtonColour(): ThemePalette {
@@ -234,7 +245,7 @@ export class PeriodComponent implements OnInit {
   renameGroup(groupType: string, oldName: string, newName: string): void {
     const newPeriod = this.period!.withGroupRenamed(groupType, oldName, newName);
     if (newPeriod !== this.period) {
-      this.period = newPeriod;
+      this.setPeriod(newPeriod);
       this.save();
     }
   }
@@ -242,14 +253,14 @@ export class PeriodComponent implements OnInit {
   renameTag(oldName: string, newName: string) {
     const newPeriod = this.period!.withTagRenamed(oldName, newName);
     if (newPeriod !== this.period) {
-      this.period = newPeriod;
+      this.setPeriod(newPeriod);
       this.save();
     }
   }
 
   loadDataFor(teamId: string, periodId: string): void {
-    this.team = undefined;
-    this.period = undefined;
+    this.setTeam(undefined);
+    this.setPeriod(undefined);
     this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
@@ -258,9 +269,9 @@ export class PeriodComponent implements OnInit {
       })
     ).subscribe((team?: Team) => {
       if (team) {
-        this.team = new ImmutableTeam(team);
+        this.setTeam(new ImmutableTeam(team));
       } else {
-        this.team = undefined;
+        this.setTeam(undefined);
       }
     });
 
@@ -283,9 +294,9 @@ export class PeriodComponent implements OnInit {
       })
     ).subscribe((period?: Period) => {
       if (period) {
-        this.period = ImmutablePeriod.fromPeriod(period);
+        this.setPeriod(ImmutablePeriod.fromPeriod(period));
       } else {
-        this.period = undefined;
+        this.setPeriod(undefined);
       }
     });
   }
@@ -300,17 +311,17 @@ export class PeriodComponent implements OnInit {
   }
 
   onNewPerson(person: ImmutablePerson): void {
-    this.period = this.period!.withNewPerson(person);
+    this.setPeriod(this.period!.withNewPerson(person));
     this.save();
   }
 
   onChangedPerson(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): void {
-    this.period = this.period!.withPersonChanged(oldPerson, newPerson);
+    this.setPeriod(this.period!.withPersonChanged(oldPerson, newPerson));
     this.save();
   }
 
   deletePerson(person: ImmutablePerson): void {
-    this.period = this.period!.withPersonDeleted(person);
+    this.setPeriod(this.period!.withPersonDeleted(person));
     this.save();
   }
 
@@ -332,7 +343,7 @@ export class PeriodComponent implements OnInit {
     ).subscribe(updateResponse => {
       if (updateResponse) {
         this.snackBar.open('Saved', '', {duration: 2000});
-        this.period = this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID);
+        this.setPeriod(this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID));
       }
     });
   }
@@ -348,7 +359,7 @@ export class PeriodComponent implements OnInit {
     const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
-        this.period = ImmutablePeriod.fromPeriod(dialogData.period);
+        this.setPeriod(ImmutablePeriod.fromPeriod(dialogData.period));
         this.save();
       }
     });
@@ -366,23 +377,33 @@ export class PeriodComponent implements OnInit {
       if (!bucket) {
         return;
       }
-      this.period = this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket));
+      this.setPeriod(this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket)));
       this.save();
     });
   }
 
   moveBucketUpOne(bucket: ImmutableBucket): void {
-    this.period = this.period!.withBucketMovedUpOne(bucket);
+    this.setPeriod(this.period!.withBucketMovedUpOne(bucket));
     this.save();
   }
 
   moveBucketDownOne(bucket: ImmutableBucket): void {
-    this.period = this.period!.withBucketMovedDownOne(bucket);
+    this.setPeriod(this.period!.withBucketMovedDownOne(bucket));
     this.save();
   }
 
   onBucketChanged(from: ImmutableBucket, to: ImmutableBucket): void {
-    this.period = this.period!.withBucketChanged(from, to);
+    this.setPeriod(this.period!.withBucketChanged(from, to));
     this.save();
+  }
+
+  setPeriod(newPeriod?: ImmutablePeriod) {
+    this.period = newPeriod;
+    this.changeDet.detectChanges();
+  }
+
+  setTeam(newTeam?: ImmutableTeam) {
+    this.team = newTeam;
+    this.changeDet.detectChanges();
   }
 }
