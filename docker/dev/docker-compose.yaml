@@ -4,16 +4,11 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: docker/dev/backend/Dockerfile
     networks:
       - local
     container_name: backend
-    volumes:
-      - "./:${WORKING_DIR}"
-    working_dir: ${WORKING_DIR}
-    env_file:
-      - ".env"
     expose:
       - "8080"
     ports:
@@ -21,14 +16,11 @@ services:
 
   frontend:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: docker/dev/frontend/Dockerfile
     ports:
       - 4200:4200
     container_name: frontend
-    working_dir: ${WORKING_DIR}
-    volumes:
-      - "./:${WORKING_DIR}"
     networks:
       - local
 
