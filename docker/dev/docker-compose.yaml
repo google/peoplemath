@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+
+  backend:
+    build:
+      context: ../../
+      dockerfile: docker/dev/backend/Dockerfile
+    networks:
+      - local
+    container_name: backend
+    expose:
+      - "8080"
+    ports:
+      - 8080:8080
+
+  frontend:
+    build:
+      context: ../../
+      dockerfile: docker/dev/frontend/Dockerfile
+    ports:
+      - 4200:4200
+    container_name: frontend
+    networks:
+      - local
+
+networks:
+  local:
