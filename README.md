@@ -61,42 +61,21 @@ To persist the API data and exercise the Cloud Datastore persistence layer, the 
 
 The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
 
-## Docker
+### Using Docker
 
-This is an alternative way to run project, but it is not mandatory to use it. 
+An alternative way of running PeopleMath using [Docker Compose](https://docs.docker.com/compose/) has been contributed by GitHub user [vavilen84](https://github.com/vavilen84) (thank you!). This will benefit developers who like to use Docker tooling. This is community-supported and not actively maintained by anyone at Google.
 
-Documentation [Docker Compose](https://docs.docker.com/compose/) 
+Configuration for this lives in the `docker` folder. Currently, there is no configuration here suitable for production use, as the frontend container uses the Angular CLI, which is not designed to be a production-quality web server.
 
-For now, it is available only for dev environment. In order to use Docker env you need:
- 
-#### Install Docker
+In order to use this workflow for development, you must first [install Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-[Install Docker](https://docs.docker.com/get-docker/)
+Then, you can run PeopleMath by `cd`ing into the project's `docker/dev` folder and running `docker-compose up`. You should then be able to access PeopleMath on `localhost:4200`.
 
-#### Install Docker Compose
-
-[Install docker-compose](https://docs.docker.com/compose/install/)
-
-#### Run Docker
-
-Run project
-```
-$ cd /project/root/folder
-$ cd /docker/dev
-$ docker-compose up
-```
-
-Project should be available via the link http://localhost:4200
-
-Stop project
-```
-$ docker-compose down
-```
-
+To stop the project, run `docker-compose down`.
 
 ## Deployment to App Engine
 
-To deploy the app to Google App Engine:
+The primary supported way of running PeopleMath in a staging or production configuration is on [Google App Engine](https://cloud.google.com/appengine/). To deploy the app to App Engine:
 
 * Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go/quickstart)
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
