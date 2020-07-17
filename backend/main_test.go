@@ -20,8 +20,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"peoplemath/controllers"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
+	"peoplemath/server"
+	"peoplemath/storage"
 	"strings"
 	"testing"
 )
@@ -77,8 +80,10 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *mod
 }
 
 func TestPostPeriod(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	store := in_memory_storage.MakeInMemStore()
+	storage.SetStorage(store)
+	controllers.InitControllers()
+	handler := server.MakeHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -102,8 +107,10 @@ func TestPostPeriod(t *testing.T) {
 }
 
 func TestInvalidCommitmentType(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	store := in_memory_storage.MakeInMemStore()
+	storage.SetStorage(store)
+	controllers.InitControllers()
+	handler := server.MakeHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -124,8 +131,10 @@ func TestInvalidCommitmentType(t *testing.T) {
 }
 
 func TestMissingCommitmentType(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	store := in_memory_storage.MakeInMemStore()
+	storage.SetStorage(store)
+	controllers.InitControllers()
+	handler := server.MakeHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -141,8 +150,10 @@ func TestMissingCommitmentType(t *testing.T) {
 }
 
 func TestImprove(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	store := in_memory_storage.MakeInMemStore()
+	storage.SetStorage(store)
+	controllers.InitControllers()
+	handler := server.MakeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
 	w := httptest.NewRecorder()

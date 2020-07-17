@@ -89,11 +89,6 @@ type Person struct {
 	Availability float64 `json:"availability"`
 }
 
-// ObjectUpdateResponse is returned to the browser after an insert or update (e.g. for concurrency control)
-type ObjectUpdateResponse struct {
-	LastUpdateUUID string `json:"lastUpdateUUID"`
-}
-
 // Settings holds stored configuration options
 type Settings struct {
 	ImproveURL string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility

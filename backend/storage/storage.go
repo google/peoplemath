@@ -19,6 +19,14 @@ import (
 	"peoplemath/models"
 )
 
+const (
+	_ = iota
+	InMemoryStorageType
+	GoogleCloudDatastoreType
+)
+
+var storage StorageService
+
 // StorageService to represent the persistent store
 type StorageService interface {
 	GetAllTeams(ctx context.Context) ([]models.Team, error)
@@ -31,4 +39,12 @@ type StorageService interface {
 	UpdatePeriod(ctx context.Context, teamID string, period models.Period) error
 	GetSettings(ctx context.Context) (models.Settings, error)
 	Close() error
+}
+
+func GetStorage() StorageService {
+	return storage
+}
+
+func SetStorage(s StorageService) {
+	storage = s
 }
