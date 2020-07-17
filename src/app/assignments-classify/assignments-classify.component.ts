@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Period } from '../period';
-import { Objective, objectiveResourcesAllocated, totalResourcesAllocated } from '../objective';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutablePeriod } from '../period';
+import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import { RenameClassDialog, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
 
@@ -28,10 +28,12 @@ export enum AggregateBy {
 @Component({
   selector: 'app-assignments-classify',
   templateUrl: './assignments-classify.component.html',
-  styleUrls: ['./assignments-classify.component.css']
+  styleUrls: ['./assignments-classify.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentsClassifyComponent implements OnInit {
-  @Input() period?: Period;
+  @Input() period?: ImmutablePeriod;
   @Input() aggregateBy?: AggregateBy;
   @Input() groupType?: string;
   @Input() title?: string;
@@ -45,8 +47,8 @@ export class AssignmentsClassifyComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  objectivesByGroup(): Array<[string, Objective[]]> {
-    let obsByGroup = new Map<string, Objective[]>();
+  objectivesByGroup(): Array<[string, ImmutableObjective[]]> {
+    let obsByGroup = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         let mgs = o.groups.filter(g => g.groupType == this.groupType);
@@ -61,7 +63,7 @@ export class AssignmentsClassifyComponent implements OnInit {
       });
     });
     for (let [_g, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     let result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
@@ -72,8 +74,8 @@ export class AssignmentsClassifyComponent implements OnInit {
     return result;
   }
 
-  objectivesByTag(): Array<[string, Objective[]]> {
-    let obsByTag = new Map<string, Objective[]>();
+  objectivesByTag(): Array<[string, ImmutableObjective[]]> {
+    let obsByTag = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.tags.forEach(t => {
@@ -86,14 +88,14 @@ export class AssignmentsClassifyComponent implements OnInit {
       });
     });
     for (let [_g, obs] of obsByTag) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     let result = Array.from(obsByTag.entries());
     result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
     return result;
   }
 
-  objectivesByClass(): Array<[string, Objective[]]> {
+  objectivesByClass(): Array<[string, ImmutableObjective[]]> {
     switch (this.aggregateBy) {
       case AggregateBy.Group:
         return this.objectivesByGroup();
@@ -104,15 +106,15 @@ export class AssignmentsClassifyComponent implements OnInit {
     return [];
   }
 
-  classTrackBy(_index: number, classobj: [string, Objective[]]): string {
+  classTrackBy(_index: number, classobj: [string, ImmutableObjective[]]): string {
     return classobj[0];
   }
 
-  assignedResources(objective: Objective): number {
-    return objectiveResourcesAllocated(objective);
+  assignedResources(objective: ImmutableObjective): number {
+    return objective.resourcesAllocated();
   }
 
-  totalAssignedResources(objectives: Objective[]): number {
+  totalAssignedResources(objectives: readonly ImmutableObjective[]): number {
     return totalResourcesAllocated(objectives);
   }
 

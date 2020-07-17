@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Bucket, bucketResourcesAllocated } from '../bucket';
-import { Period, periodResourcesAllocated } from '../period';
-import { Team } from '../team';
+import { Bucket, ImmutableBucket } from '../bucket';
+import { Period, ImmutablePeriod } from '../period';
+import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,9 +25,9 @@ import { EditBucketDialogComponent, EditBucketDialogData } from '../edit-bucket-
 import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
 import { catchError, debounceTime } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
-import { Person } from '../person';
-import { CommitmentType, Objective } from '../objective';
-import { Assignment } from '../assignment';
+import { ImmutablePerson } from '../person';
+import { CommitmentType, ImmutableObjective } from '../objective';
+import { Assignment, ImmutableAssignment } from '../assignment';
 import { AggregateBy } from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
 
@@ -35,26 +35,28 @@ import { ThemePalette } from '@angular/material/core';
   selector: 'app-period',
   templateUrl: './period.component.html',
   styleUrls: ['./period.component.css'],
+  // Requires manual change detection to be called whenever we change a member without a DOM event
+  // This is ugly but it seems to make a HUGE performance difference
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeriodComponent implements OnInit {
-  team?: Team;
-  period?: Period;
+  team?: ImmutableTeam;
+  period?: ImmutablePeriod;
   isEditingEnabled: boolean = false;
   showOrderButtons: boolean = false;
-  eventsRequiringSave = new Subject<any>();
+  readonly eventsRequiringSave = new Subject<any>();
   // To enable access to this enum from the template
-  AggregateBy = AggregateBy;
+  readonly AggregateBy = AggregateBy;
  
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private changeDet: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
-    this.isEditingEnabled = false;
-    this.showOrderButtons = false;
     this.route.paramMap.subscribe(m => {
       const teamId = m.get('team');
       const periodId = m.get('period');
@@ -68,15 +70,24 @@ export class PeriodComponent implements OnInit {
   enableEditing(): void {
     this.isEditingEnabled = true;
     this.showOrderButtons = false;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   disableEditing(): void {
     this.isEditingEnabled = false;
     this.showOrderButtons = false;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   toggleReordering(): void {
     this.showOrderButtons = !this.showOrderButtons;
+    // Shouldn't be strictly necessary, as these events should always come from the DOM,
+    // but to prevent future bugs...
+    this.changeDet.detectChanges();
   }
 
   reorderButtonColour(): ThemePalette {
@@ -93,7 +104,7 @@ export class PeriodComponent implements OnInit {
   }
 
   totalAllocated(): number {
-    return periodResourcesAllocated(this.period!);
+    return this.period!.resourcesAllocated();
   }
 
   /**
@@ -120,7 +131,9 @@ export class PeriodComponent implements OnInit {
             (sum, current) => sum + current, 0);
   }
 
-  sumAssignmentValByPerson(objPred: (o: Objective) => boolean, valFunc: (a: Assignment) => number): Map<string, number> {
+  sumAssignmentValByPerson(
+    objPred: (o: ImmutableObjective) => boolean,
+    valFunc: (a: ImmutableAssignment) => number): ReadonlyMap<string, number> {
     let result: Map<string, number> = new Map();
     this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
@@ -138,24 +151,24 @@ export class PeriodComponent implements OnInit {
     return result;
   }
 
-  peopleAllocations(): Map<string, number> {
+  peopleAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(o => true, (a: Assignment) => a.commitment);
   }
 
-  peopleCommittedAllocations(): Map<string, number> {
+  peopleCommittedAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
-      (o: Objective) => o.commitmentType == CommitmentType.Committed,
-      (a: Assignment) => a.commitment);
+      (o: ImmutableObjective) => o.commitmentType == CommitmentType.Committed,
+      (a: ImmutableAssignment) => a.commitment);
   }
 
-  peopleAssignmentCounts(): Map<string, number> {
+  peopleAssignmentCounts(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(o => true, a => 1);
   }
 
   /**
    * Amount of unallocated time for each person
    */
-  unallocatedTime(): Map<string,number> {
+  unallocatedTime(): ReadonlyMap<string,number> {
     let result = new Map();
     this.period!.people.forEach(p => result.set(p.id, p.availability));
     this.period!.buckets.forEach(b => {
@@ -200,7 +213,7 @@ export class PeriodComponent implements OnInit {
     return (this.committedAllocationRatio() * 100) > this.period!.maxCommittedPercentage;
   }
 
-  otherBuckets(bucket: Bucket): Bucket[] {
+  otherBuckets(bucket: ImmutableBucket): ImmutableBucket[] {
     return this.period!.buckets.filter(b => b !== bucket);
   }
 
@@ -230,49 +243,37 @@ export class PeriodComponent implements OnInit {
   }
 
   renameGroup(groupType: string, oldName: string, newName: string): void {
-    let changed = false;
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.groups.forEach(g => {
-          if (g.groupType == groupType && g.groupName == oldName) {
-            g.groupName = newName;
-            changed = true;
-          }
-        });
-      });
-    });
-    if (changed) {
+    const newPeriod = this.period!.withGroupRenamed(groupType, oldName, newName);
+    if (newPeriod !== this.period) {
+      this.setPeriod(newPeriod);
       this.save();
     }
   }
 
   renameTag(oldName: string, newName: string) {
-    let changed = false;
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.tags.forEach(t => {
-          if (t.name == oldName) {
-            t.name = newName;
-            changed = true;
-          }
-        });
-      });
-    });
-    if (changed) {
+    const newPeriod = this.period!.withTagRenamed(oldName, newName);
+    if (newPeriod !== this.period) {
+      this.setPeriod(newPeriod);
       this.save();
     }
   }
 
   loadDataFor(teamId: string, periodId: string): void {
-    this.team = undefined;
-    this.period = undefined;
+    this.setTeam(undefined);
+    this.setPeriod(undefined);
     this.storage.getTeam(teamId).pipe(
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
         return of(new Team('', ''));
       })
-    ).subscribe(team => this.team = team);
+    ).subscribe((team?: Team) => {
+      if (team) {
+        this.setTeam(new ImmutableTeam(team));
+      } else {
+        this.setTeam(undefined);
+      }
+    });
 
     this.storage.getPeriod(teamId, periodId).pipe(
       catchError(error => {
@@ -291,7 +292,13 @@ export class PeriodComponent implements OnInit {
           lastUpdateUUID: '',
         });
       })
-    ).subscribe(period => this.period = period);
+    ).subscribe((period?: Period) => {
+      if (period) {
+        this.setPeriod(ImmutablePeriod.fromPeriod(period));
+      } else {
+        this.setPeriod(undefined);
+      }
+    });
   }
 
   isLoaded(): boolean {
@@ -303,15 +310,18 @@ export class PeriodComponent implements OnInit {
     this.eventsRequiringSave.next();
   }
 
-  deletePerson(person: Person): void {
-    // Deleting a person requires ensuring their assignments are deleted as well
-    const index = this.period!.people.findIndex(p => p === person);
-    this.period!.people.splice(index, 1);
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.assignments = o.assignments.filter(a => a.personId != person.id);
-      });
-    });
+  onNewPerson(person: ImmutablePerson): void {
+    this.setPeriod(this.period!.withNewPerson(person));
+    this.save();
+  }
+
+  onChangedPerson(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): void {
+    this.setPeriod(this.period!.withPersonChanged(oldPerson, newPerson));
+    this.save();
+  }
+
+  deletePerson(person: ImmutablePerson): void {
+    this.setPeriod(this.period!.withPersonDeleted(person));
     this.save();
   }
 
@@ -320,7 +330,7 @@ export class PeriodComponent implements OnInit {
       console.error('performSave() called with team=' + this.team + ', period=' + this.period);
       return;
     }
-    this.storage.updatePeriod(this.team.id, this.period).pipe(
+    this.storage.updatePeriod(this.team.id, this.period.toOriginal()).pipe(
       catchError(error => {
         if (error.status == 409) {
           this.snackBar.open('This period was modified in another session. Try reloading the page and reapplying your edit.', 'Dismiss');
@@ -333,7 +343,7 @@ export class PeriodComponent implements OnInit {
     ).subscribe(updateResponse => {
       if (updateResponse) {
         this.snackBar.open('Saved', '', {duration: 2000});
-        this.period!.lastUpdateUUID = updateResponse.lastUpdateUUID;
+        this.setPeriod(this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID));
       }
     });
   }
@@ -343,12 +353,13 @@ export class PeriodComponent implements OnInit {
       return;
     }
     const dialogData: EditPeriodDialogData = {
-      period: this.period!, title: 'Edit Period "' + this.period!.id + '"',
+      period: this.period!.toOriginal(), title: 'Edit Period "' + this.period!.id + '"',
       okAction: 'OK', allowEditID: false,
     };
     const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
+        this.setPeriod(ImmutablePeriod.fromPeriod(dialogData.period));
         this.save();
       }
     });
@@ -362,30 +373,37 @@ export class PeriodComponent implements OnInit {
       bucket: new Bucket('', 0, []),
       okAction: 'Add', allowCancel: true, title: 'Add bucket'};
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(bucket => {
+    dialogRef.afterClosed().subscribe((bucket?: Bucket) => {
       if (!bucket) {
         return;
       }
-      this.period!.buckets.push(bucket);
+      this.setPeriod(this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket)));
       this.save();
     });
   }
 
-  moveBucketUpOne(bucket: Bucket): void {
-    let index = this.period!.buckets.findIndex(b => b === bucket);
-    if (index > 0) {
-      this.period!.buckets[index] = this.period!.buckets[index - 1];
-      this.period!.buckets[index - 1] = bucket;
-    }
+  moveBucketUpOne(bucket: ImmutableBucket): void {
+    this.setPeriod(this.period!.withBucketMovedUpOne(bucket));
     this.save();
   }
 
-  moveBucketDownOne(bucket: Bucket): void {
-    let index = this.period!.buckets.findIndex(b => b === bucket);
-    if (index >= 0 && index < this.period!.buckets.length - 1) {
-      this.period!.buckets[index] = this.period!.buckets[index + 1];
-      this.period!.buckets[index + 1] = bucket;
-    }
+  moveBucketDownOne(bucket: ImmutableBucket): void {
+    this.setPeriod(this.period!.withBucketMovedDownOne(bucket));
     this.save();
+  }
+
+  onBucketChanged(from: ImmutableBucket, to: ImmutableBucket): void {
+    this.setPeriod(this.period!.withBucketChanged(from, to));
+    this.save();
+  }
+
+  setPeriod(newPeriod?: ImmutablePeriod) {
+    this.period = newPeriod;
+    this.changeDet.detectChanges();
+  }
+
+  setTeam(newTeam?: ImmutableTeam) {
+    this.team = newTeam;
+    this.changeDet.detectChanges();
   }
 }

@@ -18,8 +18,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BucketSummaryComponent } from './bucket-summary.component';
 import { MaterialModule } from '../material/material.module';
-import { Bucket } from '../bucket';
-import { Objective } from '../objective';
+import { Bucket, ImmutableBucket } from '../bucket';
+import { Objective, ImmutableObjective } from '../objective';
 import { Assignment } from '../assignment';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
@@ -57,7 +57,7 @@ describe('BucketSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BucketSummaryComponent);
     component = fixture.componentInstance;
-    component.bucket = BUCKET;
+    component.bucket = ImmutableBucket.fromBucket(BUCKET);
     component.bucketAllocationFraction = 50;
     component.unit = 'things';
     fixture.detectChanges();
@@ -68,6 +68,7 @@ describe('BucketSummaryComponent', () => {
   });
 
   it('should classify objective with no commitment type as aspirational', () => {
-    expect(component.aspirationalObjectives()).toEqual([NO_COMMITMENTTYPE_OBJECTIVE]);
+    const actual = component.aspirationalObjectives().map(o => o.toOriginal());
+    expect(actual).toEqual([NO_COMMITMENTTYPE_OBJECTIVE]);
   });
 });

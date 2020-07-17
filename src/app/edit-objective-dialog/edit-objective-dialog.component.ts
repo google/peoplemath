@@ -14,8 +14,8 @@
 
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Objective, CommitmentType, ObjectiveGroup, ObjectiveTag } from '../objective';
-import { Bucket } from '../bucket';
+import { CommitmentType, ObjectiveGroup, ObjectiveTag, ImmutableObjective } from '../objective';
+import { ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
 
 export interface EditedObjective {
@@ -30,16 +30,16 @@ export interface EditedObjective {
 
 export interface EditObjectiveDialogData {
   objective: EditedObjective;
-  original?: Objective;
+  original?: ImmutableObjective;
   title: string;
   okAction: string;
   unit: string;
-  otherBuckets: Bucket[];
-  onMoveBucket?: EventEmitter<[Objective, Objective, Bucket]>;
-  onDelete?: EventEmitter<Objective>;
+  otherBuckets: readonly ImmutableBucket[];
+  onMoveBucket?: EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>;
+  onDelete?: EventEmitter<ImmutableObjective>;
 }
 
-export function makeEditedObjective(objective: Objective): EditedObjective {
+export function makeEditedObjective(objective: ImmutableObjective): EditedObjective {
   let groupsStr = objective.groups.map(g => g.groupType + ":" + g.groupName).join(",");
   let tagsStr = objective.tags.map(t => t.name).join(",");
 
@@ -50,7 +50,7 @@ export function makeEditedObjective(objective: Objective): EditedObjective {
     groups: groupsStr,
     tags: tagsStr,
     notes: objective.notes,
-    assignments: objective.assignments,
+    assignments: objective.assignments.map(a => a.toOriginal()),
   };
 }
 
@@ -82,8 +82,8 @@ export function makeTags(tagsStr: string): ObjectiveTag[] {
   });
 }
 
-function makeObjective(edited: EditedObjective): Objective {
-  return {
+function makeObjective(edited: EditedObjective): ImmutableObjective {
+  return ImmutableObjective.fromObjective({
     name: edited.name,
     resourceEstimate: edited.resourceEstimate,
     commitmentType: edited.commitmentType,
@@ -91,7 +91,7 @@ function makeObjective(edited: EditedObjective): Objective {
     tags: makeTags(edited.tags),
     notes: edited.notes,
     assignments: edited.assignments,
-  };
+  });
 }
 
 @Component({
@@ -122,7 +122,7 @@ export class EditObjectiveDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onMove(newBucket: Bucket): void {
+  onMove(newBucket: ImmutableBucket): void {
     let newObjective = makeObjective(this.data.objective);
     this.data.onMoveBucket!.emit([this.data.original!, newObjective, newBucket]);
     this.dialogRef.close();

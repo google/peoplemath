@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Period } from '../period';
+import { Period, ImmutablePeriod } from '../period';
 
 export enum CreateMethod {
   Blank = 'blank',
@@ -24,7 +24,7 @@ export enum CreateMethod {
 export interface AddPeriodDialogData {
   period: Period;
   createMethod: CreateMethod;
-  existingPeriods: Period[];
+  existingPeriods: readonly ImmutablePeriod[];
   copyFromPeriodID: string;
   copyUnit: boolean;
   copyPeople: boolean;

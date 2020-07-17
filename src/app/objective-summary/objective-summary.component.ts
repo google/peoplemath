@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Objective, objectiveResourcesAllocated, CommitmentType } from '../objective';
-import { SecondaryUnit } from '../period';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommitmentType, ImmutableObjective } from '../objective';
+import { ImmutableSecondaryUnit } from '../period';
 
 @Component({
   selector: 'app-objective-summary',
   templateUrl: './objective-summary.component.html',
-  styleUrls: ['./objective-summary.component.css']
+  styleUrls: ['./objective-summary.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectiveSummaryComponent implements OnInit {
-  @Input() objective?: Objective;
+  @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
-  @Input() secondaryUnits?: SecondaryUnit[];
+  @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
   constructor() { }
 
@@ -34,7 +36,7 @@ export class ObjectiveSummaryComponent implements OnInit {
   }
 
   allocatedResources(): number {
-    return objectiveResourcesAllocated(this.objective!);
+    return this.objective!.resourcesAllocated();
   }
 
   allocationSummary(): string {

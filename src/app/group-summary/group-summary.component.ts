@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Period } from '../period';
-import { Bucket } from '../bucket';
-import { Objective, totalResourcesAllocated, CommitmentType, objectiveResourcesAllocated } from '../objective';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutablePeriod } from '../period';
+import { ImmutableBucket } from '../bucket';
+import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 
 @Component({
   selector: 'app-group-summary',
   templateUrl: './group-summary.component.html',
-  styleUrls: ['./group-summary.component.css']
+  styleUrls: ['./group-summary.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupSummaryComponent implements OnInit {
-  @Input() period?: Period;
+  @Input() period?: ImmutablePeriod;
   @Input() groupType?: string;
   showObjectives: boolean = false;
   showByBucket: boolean = true;
@@ -35,11 +37,11 @@ export class GroupSummaryComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  bucketObjectivesByGroup(bucket: Bucket): Array<[string, Objective[]]> {
+  bucketObjectivesByGroup(bucket: ImmutableBucket): Array<[string, ImmutableObjective[]]> {
     // We order groups by the order the first item from each appears within the bucket
     let groupOrder: string[] = [];
-    let obsByGroup = new Map<string, Objective[]>();
-    let noGroup: Objective[] = [];
+    let obsByGroup = new Map<string, ImmutableObjective[]>();
+    let noGroup: ImmutableObjective[] = [];
     bucket.objectives.forEach(o => {
       let gs = o.groups.filter(g => g.groupType == this.groupType);
       if (gs.length > 0) {
@@ -58,16 +60,16 @@ export class GroupSummaryComponent implements OnInit {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    let result: Array<[string, Objective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
+    let result: Array<[string, ImmutableObjective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
     return result;
   }
 
-  allObjectivesByGroup(): Array<[string, Objective[]]> {
-    let obsByGroup = new Map<string, Objective[]>();
-    let noGroup: Objective[] = [];
+  allObjectivesByGroup(): Array<[string, ImmutableObjective[]]> {
+    let obsByGroup = new Map<string, ImmutableObjective[]>();
+    let noGroup: ImmutableObjective[] = [];
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         let gs = o.groups.filter(g => g.groupType == this.groupType);
@@ -84,11 +86,11 @@ export class GroupSummaryComponent implements OnInit {
 
     // Sort objectives in each group by descending allocation
     for (let [_, obs] of obsByGroup) {
-      obs.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
-    noGroup.sort((o1, o2) => objectiveResourcesAllocated(o2) - objectiveResourcesAllocated(o1));
+    noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
-    let result: Array<[string, Objective[]]> = Array.from(obsByGroup.entries());
+    let result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) =>
       (totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1)) || g1.localeCompare(g2));
     if (noGroup.length > 0) {
@@ -98,8 +100,8 @@ export class GroupSummaryComponent implements OnInit {
     return result;
   }
 
-  summaryObjective(groupName: string, objectives: Objective[]): Objective {
-    return {
+  summaryObjective(groupName: string, objectives: ImmutableObjective[]): ImmutableObjective {
+    return ImmutableObjective.fromObjective({
       name: groupName,
       commitmentType: undefined,
       resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
@@ -107,10 +109,10 @@ export class GroupSummaryComponent implements OnInit {
       notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,
       groups: [],
       tags: [],
-    };
+    });
   }
 
-  totalResourcesAllocated(objectives: Objective[]) {
+  totalResourcesAllocated(objectives: readonly ImmutableObjective[]) {
     return totalResourcesAllocated(objectives);
   }
 }

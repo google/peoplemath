@@ -21,9 +21,32 @@ export class Person {
     ) {}
 }
 
-export function personDisplayNameWithUsername(person: Person): string {
-    if (person.id == person.displayName || !person.displayName) {
-        return person.id;
+export class ImmutablePerson {
+    private readonly _id: string;
+    private readonly _displayName: string;
+    private readonly _location: string;
+    private readonly _availability: number;
+
+    get id(): string { return this._id }
+    get displayName(): string { return this._displayName }
+    get location(): string { return this._location }
+    get availability(): number { return this._availability }
+
+    constructor(person: Person) {
+        this._id = person.id;
+        this._displayName = person.displayName;
+        this._location = person.location;
+        this._availability = person.availability;
     }
-    return person.displayName + " (" + person.id + ")";
+
+    toOriginal(): Person {
+        return new Person(this.id, this.displayName, this.location, this.availability);
+    }
+
+    displayNameWithUsername(): string {
+        if (this.id == this.displayName || !this.displayName) {
+            return this.id;
+        }
+        return this.displayName + " (" + this.id + ")";
+    }
 }

@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
-import { Bucket } from '../bucket';
+import { Bucket, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { MaterialModule } from '../material/material.module';
 
@@ -40,7 +40,7 @@ describe('BucketComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BucketComponent);
     component = fixture.componentInstance;
-    component.bucket = new Bucket('test bucket', 100, []);
+    component.bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, []));
     fixture.detectChanges();
   });
 

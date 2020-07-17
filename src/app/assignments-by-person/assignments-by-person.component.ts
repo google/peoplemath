@@ -12,26 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Period } from '../period';
-import { Objective, CommitmentType } from '../objective';
-import { Assignment } from '../assignment';
-import { Person, personDisplayNameWithUsername } from '../person';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutablePeriod } from '../period';
+import { ImmutableObjective } from '../objective';
+import { ImmutableAssignment } from '../assignment';
+import { ImmutablePerson } from '../person';
 
 @Component({
   selector: 'app-assignments-by-person',
   templateUrl: './assignments-by-person.component.html',
-  styleUrls: ['./assignments-by-person.component.css']
+  styleUrls: ['./assignments-by-person.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentsByPersonComponent implements OnInit {
-  @Input() period?: Period;
+  @Input() period?: ImmutablePeriod;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  hasAssignments(person: Person): boolean {
+  hasAssignments(person: ImmutablePerson): boolean {
     for (let bucket of this.period!.buckets) {
       for (let objective of bucket.objectives) {
         for (let assignment of objective.assignments) {
@@ -44,13 +46,13 @@ export class AssignmentsByPersonComponent implements OnInit {
     return false;
   }
 
-  assignmentsFor(person: Person): ObjectiveAssignment[] {
+  assignmentsFor(person: ImmutablePerson): ObjectiveAssignment[] {
     const result: ObjectiveAssignment[] = [];
     this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
         objective.assignments.filter(assignment => assignment.personId === person.id)
                              .forEach(assignment => {
-          result.push(new ObjectiveAssignment(objective, assignment));
+          result.push({objective: objective, assignment: assignment});
         });
       });
     });
@@ -59,11 +61,11 @@ export class AssignmentsByPersonComponent implements OnInit {
     return result;
   }
 
-  personDisplayNameWithUsername(person: Person): string {
-    return personDisplayNameWithUsername(person);
+  personDisplayNameWithUsername(person: ImmutablePerson): string {
+    return person.displayNameWithUsername();
   }
 
-  personTrackBy(_index: number, person: Person): string {
+  personTrackBy(_index: number, person: ImmutablePerson): string {
     return person.id;
   }
 
@@ -72,9 +74,7 @@ export class AssignmentsByPersonComponent implements OnInit {
   }
 }
 
-class ObjectiveAssignment {
-  constructor(
-    public objective: Objective,
-    public assignment: Assignment,
-  ) {}
+interface ObjectiveAssignment {
+  objective: ImmutableObjective,
+  assignment: ImmutableAssignment,
 }

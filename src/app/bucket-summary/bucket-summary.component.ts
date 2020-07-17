@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import { Bucket } from '../bucket';
-import { Objective, CommitmentType, objectiveResourcesAllocated } from '../objective';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ImmutableBucket } from '../bucket';
+import { CommitmentType, ImmutableObjective } from '../objective';
 
 @Component({
   selector: 'app-bucket-summary',
   templateUrl: './bucket-summary.component.html',
-  styleUrls: ['./bucket-summary.component.css']
+  styleUrls: ['./bucket-summary.component.css'],
+  // Requires all inputs to be immutable
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BucketSummaryComponent implements OnInit {
-  @Input() bucket?: Bucket;
+  @Input() bucket?: ImmutableBucket;
   @Input() bucketAllocationFraction?: number;
   @Input() unit?: string;
 
@@ -37,27 +39,27 @@ export class BucketSummaryComponent implements OnInit {
     return this.committedObjectives().length > 0;
   }
 
-  committedObjectives(): Objective[] {
+  committedObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
       o => o.commitmentType == CommitmentType.Committed &&
-      objectiveResourcesAllocated(o) > 0);
+      o.resourcesAllocated() > 0);
   }
 
   hasAspirationalObjectives(): boolean {
     return this.aspirationalObjectives().length > 0;
   }
 
-  aspirationalObjectives(): Objective[] {
+  aspirationalObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
       o => o.commitmentType != CommitmentType.Committed &&
-      objectiveResourcesAllocated(o) > 0);
+      o.resourcesAllocated() > 0);
   }
 
   hasRejectedObjectives(): boolean {
     return this.rejectedObjectives().length > 0;
   }
 
-  rejectedObjectives(): Objective[] {
-    return this.bucket!.objectives.filter(o => objectiveResourcesAllocated(o) <= 0);
+  rejectedObjectives(): ImmutableObjective[] {
+    return this.bucket!.objectives.filter(o => o.resourcesAllocated() <= 0);
   }
 }
