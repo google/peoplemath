@@ -18,9 +18,13 @@ import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
+import {AuthComponent} from './auth/auth.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/teams', pathMatch: 'full' },
+  // { path: '', redirectTo: '/teams', pathMatch: 'full' },
+  // For testing the auth component
+  { path: '', component: AuthComponent},
+
   { path: 'teams', component: TeamsComponent },
   { path: 'team/:team', component: TeamPeriodsComponent },
   { path: 'team/:team/period/:period', component: PeriodComponent },

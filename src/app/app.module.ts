@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { AngularFireModule } from '@angular/fire'; // TODO is this wrong?
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
@@ -48,6 +49,8 @@ import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
 import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
 import { PillComponent } from './pill/pill.component';
+import { AuthComponent } from './auth/auth.component';
+import {environment} from '../environments/environment';
 
 
 @NgModule({
@@ -77,6 +80,7 @@ import { PillComponent } from './pill/pill.component';
     ResourceQuantityComponent,
     RenameClassDialog,
     PillComponent,
+    AuthComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,10 +92,12 @@ import { PillComponent } from './pill/pill.component';
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [
     StorageService,
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

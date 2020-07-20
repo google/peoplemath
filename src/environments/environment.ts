@@ -18,5 +18,16 @@
 // The list of which env maps to which file can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  // TODO: This config needs to be moved to a different file if firebase is used
+  firebase: {
+    apiKey: 'AIzaSyCQUWjKP75Q168Y9utysPPEMhd3p0KtOXc',
+    // authDomain: 'localhost',
+    authDomain: 'samicolon-peoplemath-test.firebaseapp.com',
+    projectId: 'samicolon-peoplemath-test',
+    appId: '1:192809429113:web:977f2c0ccad3745e634ca8',
+    /*messagingSenderId: '192809429113',
+    storageBucket: 'samicolon-peoplemath-test.appspot.com',
+    databaseURL: 'https://samicolon-peoplemath-test.firebaseio.com'*/
+  }
 };
