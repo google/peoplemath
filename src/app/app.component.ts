@@ -14,6 +14,8 @@
 
 import { Component } from '@angular/core';
 import {AuthService} from './services/auth.service';
+import {NotificationService} from './services/notification.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +23,15 @@ import {AuthService} from './services/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(public auth: AuthService) { }
+  constructor(
+    public auth: AuthService,
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
+    ) {
+    this.notificationService.notification$.subscribe(message => {
+      this.snackBar.open(message);
+    });
+  }
   title = 'PeopleMath';
 }
 

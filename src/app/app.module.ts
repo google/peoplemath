@@ -51,6 +51,7 @@ import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.com
 import { PillComponent } from './pill/pill.component';
 import { LoginComponent } from './login/login.component';
 import {environment} from '../environments/environment';
+import {NotificationService} from './services/notification.service';
 
 
 @NgModule({
@@ -96,6 +97,7 @@ import {environment} from '../environments/environment';
   ],
   providers: [
     StorageService,
+    NotificationService
   ],
   bootstrap: [AppComponent]
 })

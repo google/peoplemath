@@ -5,8 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { User } from './user.model';
 import * as firebase from 'firebase';
-import {switchMap} from 'rxjs/operators';
-import {of} from 'rxjs/internal/observable/of';
+import { NotificationService} from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,8 @@ export class AuthService {
 
   constructor(
     private firebaseAuth: AngularFireAuth,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     // @ts-ignore
     this.user$ = this.firebaseAuth.authState;
@@ -35,9 +35,10 @@ export class AuthService {
     );*/
   }
 
-  async googleSignin() {
+  googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider).then(result => {
+      this.notificationService.notification$.next('Sign-in successful.');
       this.router.navigate(['/']);
       return this.updateUserData(result.user);
     }).catch(error => {
@@ -46,9 +47,15 @@ export class AuthService {
     });
   }
 
-  async signOut() {
-    await firebase.auth().signOut();
-    return this.router.navigate(['/login']);
+  signOut() {
+    this.notificationService.notification$.next('Attempting to log out.');
+    firebase.auth().signOut().then(result => {
+      this.notificationService.notification$.next('Logout successful.');
+      this.router.navigate(['/login']);
+    }).catch(error => {
+      console.log(error);
+      this.notificationService.notification$.next('Logout unsuccessful, please try again.');
+    });
   }
 
   private updateUserData(user: firebase.User | null) {
