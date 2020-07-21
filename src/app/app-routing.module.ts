@@ -18,17 +18,16 @@ import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
-import {AuthComponent} from './auth/auth.component';
+import {LoginComponent} from './login/login.component';
+import {AuthGuard} from './auth.guard';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/teams', pathMatch: 'full' },
-  // For testing the auth component
-  { path: '', component: AuthComponent},
-
-  { path: 'teams', component: TeamsComponent },
-  { path: 'team/:team', component: TeamPeriodsComponent },
-  { path: 'team/:team/period/:period', component: PeriodComponent },
-  { path: 'team/:team/periodsummary/:period', component: PeriodSummaryComponent },
+  { path: '', redirectTo: '/teams', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent},
+  { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard]},
+  { path: 'team/:team', component: TeamPeriodsComponent, canActivate: [AuthGuard]},
+  { path: 'team/:team/period/:period', component: PeriodComponent, canActivate: [AuthGuard]},
+  { path: 'team/:team/periodsummary/:period', component: PeriodSummaryComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

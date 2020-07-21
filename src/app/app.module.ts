@@ -49,7 +49,7 @@ import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
 import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
 import { PillComponent } from './pill/pill.component';
-import { AuthComponent } from './auth/auth.component';
+import { LoginComponent } from './login/login.component';
 import {environment} from '../environments/environment';
 
 
@@ -80,7 +80,7 @@ import {environment} from '../environments/environment';
     ResourceQuantityComponent,
     RenameClassDialog,
     PillComponent,
-    AuthComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
