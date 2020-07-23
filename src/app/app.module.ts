@@ -37,7 +37,7 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
 import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
 import { ObjectiveSummaryComponent } from './objective-summary/objective-summary.component';
@@ -52,6 +52,7 @@ import { PillComponent } from './pill/pill.component';
 import { LoginComponent } from './login/login.component';
 import {environment} from '../environments/environment';
 import {NotificationService} from './services/notification.service';
+import {AuthInterceptor} from './services/auth.interceptor';
 
 
 @NgModule({
@@ -97,7 +98,12 @@ import {NotificationService} from './services/notification.service';
   ],
   providers: [
     StorageService,
-    NotificationService
+    NotificationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

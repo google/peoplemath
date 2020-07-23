@@ -27,7 +27,7 @@ export class AppComponent {
     public auth: AuthService,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
-    ) {
+  ) {
     this.notificationService.notification$.subscribe(message => {
       this.snackBar.open(message);
     });
