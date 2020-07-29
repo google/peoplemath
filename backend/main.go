@@ -19,10 +19,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -43,11 +43,19 @@ type Server struct {
 }
 
 func (s *Server) makeHandler() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/api/team/", s.handleTeam)
-	mux.HandleFunc("/api/period/", s.handlePeriod)
-	mux.HandleFunc("/improve", s.handleImprove)
-	return mux
+	r := mux.NewRouter()
+
+	r.HandleFunc("/api/team/{teamID}", s.handleGetTeam).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.handlePostTeam).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/", s.handlePutTeam).Methods(http.MethodPut)
+
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handleGetPeriod).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.handlePostPeriod).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handlePutPeriod).Methods(http.MethodPut)
+
+	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
+
+	return r
 }
 
 func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
@@ -100,25 +108,9 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 	return true
 }
 
-func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
-	pathParts := strings.Split(r.URL.Path, "/")
-	if len(pathParts) != 4 {
-		http.NotFound(w, r)
-		return
-	}
-	teamID := pathParts[3]
-	if r.Method == http.MethodGet {
-		s.handleGetTeam(w, r, teamID)
-	} else if r.Method == http.MethodPost {
-		s.handlePostTeam(w, r)
-	} else if r.Method == http.MethodPut {
-		s.handlePutTeam(w, r)
-	} else {
-		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
-	}
-}
-
-func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID string) {
+func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	if teamID == "" {
@@ -195,26 +187,10 @@ func readTeamFromBody(w http.ResponseWriter, r *http.Request) (models.Team, bool
 	return team, true
 }
 
-func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
-	pathParts := strings.Split(r.URL.Path, "/")
-	if len(pathParts) != 5 {
-		http.NotFound(w, r)
-		return
-	}
-	teamID := pathParts[3]
-	periodID := pathParts[4]
-	if r.Method == http.MethodGet {
-		s.handleGetPeriod(w, r, teamID, periodID)
-	} else if r.Method == http.MethodPost {
-		s.handlePostPeriod(w, r, teamID)
-	} else if r.Method == http.MethodPut {
-		s.handlePutPeriod(w, r, teamID, periodID)
-	} else {
-		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
-	}
-}
-
-func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
+func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	periodID := vars["periodID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	if periodID == "" {
@@ -255,7 +231,9 @@ func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Reques
 	enc.Encode(response)
 }
 
-func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID string) {
+func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
@@ -278,7 +256,10 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 	s.writePeriodUpdateResponse(w, r, period)
 }
 
-func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
+func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	periodID := vars["periodID"]
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
