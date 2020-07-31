@@ -1,60 +1,68 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {auth} from 'firebase/app';
-import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable} from 'rxjs';
-import {User} from './user.model';
+import {User} from '../models/user.model';
 import * as firebase from 'firebase';
 import {NotificationService} from './notification.service';
 import {of} from 'rxjs/internal/observable/of';
+import {firebaseConfig} from '../../environments/firebaseConfig';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Should be null when logged out
-  // When logged in, 'switchmap'(?) to Observable of user's profile in database
-  user$: Observable<User>;
+  user$: Observable<User | null>;
 
   constructor(
-    private firebaseAuth: AngularFireAuth,
     private router: Router,
     private notificationService: NotificationService
   ) {
-    // @ts-ignore
-    this.user$ = this.firebaseAuth.authState;
+    if (environment.requireAuth) {
+      console.log('initialisation:' + firebase.initializeApp(firebaseConfig.firebase).name);
+      firebase.apps.forEach(app => {console.log('FIREBASE APP:\n' + app.name); }); // debug
+      const firebaseUser = firebase.auth().currentUser;
+      if (firebaseUser == null) {
+        this.user$ = of(null);
+      } else {
+        const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
+        this.user$ = of(user);
+      }
+    } else {
+      this.user$ = of(null);
+    }
   }
 
-  googleSignin() {
+  googleSignin(): void {
+    firebase.apps.forEach(app => {console.log('FIREBASE APP:\n' + app.name); }); // debug
     const provider = new auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider).then(result => {
-      this.notificationService.notification$.next('Sign-in successful.');
-      this.router.navigate(['/']);
-      return this.updateUserData(result.user);
+      const user = result.user;
+      if (user == null) {
+        throw new Error('User is null');
+      } else {
+        this.notificationService.notification$.next('Signed in as ' + user.displayName);
+        this.router.navigate(['/']);
+        return this.updateUserData(user);
+      }
     }).catch(error => {
       console.log(error);
       return error;
     });
   }
 
-  private updateUserData(user: firebase.User | null) {
-    if (user !== null) {
-      const userData = {
-        uid: user.uid,
-        displayName: user.displayName
-      };
-      if (this.authenticateUserOnServer()) {
-        this.user$ = of({uid: user.uid});
-      } else {
-        // LOG OUT USER
-      }
-      console.log('User data: ', userData);
-    } else {
-      console.log('user passed was null.');
+  private updateUserData(firebaseUser: firebase.User): void {
+    const user: User = {uid: firebaseUser.uid};
+    if (firebaseUser.displayName != null) {
+      user.displayName = firebaseUser.displayName;
     }
+    this.user$ = of(user);
   }
 
   async getIdToken(): Promise<string | null> {
+    console.log('Getting ID token');
+    firebase.apps.forEach(app => {console.log('FIREBASE APP:\n' + app.name); }); // debug
     const currentUser = await firebase.auth().currentUser;
     if (currentUser != null) {
       return currentUser.getIdToken();
@@ -62,23 +70,12 @@ export class AuthService {
     return null;
   }
 
-  private authenticateUserOnServer() {
-    // Decode token on backend
-    // Check with users on backend
-    // Return whether user is authenticated
-    // Store user on server side?
-    // -> quicker authentication by only confirming uid rather than searching for user?
-  return false;
-  }
-
   signOut() {
-    this.notificationService.notification$.next('Attempting to log out.');
     firebase.auth().signOut().then(result => {
-      this.notificationService.notification$.next('Logout successful.');
+      this.user$ = of(null);
       this.router.navigate(['/login']);
     }).catch(error => {
       console.log('Sign out error: ', error);
-      this.notificationService.notification$.next('Logout unsuccessful, please try again.');
     });
   }
 }

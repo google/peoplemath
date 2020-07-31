@@ -19,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { AngularFireModule } from '@angular/fire'; // TODO is this wrong?
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
@@ -53,6 +54,8 @@ import { LoginComponent } from './login/login.component';
 import {environment} from '../environments/environment';
 import {NotificationService} from './services/notification.service';
 import {AuthInterceptor} from './services/auth.interceptor';
+import {firebaseConfig} from '../environments/firebaseConfig';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -94,7 +97,8 @@ import {AuthInterceptor} from './services/auth.interceptor';
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+    AngularFireAuthModule
   ],
   providers: [
     StorageService,
@@ -103,6 +107,10 @@ import {AuthInterceptor} from './services/auth.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {duration: 2500}
     }
   ],
   bootstrap: [AppComponent]

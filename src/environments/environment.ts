@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019-2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,11 +19,5 @@
 
 export const environment = {
   production: false,
-  // TODO: This config needs to be moved to a different file if firebase is used
-  firebase: {
-    apiKey: 'AIzaSyCQUWjKP75Q168Y9utysPPEMhd3p0KtOXc',
-    authDomain: 'samicolon-peoplemath-test.firebaseapp.com',
-    projectId: 'samicolon-peoplemath-test',
-    appId: '1:192809429113:web:977f2c0ccad3745e634ca8',
-  }
+  requireAuth: true
 };
