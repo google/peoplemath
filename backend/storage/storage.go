@@ -33,7 +33,7 @@ type StorageService interface {
 	Close() error
 
 	// Authentication / authorisation
-	GetUser(uid string) models.User
-	RemoveUser(uid string) error
-	AuthenticateUser(user models.User) (bool, error)
+	//GetUser(uid string) models.User
+	//RemoveUser(uid string) error
+	//AuthenticateUser(user models.User) (bool, error)
 }

@@ -17,13 +17,21 @@ import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from './storage.service';
 import { MaterialModule } from './material/material.module';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import {firebaseConfig} from '../environments/firebaseConfig';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent
       ],
-      imports: [ RouterTestingModule, MaterialModule ],
+      imports: [
+        RouterTestingModule,
+        MaterialModule,
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule
+      ],
       providers: [
         StorageService,
       ],

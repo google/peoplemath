@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (environment.requireAuth) {
-      return observableFrom(this.authService.getIdToken()).pipe(
+      return this.authService.getIdToken().pipe(
       switchMap(token => {
         if (token != null) {
           const cloned = req.clone({
@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
           return next.handle(req);
         }
       })
-    );} else {
+    ); } else {
       return next.handle(req);
     }
   }
