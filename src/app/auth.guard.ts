@@ -9,8 +9,9 @@ import {
 import { Observable } from 'rxjs';
 
 import { AuthService } from './services/auth.service';
-import {map, take, tap} from 'rxjs/operators';
+import {filter, map, skipWhile, take, tap} from 'rxjs/operators';
 import {environment} from '../environments/environment';
+import {User} from './models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (environment.requireAuth) {
-      return this.auth.user$.pipe(
+      return this.auth.angularFireAuth.authState.pipe(
         take(1),
         map(user => !!user),
         tap(loggedIn => {

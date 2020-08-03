@@ -13,25 +13,25 @@ import {AngularFireAuth} from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class AuthService {
-  user$: Observable<User | null>;
+  user$: Observable<User | null | undefined> = of(undefined);
 
   constructor(
     private router: Router,
     private notificationService: NotificationService,
-    private angularFireAuth: AngularFireAuth
+    public angularFireAuth: AngularFireAuth
   ) {
-    angularFireAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    angularFireAuth.currentUser.then(user => console.log('User is ' + user));
-    console.log('User is ' + angularFireAuth.onAuthStateChanged.name);
-    this.user$ = of(null);
+    console.log('Auth service is being initialised.');
     if (environment.requireAuth) {
-      angularFireAuth.currentUser.then(firebaseUser => {
-        if (firebaseUser != null) {
-          const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
-          this.user$ = of(user);
-        }
-      });
-    }
+        angularFireAuth.onAuthStateChanged(firebaseUser => {
+          console.log('User retrieved.');
+          if (firebaseUser != null) {
+            const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
+            this.user$ = of(user);
+          } else {
+            this.user$ = of(null);
+          }
+        });
+      }
   }
 
   googleSignin(): void {
