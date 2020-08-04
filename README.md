@@ -72,5 +72,9 @@ To deploy the app to Google App Engine:
 
 ### Authentication
 
-To enable authentication using firebase, set 'requireAuth' to 'true' in 'src/environments/environment.prod.ts' and add your [firebase credentials](https://support.google.com/firebase/answer/7015592#web) to 'firebaseConfig.ts in the same folder.
+To enable authentication using Firebase:
+
+* Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
+* Add your [firebase credentials](https://support.google.com/firebase/answer/7015592#web) to `firebaseConfig.ts` in the same folder.
+
 This will allow users to be authenticated using Google Sign-in.
