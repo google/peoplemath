@@ -69,3 +69,8 @@ To deploy the app to Google App Engine:
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
+
+### Authentication
+
+To enable authentication using firebase, set 'requireAuth' to 'true' in 'src/environments/environment.prod.ts' and add your [firebase credentials](https://support.google.com/firebase/answer/7015592#web) to 'firebaseConfig.ts in the same folder.
+This will allow users to be authenticated using Google Sign-in.
