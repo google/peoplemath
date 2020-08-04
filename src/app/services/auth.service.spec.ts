@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -8,6 +8,7 @@ import {firebaseConfig} from '../../environments/firebaseConfig';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let windowmock;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,9 +19,19 @@ describe('AuthService', () => {
       ]
     });
     service = TestBed.inject(AuthService);
+    windowmock = jasmine.createSpyObj('$window', ['open']);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should open a pop up when calling the sign in function', done => {
+    service.googleSignin();
+    windowmock.
+    spyOn($window, 'open');
+    expect($window.open).toHaveBeenCalled();
+  });
+
+
 });

@@ -22,7 +22,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
@@ -51,7 +51,6 @@ import { ResourceQuantityComponent } from './resource-quantity/resource-quantity
 import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
 import { PillComponent } from './pill/pill.component';
 import { LoginComponent } from './login/login.component';
-import {environment} from '../environments/environment';
 import {NotificationService} from './services/notification.service';
 import {AuthInterceptor} from './services/auth.interceptor';
 import {firebaseConfig} from '../environments/firebaseConfig';

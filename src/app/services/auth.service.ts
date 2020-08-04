@@ -20,10 +20,8 @@ export class AuthService {
     private notificationService: NotificationService,
     public angularFireAuth: AngularFireAuth
   ) {
-    console.log('Auth service is being initialised.');
     if (environment.requireAuth) {
         angularFireAuth.onAuthStateChanged(firebaseUser => {
-          console.log('User retrieved.');
           if (firebaseUser != null) {
             const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
             this.user$ = of(user);

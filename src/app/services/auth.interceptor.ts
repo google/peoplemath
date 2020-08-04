@@ -21,11 +21,10 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap(token => {
         if (token != null) {
           const cloned = req.clone({
-            headers: req.headers.set('Authorisation', 'Bearer ' + token)
+            headers: req.headers.set('Authentication', 'Bearer ' + token)
           });
           return next.handle(cloned);
         } else {
-          console.log('Id token could not be retrieved');
           return next.handle(req);
         }
       })
