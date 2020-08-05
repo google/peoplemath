@@ -131,6 +131,7 @@ func TestGetTeams(t *testing.T) {
 	for _, t := range teams {
 		if t.ID == teamID {
 			found = true
+			break
 		}
 	}
 	if !found {
@@ -198,6 +199,7 @@ func TestGetPeriods(t *testing.T) {
 	for _, p := range periods {
 		if p.ID == periodID {
 			found = true
+			break
 		}
 	}
 	if !found {
