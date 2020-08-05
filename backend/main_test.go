@@ -150,7 +150,7 @@ func TestGetTeams(t *testing.T) {
 	}
 }
 
-func TestGetTeam(t *testing.T) {
+func TestPostAndGetTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
