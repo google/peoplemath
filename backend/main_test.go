@@ -17,6 +17,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -62,7 +63,10 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 func periodToJSON(period *models.Period) string {
 	var b strings.Builder
 	enc := json.NewEncoder(&b)
-	enc.Encode(&period)
+	err := enc.Encode(&period)
+	if err != nil {
+		panic(fmt.Sprintf("Unexpected JSON encoding error: %v", err))
+	}
 	return b.String()
 }
 
