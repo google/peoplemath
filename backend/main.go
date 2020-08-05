@@ -363,7 +363,6 @@ func main() {
 			return
 		}
 	}
-
 	server := Server{store: store, storeTimeout: defaultStoreTimeout}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
