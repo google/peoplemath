@@ -59,6 +59,13 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	checkResponseStatus(http.StatusOK, resp, t)
 }
 
+func periodToJSON(period *models.Period) string {
+	var b strings.Builder
+	enc := json.NewEncoder(&b)
+	enc.Encode(&period)
+	return b.String()
+}
+
 func attemptWritePeriod(handler http.Handler, teamID, periodID, periodJSON, httpMethod string, t *testing.T) *http.Response {
 	url := "/api/period/" + teamID + "/"
 	if httpMethod == http.MethodPut {
@@ -245,10 +252,7 @@ func TestPutPeriod(t *testing.T) {
 	period := getPeriod(handler, teamID, periodID, t)
 	prevUUID := period.LastUpdateUUID
 	period.DisplayName = "2019 quarter 1"
-	var b strings.Builder
-	enc := json.NewEncoder(&b)
-	enc.Encode(&period)
-	newPeriodJSON := b.String()
+	newPeriodJSON := periodToJSON(period)
 
 	resp := attemptWritePeriod(handler, teamID, periodID, newPeriodJSON, http.MethodPut, t)
 	checkGoodJSONResponse(resp, t)
@@ -285,10 +289,7 @@ func TestPeriodConcurrentMod(t *testing.T) {
 	period := getPeriod(handler, teamID, periodID, t)
 	period.DisplayName = "Something else"
 	period.LastUpdateUUID = "This is wrong"
-	var b strings.Builder
-	enc := json.NewEncoder(&b)
-	enc.Encode(&period)
-	newPeriodJSON := b.String()
+	newPeriodJSON := periodToJSON(period)
 
 	resp := attemptWritePeriod(handler, teamID, periodID, newPeriodJSON, http.MethodPut, t)
 	checkResponseStatus(http.StatusConflict, resp, t)
