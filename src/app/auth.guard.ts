@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs';
 
 import { AuthService } from './services/auth.service';
-import {filter, map, skipWhile, take, tap} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 
 @Injectable({

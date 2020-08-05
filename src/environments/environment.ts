@@ -19,5 +19,5 @@
 
 export const environment = {
   production: false,
-  requireAuth: true
+  requireAuth: false
 };
