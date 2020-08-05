@@ -26,6 +26,22 @@ import (
 	"testing"
 )
 
+func checkResponseStatus(expected int, resp *http.Response, t *testing.T) {
+	if resp.StatusCode != expected {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		body := string(bodyBytes)
+		t.Fatalf("Expected response %v, got %v: %v", expected, resp.StatusCode, body)
+	}
+}
+
+func checkGoodJSONResponse(resp *http.Response, t *testing.T) {
+	checkResponseStatus(http.StatusOK, resp, t)
+	contentType := resp.Header.Get("Content-Type")
+	if contentType != "application/json" {
+		t.Fatalf("Expected response Content-Type application/json, found %s", contentType)
+	}
+}
+
 func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	team := models.Team{ID: teamID, DisplayName: teamID}
 	b := new(bytes.Buffer)
@@ -34,29 +50,29 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	if err != nil {
 		t.Fatalf("Could not serialize team: %v", err)
 	}
+
 	req := httptest.NewRequest(http.MethodPost, "/api/team/", b)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	resp := w.Result()
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected response %v, got %v", http.StatusOK, resp.StatusCode)
-	}
+
+	checkResponseStatus(http.StatusOK, resp, t)
 }
 
-func attemptWritePeriod(handler http.Handler, teamID, periodJSON, httpMethod string, t *testing.T) *http.Response {
-	req := httptest.NewRequest(httpMethod, "/api/period/"+teamID+"/", strings.NewReader(periodJSON))
+func attemptWritePeriod(handler http.Handler, teamID, periodID, periodJSON, httpMethod string, t *testing.T) *http.Response {
+	url := "/api/period/" + teamID + "/"
+	if httpMethod == http.MethodPut {
+		url += periodID
+	}
+	req := httptest.NewRequest(httpMethod, url, strings.NewReader(periodJSON))
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	return w.Result()
 }
 
-func addPeriod(handler http.Handler, teamID, periodJSON string, t *testing.T) {
-	resp := attemptWritePeriod(handler, teamID, periodJSON, http.MethodPost, t)
-	if resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
-		body := string(bodyBytes)
-		t.Fatalf("Expected response %v, got %v: %v", http.StatusOK, resp.StatusCode, body)
-	}
+func addPeriod(handler http.Handler, teamID, periodID, periodJSON string, t *testing.T) {
+	resp := attemptWritePeriod(handler, teamID, periodID, periodJSON, http.MethodPost, t)
+	checkGoodJSONResponse(resp, t)
 }
 
 func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *models.Period {
@@ -64,9 +80,8 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *mod
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	resp := w.Result()
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected response %v, got %v", http.StatusOK, resp.StatusCode)
-	}
+
+	checkGoodJSONResponse(resp, t)
 	p := models.Period{}
 	dec := json.NewDecoder(resp.Body)
 	err := dec.Decode(&p)
@@ -76,16 +91,131 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *mod
 	return &p
 }
 
-func TestPostPeriod(t *testing.T) {
+func getTeam(handler http.Handler, teamID string, t *testing.T) *models.Team {
+	req := httptest.NewRequest(http.MethodGet, "/api/team/"+teamID, nil)
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+
+	checkGoodJSONResponse(resp, t)
+	team := models.Team{}
+	dec := json.NewDecoder(resp.Body)
+	err := dec.Decode(&team)
+	if err != nil {
+		t.Fatalf("Could not decode response: %v", err)
+	}
+
+	return &team
+}
+
+func TestGetTeams(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
-	addPeriod(handler, teamID, periodJSON, t)
 
-	p := getPeriod(handler, teamID, "2019q1", t)
+	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+	checkGoodJSONResponse(resp, t)
+
+	teams := []models.Team{}
+	dec := json.NewDecoder(resp.Body)
+	err := dec.Decode(&teams)
+	if err != nil {
+		t.Fatalf("Could not decode response: %v", err)
+	}
+	found := false
+	for _, t := range teams {
+		if t.ID == teamID {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("Added team not found in output")
+	}
+}
+
+func TestGetTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+
+	team := getTeam(handler, teamID, t)
+
+	if team.ID != teamID {
+		t.Fatalf("Response team ID should be %v, found %v", teamID, team.ID)
+	}
+}
+
+func TestPutTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+
+	req := httptest.NewRequest(http.MethodPut, "/api/team/myteam", strings.NewReader(`{"id":"myteam","displayName":"newName"}`))
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+	checkResponseStatus(http.StatusOK, resp, t)
+
+	team := getTeam(handler, teamID, t)
+	if team.DisplayName != "newName" {
+		t.Fatalf("Expected changed display name, found %v", team.DisplayName)
+	}
+}
+
+func TestGetPeriods(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "2019q1"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/period/myteam/", nil)
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	resp := w.Result()
+	checkGoodJSONResponse(resp, t)
+
+	periods := []models.Period{}
+	dec := json.NewDecoder(resp.Body)
+	err := dec.Decode(&periods)
+	if err != nil {
+		t.Fatalf("Could not decode body: %v", err)
+	}
+
+	found := false
+	for _, p := range periods {
+		if p.ID == periodID {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("Could not find saved period in output")
+	}
+}
+
+func TestPostPeriod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "2019q1"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
+
+	p := getPeriod(handler, teamID, periodID, t)
 
 	if p.Buckets[0].AllocationPercentage != 80 {
 		t.Fatalf("Expected allocation percentage 80, found %v", p.Buckets[0].AllocationPercentage)
@@ -98,7 +228,73 @@ func TestPostPeriod(t *testing.T) {
 	if p.People[0].Location != "LON" {
 		t.Fatalf("Expected location to be LON, found %q", p.People[0].Location)
 	}
+}
 
+func TestPutPeriod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "2019q1"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
+
+	period := getPeriod(handler, teamID, periodID, t)
+	prevUUID := period.LastUpdateUUID
+	period.DisplayName = "2019 quarter 1"
+	var b strings.Builder
+	enc := json.NewEncoder(&b)
+	enc.Encode(&period)
+	newPeriodJSON := b.String()
+
+	resp := attemptWritePeriod(handler, teamID, periodID, newPeriodJSON, http.MethodPut, t)
+	checkGoodJSONResponse(resp, t)
+
+	respContent := models.ObjectUpdateResponse{}
+	dec := json.NewDecoder(resp.Body)
+	err := dec.Decode(&respContent)
+	if err != nil {
+		t.Fatalf("Could not decode put response: %v", err)
+	}
+
+	period = getPeriod(handler, teamID, "2019q1", t)
+	if period.DisplayName != "2019 quarter 1" {
+		t.Fatalf("Period did not have updated display name: found %v", period.DisplayName)
+	}
+	if period.LastUpdateUUID == prevUUID {
+		t.Fatalf("Expected UUID change, found %v before and after", prevUUID)
+	}
+	if period.LastUpdateUUID != respContent.LastUpdateUUID {
+		t.Fatalf("Expected UUID to match put response %v, found %v", respContent.LastUpdateUUID, period.LastUpdateUUID)
+	}
+}
+
+func TestPeriodConcurrentMod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "2019q1"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
+
+	period := getPeriod(handler, teamID, periodID, t)
+	period.DisplayName = "Something else"
+	period.LastUpdateUUID = "This is wrong"
+	var b strings.Builder
+	enc := json.NewEncoder(&b)
+	enc.Encode(&period)
+	newPeriodJSON := b.String()
+
+	resp := attemptWritePeriod(handler, teamID, periodID, newPeriodJSON, http.MethodPut, t)
+	checkResponseStatus(http.StatusConflict, resp, t)
+
+	period = getPeriod(handler, teamID, periodID, t)
+	if period.DisplayName != "2019Q1" {
+		t.Fatalf("Expected unchanged display name, found %v", period.DisplayName)
+	}
 }
 
 func TestInvalidCommitmentType(t *testing.T) {
@@ -107,16 +303,15 @@ func TestInvalidCommitmentType(t *testing.T) {
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"wibble","assignments":[]}]}],"people":[]}`
+	periodID := "2019q1"
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"wibble","assignments":[]}]}],"people":[]}`
 
-	resp := attemptWritePeriod(handler, teamID, periodJSON, http.MethodPost, t)
+	resp := attemptWritePeriod(handler, teamID, periodID, periodJSON, http.MethodPost, t)
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	body := string(bodyBytes)
 
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Fatalf("Expected status code %v, found %v: %v", http.StatusBadRequest, resp.StatusCode, body)
-	}
+	checkResponseStatus(http.StatusBadRequest, resp, t)
 
 	if !strings.Contains(body, "wibble") {
 		t.Fatalf("Expected bad commitment type to appear in body, found: %v", body)
@@ -128,11 +323,12 @@ func TestMissingCommitmentType(t *testing.T) {
 	handler := server.makeHandler()
 
 	teamID := "myteam"
+	periodID := "2019q1"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"2019q1","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
-	addPeriod(handler, teamID, periodJSON, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"assignments":[]}]}],"people":[]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
 
-	p := getPeriod(handler, teamID, "2019q1", t)
+	p := getPeriod(handler, teamID, periodID, t)
 
 	readCommitType := p.Buckets[0].Objectives[0].CommitmentType
 	if readCommitType != "" {
@@ -148,9 +344,7 @@ func TestImprove(t *testing.T) {
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	resp := w.Result()
-	if resp.StatusCode != http.StatusFound {
-		t.Fatalf("Expected response %c, got %v", http.StatusFound, resp.StatusCode)
-	}
+	checkResponseStatus(http.StatusFound, resp, t)
 	expectedImproveURL := "https://github.com/google/peoplemath"
 	location := resp.Header.Get("Location")
 	if location != expectedImproveURL {
