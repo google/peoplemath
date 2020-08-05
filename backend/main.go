@@ -364,14 +364,6 @@ func main() {
 		}
 	}
 
-	// Testing the firebase sdk initialisation
-	/*opt := option.WithCredentialsFile("/Users/Sam/Documents/Volunteering_work/google_resources/serviceAccountKey.json")
-	  app, err := firebase.NewApp(context.Background(), nil, opt)
-	  if err != nil {
-	    fmt.Errorf("error instantialising app: %v", err)
-	    return
-	  }*/
-
 	server := Server{store: store, storeTimeout: defaultStoreTimeout}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")

@@ -31,9 +31,4 @@ type StorageService interface {
 	UpdatePeriod(ctx context.Context, teamID string, period models.Period) error
 	GetSettings(ctx context.Context) (models.Settings, error)
 	Close() error
-
-	// Authentication / authorisation
-	//GetUser(uid string) models.User
-	//RemoveUser(uid string) error
-	//AuthenticateUser(user models.User) (bool, error)
 }
