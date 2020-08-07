@@ -23,6 +23,7 @@ import (
 	"net/http/httptest"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
+	"peoplemath/server"
 	"strings"
 	"testing"
 )
@@ -120,8 +121,8 @@ func getTeam(handler http.Handler, teamID string, t *testing.T) *models.Team {
 }
 
 func TestGetTeams(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -151,8 +152,8 @@ func TestGetTeams(t *testing.T) {
 }
 
 func TestPostAndGetTeam(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -165,8 +166,8 @@ func TestPostAndGetTeam(t *testing.T) {
 }
 
 func TestPutTeam(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -184,8 +185,8 @@ func TestPutTeam(t *testing.T) {
 }
 
 func TestGetPeriods(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -219,8 +220,8 @@ func TestGetPeriods(t *testing.T) {
 }
 
 func TestPostPeriod(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -244,8 +245,8 @@ func TestPostPeriod(t *testing.T) {
 }
 
 func TestPutPeriod(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -281,8 +282,8 @@ func TestPutPeriod(t *testing.T) {
 }
 
 func TestPeriodConcurrentMod(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -305,8 +306,8 @@ func TestPeriodConcurrentMod(t *testing.T) {
 }
 
 func TestInvalidCommitmentType(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -326,8 +327,8 @@ func TestInvalidCommitmentType(t *testing.T) {
 }
 
 func TestMissingCommitmentType(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -344,8 +345,8 @@ func TestMissingCommitmentType(t *testing.T) {
 }
 
 func TestImprove(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
+	cfg := server.Config{Store: in_memory_storage.MakeInMemStore()}
+	handler := server.MakeHandler(cfg)
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
 	w := httptest.NewRecorder()
