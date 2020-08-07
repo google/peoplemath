@@ -50,7 +50,7 @@ func checkGoodJSONResponse(resp *http.Response, t *testing.T) {
 	}
 }
 
-func addTeam(handler http.Handler, teamID string, t *testing.T) {
+func attemptAddTeam(handler http.Handler, teamID string, t *testing.T) *http.Response {
 	team := models.Team{ID: teamID, DisplayName: teamID}
 	b := new(bytes.Buffer)
 	enc := json.NewEncoder(b)
@@ -60,8 +60,11 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	}
 
 	req := httptest.NewRequest(http.MethodPost, "/api/team/", b)
-	resp := makeHTTPRequest(req, handler, t)
+	return makeHTTPRequest(req, handler, t)
+}
 
+func addTeam(handler http.Handler, teamID string, t *testing.T) {
+	resp := attemptAddTeam(handler, teamID, t)
 	checkResponseStatus(http.StatusOK, resp, t)
 }
 
@@ -161,6 +164,16 @@ func TestPostAndGetTeam(t *testing.T) {
 	}
 }
 
+func TestPostExistingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+	resp := attemptAddTeam(handler, teamID, t)
+	checkResponseStatus(http.StatusBadRequest, resp, t)
+}
+
 func TestGetMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
@@ -185,6 +198,15 @@ func TestPutTeam(t *testing.T) {
 	if team.DisplayName != "newName" {
 		t.Fatalf("Expected changed display name, found %v", team.DisplayName)
 	}
+}
+
+func TestPutMissingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	req := httptest.NewRequest(http.MethodPut, "/api/team/nonexistent", strings.NewReader(`{"id":"nonexistent","displayName":"newName"}`))
+	resp := makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
 }
 
 func TestGetPeriods(t *testing.T) {
@@ -220,6 +242,27 @@ func TestGetPeriods(t *testing.T) {
 	}
 }
 
+func TestGetPeriodsForMissingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/period/nonexistent/", nil)
+	resp := makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
+}
+
+func TestGetMissingPeriod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/nonexistent", nil)
+	resp := makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
+}
+
 func TestPostPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
 	handler := server.makeHandler()
@@ -243,6 +286,40 @@ func TestPostPeriod(t *testing.T) {
 	if p.People[0].Location != "LON" {
 		t.Fatalf("Expected location to be LON, found %q", p.People[0].Location)
 	}
+}
+
+func TestPostExistingPeriod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "2019q1"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	addPeriod(handler, teamID, periodID, periodJSON, t)
+
+	resp := attemptWritePeriod(handler, teamID, periodID, periodJSON, http.MethodPost, t)
+	checkResponseStatus(http.StatusBadRequest, resp, t)
+}
+
+func TestPostPeriodBadJSON(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	addTeam(handler, teamID, t)
+
+	resp := attemptWritePeriod(handler, teamID, "myperiodid", "some bad json", http.MethodPost, t)
+	checkResponseStatus(http.StatusBadRequest, resp, t)
+}
+
+func TestPostPeriodMissingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	period := models.Period{ID: "pid", DisplayName: "some period"}
+	resp := attemptWritePeriod(handler, "nonexistent", period.ID, periodToJSON(&period), http.MethodPost, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
 }
 
 func TestPutPeriod(t *testing.T) {
@@ -280,6 +357,28 @@ func TestPutPeriod(t *testing.T) {
 	if period.LastUpdateUUID != respContent.LastUpdateUUID {
 		t.Fatalf("Expected UUID to match put response %v, found %v", respContent.LastUpdateUUID, period.LastUpdateUUID)
 	}
+}
+
+func TestPutMissingPeriod(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	teamID := "myteam"
+	periodID := "nonexistent"
+	addTeam(handler, teamID, t)
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+
+	resp := attemptWritePeriod(handler, teamID, periodID, periodJSON, http.MethodPut, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
+}
+
+func TestPutPeriodMissingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	period := models.Period{ID: "pid", DisplayName: "some period"}
+	resp := attemptWritePeriod(handler, "nonexistent", period.ID, periodToJSON(&period), http.MethodPut, t)
+	checkResponseStatus(http.StatusNotFound, resp, t)
 }
 
 func TestPeriodConcurrentMod(t *testing.T) {
