@@ -19,10 +19,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -43,11 +43,21 @@ type Server struct {
 }
 
 func (s *Server) makeHandler() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/api/team/", s.handleTeam)
-	mux.HandleFunc("/api/period/", s.handlePeriod)
-	mux.HandleFunc("/improve", s.handleImprove)
-	return mux
+	r := mux.NewRouter()
+
+	r.HandleFunc("/api/team/{teamID}", s.handleGetTeam).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.handleGetAllTeams).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.handlePostTeam).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.handlePutTeam).Methods(http.MethodPut)
+
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handleGetPeriod).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.handleGetAllPeriods).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.handlePostPeriod).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handlePutPeriod).Methods(http.MethodPut)
+
+	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
+
+	return r
 }
 
 func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
@@ -95,57 +105,44 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 		msg := fmt.Sprintf("Concurrent modification: last saved UUID=%s, your last loaded UUID=%s",
 			savedPeriod.LastUpdateUUID, period.LastUpdateUUID)
 		http.Error(w, msg, http.StatusConflict)
+
 		return false
 	}
 	return true
 }
 
-func (s *Server) handleTeam(w http.ResponseWriter, r *http.Request) {
-	pathParts := strings.Split(r.URL.Path, "/")
-	if len(pathParts) != 4 {
+func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	teams, err := s.store.GetAllTeams(ctx)
+	if err != nil {
+		log.Printf("Could not retrieve teams: error: %s", err)
+		http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
+		return
+	}
+	enc := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	enc.Encode(teams)
+}
+
+func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	team, found, err := s.store.GetTeam(ctx, teamID)
+	if err != nil {
+		log.Printf("Could not retrieve team '%s': error: %s", teamID, err)
+		http.Error(w, fmt.Sprintf("Could not retrieve team '%s' (see server log)", teamID), http.StatusInternalServerError)
+		return
+	}
+	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	teamID := pathParts[3]
-	if r.Method == http.MethodGet {
-		s.handleGetTeam(w, r, teamID)
-	} else if r.Method == http.MethodPost {
-		s.handlePostTeam(w, r)
-	} else if r.Method == http.MethodPut {
-		s.handlePutTeam(w, r)
-	} else {
-		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
-	}
-}
-
-func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request, teamID string) {
-	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
-	defer cancel()
-	if teamID == "" {
-		teams, err := s.store.GetAllTeams(ctx)
-		if err != nil {
-			log.Printf("Could not retrieve teams: error: %s", err)
-			http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
-			return
-		}
-		enc := json.NewEncoder(w)
-		w.Header().Set("Content-Type", "application/json")
-		enc.Encode(teams)
-	} else {
-		team, found, err := s.store.GetTeam(ctx, teamID)
-		if err != nil {
-			log.Printf("Could not retrieve team '%s': error: %s", teamID, err)
-			http.Error(w, fmt.Sprintf("Could not retrieve team '%s' (see server log)", teamID), http.StatusInternalServerError)
-			return
-		}
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
-		enc := json.NewEncoder(w)
-		w.Header().Set("Content-Type", "application/json")
-		enc.Encode(team)
-	}
+	enc := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	enc.Encode(team)
 }
 
 func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
@@ -195,57 +192,46 @@ func readTeamFromBody(w http.ResponseWriter, r *http.Request) (models.Team, bool
 	return team, true
 }
 
-func (s *Server) handlePeriod(w http.ResponseWriter, r *http.Request) {
-	pathParts := strings.Split(r.URL.Path, "/")
-	if len(pathParts) != 5 {
+func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+
+	periods, found, err := s.store.GetAllPeriods(ctx, teamID)
+	if err != nil {
+		log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
+		http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+		return
+	}
+	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	teamID := pathParts[3]
-	periodID := pathParts[4]
-	if r.Method == http.MethodGet {
-		s.handleGetPeriod(w, r, teamID, periodID)
-	} else if r.Method == http.MethodPost {
-		s.handlePostPeriod(w, r, teamID)
-	} else if r.Method == http.MethodPut {
-		s.handlePutPeriod(w, r, teamID, periodID)
-	} else {
-		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
-	}
+	enc := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	enc.Encode(periods)
 }
 
-func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
+func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	periodID := vars["periodID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	if periodID == "" {
-		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
-		if err != nil {
-			log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
-			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
-			return
-		}
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
-		enc := json.NewEncoder(w)
-		w.Header().Set("Content-Type", "application/json")
-		enc.Encode(periods)
-	} else {
-		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
-		if err != nil {
-			log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
-			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
-			return
-		}
-		if !found {
-			http.NotFound(w, r)
-			return
-		}
-		enc := json.NewEncoder(w)
-		w.Header().Set("Content-Type", "application/json")
-		enc.Encode(period)
+	period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
+	if err != nil {
+		log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
+		http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+		return
 	}
+	if !found {
+		http.NotFound(w, r)
+		return
+	}
+	enc := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	enc.Encode(period)
 }
 
 func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period models.Period) {
@@ -255,7 +241,9 @@ func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Reques
 	enc.Encode(response)
 }
 
-func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID string) {
+func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
@@ -278,7 +266,10 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request, teamID
 	s.writePeriodUpdateResponse(w, r, period)
 }
 
-func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request, teamID, periodID string) {
+func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	periodID := vars["periodID"]
 	period, ok := readPeriodFromBody(w, r)
 	if !ok {
 		return
