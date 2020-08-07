@@ -27,6 +27,12 @@ import (
 	"testing"
 )
 
+func makeHTTPRequest(request *http.Request, handler http.Handler) *http.Response {
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, request)
+	return w.Result()
+}
+
 func checkResponseStatus(expected int, resp *http.Response, t *testing.T) {
 	if resp.StatusCode != expected {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
@@ -162,6 +168,15 @@ func TestPostAndGetTeam(t *testing.T) {
 	if team.ID != teamID {
 		t.Fatalf("Response team ID should be %v, found %v", teamID, team.ID)
 	}
+}
+
+func TestGetMissingTeam(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/team/nonexistent", nil)
+	res := makeHTTPRequest(req, handler)
+	checkResponseStatus(http.StatusNotFound, res, t)
 }
 
 func TestPutTeam(t *testing.T) {
