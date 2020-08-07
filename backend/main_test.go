@@ -463,3 +463,16 @@ func TestImprove(t *testing.T) {
 		t.Errorf("Expected redirect URL %v in body, found %v", expectedImproveURL, body)
 	}
 }
+
+func TestImproveBadMethods(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	putreq := httptest.NewRequest(http.MethodPut, "/improve", nil)
+	putresp := makeHTTPRequest(putreq, handler, t)
+	checkResponseStatus(http.StatusMethodNotAllowed, putresp, t)
+
+	postreq := httptest.NewRequest(http.MethodPost, "/improve", nil)
+	postresp := makeHTTPRequest(postreq, handler, t)
+	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
+}
