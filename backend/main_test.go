@@ -27,7 +27,8 @@ import (
 	"testing"
 )
 
-func makeHTTPRequest(request *http.Request, handler http.Handler) *http.Response {
+func makeHTTPRequest(request *http.Request, handler http.Handler, t *testing.T) *http.Response {
+	t.Logf("Making HTTP request %v %v", request.Method, request.URL)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, request)
 	return w.Result()
@@ -59,9 +60,7 @@ func addTeam(handler http.Handler, teamID string, t *testing.T) {
 	}
 
 	req := httptest.NewRequest(http.MethodPost, "/api/team/", b)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 
 	checkResponseStatus(http.StatusOK, resp, t)
 }
@@ -82,9 +81,7 @@ func attemptWritePeriod(handler http.Handler, teamID, periodID, periodJSON, http
 		url += periodID
 	}
 	req := httptest.NewRequest(httpMethod, url, strings.NewReader(periodJSON))
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	return w.Result()
+	return makeHTTPRequest(req, handler, t)
 }
 
 func addPeriod(handler http.Handler, teamID, periodID, periodJSON string, t *testing.T) {
@@ -94,9 +91,7 @@ func addPeriod(handler http.Handler, teamID, periodID, periodJSON string, t *tes
 
 func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *models.Period {
 	req := httptest.NewRequest(http.MethodGet, "/api/period/"+teamID+"/"+periodID, nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 
 	checkGoodJSONResponse(resp, t)
 	p := models.Period{}
@@ -110,9 +105,7 @@ func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *mod
 
 func getTeam(handler http.Handler, teamID string, t *testing.T) *models.Team {
 	req := httptest.NewRequest(http.MethodGet, "/api/team/"+teamID, nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 
 	checkGoodJSONResponse(resp, t)
 	team := models.Team{}
@@ -133,9 +126,7 @@ func TestGetTeams(t *testing.T) {
 	addTeam(handler, teamID, t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 	checkGoodJSONResponse(resp, t)
 
 	teams := []models.Team{}
@@ -175,7 +166,7 @@ func TestGetMissingTeam(t *testing.T) {
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/nonexistent", nil)
-	res := makeHTTPRequest(req, handler)
+	res := makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusNotFound, res, t)
 }
 
@@ -187,9 +178,7 @@ func TestPutTeam(t *testing.T) {
 	addTeam(handler, teamID, t)
 
 	req := httptest.NewRequest(http.MethodPut, "/api/team/myteam", strings.NewReader(`{"id":"myteam","displayName":"newName"}`))
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusOK, resp, t)
 
 	team := getTeam(handler, teamID, t)
@@ -209,9 +198,7 @@ func TestGetPeriods(t *testing.T) {
 	addPeriod(handler, teamID, periodID, periodJSON, t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/period/myteam/", nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 	checkGoodJSONResponse(resp, t)
 
 	periods := []models.Period{}
@@ -363,9 +350,7 @@ func TestImprove(t *testing.T) {
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	resp := w.Result()
+	resp := makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusFound, resp, t)
 	expectedImproveURL := "https://github.com/google/peoplemath"
 	location := resp.Header.Get("Location")
