@@ -19,17 +19,19 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+
 	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
 	"peoplemath/storage"
+
+	"github.com/google/uuid"
 )
 
 const (
@@ -315,18 +317,14 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, 
 }
 
 func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
-		defer cancel()
-		settings, err := s.store.GetSettings(ctx)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not retrieve settings: %v", err), http.StatusInternalServerError)
-			return
-		}
-		http.Redirect(w, r, settings.ImproveURL, http.StatusFound)
-	} else {
-		http.Error(w, fmt.Sprintf("Unsupported method '%s'", r.Method), http.StatusBadRequest)
+	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
+	defer cancel()
+	settings, err := s.store.GetSettings(ctx)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Could not retrieve settings: %v", err), http.StatusInternalServerError)
+		return
 	}
+	http.Redirect(w, r, settings.ImproveURL, http.StatusFound)
 }
 
 func main() {
