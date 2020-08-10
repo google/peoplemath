@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"firebase.google.com/go/v4/auth"
 	"flag"
 	"fmt"
 	"log"
@@ -24,6 +25,7 @@ import (
 	"os"
 	"time"
 
+	"firebase.google.com/go/v4"
 	"github.com/gorilla/mux"
 
 	"peoplemath/google_cds_store"
@@ -42,6 +44,20 @@ const (
 type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
+	auth         Auth
+}
+
+type Auth interface {
+	authenticate(r *http.Request) models.User
+}
+
+type firebaseAuth struct {
+	firebaseClient *auth.Client
+}
+
+func (auth firebaseAuth) authenticate(r *http.Request) models.User {
+	log.Print("Auth header: " + r.Header.Get("Authentication"))
+	return models.User{}
 }
 
 func (s *Server) makeHandler() http.Handler {
@@ -114,6 +130,8 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 }
 
 func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
+	s.auth.authenticate(r)
+
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	teams, err := s.store.GetAllTeams(ctx)
@@ -353,15 +371,30 @@ func main() {
 		}
 	}
 
-	// Testing the firebase sdk initialisation
-	/*opt := option.WithCredentialsFile("/Users/Sam/Documents/Volunteering_work/google_resources/serviceAccountKey.json")
-	  app, err := firebase.NewApp(context.Background(), nil, opt)
-	  if err != nil {
-	    fmt.Errorf("error instantialising app: %v", err)
-	    return
-	  }*/
+	// TODO add to README
+	// export GOOGLE_APPLICATION_CREDENTIALS="/Users/sam/Documents/Volunteering_work/google_resources/serviceAccountKey.json"
 
-	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+	ctx := context.Background()
+	app, err := firebase.NewApp(ctx, nil)
+	if err != nil {
+		log.Fatalf("error initializing app: %v\n", err)
+	}
+	firebaseClient, err := app.Auth(ctx)
+	if err != nil {
+		log.Fatalf("error getting Auth client: %v\n", err)
+		// TODO do better error handling
+	}
+
+	auth := firebaseAuth{firebaseClient: firebaseClient}
+
+	/*token, err := client.VerifyIDToken(ctx, idToken)
+	  if err != nil {
+	    log.Fatalf("error verifying ID token: %v\n", err)
+	  }
+
+	  log.Printf("Verified ID token: %v\n", token)*/
+
+	server := Server{store: store, storeTimeout: defaultStoreTimeout, auth: auth}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
 	if port == "" {
