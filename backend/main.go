@@ -23,6 +23,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"firebase.google.com/go/v4"
@@ -48,16 +49,58 @@ type Server struct {
 }
 
 type Auth interface {
-	authenticate(r *http.Request) models.User
+	authenticate(w http.ResponseWriter, r *http.Request) (models.User, error)
+}
+
+type noAuth struct{}
+
+func (auth noAuth) authenticate(w http.ResponseWriter, r *http.Request) (models.User, error) {
+	return models.User{}, nil
 }
 
 type firebaseAuth struct {
 	firebaseClient *auth.Client
 }
 
-func (auth firebaseAuth) authenticate(r *http.Request) models.User {
-	log.Print("Auth header: " + r.Header.Get("Authentication"))
-	return models.User{}
+/*func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
+  return func (w http.ResponseWriter, r *http.Request) {
+    idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
+    token, err := auth.firebaseClient.VerifyIDToken(context.Background(), idToken)
+    if err != nil {
+      log.Printf("User authentication failed: error: %s", err)
+      http.Error(w, "User authentication failed (see server log)", http.StatusInternalServerError)
+      return
+    }
+
+    uid := token.Claims["user_id"].(string)
+    domain := getDomain(token.Claims["email"].(string))
+    user := models.User{UID: uid, Domain: domain}
+
+    log.Printf("User domain is: %s", err)
+
+    next(w, r)
+  }
+}*/
+
+func (auth firebaseAuth) authenticate(w http.ResponseWriter, r *http.Request) (models.User, error) {
+	idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
+	token, err := auth.firebaseClient.VerifyIDToken(context.Background(), idToken)
+	if err != nil {
+		log.Printf("User authentication failed: error: %s", err)
+		http.Error(w, "User authentication failed (see server log)", http.StatusInternalServerError)
+		return models.User{}, err
+	}
+
+	uid := token.Claims["user_id"].(string)
+	domain := getDomain(token.Claims["email"].(string))
+	user := models.User{UID: uid, Domain: domain}
+
+	return user, nil
+}
+
+func getDomain(email string) string {
+	emailParts := strings.Split(email, "@")
+	return emailParts[len(emailParts)-1]
 }
 
 func (s *Server) makeHandler() http.Handler {
@@ -130,7 +173,10 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 }
 
 func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
-	s.auth.authenticate(r)
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
 
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
@@ -146,6 +192,11 @@ func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
@@ -166,6 +217,11 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	team, ok := readTeamFromBody(w, r)
 	if !ok {
 		return
@@ -175,7 +231,7 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreateTeam(ctx, team)
+	err = s.store.CreateTeam(ctx, team)
 	if err != nil {
 		log.Printf("Could not create team: error: %s", err)
 		http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
@@ -184,6 +240,11 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	team, ok := readTeamFromBody(w, r)
 	if !ok {
 		return
@@ -193,7 +254,7 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdateTeam(ctx, team)
+	err = s.store.UpdateTeam(ctx, team)
 	if err != nil {
 		log.Printf("Could not update team: error: %s", err)
 		http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
@@ -213,6 +274,11 @@ func readTeamFromBody(w http.ResponseWriter, r *http.Request) (models.Team, bool
 }
 
 func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
@@ -234,6 +300,11 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	periodID := vars["periodID"]
@@ -262,6 +333,11 @@ func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Reques
 }
 
 func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	period, ok := readPeriodFromBody(w, r)
@@ -277,7 +353,7 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreatePeriod(ctx, teamID, period)
+	err = s.store.CreatePeriod(ctx, teamID, period)
 	if err != nil {
 		log.Printf("Could not create period for team '%s': error: %s", teamID, err)
 		http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
@@ -287,6 +363,11 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
+	_, err := s.auth.authenticate(w, r)
+	if err != nil {
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	periodID := vars["periodID"]
@@ -304,7 +385,7 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdatePeriod(ctx, teamID, period)
+	err = s.store.UpdatePeriod(ctx, teamID, period)
 	if err != nil {
 		log.Printf("Could not update period '%s' for team '%s': error: %s", periodID, teamID, err)
 		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
@@ -347,7 +428,9 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var useInMemStore bool
+	var disableAuth bool
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
+	flag.BoolVar(&disableAuth, "disableauth", false, "Disable authentication")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -371,30 +454,28 @@ func main() {
 		}
 	}
 
-	// TODO add to README
-	// export GOOGLE_APPLICATION_CREDENTIALS="/Users/sam/Documents/Volunteering_work/google_resources/serviceAccountKey.json"
+	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+	if disableAuth {
+		server.auth = noAuth{}
+	} else {
+		// TODO add to README
+		// export GOOGLE_APPLICATION_CREDENTIALS="/Users/sam/Documents/Volunteering_work/google_resources/serviceAccountKey.json"
 
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
+		ctx := context.Background()
+		app, err := firebase.NewApp(ctx, nil)
+		if err != nil {
+			log.Fatalf("error initializing app: %v\n", err)
+		}
+		firebaseClient, err := app.Auth(ctx)
+		if err != nil {
+			log.Fatalf("error getting Auth client: %v\n", err)
+			// TODO do better error handling
+		}
+
+		firebaseAuth := firebaseAuth{firebaseClient: firebaseClient}
+		server.auth = firebaseAuth
 	}
-	firebaseClient, err := app.Auth(ctx)
-	if err != nil {
-		log.Fatalf("error getting Auth client: %v\n", err)
-		// TODO do better error handling
-	}
 
-	auth := firebaseAuth{firebaseClient: firebaseClient}
-
-	/*token, err := client.VerifyIDToken(ctx, idToken)
-	  if err != nil {
-	    log.Fatalf("error verifying ID token: %v\n", err)
-	  }
-
-	  log.Printf("Verified ID token: %v\n", token)*/
-
-	server := Server{store: store, storeTimeout: defaultStoreTimeout, auth: auth}
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
 	if port == "" {

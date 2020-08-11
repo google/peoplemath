@@ -21,6 +21,12 @@ type Team struct {
 	Permissions Permissions `json:"permissions"`
 }
 
+// User model for authentication and authorisation
+type User struct {
+	UID    string `json:"uid"`
+	Domain string `json:"domain"`
+}
+
 type Permissions struct {
 	// We would like to be able to permission both individual users and entire G-Suite domains
 	// (e.g. "anyone with a google.com account can read this team but only these specific accounts can write it").
@@ -111,10 +117,4 @@ type ObjectUpdateResponse struct {
 // Settings holds stored configuration options
 type Settings struct {
 	ImproveURL string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility
-}
-
-// User model for authentication and authorisation
-type User struct {
-	UID         string `json:"uid"`
-	DisplayName string `json:"displayName"`
 }
