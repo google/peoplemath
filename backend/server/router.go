@@ -7,19 +7,24 @@ import (
 	"time"
 )
 
+const (
+	DefaultStoreTimeout = 5 * time.Second
+)
+
 // Server struct to handle incoming HTTP requests
 type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
 }
 
-type Config struct {
-	Store        storage.StorageService
-	StoreTimeout time.Duration
+func InitServer(store storage.StorageService, storeTimeout time.Duration) *Server {
+	return &Server{
+		store:        store,
+		storeTimeout: storeTimeout,
+	}
 }
 
-func MakeHandler(c Config) http.Handler {
-	s := Server{store: c.Store, storeTimeout: c.StoreTimeout}
+func MakeHandler(s *Server) http.Handler {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/team/{teamID}", s.handleGetTeam).Methods(http.MethodGet)

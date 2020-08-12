@@ -21,16 +21,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"peoplemath/server"
-	"time"
-
 	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
+	"peoplemath/server"
 	"peoplemath/storage"
-)
-
-const (
-	defaultStoreTimeout = 5 * time.Second
 )
 
 func main() {
@@ -58,8 +52,8 @@ func main() {
 			return
 		}
 	}
-	cfg := server.Config{Store: store, StoreTimeout: defaultStoreTimeout}
-	handler := server.MakeHandler(cfg)
+	srv := server.InitServer(store, server.DefaultStoreTimeout)
+	handler := server.MakeHandler(srv)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
