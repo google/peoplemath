@@ -73,5 +73,5 @@ To deploy the app to Google App Engine:
 ### Authentication
 
 Authentication using Firebase is in development.
-Currently, only the frontend is implemented, as long as
-`requireAuth` to `false` in `src/environments/environment.prod.ts` the app will run as expected without authentication.
+Currently, only the frontend is implemented. As long as
+`requireAuth` is set to `false` in `src/environments/environment.prod.ts` the app will run as expected without authentication.

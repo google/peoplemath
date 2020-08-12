@@ -96,7 +96,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+    AngularFireModule.initializeApp(firebaseConfig.firebase),
     AngularFireAuthModule
   ],
   providers: [
@@ -114,5 +114,4 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
   ],
   bootstrap: [AppComponent]
 })
-
 export class AppModule { }

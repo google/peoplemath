@@ -21,7 +21,7 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-        angularFireAuth.onAuthStateChanged(firebaseUser => {
+        angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
           if (firebaseUser != null) {
             const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
             this.user$ = of(user);
@@ -34,7 +34,7 @@ export class AuthService {
 
   googleSignin(): void {
     const provider = new auth.GoogleAuthProvider();
-    this.angularFireAuth.signInWithPopup(provider).then(result => {
+    this.angularFireAuth.signInWithPopup(provider).then((result: auth.UserCredential) => {
       const user = result.user;
       if (user == null) {
         throw new Error('User is null');

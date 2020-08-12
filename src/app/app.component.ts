@@ -24,7 +24,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class AppComponent {
   constructor(
-    public auth: AuthService,
+    private auth: AuthService,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) {

@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot): Observable<boolean> | boolean {
     if (environment.requireAuth) {
       return this.auth.angularFireAuth.authState.pipe(
         take(1),
@@ -37,16 +37,3 @@ export class AuthGuard implements CanActivate {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
