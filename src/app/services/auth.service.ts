@@ -17,11 +17,10 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {auth} from 'firebase/app';
-import {Observable} from 'rxjs';
+import {Observable, BehaviorSubject} from 'rxjs';
 import {User} from '../models/user.model';
 import * as firebase from 'firebase';
 import {NotificationService} from './notification.service';
-import {of} from 'rxjs/internal/observable/of';
 import {environment} from '../../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
 
@@ -29,7 +28,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class AuthService {
-  user$: Observable<User | null | undefined> = of(undefined);
+  readonly user$ = new BehaviorSubject<User | null | undefined>(undefined);
 
   constructor(
     private router: Router,
@@ -37,14 +36,14 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-        angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
-          if (firebaseUser != null) {
-            const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
-            this.user$ = of(user);
-          } else {
-            this.user$ = of(null);
-          }
-        });
+      angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
+        if (firebaseUser != null) {
+          const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
+          this.user$.next(user);
+        } else {
+          this.user$.next(null);
+        }
+      });
       }
   }
 
@@ -66,7 +65,7 @@ export class AuthService {
     if (firebaseUser?.displayName != null) {
       user.displayName = firebaseUser?.displayName;
     }
-    this.user$ = of(user);
+    this.user$.next(user);
   }
 
   public getIdToken(): Observable<string | null> {
@@ -75,7 +74,7 @@ export class AuthService {
 
   public signOut(): void {
     this.angularFireAuth.signOut().then(() => {
-      this.user$ = of(null);
+      this.user$.next(null);
       this.router.navigate(['/login']);
     }).catch(error => {
       this.notificationService.error$.next(error);
