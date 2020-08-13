@@ -52,23 +52,19 @@ export class AuthService {
     const provider = new auth.GoogleAuthProvider();
     this.angularFireAuth.signInWithPopup(provider).then((result: auth.UserCredential) => {
       const user = result.user;
-      if (user == null) {
-        throw new Error('User is null');
-      } else {
-        this.notificationService.notification$.next('Signed in as ' + user.displayName);
-        this.router.navigate(['/']);
-        return this.updateUserData(user);
-      }
+      this.notificationService.notification$.next('Signed in as ' + user?.displayName);
+      this.router.navigate(['/']);
+      return this.updateUserData(user);
     }).catch(error => {
-      console.log(error);
+      this.notificationService.error$.next(error);
       return error;
     });
   }
 
-  private updateUserData(firebaseUser: firebase.User): void {
-    const user: User = {uid: firebaseUser.uid};
-    if (firebaseUser.displayName != null) {
-      user.displayName = firebaseUser.displayName;
+  private updateUserData(firebaseUser: firebase.User | null): void {
+    const user: User = {uid: firebaseUser?.uid};
+    if (firebaseUser?.displayName != null) {
+      user.displayName = firebaseUser?.displayName;
     }
     this.user$ = of(user);
   }
@@ -78,11 +74,11 @@ export class AuthService {
   }
 
   public signOut(): void {
-    this.angularFireAuth.signOut().then(result => {
+    this.angularFireAuth.signOut().then(() => {
       this.user$ = of(null);
       this.router.navigate(['/login']);
     }).catch(error => {
-      console.log('Sign out error: ', error);
+      this.notificationService.error$.next(error);
     });
   }
 }

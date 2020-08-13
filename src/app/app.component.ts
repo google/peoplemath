@@ -24,12 +24,15 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class AppComponent {
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) {
     this.notificationService.notification$.subscribe(message => {
       this.snackBar.open(message);
+    });
+    this.notificationService.error$.subscribe(errorMessage => {
+      this.snackBar.open(errorMessage);
     });
   }
   title = 'PeopleMath';

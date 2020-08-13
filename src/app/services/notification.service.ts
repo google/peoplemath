@@ -22,6 +22,7 @@ import {Subject} from 'rxjs/internal/Subject';
 })
 export class NotificationService {
   public notification$: Subject<string> = new Subject<string>();
+  public error$: Subject<string> = new Subject<string>();
 
   constructor() { }
 }
