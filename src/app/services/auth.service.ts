@@ -1,11 +1,26 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {auth} from 'firebase/app';
-import {Observable} from 'rxjs';
+import {Observable, BehaviorSubject} from 'rxjs';
 import {User} from '../models/user.model';
 import * as firebase from 'firebase';
 import {NotificationService} from './notification.service';
-import {of} from 'rxjs/internal/observable/of';
 import {environment} from '../../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
 
@@ -13,7 +28,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class AuthService {
-  user$: Observable<User | null | undefined> = of(undefined);
+  readonly user$ = new BehaviorSubject<User | null | undefined>(undefined);
 
   constructor(
     private router: Router,
@@ -21,40 +36,36 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-        angularFireAuth.onAuthStateChanged(firebaseUser => {
-          if (firebaseUser != null) {
-            const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
-            this.user$ = of(user);
-          } else {
-            this.user$ = of(null);
-          }
-        });
+      angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
+        if (firebaseUser != null) {
+          const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
+          this.user$.next(user);
+        } else {
+          this.user$.next(null);
+        }
+      });
       }
   }
 
   googleSignin(): void {
     const provider = new auth.GoogleAuthProvider();
-    this.angularFireAuth.signInWithPopup(provider).then(result => {
+    this.angularFireAuth.signInWithPopup(provider).then((result: auth.UserCredential) => {
       const user = result.user;
-      if (user == null) {
-        throw new Error('User is null');
-      } else {
-        this.notificationService.notification$.next('Signed in as ' + user.displayName);
-        this.router.navigate(['/']);
-        return this.updateUserData(user);
-      }
+      this.notificationService.notification$.next('Signed in as ' + user?.displayName);
+      this.router.navigate(['/']);
+      return this.updateUserData(user);
     }).catch(error => {
-      console.log(error);
+      this.notificationService.error$.next(error);
       return error;
     });
   }
 
-  private updateUserData(firebaseUser: firebase.User): void {
-    const user: User = {uid: firebaseUser.uid};
-    if (firebaseUser.displayName != null) {
-      user.displayName = firebaseUser.displayName;
+  private updateUserData(firebaseUser: firebase.User | null): void {
+    const user: User = {uid: firebaseUser?.uid};
+    if (firebaseUser?.displayName != null) {
+      user.displayName = firebaseUser?.displayName;
     }
-    this.user$ = of(user);
+    this.user$.next(user);
   }
 
   public getIdToken(): Observable<string | null> {
@@ -62,11 +73,11 @@ export class AuthService {
   }
 
   public signOut(): void {
-    this.angularFireAuth.signOut().then(result => {
-      this.user$ = of(null);
+    this.angularFireAuth.signOut().then(() => {
+      this.user$.next(null);
       this.router.navigate(['/login']);
     }).catch(error => {
-      console.log('Sign out error: ', error);
+      this.notificationService.error$.next(error);
     });
   }
 }

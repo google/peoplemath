@@ -18,17 +18,18 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (environment.requireAuth) {
       return this.authService.getIdToken().pipe(
-      switchMap(token => {
-        if (token != null) {
-          const cloned = req.clone({
-            headers: req.headers.set('Authentication', 'Bearer ' + token)
-          });
-          return next.handle(cloned);
-        } else {
-          return next.handle(req);
-        }
-      })
-    ); } else {
+        switchMap((token: string | null) => {
+          if (token != null) {
+            const cloned = req.clone({
+              headers: req.headers.set('Authentication', 'Bearer ' + token)
+            });
+            return next.handle(cloned);
+          } else {
+            return next.handle(req);
+          }
+        })
+      );
+    } else {
       return next.handle(req);
     }
   }

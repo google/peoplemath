@@ -31,6 +31,9 @@ export class AppComponent {
     this.notificationService.notification$.subscribe(message => {
       this.snackBar.open(message);
     });
+    this.notificationService.error$.subscribe(errorMessage => {
+      this.snackBar.open(errorMessage);
+    });
   }
   title = 'PeopleMath';
 }
