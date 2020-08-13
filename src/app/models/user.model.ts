@@ -3,5 +3,5 @@
  */
 export interface User {
   uid: string | undefined;
-  displayName?: string | null;
+  displayName?: string;
 }
