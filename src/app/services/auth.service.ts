@@ -38,7 +38,10 @@ export class AuthService {
     if (environment.requireAuth) {
       angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
         if (firebaseUser != null) {
-          const user: User = {uid: firebaseUser.uid, displayName: firebaseUser.displayName};
+          const user: User = {uid: firebaseUser.uid};
+          if (firebaseUser.displayName != null) {
+            user.displayName = firebaseUser.displayName;
+          }
           this.user$.next(user);
         } else {
           this.user$.next(null);

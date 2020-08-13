@@ -23,8 +23,8 @@ type Team struct {
 
 // User model for authentication and authorisation
 type User struct {
-	UID    string `json:"uid"`
-	Domain string `json:"domain"`
+	UID   string `json:"uid"`
+	Email string `json:"email"`
 }
 
 type Permissions struct {
