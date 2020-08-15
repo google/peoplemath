@@ -5,6 +5,6 @@
     .mat-sidenav-container { height: 100% }
 }
 
-button {
+#logout-button {
   margin: 0 10px;
 }
