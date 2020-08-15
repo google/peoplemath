@@ -16,13 +16,13 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {User as firebaseUserModel} from 'firebase';
 import {auth} from 'firebase/app';
+import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {User} from '../models/user.model';
-import * as firebase from 'firebase';
 import {NotificationService} from './notification.service';
 import {environment} from '../../environments/environment';
-import {AngularFireAuth} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-      angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
+      angularFireAuth.onAuthStateChanged((firebaseUser: firebaseUserModel | null) => {
         if (firebaseUser != null) {
           const user: User = {uid: firebaseUser.uid};
           if (firebaseUser.displayName != null) {

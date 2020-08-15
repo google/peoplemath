@@ -17,6 +17,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "firebase",
+              "@firebase/app",
+              "@firebase/auth"
+            ],
             "outputPath": "dist/peoplemath",
             "index": "src/index.html",
             "main": "src/main.ts",
