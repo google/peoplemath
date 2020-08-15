@@ -476,3 +476,10 @@ func TestImproveBadMethods(t *testing.T) {
 	postresp := makeHTTPRequest(postreq, handler, t)
 	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
 }
+
+func TestAuthenticate(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	handler := server.makeHandler()
+
+	//
+}
