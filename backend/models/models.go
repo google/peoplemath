@@ -16,28 +16,14 @@ package models
 
 // Team model struct
 type Team struct {
-	ID          string      `json:"id"`
-	DisplayName string      `json:"displayName"`
-	Permissions Permissions `json:"permissions"`
+	ID          string `json:"id"`
+	DisplayName string `json:"displayName"`
 }
 
 // User model for authentication and authorisation
 type User struct {
 	UID   string `json:"uid"`
 	Email string `json:"email"`
-}
-
-type Permissions struct {
-	// We would like to be able to permission both individual users and entire G-Suite domains
-	// (e.g. "anyone with a google.com account can read this team but only these specific accounts can write it").
-	// In the future we may want to permission other types of entity,
-	// e.g. groups/roles, so we need a new struct to represent the different types of entity
-	// which can be permissioned.
-
-	// For example
-	// Domain        map[string]bool    `json:"domain"`
-	// Users         map[string]bool    `json:"users"`
-	// ?
 }
 
 // Period model struct

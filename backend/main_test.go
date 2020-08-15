@@ -123,6 +123,7 @@ func getTeam(handler http.Handler, teamID string, t *testing.T) *models.Team {
 
 func TestGetTeams(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -152,6 +153,7 @@ func TestGetTeams(t *testing.T) {
 
 func TestPostAndGetTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -166,6 +168,7 @@ func TestPostAndGetTeam(t *testing.T) {
 
 func TestPostExistingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -176,6 +179,7 @@ func TestPostExistingTeam(t *testing.T) {
 
 func TestGetMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/nonexistent", nil)
@@ -185,6 +189,7 @@ func TestGetMissingTeam(t *testing.T) {
 
 func TestPutTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -202,6 +207,7 @@ func TestPutTeam(t *testing.T) {
 
 func TestPutMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodPut, "/api/team/nonexistent", strings.NewReader(`{"id":"nonexistent","displayName":"newName"}`))
@@ -211,6 +217,7 @@ func TestPutMissingTeam(t *testing.T) {
 
 func TestGetPeriods(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -244,6 +251,7 @@ func TestGetPeriods(t *testing.T) {
 
 func TestGetPeriodsForMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/period/nonexistent/", nil)
@@ -253,6 +261,7 @@ func TestGetPeriodsForMissingTeam(t *testing.T) {
 
 func TestGetMissingPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -265,6 +274,7 @@ func TestGetMissingPeriod(t *testing.T) {
 
 func TestPostPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -290,6 +300,7 @@ func TestPostPeriod(t *testing.T) {
 
 func TestPostExistingPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -304,6 +315,7 @@ func TestPostExistingPeriod(t *testing.T) {
 
 func TestPostPeriodBadJSON(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -315,6 +327,7 @@ func TestPostPeriodBadJSON(t *testing.T) {
 
 func TestPostPeriodMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	period := models.Period{ID: "pid", DisplayName: "some period"}
@@ -324,6 +337,7 @@ func TestPostPeriodMissingTeam(t *testing.T) {
 
 func TestPutPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -361,6 +375,7 @@ func TestPutPeriod(t *testing.T) {
 
 func TestPutMissingPeriod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -374,6 +389,7 @@ func TestPutMissingPeriod(t *testing.T) {
 
 func TestPutPeriodMissingTeam(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	period := models.Period{ID: "pid", DisplayName: "some period"}
@@ -383,6 +399,7 @@ func TestPutPeriodMissingTeam(t *testing.T) {
 
 func TestPeriodConcurrentMod(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -407,6 +424,7 @@ func TestPeriodConcurrentMod(t *testing.T) {
 
 func TestInvalidCommitmentType(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -428,6 +446,7 @@ func TestInvalidCommitmentType(t *testing.T) {
 
 func TestMissingCommitmentType(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	teamID := "myteam"
@@ -446,6 +465,7 @@ func TestMissingCommitmentType(t *testing.T) {
 
 func TestImprove(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
@@ -466,6 +486,7 @@ func TestImprove(t *testing.T) {
 
 func TestImproveBadMethods(t *testing.T) {
 	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = noAuth{}
 	handler := server.makeHandler()
 
 	putreq := httptest.NewRequest(http.MethodPut, "/improve", nil)
@@ -475,11 +496,4 @@ func TestImproveBadMethods(t *testing.T) {
 	postreq := httptest.NewRequest(http.MethodPost, "/improve", nil)
 	postresp := makeHTTPRequest(postreq, handler, t)
 	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
-}
-
-func TestAuthenticate(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	handler := server.makeHandler()
-
-	//
 }
