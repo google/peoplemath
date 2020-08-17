@@ -95,5 +95,3 @@ To enable authentication using Firebase:
 * Download your [firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
 
 This will allow users to be authenticated using Google Sign-in.
-
-

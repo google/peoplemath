@@ -10,7 +10,6 @@ require (
 	golang.org/x/exp v0.0.0-20200228211341-fcea875c7e85 // indirect
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
-	golang.org/x/tools v0.0.0-20200228224639-71482053b885 // indirect
 	google.golang.org/api v0.19.0
 	google.golang.org/genproto v0.0.0-20200228133532-8c2c7df3a383 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.3 // indirect

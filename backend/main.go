@@ -87,14 +87,11 @@ func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
 			user.Email = token.Claims["email"].(string)
 		}
 
-		log.Printf("User is: %s", user)
-
 		next(w, r)
 	}
 }
 
 func getDomain(email string) string {
-	// I have not been able to find any case where this would fail
 	emailParts := strings.Split(email, "@")
 	return emailParts[len(emailParts)-1]
 }
