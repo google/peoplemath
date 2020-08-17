@@ -59,7 +59,11 @@ func (auth noAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
 }
 
 type firebaseAuth struct {
-	firebaseClient *auth.Client
+	firebaseClient authClient
+}
+
+type authClient interface {
+	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
 func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
@@ -71,7 +75,7 @@ func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
 		token, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			log.Printf("User authentication failed: error: %s", err)
-			http.Error(w, "User authentication failed (see server log)", http.StatusInternalServerError)
+			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
 			return
 		}
 

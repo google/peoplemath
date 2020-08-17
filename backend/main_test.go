@@ -16,13 +16,18 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
+	"firebase.google.com/go/v4/auth"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -496,4 +501,94 @@ func TestImproveBadMethods(t *testing.T) {
 	postreq := httptest.NewRequest(http.MethodPost, "/improve", nil)
 	postresp := makeHTTPRequest(postreq, handler, t)
 	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
+}
+
+type failingAuthStub struct{}
+
+func (auth failingAuthStub) authenticate(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Auth failed", http.StatusUnauthorized)
+		return
+	}
+}
+
+func TestAuthMiddleware(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = failingAuthStub{}
+	handler := server.makeHandler()
+
+	testHandlerWithAuth := func(httpMethod, target string, body io.Reader) {
+		req := httptest.NewRequest(httpMethod, target, body)
+		resp := makeHTTPRequest(req, handler, t)
+		checkResponseStatus(http.StatusUnauthorized, resp, t)
+	}
+	teamID := "myteam"
+	periodID := "2019q1"
+
+	testHandlerWithAuth(http.MethodGet, "/api/team/"+teamID, nil)
+	testHandlerWithAuth(http.MethodGet, "/api/team/", nil)
+	testHandlerWithAuth(http.MethodPost, "/api/team/", nil)
+	testHandlerWithAuth(http.MethodPut, "/api/team/"+teamID, nil)
+	testHandlerWithAuth(http.MethodGet, "/api/period/"+teamID+"/"+periodID, nil)
+	testHandlerWithAuth(http.MethodGet, "/api/period/"+teamID+"/", nil)
+	testHandlerWithAuth(http.MethodPost, "/api/period/"+teamID+"/", nil)
+	testHandlerWithAuth(http.MethodPut, "/api/period/"+teamID+"/"+periodID, nil)
+
+	getreq := httptest.NewRequest(http.MethodGet, "/improve", nil)
+	getresp := makeHTTPRequest(getreq, handler, t)
+	checkResponseStatus(http.StatusFound, getresp, t)
+}
+
+func TestNoAuth(t *testing.T) {
+	auth := noAuth{}
+	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
+		return
+	}
+	returnValue := auth.authenticate(handlerFunc)
+	returnType := reflect.TypeOf(returnValue)
+	if returnType.String() != "http.HandlerFunc" {
+		t.Errorf("Expected noAuth.authenticate to return a handler function,"+
+			" returned a value of type %v instead", returnType)
+	}
+}
+
+type AuthClientStub struct{}
+
+func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error) {
+	claims := map[string]interface{}{
+		"user_id":        "id123",
+		"email_verified": true,
+		"email":          "test@google.com"}
+	token := &auth.Token{
+		Claims: claims,
+	}
+	if idToken == "pass" {
+		return token, nil
+	} else if idToken == "passEmailUnverified" {
+		token.Claims["email_verified"] = false
+		return token, nil
+	} else {
+		token := &auth.Token{}
+		err := errors.New("token invalid")
+		return token, err
+	}
+}
+
+func TestFirebaseAuth(t *testing.T) {
+	server := Server{store: in_memory_storage.MakeInMemStore()}
+	server.auth = firebaseAuth{firebaseClient: AuthClientStub{}}
+	handler := server.makeHandler()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
+	req.Header.Add("Authentication", "Bearer pass")
+	resp := makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusOK, resp, t)
+
+	req.Header.Set("Authentication", "Bearer passEmailUnverified")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusOK, resp, t)
+
+	req.Header.Set("Authentication", "Bearer reject")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
 }
