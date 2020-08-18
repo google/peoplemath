@@ -72,19 +72,11 @@ func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
 		defer cancel()
 
 		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
-		token, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
+		_, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			log.Printf("User authentication failed: error: %s", err)
 			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
 			return
-		}
-
-		uid := token.Claims["user_id"].(string)
-		user := models.User{UID: uid}
-
-		emailVerified := token.Claims["email_verified"].(bool)
-		if emailVerified {
-			user.Email = token.Claims["email"].(string)
 		}
 
 		next(w, r)
@@ -381,9 +373,9 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var useInMemStore bool
-	var disableAuth bool
+	var authMode string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
-	flag.BoolVar(&disableAuth, "disableauth", false, "Disable authentication")
+	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -409,9 +401,10 @@ func main() {
 
 	server := Server{store: store, storeTimeout: defaultStoreTimeout}
 
-	if disableAuth {
+	if authMode == "none" {
 		server.auth = noAuth{}
-	} else {
+	} else if authMode == "firebase" {
+		log.Printf("Using firebase authentication per command-line flag")
 		ctx := context.Background()
 		app, err := firebase.NewApp(ctx, nil)
 		if err != nil {
