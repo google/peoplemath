@@ -4,3 +4,7 @@
 @media screen {
     .mat-sidenav-container { height: 100% }
 }
+
+#logout-button {
+  margin: 0 10px;
+}
