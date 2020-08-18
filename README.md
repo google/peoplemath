@@ -81,3 +81,9 @@ The primary supported way of running PeopleMath in a staging or production confi
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
+
+### Authentication
+
+Authentication using Firebase is in development.
+Currently, only the frontend is implemented. As long as
+`requireAuth` is set to `false` in `src/environments/environment.prod.ts` the app will run as expected without authentication.
