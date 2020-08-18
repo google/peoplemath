@@ -20,6 +20,12 @@ type Team struct {
 	DisplayName string `json:"displayName"`
 }
 
+// User model for authentication and authorisation
+type User struct {
+	UID   string `json:"uid"`
+	Email string `json:"email"`
+}
+
 // Period model struct
 type Period struct {
 	ID                     string          `json:"id"`

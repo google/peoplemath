@@ -17,13 +17,16 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"firebase.google.com/go/v4/auth"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
+	"firebase.google.com/go/v4"
 	"github.com/gorilla/mux"
 
 	"peoplemath/google_cds_store"
@@ -42,20 +45,69 @@ const (
 type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
+	auth         Auth
+}
+
+type Auth interface {
+	authenticate(next http.HandlerFunc) http.HandlerFunc
+}
+
+type noAuth struct{}
+
+func (auth noAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
+	return next
+}
+
+type firebaseAuth struct {
+	firebaseClient authClient
+}
+
+type authClient interface {
+	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
+}
+
+func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), defaultStoreTimeout)
+		defer cancel()
+
+		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
+		token, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
+		if err != nil {
+			log.Printf("User authentication failed: error: %s", err)
+			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
+			return
+		}
+
+		uid := token.Claims["user_id"].(string)
+		user := models.User{UID: uid}
+
+		emailVerified := token.Claims["email_verified"].(bool)
+		if emailVerified {
+			user.Email = token.Claims["email"].(string)
+		}
+
+		next(w, r)
+	}
+}
+
+func getDomain(email string) string {
+	emailParts := strings.Split(email, "@")
+	return emailParts[len(emailParts)-1]
 }
 
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.handleGetTeam).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.handleGetAllTeams).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.handlePostTeam).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.handlePutTeam).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.authenticate(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handleGetPeriod).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.handleGetAllPeriods).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.handlePostPeriod).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handlePutPeriod).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
@@ -329,7 +381,9 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var useInMemStore bool
+	var disableAuth bool
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
+	flag.BoolVar(&disableAuth, "disableauth", false, "Disable authentication")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -352,7 +406,28 @@ func main() {
 			return
 		}
 	}
+
 	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+
+	if disableAuth {
+		server.auth = noAuth{}
+	} else {
+		ctx := context.Background()
+		app, err := firebase.NewApp(ctx, nil)
+		if err != nil {
+			log.Fatalf("Could not instantiate Firebase app: %v\n", err)
+			return
+		}
+		firebaseClient, err := app.Auth(ctx)
+		if err != nil {
+			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
+			return
+		}
+
+		firebaseAuth := firebaseAuth{firebaseClient: firebaseClient}
+		server.auth = firebaseAuth
+	}
+
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
 	if port == "" {
