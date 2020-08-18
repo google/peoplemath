@@ -27,7 +27,6 @@ import (
 	"net/http/httptest"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -501,19 +500,6 @@ func TestAuthMiddleware(t *testing.T) {
 	getreq := httptest.NewRequest(http.MethodGet, "/improve", nil)
 	getresp := makeHTTPRequest(getreq, handler, t)
 	checkResponseStatus(http.StatusFound, getresp, t)
-}
-
-func TestNoAuth(t *testing.T) {
-	auth := noAuth{}
-	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
-		return
-	}
-	returnValue := auth.authenticate(handlerFunc)
-	returnType := reflect.TypeOf(returnValue)
-	if returnType.String() != "http.HandlerFunc" {
-		t.Errorf("Expected noAuth.authenticate to return a handler function,"+
-			" returned a value of type %v instead", returnType)
-	}
 }
 
 type AuthClientStub struct{}
