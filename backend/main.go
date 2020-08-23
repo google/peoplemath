@@ -46,41 +46,66 @@ type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
 	auth         Auth
+	authDomain   string
 }
 
 type Auth interface {
-	authenticate(next http.HandlerFunc) http.HandlerFunc
+	authenticate(token string) (userEmail string, httpError *string)
+	authorize(next http.HandlerFunc) http.HandlerFunc
 }
 
 type noAuth struct{}
 
-func (auth noAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth noAuth) authorize(next http.HandlerFunc) http.HandlerFunc {
 	return next
+}
+
+func (auth noAuth) authenticate(token string) (userEmail string, httpError *string) {
+	return "", nil
 }
 
 type firebaseAuth struct {
 	firebaseClient authClient
+	server         *Server
 }
 
 type authClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth firebaseAuth) authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), defaultStoreTimeout)
+		_, cancel := context.WithTimeout(r.Context(), defaultStoreTimeout)
 		defer cancel()
 
 		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
-		_, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
-		if err != nil {
-			log.Printf("User authentication failed: error: %s", err)
-			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
+		userEmail, httpError := auth.authenticate(idToken)
+		if httpError != nil {
+			http.Error(w, *httpError, http.StatusUnauthorized)
 			return
 		}
-
+		if getDomain(userEmail) != auth.server.authDomain {
+			http.Error(w, "You are not authorized to view this resource", http.StatusUnauthorized)
+			return
+		}
 		next(w, r)
 	}
+}
+
+func (auth firebaseAuth) authenticate(idToken string) (userEmail string, httpError *string) {
+	token, err := auth.firebaseClient.VerifyIDToken(context.Background(), idToken)
+	errorMessage := ""
+	if err != nil {
+		errorMessage = "User authentication failed"
+		return "", &errorMessage
+	}
+	if !token.Claims["email_verified"].(bool) {
+		errorMessage = "User authentication failed, please verify your email address"
+		return "", &errorMessage
+	}
+
+	userEmail = token.Claims["email"].(string)
+	return userEmail, nil
 }
 
 func getDomain(email string) string {
@@ -91,15 +116,15 @@ func getDomain(email string) string {
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handleGetTeam)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.authenticate(s.handlePostTeam)).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handlePutTeam)).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.authorize(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.authorize(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.authorize(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.authorize(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authorize(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.authorize(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.authorize(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authorize(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
@@ -374,8 +399,10 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var useInMemStore bool
 	var authMode string
+	var authDomain string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
+	flag.StringVar(&authDomain, "authdomain", "google.com", "Choose domain that is allowed to read and write")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -399,12 +426,13 @@ func main() {
 		}
 	}
 
-	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+	server := Server{store: store, storeTimeout: defaultStoreTimeout, authDomain: authDomain}
 
 	if authMode == "none" {
 		server.auth = noAuth{}
 	} else if authMode == "firebase" {
 		log.Printf("Using firebase authentication per command-line flag")
+		log.Printf("Using authorising domain %s per command-line flag", server.authDomain)
 		ctx := context.Background()
 		app, err := firebase.NewApp(ctx, nil)
 		if err != nil {
@@ -417,7 +445,10 @@ func main() {
 			return
 		}
 
-		firebaseAuth := firebaseAuth{firebaseClient: firebaseClient}
+		firebaseAuth := firebaseAuth{
+			firebaseClient: firebaseClient,
+			server:         &server,
+		}
 		server.auth = firebaseAuth
 	}
 

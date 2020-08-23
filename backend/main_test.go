@@ -468,11 +468,15 @@ func TestImproveBadMethods(t *testing.T) {
 
 type failingAuthStub struct{}
 
-func (auth failingAuthStub) authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth failingAuthStub) authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "Auth failed", http.StatusUnauthorized)
+		http.Error(w, "Authentication failed", http.StatusUnauthorized)
 		return
 	}
+}
+
+func (auth failingAuthStub) authenticate(token string) (userEmail string, httpError *string) {
+	return "", nil
 }
 
 func TestAuthMiddleware(t *testing.T) {
@@ -525,10 +529,15 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*auth.
 }
 
 func TestFirebaseAuth(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	server.auth = firebaseAuth{firebaseClient: AuthClientStub{}}
+	server := Server{
+		store:      in_memory_storage.MakeInMemStore(),
+		authDomain: "google.com"}
+	server.auth = firebaseAuth{
+		firebaseClient: AuthClientStub{},
+		server:         &server}
 	handler := server.makeHandler()
 
+	// Testing with authorised user domain
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
 	req.Header.Add("Authentication", "Bearer pass")
 	resp := makeHTTPRequest(req, handler, t)
@@ -536,7 +545,21 @@ func TestFirebaseAuth(t *testing.T) {
 
 	req.Header.Set("Authentication", "Bearer passEmailUnverified")
 	resp = makeHTTPRequest(req, handler, t)
-	checkResponseStatus(http.StatusOK, resp, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
+
+	req.Header.Set("Authentication", "Bearer reject")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
+
+	// Testing with unauthorised user domain
+	server.authDomain = ""
+	req.Header.Set("Authentication", "Bearer pass")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
+
+	req.Header.Set("Authentication", "Bearer passEmailUnverified")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
 
 	req.Header.Set("Authentication", "Bearer reject")
 	resp = makeHTTPRequest(req, handler, t)
