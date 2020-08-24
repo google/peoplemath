@@ -78,14 +78,15 @@ func (auth firebaseAuth) authorize(next http.HandlerFunc) http.HandlerFunc {
 		_, cancel := context.WithTimeout(r.Context(), defaultStoreTimeout)
 		defer cancel()
 
-		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
+		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 		userEmail, httpError := auth.authenticate(idToken)
 		if httpError != nil {
+			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
 			http.Error(w, *httpError, http.StatusUnauthorized)
 			return
 		}
 		if getDomain(userEmail) != auth.server.authDomain {
-			http.Error(w, "You are not authorized to view this resource", http.StatusUnauthorized)
+			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
 			return
 		}
 		next(w, r)

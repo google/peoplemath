@@ -28,6 +28,9 @@ const routes: Routes = [
   { path: 'team/:team', component: TeamPeriodsComponent, canActivate: [AuthGuard]},
   { path: 'team/:team/period/:period', component: PeriodComponent, canActivate: [AuthGuard]},
   { path: 'team/:team/periodsummary/:period', component: PeriodSummaryComponent, canActivate: [AuthGuard]},
+
+  { path: 'unauthenticated', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'unauthorized-read', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({
