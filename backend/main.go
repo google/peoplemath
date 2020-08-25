@@ -17,18 +17,17 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"firebase.google.com/go/v4/auth"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"firebase.google.com/go/v4"
 	"github.com/gorilla/mux"
 
+	"peoplemath/auth"
 	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
@@ -45,61 +44,21 @@ const (
 type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
-	auth         Auth
-}
-
-type Auth interface {
-	authenticate(next http.HandlerFunc) http.HandlerFunc
-}
-
-type noAuth struct{}
-
-func (auth noAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
-	return next
-}
-
-type firebaseAuth struct {
-	firebaseClient authClient
-}
-
-type authClient interface {
-	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
-}
-
-func (auth firebaseAuth) authenticate(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), defaultStoreTimeout)
-		defer cancel()
-
-		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
-		_, err := auth.firebaseClient.VerifyIDToken(ctx, idToken)
-		if err != nil {
-			log.Printf("User authentication failed: error: %s", err)
-			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
-			return
-		}
-
-		next(w, r)
-	}
-}
-
-func getDomain(email string) string {
-	emailParts := strings.Split(email, "@")
-	return emailParts[len(emailParts)-1]
+	auth         auth.Auth
 }
 
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handleGetTeam)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.authenticate(s.handlePostTeam)).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.auth.authenticate(s.handlePutTeam)).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
@@ -399,10 +358,10 @@ func main() {
 		}
 	}
 
-	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+	var authProvider auth.Auth
 
 	if authMode == "none" {
-		server.auth = noAuth{}
+		authProvider = auth.NoAuth{}
 	} else if authMode == "firebase" {
 		log.Printf("Using firebase authentication per command-line flag")
 		ctx := context.Background()
@@ -416,10 +375,13 @@ func main() {
 			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
 			return
 		}
-
-		firebaseAuth := firebaseAuth{firebaseClient: firebaseClient}
-		server.auth = firebaseAuth
+		firebaseAuth := auth.FirebaseAuth{FirebaseClient: firebaseClient}
+		authProvider = firebaseAuth
+	} else {
+		log.Fatalf("%s is not a supported authMode. Supported are 'none and 'firebase'.", authMode)
 	}
+
+	server := Server{store: store, storeTimeout: defaultStoreTimeout, auth: authProvider}
 
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")

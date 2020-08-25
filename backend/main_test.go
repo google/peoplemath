@@ -19,21 +19,21 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"firebase.google.com/go/v4/auth"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"peoplemath/auth"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
 	"strings"
 	"testing"
+
+	firebaseAuth "firebase.google.com/go/v4/auth"
 )
 
 func makeHandler() http.Handler {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	server.auth = noAuth{}
+	server := Server{store: in_memory_storage.MakeInMemStore(), auth: auth.NoAuth{}}
 	return server.makeHandler()
 }
 
@@ -466,9 +466,9 @@ func TestImproveBadMethods(t *testing.T) {
 	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
 }
 
-type failingAuthStub struct{}
+type failAuthenticationStub struct{}
 
-func (auth failingAuthStub) authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth failAuthenticationStub) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Auth failed", http.StatusUnauthorized)
 		return
@@ -476,27 +476,27 @@ func (auth failingAuthStub) authenticate(next http.HandlerFunc) http.HandlerFunc
 }
 
 func TestAuthMiddleware(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	server.auth = failingAuthStub{}
+	server := Server{store: in_memory_storage.MakeInMemStore(), auth: failAuthenticationStub{}}
 	handler := server.makeHandler()
 
-	testHandlerWithAuth := func(httpMethod, target string, body io.Reader) {
-		req := httptest.NewRequest(httpMethod, target, body)
+	assertAuthenticationFailure := func(httpMethod, target string) {
+		req := httptest.NewRequest(httpMethod, target, nil)
 		resp := makeHTTPRequest(req, handler, t)
 		checkResponseStatus(http.StatusUnauthorized, resp, t)
 	}
 	teamID := "myteam"
 	periodID := "2019q1"
 
-	testHandlerWithAuth(http.MethodGet, "/api/team/"+teamID, nil)
-	testHandlerWithAuth(http.MethodGet, "/api/team/", nil)
-	testHandlerWithAuth(http.MethodPost, "/api/team/", nil)
-	testHandlerWithAuth(http.MethodPut, "/api/team/"+teamID, nil)
-	testHandlerWithAuth(http.MethodGet, "/api/period/"+teamID+"/"+periodID, nil)
-	testHandlerWithAuth(http.MethodGet, "/api/period/"+teamID+"/", nil)
-	testHandlerWithAuth(http.MethodPost, "/api/period/"+teamID+"/", nil)
-	testHandlerWithAuth(http.MethodPut, "/api/period/"+teamID+"/"+periodID, nil)
+	assertAuthenticationFailure(http.MethodGet, "/api/team/"+teamID)
+	assertAuthenticationFailure(http.MethodGet, "/api/team/")
+	assertAuthenticationFailure(http.MethodPost, "/api/team/")
+	assertAuthenticationFailure(http.MethodPut, "/api/team/"+teamID)
+	assertAuthenticationFailure(http.MethodGet, "/api/period/"+teamID+"/"+periodID)
+	assertAuthenticationFailure(http.MethodGet, "/api/period/"+teamID+"/")
+	assertAuthenticationFailure(http.MethodPost, "/api/period/"+teamID+"/")
+	assertAuthenticationFailure(http.MethodPut, "/api/period/"+teamID+"/"+periodID)
 
+	// "/improve" is not covered by authentication so it should not return a 401
 	getreq := httptest.NewRequest(http.MethodGet, "/improve", nil)
 	getresp := makeHTTPRequest(getreq, handler, t)
 	checkResponseStatus(http.StatusFound, getresp, t)
@@ -504,12 +504,13 @@ func TestAuthMiddleware(t *testing.T) {
 
 type AuthClientStub struct{}
 
-func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error) {
+func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
 	claims := map[string]interface{}{
 		"user_id":        "id123",
 		"email_verified": true,
-		"email":          "test@google.com"}
-	token := &auth.Token{
+		"email":          "test@google.com",
+	}
+	token := &firebaseAuth.Token{
 		Claims: claims,
 	}
 	if idToken == "pass" {
@@ -518,15 +519,15 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*auth.
 		token.Claims["email_verified"] = false
 		return token, nil
 	} else {
-		token := &auth.Token{}
+		token := &firebaseAuth.Token{}
 		err := errors.New("token invalid")
 		return token, err
 	}
 }
 
 func TestFirebaseAuth(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore()}
-	server.auth = firebaseAuth{firebaseClient: AuthClientStub{}}
+	auth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{}}
+	server := Server{store: in_memory_storage.MakeInMemStore(), auth: auth}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
