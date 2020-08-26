@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/internal/Observable';
 import {from as observableFrom} from 'rxjs';
 import {AuthService} from './auth.service';
-import {switchMap} from 'rxjs/operators';
+import {catchError, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {of} from 'rxjs/internal/observable/of';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -33,9 +35,21 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((token: string | null) => {
           if (token != null) {
             const cloned = req.clone({
-              headers: req.headers.set('Authentication', 'Bearer ' + token)
+              headers: req.headers.set('Authorization', 'Bearer ' + token)
             });
-            return next.handle(cloned);
+            return next.handle(cloned).pipe(
+              catchError((err: any) => {
+                console.log(err);
+                if (err instanceof HttpErrorResponse) {
+                  if (err.status === 401) {
+                    this.router.navigate(['unauthenticated']);
+                  } else if (cloned.method === 'GET' && err.status === 403) {
+                    this.router.navigate(['unauthorized-read']);
+                  }
+                }
+                return of(err);
+              })
+            );
           } else {
             return next.handle(req);
           }

@@ -15,36 +15,56 @@
 package auth
 
 import (
-	"context"
-	"firebase.google.com/go/v4/auth"
-	"log"
-	"net/http"
-	"strings"
-	"time"
+  "context"
+  "firebase.google.com/go/v4/auth"
+  "net/http"
+  "strings"
+  "time"
 )
 
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
+	AuthDomain     *string
 }
 
 type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
+		_, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
 		defer cancel()
 
-		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
-		_, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
-		if err != nil {
-			log.Printf("User authentication failed: error: %s", err)
-			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
+		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
+		userEmail, httpError := auth.Authenticate(idToken)
+		if httpError != nil {
+			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
+			http.Error(w, *httpError, http.StatusUnauthorized)
 			return
 		}
 
+		if getDomain(userEmail) != *auth.AuthDomain {
+			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
+			return
+		}
 		next(w, r)
 	}
+}
+
+func (auth FirebaseAuth) Authenticate(idToken string) (userEmail string, httpError *string) {
+	token, err := auth.FirebaseClient.VerifyIDToken(context.Background(), idToken)
+	errorMessage := ""
+	if err != nil {
+		errorMessage = "User authentication failed"
+		return "", &errorMessage
+	}
+	if !token.Claims["email_verified"].(bool) {
+		errorMessage = "User authentication failed, please verify your email address"
+		return "", &errorMessage
+	}
+
+	userEmail = token.Claims["email"].(string)
+	return userEmail, nil
 }
