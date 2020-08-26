@@ -20,10 +20,12 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
+	AuthTimeout    time.Duration
 }
 
 type firebaseAuthClient interface {
@@ -32,7 +34,7 @@ type firebaseAuthClient interface {
 
 func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), defaultAuthTimeout)
+		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
 		defer cancel()
 
 		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")

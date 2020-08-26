@@ -38,6 +38,7 @@ import (
 
 const (
 	defaultStoreTimeout = 5 * time.Second
+	defaultAuthTimeout  = 5 * time.Second
 )
 
 // Server struct to handle incoming HTTP requests
@@ -375,7 +376,10 @@ func main() {
 			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
 			return
 		}
-		firebaseAuth := auth.FirebaseAuth{FirebaseClient: firebaseClient}
+		firebaseAuth := auth.FirebaseAuth{
+			FirebaseClient: firebaseClient,
+			AuthTimeout:    defaultAuthTimeout,
+		}
 		authProvider = firebaseAuth
 	} else {
 		log.Fatalf("%s is not a supported authMode. Supported are 'none and 'firebase'.", authMode)

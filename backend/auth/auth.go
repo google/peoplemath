@@ -16,11 +16,6 @@ package auth
 
 import (
 	"net/http"
-	"time"
-)
-
-const (
-	defaultAuthTimeout = 5 * time.Second
 )
 
 type Auth interface {
