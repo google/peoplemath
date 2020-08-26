@@ -382,7 +382,7 @@ func main() {
 		}
 		authProvider = firebaseAuth
 	} else {
-		log.Fatalf("%s is not a supported authMode. Supported are 'none and 'firebase'.", authMode)
+		log.Fatalf("%s is not a supported authMode. Supported are 'none' and 'firebase'.", authMode)
 	}
 
 	server := Server{store: store, storeTimeout: defaultStoreTimeout, auth: authProvider}
