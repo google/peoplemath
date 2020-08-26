@@ -21,7 +21,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AppComponent } from './app.component';
+import {AppComponent, ModalComponent} from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
@@ -85,6 +85,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
     RenameClassDialog,
     PillComponent,
     LoginComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,

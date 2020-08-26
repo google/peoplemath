@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {AuthService} from './services/auth.service';
 import {NotificationService} from './services/notification.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -26,15 +27,28 @@ export class AppComponent {
   constructor(
     public auth: AuthService,
     private notificationService: NotificationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.notificationService.notification$.subscribe(message => {
-      this.snackBar.open(message);
+      this.snackBar.open(message, 'Dismiss');
     });
     this.notificationService.error$.subscribe(errorMessage => {
-      this.snackBar.open(errorMessage);
+      this.snackBar.open(errorMessage, 'Dismiss');
+    });
+
+    this.notificationService.importantNotification$.subscribe(message => {
+      this.dialog.open(ModalComponent, {data: message});
     });
   }
   title = 'PeopleMath';
 }
 
+@Component({
+  selector: 'modal-component',
+  template: '<h2 mat-dialog-title>Notification</h2>\n<mat-dialog-content class="mat-typography">\n  <h3>{{data}}</h3>\n</mat-dialog-content>'
+})
+export class ModalComponent {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: string) {}
+}

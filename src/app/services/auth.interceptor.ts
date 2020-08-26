@@ -23,11 +23,15 @@ import {catchError, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {of} from 'rxjs/internal/observable/of';
 import {Router} from '@angular/router';
+import {NotificationService} from './notification.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {
-  }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (environment.requireAuth) {
@@ -44,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
                   if (err.status === 401) {
                     this.router.navigate(['unauthenticated']);
                   } else if (cloned.method === 'GET' && err.status === 403) {
-                    this.router.navigate(['unauthorized-read']);
+                    this.notificationService.importantNotification$.next(err.error);
                   }
                 }
                 return of(err);
