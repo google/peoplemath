@@ -24,8 +24,10 @@ import (
 	"os"
 	"time"
 
+	"firebase.google.com/go/v4"
 	"github.com/gorilla/mux"
 
+	"peoplemath/auth"
 	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
@@ -36,26 +38,28 @@ import (
 
 const (
 	defaultStoreTimeout = 5 * time.Second
+	defaultAuthTimeout  = 5 * time.Second
 )
 
 // Server struct to handle incoming HTTP requests
 type Server struct {
 	store        storage.StorageService
 	storeTimeout time.Duration
+	auth         auth.Auth
 }
 
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.handleGetTeam).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.handleGetAllTeams).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.handlePostTeam).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.handlePutTeam).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handleGetPeriod).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.handleGetAllPeriods).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.handlePostPeriod).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.handlePutPeriod).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
@@ -329,7 +333,9 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var useInMemStore bool
+	var authMode string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
+	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -352,7 +358,35 @@ func main() {
 			return
 		}
 	}
-	server := Server{store: store, storeTimeout: defaultStoreTimeout}
+
+	var authProvider auth.Auth
+
+	if authMode == "none" {
+		authProvider = auth.NoAuth{}
+	} else if authMode == "firebase" {
+		log.Printf("Using firebase authentication per command-line flag")
+		ctx := context.Background()
+		app, err := firebase.NewApp(ctx, nil)
+		if err != nil {
+			log.Fatalf("Could not instantiate Firebase app: %v\n", err)
+			return
+		}
+		firebaseClient, err := app.Auth(ctx)
+		if err != nil {
+			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
+			return
+		}
+		firebaseAuth := auth.FirebaseAuth{
+			FirebaseClient: firebaseClient,
+			AuthTimeout:    defaultAuthTimeout,
+		}
+		authProvider = firebaseAuth
+	} else {
+		log.Fatalf("%s is not a supported authMode. Supported are 'none' and 'firebase'.", authMode)
+	}
+
+	server := Server{store: store, storeTimeout: defaultStoreTimeout, auth: authProvider}
+
 	handler := server.makeHandler()
 	port := os.Getenv("PORT")
 	if port == "" {

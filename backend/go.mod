@@ -3,6 +3,7 @@ module peoplemath
 require (
 	cloud.google.com/go v0.53.0 // indirect
 	cloud.google.com/go/datastore v1.1.0
+	firebase.google.com/go/v4 v4.0.0
 	github.com/golang/protobuf v1.3.4 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.4
