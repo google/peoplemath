@@ -334,10 +334,8 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var useInMemStore bool
 	var authMode string
-	var authDomain string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
-	flag.StringVar(&authDomain, "authdomain", "google.com", "The email domain with read and write access")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -381,7 +379,7 @@ func main() {
 		firebaseAuth := auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
-			AuthDomain:     &authDomain,
+			Store:          &store,
 		}
 		authProvider = firebaseAuth
 	} else {

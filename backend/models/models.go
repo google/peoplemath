@@ -16,8 +16,28 @@ package models
 
 // Team model struct
 type Team struct {
-	ID          string `json:"id"`
-	DisplayName string `json:"displayName"`
+	ID          string          `json:"id"`
+	DisplayName string          `json:"displayName"`
+	Permissions TeamPermissions `json:"teamPermissions"`
+}
+
+const (
+	PrincipalTypeEmail  = "email"
+	PrincipalTypeDomain = "domain"
+)
+
+type Principal struct {
+	Type string `json:"type"`
+	ID   string `json:"id"`
+}
+
+type Permission struct {
+	Allow []Principal `json:"allow"`
+}
+
+type TeamPermissions struct {
+	Read  Permission `json:"read"`
+	Write Permission `json:"write"`
 }
 
 // Period model struct

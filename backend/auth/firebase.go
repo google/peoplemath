@@ -15,28 +15,69 @@
 package auth
 
 import (
-  "context"
-  "firebase.google.com/go/v4/auth"
-  "net/http"
-  "strings"
-  "time"
+	"context"
+	"firebase.google.com/go/v4/auth"
+	"github.com/gorilla/mux"
+	"net/http"
+	"peoplemath/models"
+	"peoplemath/storage"
+	"strings"
+	"time"
 )
 
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
-	AuthDomain     *string
+	Store          *storage.StorageService
 }
 
 type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
+const (
+	AccessLevelRead  = "read"
+	AccessLevelWrite = "write"
+	AccessLevelAny   = "any"
+)
+
+func getAccessType(r *http.Request) string {
+	accessTypes := map[string]string{
+		http.MethodGet:  AccessLevelRead,
+		http.MethodPut:  AccessLevelWrite,
+		http.MethodPost: AccessLevelWrite,
+	}
+	return accessTypes[r.Method]
+}
+
+func getPermissionsList(team models.Team, accessType string) []models.Principal {
+	var permissions []models.Principal
+	if accessType == AccessLevelRead {
+		permissions = team.Permissions.Read.Allow
+	} else if accessType == AccessLevelWrite {
+		permissions = team.Permissions.Write.Allow
+	} else if accessType == AccessLevelAny {
+		permissions = append(team.Permissions.Read.Allow, team.Permissions.Write.Allow...)
+	}
+	return permissions
+}
+
+type user struct {
+	email  string
+	domain string
+}
+
+func (user user) hasAccess(permission models.Principal) bool {
+	return (permission.Type == models.PrincipalTypeDomain && permission.ID == user.domain) ||
+		(permission.Type == models.PrincipalTypeEmail && permission.ID == user.email)
+}
+
 func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
+		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
 		defer cancel()
 
+		// Do authentication
 		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 		userEmail, httpError := auth.Authenticate(idToken)
 		if httpError != nil {
@@ -45,10 +86,58 @@ func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		if getDomain(userEmail) != *auth.AuthDomain {
-			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
-			return
+		// Get information that authorization is based on:
+		// The user, what the user is trying to access and how
+		user := user{
+			email:  userEmail,
+			domain: getDomain(userEmail),
 		}
+		teamID := mux.Vars(r)["teamID"]
+		accessType := getAccessType(r)
+
+		if teamID == "" { // If all teams are being read or a new team is being added
+			accessType = AccessLevelAny // allow anyone who has any access to any team to see all teams and create new teams
+			teams, err := (*auth.Store).GetAllTeams(ctx)
+			if err != nil {
+				http.Error(w, "Authorization failed because of internal server error", http.StatusInternalServerError)
+				return
+			}
+			hasAccess := false
+			for _, team := range teams {
+				for _, permission := range getPermissionsList(team, accessType) {
+					if user.hasAccess(permission) {
+						hasAccess = true
+					}
+				}
+				if !hasAccess {
+					http.Error(w, "You do not have the correct permissions for this action", http.StatusForbidden)
+					return
+				}
+			}
+		} else { // If one team is being accessed
+			team, found, err := (*auth.Store).GetTeam(ctx, teamID)
+			if err != nil {
+				http.Error(w, "Authorization failed because of internal server error", http.StatusInternalServerError)
+				return
+			}
+			if !found {
+				http.NotFound(w, r)
+				return
+			}
+
+			permissions := getPermissionsList(team, accessType)
+			hasAccess := false
+			for _, permission := range permissions {
+				if user.hasAccess(permission) {
+					hasAccess = true
+				}
+			}
+			if !hasAccess {
+				http.Error(w, "You do not have the correct permissions for this action", http.StatusForbidden)
+				return
+			}
+		}
+
 		next(w, r)
 	}
 }
