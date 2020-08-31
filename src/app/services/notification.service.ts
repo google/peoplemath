@@ -23,7 +23,6 @@ import { Subject } from 'rxjs';
 export class NotificationService {
   public notification$: Subject<string> = new Subject<string>();
   public error$: Subject<string> = new Subject<string>();
-  public importantNotification$: Subject<string> = new Subject<string>();
 
   constructor() { }
 }

@@ -381,7 +381,7 @@ func main() {
 		firebaseAuth := auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
-			AuthDomain:     &authDomain,
+			AuthDomain:     authDomain,
 		}
 		authProvider = firebaseAuth
 	} else {

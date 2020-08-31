@@ -15,12 +15,13 @@
 package auth
 
 import (
+	"context"
 	"net/http"
 	"strings"
 )
 
 type Auth interface {
-	Authenticate(token string) (userEmail string, httpError *string)
+	Authenticate(ctx context.Context, token string) (userEmail string, err error)
 	Authorize(next http.HandlerFunc) http.HandlerFunc
 }
 
@@ -30,7 +31,7 @@ func (auth NoAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return next
 }
 
-func (auth NoAuth) Authenticate(token string) (userEmail string, httpError *string) {
+func (auth NoAuth) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
 	return "", nil
 }
 

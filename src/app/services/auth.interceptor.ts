@@ -42,13 +42,13 @@ export class AuthInterceptor implements HttpInterceptor {
               headers: req.headers.set('Authorization', 'Bearer ' + token)
             });
             return next.handle(cloned).pipe(
-              catchError((err: any) => {
+              catchError(err => {
                 console.log(err);
                 if (err instanceof HttpErrorResponse) {
                   if (err.status === 401) {
                     this.router.navigate(['unauthenticated']);
                   } else if (cloned.method === 'GET' && err.status === 403) {
-                    this.notificationService.importantNotification$.next(err.error);
+                    this.notificationService.error$.next(err.error);
                   }
                 }
                 return of(err);

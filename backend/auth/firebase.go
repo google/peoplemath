@@ -15,17 +15,18 @@
 package auth
 
 import (
-  "context"
-  "firebase.google.com/go/v4/auth"
-  "net/http"
-  "strings"
-  "time"
+	"context"
+	"errors"
+	"firebase.google.com/go/v4/auth"
+	"net/http"
+	"strings"
+	"time"
 )
 
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
-	AuthDomain     *string
+	AuthDomain     string
 }
 
 type firebaseAuthClient interface {
@@ -34,18 +35,15 @@ type firebaseAuthClient interface {
 
 func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
-		defer cancel()
-
 		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
-		userEmail, httpError := auth.Authenticate(idToken)
-		if httpError != nil {
+		userEmail, err := auth.Authenticate(r.Context(), idToken)
+		if err != nil {
 			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
-			http.Error(w, *httpError, http.StatusUnauthorized)
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		if getDomain(userEmail) != *auth.AuthDomain {
+		if getDomain(userEmail) != auth.AuthDomain {
 			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
 			return
 		}
@@ -53,16 +51,19 @@ func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func (auth FirebaseAuth) Authenticate(idToken string) (userEmail string, httpError *string) {
-	token, err := auth.FirebaseClient.VerifyIDToken(context.Background(), idToken)
+func (auth FirebaseAuth) Authenticate(ctx context.Context, idToken string) (userEmail string, err error) {
+	ctx, cancel := context.WithTimeout(ctx, auth.AuthTimeout)
+	defer cancel()
+
+	token, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
 	errorMessage := ""
 	if err != nil {
-		errorMessage = "User authentication failed"
-		return "", &errorMessage
+		errorMessage = "User authentication failed "
+		return "", errors.New(errorMessage)
 	}
 	if !token.Claims["email_verified"].(bool) {
 		errorMessage = "User authentication failed, please verify your email address"
-		return "", &errorMessage
+		return "", errors.New(errorMessage)
 	}
 
 	userEmail = token.Claims["email"].(string)
