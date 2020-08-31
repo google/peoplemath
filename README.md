@@ -81,3 +81,14 @@ The primary supported way of running PeopleMath in a staging or production confi
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
+
+### Authentication
+
+To enable authentication using Firebase:
+
+* Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
+* Run backend with authmode flag `--authmode firebase`
+* Download your [Firebase config file](https://support.google.com/firebase/answer/7015592#web) and copy the text into the `firebaseConfig.ts` file in the same folder.
+* Download your [Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
+
+This will allow users to be authenticated using Google Sign-in.

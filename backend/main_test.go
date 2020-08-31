@@ -16,11 +16,15 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
+	firebaseAuth "firebase.google.com/go/v4/auth"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"peoplemath/auth"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
 	"peoplemath/server"
@@ -122,13 +126,13 @@ func getTeam(handler http.Handler, teamID string, t *testing.T) *models.Team {
 	return &team
 }
 
-func makeHandler() http.Handler {
-	srv := server.InitServer(in_memory_storage.MakeInMemStore(), server.DefaultStoreTimeout)
+func makeDefaultHandler() http.Handler {
+	srv := server.InitServer(in_memory_storage.MakeInMemStore(), server.DefaultStoreTimeout, auth.NoAuth{})
 	return server.MakeHandler(srv)
 }
 
 func TestGetTeams(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -156,7 +160,7 @@ func TestGetTeams(t *testing.T) {
 }
 
 func TestPostAndGetTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -169,7 +173,7 @@ func TestPostAndGetTeam(t *testing.T) {
 }
 
 func TestPostExistingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -178,7 +182,7 @@ func TestPostExistingTeam(t *testing.T) {
 }
 
 func TestGetMissingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/nonexistent", nil)
 	res := makeHTTPRequest(req, handler, t)
@@ -186,7 +190,7 @@ func TestGetMissingTeam(t *testing.T) {
 }
 
 func TestPutTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -202,7 +206,7 @@ func TestPutTeam(t *testing.T) {
 }
 
 func TestPutMissingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	req := httptest.NewRequest(http.MethodPut, "/api/team/nonexistent", strings.NewReader(`{"id":"nonexistent","displayName":"newName"}`))
 	resp := makeHTTPRequest(req, handler, t)
@@ -210,7 +214,7 @@ func TestPutMissingTeam(t *testing.T) {
 }
 
 func TestGetPeriods(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -242,7 +246,7 @@ func TestGetPeriods(t *testing.T) {
 }
 
 func TestGetPeriodsForMissingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/period/nonexistent/", nil)
 	resp := makeHTTPRequest(req, handler, t)
@@ -250,7 +254,7 @@ func TestGetPeriodsForMissingTeam(t *testing.T) {
 }
 
 func TestGetMissingPeriod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -261,7 +265,7 @@ func TestGetMissingPeriod(t *testing.T) {
 }
 
 func TestPostPeriod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -285,7 +289,7 @@ func TestPostPeriod(t *testing.T) {
 }
 
 func TestPostExistingPeriod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -298,7 +302,7 @@ func TestPostExistingPeriod(t *testing.T) {
 }
 
 func TestPostPeriodBadJSON(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -308,7 +312,7 @@ func TestPostPeriodBadJSON(t *testing.T) {
 }
 
 func TestPostPeriodMissingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	period := models.Period{ID: "pid", DisplayName: "some period"}
 	resp := attemptWritePeriod(handler, "nonexistent", period.ID, periodToJSON(&period), http.MethodPost, t)
@@ -316,7 +320,7 @@ func TestPostPeriodMissingTeam(t *testing.T) {
 }
 
 func TestPutPeriod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -352,7 +356,7 @@ func TestPutPeriod(t *testing.T) {
 }
 
 func TestPutMissingPeriod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "nonexistent"
@@ -364,7 +368,7 @@ func TestPutMissingPeriod(t *testing.T) {
 }
 
 func TestPutPeriodMissingTeam(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	period := models.Period{ID: "pid", DisplayName: "some period"}
 	resp := attemptWritePeriod(handler, "nonexistent", period.ID, periodToJSON(&period), http.MethodPut, t)
@@ -372,7 +376,7 @@ func TestPutPeriodMissingTeam(t *testing.T) {
 }
 
 func TestPeriodConcurrentMod(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -395,7 +399,7 @@ func TestPeriodConcurrentMod(t *testing.T) {
 }
 
 func TestInvalidCommitmentType(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
@@ -415,7 +419,7 @@ func TestInvalidCommitmentType(t *testing.T) {
 }
 
 func TestMissingCommitmentType(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	teamID := "myteam"
 	periodID := "2019q1"
@@ -432,7 +436,7 @@ func TestMissingCommitmentType(t *testing.T) {
 }
 
 func TestImprove(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/improve", nil)
 	resp := makeHTTPRequest(req, handler, t)
@@ -451,7 +455,7 @@ func TestImprove(t *testing.T) {
 }
 
 func TestImproveBadMethods(t *testing.T) {
-	handler := makeHandler()
+	handler := makeDefaultHandler()
 
 	putreq := httptest.NewRequest(http.MethodPut, "/improve", nil)
 	putresp := makeHTTPRequest(putreq, handler, t)
@@ -460,4 +464,82 @@ func TestImproveBadMethods(t *testing.T) {
 	postreq := httptest.NewRequest(http.MethodPost, "/improve", nil)
 	postresp := makeHTTPRequest(postreq, handler, t)
 	checkResponseStatus(http.StatusMethodNotAllowed, postresp, t)
+}
+
+type failAuthenticationStub struct{}
+
+func (auth failAuthenticationStub) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Auth failed", http.StatusUnauthorized)
+		return
+	}
+}
+
+func TestAuthMiddleware(t *testing.T) {
+	srv := server.InitServer(in_memory_storage.MakeInMemStore(), server.DefaultStoreTimeout, failAuthenticationStub{})
+	handler := server.MakeHandler(srv)
+
+	assertAuthenticationFailure := func(httpMethod, target string) {
+		req := httptest.NewRequest(httpMethod, target, nil)
+		resp := makeHTTPRequest(req, handler, t)
+		checkResponseStatus(http.StatusUnauthorized, resp, t)
+	}
+	teamID := "myteam"
+	periodID := "2019q1"
+
+	assertAuthenticationFailure(http.MethodGet, "/api/team/"+teamID)
+	assertAuthenticationFailure(http.MethodGet, "/api/team/")
+	assertAuthenticationFailure(http.MethodPost, "/api/team/")
+	assertAuthenticationFailure(http.MethodPut, "/api/team/"+teamID)
+	assertAuthenticationFailure(http.MethodGet, "/api/period/"+teamID+"/"+periodID)
+	assertAuthenticationFailure(http.MethodGet, "/api/period/"+teamID+"/")
+	assertAuthenticationFailure(http.MethodPost, "/api/period/"+teamID+"/")
+	assertAuthenticationFailure(http.MethodPut, "/api/period/"+teamID+"/"+periodID)
+
+	// "/improve" is not covered by authentication so it should not return a 401
+	getreq := httptest.NewRequest(http.MethodGet, "/improve", nil)
+	getresp := makeHTTPRequest(getreq, handler, t)
+	checkResponseStatus(http.StatusFound, getresp, t)
+}
+
+type AuthClientStub struct{}
+
+func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
+	claims := map[string]interface{}{
+		"user_id":        "id123",
+		"email_verified": true,
+		"email":          "test@google.com",
+	}
+	token := &firebaseAuth.Token{
+		Claims: claims,
+	}
+	if idToken == "pass" {
+		return token, nil
+	} else if idToken == "passEmailUnverified" {
+		token.Claims["email_verified"] = false
+		return token, nil
+	} else {
+		token := &firebaseAuth.Token{}
+		err := errors.New("token invalid")
+		return token, err
+	}
+}
+
+func TestFirebaseAuth(t *testing.T) {
+	fa := auth.FirebaseAuth{FirebaseClient: AuthClientStub{}}
+	srv := server.InitServer(in_memory_storage.MakeInMemStore(), server.DefaultStoreTimeout, fa)
+	handler := server.MakeHandler(srv)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
+	req.Header.Add("Authentication", "Bearer pass")
+	resp := makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusOK, resp, t)
+
+	req.Header.Set("Authentication", "Bearer passEmailUnverified")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusOK, resp, t)
+
+	req.Header.Set("Authentication", "Bearer reject")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
 }

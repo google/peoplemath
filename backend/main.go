@@ -21,6 +21,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"peoplemath/auth"
 	"peoplemath/google_cds_store"
 	"peoplemath/in_memory_storage"
 	"peoplemath/server"
@@ -29,7 +30,9 @@ import (
 
 func main() {
 	var useInMemStore bool
+	var authMode string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
+	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -52,7 +55,9 @@ func main() {
 			return
 		}
 	}
-	srv := server.InitServer(store, server.DefaultStoreTimeout)
+
+	authProvider := auth.GetAuthProvider(authMode)
+	srv := server.InitServer(store, server.DefaultStoreTimeout, authProvider)
 	handler := server.MakeHandler(srv)
 	port := os.Getenv("PORT")
 	if port == "" {

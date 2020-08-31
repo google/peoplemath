@@ -33,6 +33,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+/src/environments/firebaseConfig.ts
 
 # e2e
 /e2e/*.js
