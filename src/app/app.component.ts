@@ -35,7 +35,8 @@ export class AppComponent {
       this.snackBar.open(message, 'Dismiss');
     });
     this.notificationService.error$.subscribe(message => {
-      this.dialog.open(ModalComponent, {data: message});
+      const dismissInfo = ' Click anywhere to dismiss.';
+      this.dialog.open(ModalComponent, {data: message + dismissInfo});
     });
   }
   title = 'PeopleMath';

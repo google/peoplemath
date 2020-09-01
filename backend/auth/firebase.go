@@ -61,7 +61,7 @@ func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func getPermissionsList(team models.Team, action string) []models.Principal {
+func getPermissionsFromTeam(team models.Team, action string) []models.Principal {
 	var permissions []models.Principal
 	if action == ActionRead {
 		permissions = team.Permissions.Read.Allow
@@ -71,13 +71,22 @@ func getPermissionsList(team models.Team, action string) []models.Principal {
 	return permissions
 }
 
+func getPermissionsFromGeneral(generalPermissions models.GeneralPermissions, action string) []models.Principal {
+	var permissions []models.Principal
+	if action == ActionReadTeamList {
+		permissions = generalPermissions.ReadTeamList.Allow
+	} else if action == ActionAddTeam {
+		permissions = generalPermissions.AddTeam.Allow
+	}
+	return permissions
+}
+
 func (user User) has(permission models.Principal) bool {
 	return (permission.Type == models.PrincipalTypeDomain && permission.ID == user.domain) ||
 		(permission.Type == models.PrincipalTypeEmail && permission.ID == user.email)
 }
 
-func (auth FirebaseAuth) CanActOnTeam(user User, team models.Team, action string) bool {
-	permissions := getPermissionsList(team, action)
+func (user User) isPermitted(permissions []models.Principal) bool {
 	isPermitted := false
 	for _, permission := range permissions {
 		if user.has(permission) {
@@ -87,14 +96,12 @@ func (auth FirebaseAuth) CanActOnTeam(user User, team models.Team, action string
 	return isPermitted
 }
 
-func (auth FirebaseAuth) CanReadTeamList(user User, teams []models.Team) bool {
-	isPermitted := false
-	for _, team := range teams {
-		for _, permission := range append(team.Permissions.Read.Allow, team.Permissions.Write.Allow...) {
-			if user.has(permission) {
-				isPermitted = true
-			}
-		}
-	}
-	return isPermitted
+func (auth *FirebaseAuth) CanActOnTeam(user User, team models.Team, action string) bool {
+	permissions := getPermissionsFromTeam(team, action)
+	return user.isPermitted(permissions)
+}
+
+func (auth *FirebaseAuth) CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool {
+	permissions := getPermissionsFromGeneral(generalPermissions, action)
+	return user.isPermitted(permissions)
 }

@@ -14,6 +14,11 @@
 
 package models
 
+type GeneralPermissions struct {
+	ReadTeamList Permission `json:"readTeamList"`
+	AddTeam      Permission `json:"addTeam"`
+}
+
 // Team model struct
 type Team struct {
 	ID          string          `json:"id"`
@@ -21,26 +26,24 @@ type Team struct {
 	Permissions TeamPermissions `json:"teamPermissions"`
 }
 
-const (
-	PrincipalTypeEmail  = "email"
-	PrincipalTypeDomain = "domain"
-)
-
-type Principal struct {
-	Type string `json:"type"`
-	ID   string `json:"id"`
+type TeamPermissions struct {
+	Read  Permission `json:"read"`
+	Write Permission `json:"write"`
 }
 
 type Permission struct {
 	Allow []Principal `json:"allow"`
 }
 
-type TeamPermissions struct {
-	Read         Permission `json:"read"`
-	Write        Permission `json:"write"`
-	ViewAllTeams Permission `json:"viewAllTeams"`
-	AddTeam      Permission `json:"addTeam"`
+type Principal struct {
+	Type string `json:"type"`
+	ID   string `json:"id"`
 }
+
+const (
+	PrincipalTypeEmail  = "email"
+	PrincipalTypeDomain = "domain"
+)
 
 // Period model struct
 type Period struct {

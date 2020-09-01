@@ -120,15 +120,24 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	teams, err := s.store.GetAllTeams(ctx)
+	permissions, err := s.store.GetGeneralPermissions(ctx)
 	if err != nil {
-		log.Printf("Could not retrieve teams: error: %s", err)
-		http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(teams)
+	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionReadTeamList) {
+		teams, err := s.store.GetAllTeams(ctx)
+		if err != nil {
+			log.Printf("Could not retrieve teams: error: %s", err)
+			http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(teams)
+	} else {
+		http.Error(w, "You are not authorized to view the team list.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
@@ -166,11 +175,20 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreateTeam(ctx, team)
+	permissions, err := s.store.GetGeneralPermissions(ctx)
 	if err != nil {
-		log.Printf("Could not create team: error: %s", err)
-		http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
+	}
+	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionReadTeamList) {
+		err := s.store.CreateTeam(ctx, team)
+		if err != nil {
+			log.Printf("Could not create team: error: %s", err)
+			http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "You are not authorized to create a new team.", http.StatusForbidden)
 	}
 }
 
@@ -399,14 +417,19 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var useInMemStore bool
 	var authMode string
+	var defaultDomain string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
+	flag.StringVar(&defaultDomain, "defaultdomain", "none", "The domain that all team permissions are defaulted to")
 	flag.Parse()
 
 	var store storage.StorageService
 	if useInMemStore {
 		log.Printf("Using in-memory store per command-line flag")
-		store = in_memory_storage.MakeInMemStore()
+		if defaultDomain == "none" {
+			defaultDomain = "google.com"
+		}
+		store = in_memory_storage.MakeInMemStore(defaultDomain)
 	} else {
 		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 		if gcloudProject == "" {
@@ -441,7 +464,7 @@ func main() {
 			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
 			return
 		}
-		firebaseAuth := auth.FirebaseAuth{
+		firebaseAuth := &auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
 		}

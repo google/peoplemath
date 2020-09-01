@@ -16,7 +16,7 @@ export class Team {
     constructor(
         public id: string,
         public displayName: string,
-        public permissions?: TeamPermissions
+        public teamPermissions?: TeamPermissions
     ) {}
 }
 
@@ -24,7 +24,7 @@ export class TeamPermissions {
   constructor(
     public read: Permission,
     public write: Permission,
-    public viewAllTeams: Permission,
+    public readAllTeams: Permission,
     public addTeam: Permission,
   ) {
   }
@@ -48,19 +48,19 @@ export class Principal {
 export class ImmutableTeam {
   private readonly _id: string;
   private readonly _displayName: string;
-  private readonly _permissions?: TeamPermissions;
+  private readonly _teamPermissions?: TeamPermissions;
 
   get id(): string { return this._id; }
   get displayName(): string { return this._displayName; }
-  get permissions(): TeamPermissions | undefined { return this._permissions; }
+  get teamPermissions(): TeamPermissions | undefined { return this._teamPermissions; }
 
   constructor(t: Team) {
     this._id = t.id;
     this._displayName = t.displayName;
-    this._permissions = t.permissions;
+    this._teamPermissions = t.teamPermissions;
   }
 
   toOriginal(): Team {
-      return new Team(this.id, this.displayName, this.permissions);
+      return new Team(this.id, this.displayName, this.teamPermissions);
   }
 }

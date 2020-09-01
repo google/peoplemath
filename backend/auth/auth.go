@@ -22,13 +22,15 @@ import (
 
 type Auth interface {
 	Authenticate(next http.HandlerFunc) http.HandlerFunc
-	CanReadTeamList(user User, teams []models.Team) bool
 	CanActOnTeam(user User, team models.Team, action string) bool
+	CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool
 }
 
 const (
-	ActionRead  = "read"
-	ActionWrite = "write"
+	ActionRead         = "read"
+	ActionWrite        = "write"
+	ActionReadTeamList = "readTeamList"
+	ActionAddTeam      = "addTeam"
 )
 
 type User struct {
@@ -42,10 +44,10 @@ func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return next
 }
 
-func (auth NoAuth) CanReadTeamList(user User, teams []models.Team) bool {
+func (auth NoAuth) CanActOnTeam(user User, team models.Team, action string) bool {
 	return true
 }
-func (auth NoAuth) CanActOnTeam(user User, team models.Team, action string) bool {
+func (auth NoAuth) CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool {
 	return true
 }
 

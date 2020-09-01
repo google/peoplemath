@@ -26,16 +26,28 @@ import (
 
 // In-memory implementation of StorageService, for local testing
 type inMemStore struct {
-	teams    map[string]models.Team
-	periods  map[string]map[string]models.Period
-	settings models.Settings
+	generalPermissions models.GeneralPermissions
+	teams              map[string]models.Team
+	periods            map[string]map[string]models.Period
+	settings           models.Settings
 }
 
-func MakeInMemStore() storage.StorageService {
-	permissions := models.TeamPermissions{}
+func MakeInMemStore(defaultDomain string) storage.StorageService {
+	permissionList := models.Permission{Allow: []models.Principal{{
+		Type: models.PrincipalTypeDomain,
+		ID:   defaultDomain,
+	}}}
+	generalPermissions := models.GeneralPermissions{
+		ReadTeamList: permissionList,
+		AddTeam:      permissionList,
+	}
+	teamPermissions := models.TeamPermissions{
+		Read:  permissionList,
+		Write: permissionList,
+	}
 	teams := map[string]models.Team{
-		"team1": {ID: "team1", DisplayName: "Team team1"},
-		"team2": {ID: "team2", DisplayName: "Team team2"},
+		"team1": {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
+		"team2": {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
 	}
 	periods := map[string]map[string]models.Period{
 		"team1": {
@@ -50,7 +62,11 @@ func MakeInMemStore() storage.StorageService {
 	settings := models.Settings{
 		ImproveURL: "https://github.com/google/peoplemath",
 	}
-	return &inMemStore{teams: teams, periods: periods, settings: settings}
+	return &inMemStore{teams: teams, periods: periods, settings: settings, generalPermissions: generalPermissions}
+}
+
+func (s *inMemStore) GetGeneralPermissions(ctx context.Context) (models.GeneralPermissions, error) {
+	return s.generalPermissions, nil
 }
 
 func (s *inMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {

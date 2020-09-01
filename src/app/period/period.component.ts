@@ -31,6 +31,7 @@ import { Assignment, ImmutableAssignment } from '../assignment';
 import { AggregateBy } from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
 import {AuthService} from '../services/auth.service';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-period',
@@ -57,6 +58,7 @@ export class PeriodComponent implements OnInit {
     private snackBar: MatSnackBar,
     private changeDet: ChangeDetectorRef,
     public authService: AuthService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -273,18 +275,21 @@ export class PeriodComponent implements OnInit {
     ).subscribe((team?: Team) => {
       if (team) {
         this.setTeam(new ImmutableTeam(team));
-        const user = this.authService.user$.getValue();
-        const userEmail = user?.email;
-        const userDomain = user?.domain;
-        const principalTypeEmail = 'email';
-        const principalTypeDomain = 'domain';
-        if (team.permissions !== undefined) {
-          team.permissions.write.allow.forEach(permission => {
-            if ((permission.type === principalTypeDomain && permission.type === userDomain) ||
+        if (team.teamPermissions !== undefined) {
+          const user = this.authService.user$.getValue();
+          const userEmail = user?.email;
+          const userDomain = user?.domain;
+          const principalTypeEmail = 'email';
+          const principalTypeDomain = 'domain';
+          team.teamPermissions.write.allow.forEach(permission => {
+            if ((permission.type === principalTypeDomain && permission.id === userDomain) ||
               (permission.type === principalTypeEmail && permission.id === userEmail)) {
               this.userHasEditPermissions = true;
             }
           });
+          if (!this.userHasEditPermissions) {
+            this.notificationService.error$.next('You do not have editing priviliges.');
+          }
         }
       } else {
         this.setTeam(undefined);
