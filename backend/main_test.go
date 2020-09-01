@@ -468,11 +468,15 @@ func TestImproveBadMethods(t *testing.T) {
 
 type failAuthenticationStub struct{}
 
-func (auth failAuthenticationStub) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth failAuthenticationStub) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "Auth failed", http.StatusUnauthorized)
+		http.Error(w, "Authentication failed", http.StatusUnauthorized)
 		return
 	}
+}
+
+func (auth failAuthenticationStub) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
+	return "", nil
 }
 
 func TestAuthMiddleware(t *testing.T) {
@@ -502,7 +506,8 @@ func TestAuthMiddleware(t *testing.T) {
 	checkResponseStatus(http.StatusFound, getresp, t)
 }
 
-type AuthClientStub struct{}
+type AuthClientStub struct {
+}
 
 func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
 	claims := map[string]interface{}{
@@ -526,20 +531,39 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*fireb
 }
 
 func TestFirebaseAuth(t *testing.T) {
-	auth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{}}
-	server := Server{store: in_memory_storage.MakeInMemStore(), auth: auth}
+	authDomain := "google.com"
+	testAuth := auth.FirebaseAuth{
+		FirebaseClient: AuthClientStub{},
+		AuthDomain:     authDomain,
+	}
+	server := Server{store: in_memory_storage.MakeInMemStore(), auth: &testAuth}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
-	req.Header.Add("Authentication", "Bearer pass")
+	req.Header.Add("Authorization", "Bearer pass")
 	resp := makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusOK, resp, t)
 
-	req.Header.Set("Authentication", "Bearer passEmailUnverified")
+	req.Header.Set("Authorization", "Bearer passEmailUnverified")
 	resp = makeHTTPRequest(req, handler, t)
-	checkResponseStatus(http.StatusOK, resp, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
 
-	req.Header.Set("Authentication", "Bearer reject")
+	req.Header.Set("Authorization", "Bearer reject")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
+
+	// Testing with unauthorised user domain
+	testAuth.AuthDomain = ""
+
+	req.Header.Set("Authorization", "Bearer pass")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusForbidden, resp, t)
+
+	req.Header.Set("Authorization", "Bearer passEmailUnverified")
+	resp = makeHTTPRequest(req, handler, t)
+	checkResponseStatus(http.StatusUnauthorized, resp, t)
+
+	req.Header.Set("Authorization", "Bearer reject")
 	resp = makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusUnauthorized, resp, t)
 }

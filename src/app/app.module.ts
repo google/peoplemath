@@ -21,7 +21,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
@@ -55,6 +55,7 @@ import {NotificationService} from './services/notification.service';
 import {AuthInterceptor} from './services/auth.interceptor';
 import {firebaseConfig} from '../environments/firebaseConfig';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
+import {ModalComponent} from './modal/modal.component';
 
 
 @NgModule({
@@ -85,6 +86,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
     RenameClassDialog,
     PillComponent,
     LoginComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,

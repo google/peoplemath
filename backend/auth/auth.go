@@ -15,15 +15,27 @@
 package auth
 
 import (
+	"context"
 	"net/http"
+	"strings"
 )
 
 type Auth interface {
-	Authenticate(next http.HandlerFunc) http.HandlerFunc
+	Authenticate(ctx context.Context, token string) (userEmail string, err error)
+	Authorize(next http.HandlerFunc) http.HandlerFunc
 }
 
 type NoAuth struct{}
 
-func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth NoAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return next
+}
+
+func (auth NoAuth) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
+	return "", nil
+}
+
+func getDomain(email string) string {
+	emailParts := strings.Split(email, "@")
+	return emailParts[len(emailParts)-1]
 }
