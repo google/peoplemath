@@ -16,12 +16,10 @@
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/internal/Observable';
-import {from as observableFrom} from 'rxjs';
 import {AuthService} from './auth.service';
-import {catchError, switchMap, tap} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {of} from 'rxjs/internal/observable/of';
+import {of, Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {NotificationService} from './notification.service';
 
