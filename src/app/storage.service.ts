@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Injectable } from '@angular/core';
-import { Team } from './team';
+import {Team, TeamList} from './team';
 import { Period } from './period';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -24,8 +24,8 @@ export class StorageService {
 
   constructor(private http: HttpClient) { }
 
-  getTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>('/api/team/');
+  getTeams(): Observable<(TeamList)> {
+    return this.http.get<TeamList>('/api/team/');
   }
 
   getTeam(teamId: string): Observable<Team> {
@@ -45,7 +45,7 @@ export class StorageService {
   getPeriods(teamId: string): Observable<Period[]> {
     return this.http.get<Period[]>('/api/period/' + teamId + '/');
   }
-  
+
   getPeriod(teamId: string, periodId: string): Observable<Period> {
     return this.http.get<Period>('/api/period/' + teamId + '/' + periodId);
   }

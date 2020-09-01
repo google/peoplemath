@@ -134,7 +134,9 @@ func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 		}
 		enc := json.NewEncoder(w)
 		w.Header().Set("Content-Type", "application/json")
-		enc.Encode(teams)
+		userCanAddTeam := s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionAddTeam)
+		teamList := models.TeamList{Teams: teams, AddTeamPermissions: userCanAddTeam}
+		enc.Encode(teamList)
 	} else {
 		http.Error(w, "You are not authorized to view the team list.", http.StatusForbidden)
 	}

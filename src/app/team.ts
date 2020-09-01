@@ -20,6 +20,14 @@ export class Team {
     ) {}
 }
 
+export class TeamList {
+  constructor(
+    public teams: Team[],
+    public addTeamPermissions: boolean
+  ) {
+  }
+}
+
 export class TeamPermissions {
   constructor(
     public read: Permission,

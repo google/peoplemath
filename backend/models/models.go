@@ -26,6 +26,11 @@ type Team struct {
 	Permissions TeamPermissions `json:"teamPermissions"`
 }
 
+type TeamList struct {
+	Teams              []Team `json:"teams"`
+	AddTeamPermissions bool   `json:"addTeamPermissions"`
+}
+
 type TeamPermissions struct {
 	Read  Permission `json:"read"`
 	Write Permission `json:"write"`
