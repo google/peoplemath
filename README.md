@@ -88,7 +88,7 @@ A basic authorization mechanism has been implemented which specifies one email d
 Every user with an email address ending in that domain has read and write access.
 Any other user will not have access.
 
-To enable authorization with Firebase to authenticate users:
+To enable authorization with [Firebase](https://firebase.google.com/docs/auth) to authenticate users:
 
 * Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
 * Run backend with authmode flag `--authmode firebase`
