@@ -532,11 +532,11 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*fireb
 
 func TestFirebaseAuth(t *testing.T) {
 	authDomain := "google.com"
-	auth := auth.FirebaseAuth{
+	testAuth := auth.FirebaseAuth{
 		FirebaseClient: AuthClientStub{},
 		AuthDomain:     authDomain,
 	}
-	server := Server{store: in_memory_storage.MakeInMemStore(), auth: auth}
+	server := Server{store: in_memory_storage.MakeInMemStore(), auth: &testAuth}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
@@ -553,9 +553,7 @@ func TestFirebaseAuth(t *testing.T) {
 	checkResponseStatus(http.StatusUnauthorized, resp, t)
 
 	// Testing with unauthorised user domain
-	auth.AuthDomain = ""
-	server = Server{store: in_memory_storage.MakeInMemStore(), auth: auth}
-	handler = server.makeHandler()
+	testAuth.AuthDomain = ""
 
 	req.Header.Set("Authorization", "Bearer pass")
 	resp = makeHTTPRequest(req, handler, t)

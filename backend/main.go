@@ -378,7 +378,7 @@ func main() {
 			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
 			return
 		}
-		firebaseAuth := auth.FirebaseAuth{
+		firebaseAuth := &auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
 			AuthDomain:     authDomain,

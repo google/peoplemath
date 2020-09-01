@@ -33,7 +33,7 @@ type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
+func (auth *FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 		userEmail, err := auth.Authenticate(r.Context(), idToken)
@@ -42,7 +42,6 @@ func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-
 		if getDomain(userEmail) != auth.AuthDomain {
 			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
 			return
@@ -51,7 +50,7 @@ func (auth FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func (auth FirebaseAuth) Authenticate(ctx context.Context, idToken string) (userEmail string, err error) {
+func (auth *FirebaseAuth) Authenticate(ctx context.Context, idToken string) (userEmail string, err error) {
 	ctx, cancel := context.WithTimeout(ctx, auth.AuthTimeout)
 	defer cancel()
 
