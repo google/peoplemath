@@ -32,6 +32,7 @@ type inMemStore struct {
 }
 
 func MakeInMemStore() storage.StorageService {
+	permissions := models.TeamPermissions{}
 	teams := map[string]models.Team{
 		"team1": {ID: "team1", DisplayName: "Team team1"},
 		"team2": {ID: "team2", DisplayName: "Team team2"},

@@ -16,14 +16,16 @@ export class Team {
     constructor(
         public id: string,
         public displayName: string,
-        public permissions: TeamPermissions
+        public permissions?: TeamPermissions
     ) {}
 }
 
 export class TeamPermissions {
   constructor(
     public read: Permission,
-    public write: Permission
+    public write: Permission,
+    public viewAllTeams: Permission,
+    public addTeam: Permission,
   ) {
   }
 }
@@ -43,15 +45,14 @@ export class Principal {
   }
 }
 
-
 export class ImmutableTeam {
   private readonly _id: string;
   private readonly _displayName: string;
-  private readonly _permissions: TeamPermissions;
+  private readonly _permissions?: TeamPermissions;
 
   get id(): string { return this._id; }
   get displayName(): string { return this._displayName; }
-  get permissions(): TeamPermissions { return this._permissions; }
+  get permissions(): TeamPermissions | undefined { return this._permissions; }
 
   constructor(t: Team) {
     this._id = t.id;

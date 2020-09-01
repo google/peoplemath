@@ -61,7 +61,7 @@ export class TeamsComponent implements OnInit {
 
   addTeam(): void {
     const dialogData: EditTeamDialogData = {
-      team: new Team('', '', new TeamPermissions(new Permission([]), new Permission([]))),
+      team: new Team('', ''),
       title: 'Add Team',
       okAction: 'Add',
       allowCancel: true,

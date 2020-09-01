@@ -63,7 +63,7 @@ export class TeamPeriodsComponent implements OnInit {
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
-        return of(new Team('', '', new TeamPermissions(new Permission([]), new Permission([]))));
+        return of(new Team('', ''));
       })
     ).subscribe((team?: Team) => {
       if (team) {

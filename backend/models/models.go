@@ -36,8 +36,10 @@ type Permission struct {
 }
 
 type TeamPermissions struct {
-	Read  Permission `json:"read"`
-	Write Permission `json:"write"`
+	Read         Permission `json:"read"`
+	Write        Permission `json:"write"`
+	ViewAllTeams Permission `json:"viewAllTeams"`
+	AddTeam      Permission `json:"addTeam"`
 }
 
 // Period model struct
