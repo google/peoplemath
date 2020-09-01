@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit } from '@angular/core';
-import { Team, ImmutableTeam } from '../team';
+import {Team, ImmutableTeam, TeamPermissions, Permission} from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -61,7 +61,7 @@ export class TeamsComponent implements OnInit {
 
   addTeam(): void {
     const dialogData: EditTeamDialogData = {
-      team: new Team('', ''),
+      team: new Team('', '', new TeamPermissions(new Permission([]), new Permission([]))),
       title: 'Add Team',
       okAction: 'Add',
       allowCancel: true,

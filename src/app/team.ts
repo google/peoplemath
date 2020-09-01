@@ -15,23 +15,51 @@
 export class Team {
     constructor(
         public id: string,
-        public displayName: string
+        public displayName: string,
+        public permissions: TeamPermissions
     ) {}
 }
 
+export class TeamPermissions {
+  constructor(
+    public read: Permission,
+    public write: Permission
+  ) {
+  }
+}
+
+export class Permission {
+  constructor(
+    public allow: Principal[]
+  ) {
+  }
+}
+
+export class Principal {
+  constructor(
+    public type: string,
+    public id: string
+  ) {
+  }
+}
+
+
 export class ImmutableTeam {
-    private readonly _id: string;
-    private readonly _displayName: string;
+  private readonly _id: string;
+  private readonly _displayName: string;
+  private readonly _permissions: TeamPermissions;
 
-    get id(): string { return this._id; }
-    get displayName(): string { return this._displayName; }
+  get id(): string { return this._id; }
+  get displayName(): string { return this._displayName; }
+  get permissions(): TeamPermissions { return this._permissions; }
 
-    constructor(t: Team) {
-        this._id = t.id;
-        this._displayName = t.displayName;
-    }
+  constructor(t: Team) {
+    this._id = t.id;
+    this._displayName = t.displayName;
+    this._permissions = t.permissions;
+  }
 
-    toOriginal(): Team {
-        return new Team(this.id, this.displayName);
-    }
+  toOriginal(): Team {
+      return new Team(this.id, this.displayName, this.permissions);
+  }
 }

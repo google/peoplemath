@@ -51,15 +51,15 @@ type Server struct {
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handleGetTeam)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authorize(s.handleGetAllTeams)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authorize(s.handlePostTeam)).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handlePutTeam)).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handleGetPeriod)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handleGetAllPeriods)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handlePostPeriod)).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handlePutPeriod)).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
@@ -146,9 +146,14 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(team)
+
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionRead) {
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(team)
+	} else {
+		http.Error(w, "You are not authorized to view this team.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
@@ -179,11 +184,16 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdateTeam(ctx, team)
-	if err != nil {
-		log.Printf("Could not update team: error: %s", err)
-		http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
-		return
+
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionRead) {
+		err := s.store.UpdateTeam(ctx, team)
+		if err != nil {
+			log.Printf("Could not update team: error: %s", err)
+			http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "You are not authorized to edit this team.", http.StatusForbidden)
 	}
 }
 
@@ -204,19 +214,32 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	periods, found, err := s.store.GetAllPeriods(ctx, teamID)
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
-		http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(periods)
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionRead) {
+		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
+		if err != nil {
+			log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(periods)
+	} else {
+		http.Error(w, "You are not authorized to view this team's periods.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
@@ -225,19 +248,33 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 	periodID := vars["periodID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
+
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
-		http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(period)
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionRead) {
+		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
+		if err != nil {
+			log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(period)
+	} else {
+		http.Error(w, "You are not authorized to view this team's periods.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period models.Period) {
@@ -263,13 +300,27 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreatePeriod(ctx, teamID, period)
+
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not create period for team '%s': error: %s", teamID, err)
-		http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
-	s.writePeriodUpdateResponse(w, r, period)
+	if !found {
+		http.NotFound(w, r)
+		return
+	}
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionWrite) {
+		err := s.store.CreatePeriod(ctx, teamID, period)
+		if err != nil {
+			log.Printf("Could not create period for team '%s': error: %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		s.writePeriodUpdateResponse(w, r, period)
+	} else {
+		http.Error(w, "You are not authorized to add new periods for this team.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
@@ -290,13 +341,27 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdatePeriod(ctx, teamID, period)
+
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not update period '%s' for team '%s': error: %s", periodID, teamID, err)
-		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
-	s.writePeriodUpdateResponse(w, r, period)
+	if !found {
+		http.NotFound(w, r)
+		return
+	}
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionWrite) {
+		err := s.store.UpdatePeriod(ctx, teamID, period)
+		if err != nil {
+			log.Printf("Could not update period '%s' for team '%s': error: %s", periodID, teamID, err)
+			http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+			return
+		}
+		s.writePeriodUpdateResponse(w, r, period)
+	} else {
+		http.Error(w, "You are not authorized to edit this team's periods.", http.StatusForbidden)
+	}
 }
 
 func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, bool) {
@@ -379,7 +444,6 @@ func main() {
 		firebaseAuth := auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
-			Store:          &store,
 		}
 		authProvider = firebaseAuth
 	} else {

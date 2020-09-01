@@ -19,7 +19,7 @@
         <button mat-fab (click)="disableEditing()" color="primary"><mat-icon>done</mat-icon></button>
     </span>
     <span *ngIf="!isEditingEnabled">
-        <button mat-fab (click)="enableEditing()" color="primary"><mat-icon>edit</mat-icon></button>
+        <button mat-fab [disabled]="!userHasEditPermissions" (click)="enableEditing()" color="primary"><mat-icon>edit</mat-icon></button>
     </span>
 </div>
 </div>

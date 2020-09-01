@@ -15,7 +15,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
-import { Team, ImmutableTeam } from '../team';
+import {Team, ImmutableTeam, TeamPermissions, Permission} from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -63,7 +63,7 @@ export class TeamPeriodsComponent implements OnInit {
       catchError(error => {
         this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
-        return of(new Team('', ''));
+        return of(new Team('', '', new TeamPermissions(new Permission([]), new Permission([]))));
       })
     ).subscribe((team?: Team) => {
       if (team) {
