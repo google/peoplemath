@@ -282,8 +282,8 @@ export class PeriodComponent implements OnInit {
           const principalTypeEmail = 'email';
           const principalTypeDomain = 'domain';
           team.teamPermissions.write.allow.forEach(permission => {
-            if ((permission.type === principalTypeDomain && permission.id === userDomain) ||
-              (permission.type === principalTypeEmail && permission.id === userEmail)) {
+            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
               this.userHasEditPermissions = true;
             }
           });

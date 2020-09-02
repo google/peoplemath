@@ -82,8 +82,8 @@ func getPermissionsFromGeneral(generalPermissions models.GeneralPermissions, act
 }
 
 func (user User) has(permission models.Principal) bool {
-	return (permission.Type == models.PrincipalTypeDomain && permission.ID == user.domain) ||
-		(permission.Type == models.PrincipalTypeEmail && permission.ID == user.email)
+	return (permission.Type == models.PrincipalTypeDomain && strings.ToLower(permission.ID) == strings.ToLower(user.domain)) ||
+		(permission.Type == models.PrincipalTypeEmail && strings.ToLower(permission.ID) == strings.ToLower(user.email))
 }
 
 func (user User) isPermitted(permissions []models.Principal) bool {

@@ -33,21 +33,38 @@ type inMemStore struct {
 }
 
 func MakeInMemStore(defaultDomain string) storage.StorageService {
-	permissionList := models.Permission{Allow: []models.Principal{{
+	defaultPermissionList := models.Permission{Allow: []models.Principal{{
 		Type: models.PrincipalTypeDomain,
 		ID:   defaultDomain,
 	}}}
-	generalPermissions := models.GeneralPermissions{
-		ReadTeamList: permissionList,
-		AddTeam:      permissionList,
-	}
 	teamPermissions := models.TeamPermissions{
-		Read:  permissionList,
-		Write: permissionList,
+		Read:  defaultPermissionList,
+		Write: defaultPermissionList,
+	}
+	userAEmail := "userA@userA.com"
+	userBDomain := "userB.com"
+	testPermissionList := models.Permission{Allow: []models.Principal{{
+		Type: models.PrincipalTypeEmail,
+		ID:   userAEmail,
+	}, {
+		Type: models.PrincipalTypeDomain,
+		ID:   userBDomain,
+	}, {
+		Type: models.PrincipalTypeDomain,
+		ID:   defaultDomain,
+	}}}
+	authTestTeamPermissions := models.TeamPermissions{
+		Read:  testPermissionList,
+		Write: testPermissionList,
 	}
 	teams := map[string]models.Team{
-		"team1": {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
-		"team2": {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
+		"team1":        {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
+		"team2":        {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
+		"teamAuthTest": {ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: authTestTeamPermissions},
+	}
+	generalPermissions := models.GeneralPermissions{
+		ReadTeamList: testPermissionList,
+		AddTeam:      testPermissionList,
 	}
 	periods := map[string]map[string]models.Period{
 		"team1": {
@@ -57,6 +74,9 @@ func MakeInMemStore(defaultDomain string) storage.StorageService {
 		},
 		"team2": {
 			"2018q4": makeFakePeriod("2018q4"),
+		},
+		"teamAuthTest": {
+			"2019q1": makeFakePeriod("2019q1"),
 		},
 	}
 	settings := models.Settings{

@@ -24,7 +24,7 @@ export class StorageService {
 
   constructor(private http: HttpClient) { }
 
-  getTeams(): Observable<(TeamList)> {
+  getTeams(): Observable<TeamList> {
     return this.http.get<TeamList>('/api/team/');
   }
 

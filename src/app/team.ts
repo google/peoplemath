@@ -24,8 +24,7 @@ export class TeamList {
   constructor(
     public teams: Team[],
     public addTeamPermissions: boolean
-  ) {
-  }
+  ) {}
 }
 
 export class TeamPermissions {

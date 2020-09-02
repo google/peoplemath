@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -33,7 +34,7 @@ import (
 )
 
 func makeHandler() http.Handler {
-	server := Server{store: in_memory_storage.MakeInMemStore(), auth: auth.NoAuth{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: auth.NoAuth{}}
 	return server.makeHandler()
 }
 
@@ -141,14 +142,14 @@ func TestGetTeams(t *testing.T) {
 	resp := makeHTTPRequest(req, handler, t)
 	checkGoodJSONResponse(resp, t)
 
-	teams := []models.Team{}
+	teamList := models.TeamList{}
 	dec := json.NewDecoder(resp.Body)
-	err := dec.Decode(&teams)
+	err := dec.Decode(&teamList)
 	if err != nil {
 		t.Fatalf("Could not decode response: %v", err)
 	}
 	found := false
-	for _, t := range teams {
+	for _, t := range teamList.Teams {
 		if t.ID == teamID {
 			found = true
 			break
@@ -468,19 +469,23 @@ func TestImproveBadMethods(t *testing.T) {
 
 type failAuthenticationStub struct{}
 
-func (auth failAuthenticationStub) Authorize(next http.HandlerFunc) http.HandlerFunc {
+func (auth failAuthenticationStub) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Authentication failed", http.StatusUnauthorized)
 		return
 	}
 }
 
-func (auth failAuthenticationStub) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
-	return "", nil
+func (auth failAuthenticationStub) CanActOnTeam(user auth.User, team models.Team, action string) bool {
+	return true
+}
+
+func (auth failAuthenticationStub) CanActOnTeamList(user auth.User, generalPermissions models.GeneralPermissions, action string) bool {
+	return true
 }
 
 func TestAuthMiddleware(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore(), auth: failAuthenticationStub{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: failAuthenticationStub{}}
 	handler := server.makeHandler()
 
 	assertAuthenticationFailure := func(httpMethod, target string) {
@@ -530,13 +535,9 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*fireb
 	}
 }
 
-func TestFirebaseAuth(t *testing.T) {
-	authDomain := "google.com"
-	testAuth := auth.FirebaseAuth{
-		FirebaseClient: AuthClientStub{},
-		AuthDomain:     authDomain,
-	}
-	server := Server{store: in_memory_storage.MakeInMemStore(), auth: &testAuth}
+func TestFirebaseAuthentication(t *testing.T) {
+	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: &testAuth}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
@@ -551,19 +552,124 @@ func TestFirebaseAuth(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer reject")
 	resp = makeHTTPRequest(req, handler, t)
 	checkResponseStatus(http.StatusUnauthorized, resp, t)
+}
 
-	// Testing with unauthorised user domain
-	testAuth.AuthDomain = ""
+type UserAAuthClientStub struct {
+}
 
-	req.Header.Set("Authorization", "Bearer pass")
-	resp = makeHTTPRequest(req, handler, t)
-	checkResponseStatus(http.StatusForbidden, resp, t)
+func (UserAAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
+	claims := map[string]interface{}{
+		"user_id":        "userA",
+		"email_verified": true,
+		"email":          "usera@usera.com",
+	}
+	token := &firebaseAuth.Token{
+		Claims: claims,
+	}
+	return token, nil
+}
 
-	req.Header.Set("Authorization", "Bearer passEmailUnverified")
-	resp = makeHTTPRequest(req, handler, t)
-	checkResponseStatus(http.StatusUnauthorized, resp, t)
+type UserBAuthClientStub struct {
+}
 
-	req.Header.Set("Authorization", "Bearer reject")
-	resp = makeHTTPRequest(req, handler, t)
-	checkResponseStatus(http.StatusUnauthorized, resp, t)
+func (UserBAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
+	claims := map[string]interface{}{
+		"user_id":        "userB",
+		"email_verified": true,
+		"email":          "userb@userb.com",
+	}
+	token := &firebaseAuth.Token{
+		Claims: claims,
+	}
+	return token, nil
+}
+
+type UserCAuthClientStub struct {
+}
+
+func (UserCAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
+	claims := map[string]interface{}{
+		"user_id":        "userC",
+		"email_verified": true,
+		"email":          "userc@userc.com",
+	}
+	token := &firebaseAuth.Token{
+		Claims: claims,
+	}
+	return token, nil
+}
+
+func TestFirebaseAuthorization(t *testing.T) {
+	existingTeamId := "teamAuthTest"
+	newTeamId := "teamTest2"
+	existingPeriodId := "2019q1"
+	newPeriodId := "2020q4"
+
+	addTeamBody := `{"id":"` + newTeamId + `","displayName":"team"}`
+	updateTeamBody := `{"id":"` + existingTeamId + `","displayName":"team"}`
+	addPeriodBody := `{"id":"` + newPeriodId + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	updatePeriodBody := `{"id":"` + existingPeriodId + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+
+	// User A has all permission through their email address
+	testAuth := auth.FirebaseAuth{FirebaseClient: UserAAuthClientStub{}}
+	server := Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	handler := server.makeHandler()
+
+	assertAuthorizationPass := func(httpMethod, target string, body io.Reader) {
+		req := httptest.NewRequest(httpMethod, target, body)
+		resp := makeHTTPRequest(req, handler, t)
+		checkResponseStatus(http.StatusOK, resp, t)
+	}
+
+	t.Log("User A")
+	assertAuthorizationPass(http.MethodGet, "/api/team/"+existingTeamId, nil)
+	assertAuthorizationPass(http.MethodGet, "/api/team/", nil)
+	assertAuthorizationPass(http.MethodGet, "/api/period/"+existingTeamId+"/"+existingPeriodId, nil)
+	assertAuthorizationPass(http.MethodGet, "/api/period/"+existingTeamId+"/", nil)
+
+	assertAuthorizationPass(http.MethodPost, "/api/team/", strings.NewReader(addTeamBody))
+	assertAuthorizationPass(http.MethodPost, "/api/period/"+existingTeamId+"/", strings.NewReader(addPeriodBody))
+
+	assertAuthorizationPass(http.MethodPut, "/api/period/"+existingTeamId+"/"+existingPeriodId, strings.NewReader(updatePeriodBody))
+	assertAuthorizationPass(http.MethodPut, "/api/team/"+existingTeamId, strings.NewReader(updateTeamBody))
+
+	// User B has all permissions through their email domain
+	testAuth = auth.FirebaseAuth{FirebaseClient: UserBAuthClientStub{}}
+	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	handler = server.makeHandler()
+
+	t.Log("User B")
+	assertAuthorizationPass(http.MethodGet, "/api/team/"+existingTeamId, nil)
+	assertAuthorizationPass(http.MethodGet, "/api/team/", nil)
+	assertAuthorizationPass(http.MethodGet, "/api/period/"+existingTeamId+"/"+existingPeriodId, nil)
+	assertAuthorizationPass(http.MethodGet, "/api/period/"+existingTeamId+"/", nil)
+
+	assertAuthorizationPass(http.MethodPost, "/api/team/", strings.NewReader(addTeamBody))
+	assertAuthorizationPass(http.MethodPost, "/api/period/"+existingTeamId+"/", strings.NewReader(addPeriodBody))
+
+	assertAuthorizationPass(http.MethodPut, "/api/period/"+existingTeamId+"/"+existingPeriodId, strings.NewReader(updatePeriodBody))
+	assertAuthorizationPass(http.MethodPut, "/api/team/"+existingTeamId, strings.NewReader(updateTeamBody))
+
+	// User C has no permissions
+	testAuth = auth.FirebaseAuth{FirebaseClient: UserCAuthClientStub{}}
+	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	handler = server.makeHandler()
+
+	assertAuthorizationFail := func(httpMethod, target string, body io.Reader) {
+		req := httptest.NewRequest(httpMethod, target, body)
+		resp := makeHTTPRequest(req, handler, t)
+		checkResponseStatus(http.StatusForbidden, resp, t)
+	}
+
+	t.Log("User C")
+	assertAuthorizationFail(http.MethodGet, "/api/team/"+existingTeamId, nil)
+	assertAuthorizationFail(http.MethodGet, "/api/team/", nil)
+	assertAuthorizationFail(http.MethodGet, "/api/period/"+existingTeamId+"/"+existingPeriodId, nil)
+	assertAuthorizationFail(http.MethodGet, "/api/period/"+existingTeamId+"/", nil)
+
+	assertAuthorizationFail(http.MethodPost, "/api/team/", strings.NewReader(addTeamBody))
+	assertAuthorizationFail(http.MethodPost, "/api/period/"+existingTeamId+"/", strings.NewReader(addPeriodBody))
+
+	assertAuthorizationFail(http.MethodPut, "/api/period/"+existingTeamId+"/"+existingPeriodId, strings.NewReader(updatePeriodBody))
+	assertAuthorizationFail(http.MethodPut, "/api/team/"+existingTeamId, strings.NewReader(updateTeamBody))
 }

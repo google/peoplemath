@@ -15,6 +15,7 @@
 package auth
 
 import (
+	"context"
 	"net/http"
 	"peoplemath/models"
 	"strings"
@@ -41,7 +42,10 @@ type User struct {
 type NoAuth struct{}
 
 func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
-	return next
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctxWithUser := context.WithValue(r.Context(), "user", User{})
+		next(w, r.WithContext(ctxWithUser))
+	}
 }
 
 func (auth NoAuth) CanActOnTeam(user User, team models.Team, action string) bool {

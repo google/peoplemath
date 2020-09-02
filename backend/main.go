@@ -66,14 +66,14 @@ func (s *Server) makeHandler() http.Handler {
 	return r
 }
 
-func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
+func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) (models.Team, bool) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	_, exists, err := s.store.GetTeam(ctx, teamID)
+	team, exists, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
 		log.Printf("Could not validate existence of team '%s': error: %s", teamID, err)
 		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s' (see server log)", teamID), http.StatusInternalServerError)
-		return false
+		return models.Team{}, false
 	}
 	if exists != expected {
 		statusCode := http.StatusBadRequest
@@ -81,9 +81,9 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 			statusCode = http.StatusNotFound
 		}
 		http.Error(w, fmt.Sprintf("Team with ID '%s' expected exists=%v, found %v", teamID, expected, exists), statusCode)
-		return false
+		return models.Team{}, false
 	}
-	return true
+	return team, true
 }
 
 func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (models.Period, bool) {
@@ -172,7 +172,8 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, team.ID, false) {
+	_, isNew := s.ensureTeamExistence(w, r, team.ID, false)
+	if !isNew {
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
@@ -182,7 +183,7 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
-	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionReadTeamList) {
+	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionAddTeam) {
 		err := s.store.CreateTeam(ctx, team)
 		if err != nil {
 			log.Printf("Could not create team: error: %s", err)
@@ -195,18 +196,19 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
-	team, ok := readTeamFromBody(w, r)
+	updatedTeam, ok := readTeamFromBody(w, r)
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, team.ID, true) {
+	team, exists := s.ensureTeamExistence(w, r, updatedTeam.ID, true)
+	if !exists {
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionRead) {
-		err := s.store.UpdateTeam(ctx, team)
+	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionWrite) {
+		err := s.store.UpdateTeam(ctx, updatedTeam)
 		if err != nil {
 			log.Printf("Could not update team: error: %s", err)
 			http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
@@ -311,7 +313,8 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, teamID, true) {
+	team, exists := s.ensureTeamExistence(w, r, teamID, true)
+	if !exists {
 		return
 	}
 	if _, ok := s.ensurePeriodExistence(w, r, teamID, period.ID, false); !ok {
@@ -321,15 +324,6 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	team, found, err := s.store.GetTeam(ctx, teamID)
-	if err != nil {
-		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
-		return
-	}
-	if !found {
-		http.NotFound(w, r)
-		return
-	}
 	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionWrite) {
 		err := s.store.CreatePeriod(ctx, teamID, period)
 		if err != nil {
@@ -351,9 +345,11 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, teamID, true) {
+	team, exists := s.ensureTeamExistence(w, r, teamID, true)
+	if !exists {
 		return
 	}
+	log.Print(team)
 	savedPeriod, ok := s.ensurePeriodExistence(w, r, teamID, periodID, true)
 	if !ok || !s.ensureNoConcurrentMod(w, r, period, savedPeriod) {
 		return
@@ -362,15 +358,6 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	team, found, err := s.store.GetTeam(ctx, teamID)
-	if err != nil {
-		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
-		return
-	}
-	if !found {
-		http.NotFound(w, r)
-		return
-	}
 	if s.auth.CanActOnTeam(r.Context().Value("user").(auth.User), team, auth.ActionWrite) {
 		err := s.store.UpdatePeriod(ctx, teamID, period)
 		if err != nil {
