@@ -14,6 +14,7 @@
 
 import { Bucket, ImmutableBucket } from "./bucket";
 import { Person, ImmutablePerson } from "./person";
+import { ImmutableObjective } from './objective';
 
 export interface SecondaryUnit {
   name: string,
@@ -155,6 +156,21 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   private withNewPeople(people: ImmutablePerson[]): ImmutablePeriod {
     people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
     return new ImmutablePeriod({...this, people: people});
+  }
+
+  withObjectiveMoved(oldObj: ImmutableObjective, from: ImmutableBucket, newObj: ImmutableObjective, to: ImmutableBucket): ImmutablePeriod {
+    let newBuckets = [...this.buckets];
+    let fromIdx = newBuckets.findIndex(b => b === from);
+    if (fromIdx < 0) {
+      throw Error('Could not find old bucket');
+    }
+    newBuckets[fromIdx] = newBuckets[fromIdx].withObjectiveDeleted(oldObj);
+    let toIdx = newBuckets.findIndex(b => b === to);
+    if (toIdx < 0) {
+      throw Error('Could not find new bucket');
+    }
+    newBuckets[toIdx] = newBuckets[toIdx].withNewObjective(newObj);
+    return new ImmutablePeriod({...this, buckets: newBuckets});
   }
 
   withPersonChanged(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): ImmutablePeriod {
