@@ -19,6 +19,7 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -27,16 +28,26 @@ const (
 )
 
 type Auth interface {
-	Authenticate(next http.HandlerFunc) http.HandlerFunc
+	Authenticate(ctx context.Context, token string) (userEmail string, err error)
+	Authorize(next http.HandlerFunc) http.HandlerFunc
 }
 
 type NoAuth struct{}
 
-func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth NoAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return next
 }
 
-func GetAuthProvider(authMode string) (authProvider Auth) {
+func (auth NoAuth) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
+	return "", nil
+}
+
+func getDomain(email string) string {
+	emailParts := strings.Split(email, "@")
+	return emailParts[len(emailParts)-1]
+}
+
+func GetAuthProvider(authMode, authDomain string) (authProvider Auth) {
 	if authMode == "none" {
 		authProvider = NoAuth{}
 	} else if authMode == "firebase" {
@@ -55,6 +66,7 @@ func GetAuthProvider(authMode string) (authProvider Auth) {
 		firebaseAuth := FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
+			AuthDomain:     authDomain,
 		}
 		authProvider = firebaseAuth
 	} else {

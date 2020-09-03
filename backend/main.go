@@ -31,8 +31,10 @@ import (
 func main() {
 	var useInMemStore bool
 	var authMode string
+	var authDomain string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
+	flag.StringVar(&authDomain, "authdomain", "google.com", "The email domain with read and write access")
 	flag.Parse()
 
 	var store storage.StorageService
@@ -56,7 +58,7 @@ func main() {
 		}
 	}
 
-	authProvider := auth.GetAuthProvider(authMode)
+	authProvider := auth.GetAuthProvider(authMode, authDomain)
 	srv := server.InitServer(store, server.DefaultStoreTimeout, authProvider)
 	handler := server.MakeHandler(srv)
 	port := os.Getenv("PORT")

@@ -16,8 +16,8 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"firebase.google.com/go/v4/auth"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -26,25 +26,45 @@ import (
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
+	AuthDomain     string
 }
 
 type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth *FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
-		defer cancel()
-
-		idToken := strings.TrimPrefix(r.Header.Get("Authentication"), "Bearer ")
-		_, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
+		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
+		userEmail, err := auth.Authenticate(r.Context(), idToken)
 		if err != nil {
-			log.Printf("User authentication failed: error: %s", err)
-			http.Error(w, "User authentication failed (see server log)", http.StatusUnauthorized)
+			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-
+		if getDomain(userEmail) != auth.AuthDomain {
+			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
+			return
+		}
 		next(w, r)
 	}
+}
+
+func (auth *FirebaseAuth) Authenticate(ctx context.Context, idToken string) (userEmail string, err error) {
+	ctx, cancel := context.WithTimeout(ctx, auth.AuthTimeout)
+	defer cancel()
+
+	token, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
+	errorMessage := ""
+	if err != nil {
+		errorMessage = "User authentication failed "
+		return "", errors.New(errorMessage)
+	}
+	if !token.Claims["email_verified"].(bool) {
+		errorMessage = "User authentication failed, please verify your email address"
+		return "", errors.New(errorMessage)
+	}
+
+	userEmail = token.Claims["email"].(string)
+	return userEmail, nil
 }

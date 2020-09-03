@@ -30,15 +30,15 @@ func InitServer(store storage.StorageService, storeTimeout time.Duration, auth a
 func MakeHandler(s *Server) http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handleGetTeam)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handlePostTeam)).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handlePutTeam)).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authorize(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authorize(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
