@@ -16,7 +16,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { StorageService } from './storage.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Team } from './team';
+import {Team, TeamList} from './team';
 import { Period } from './period';
 import { ObjectUpdateResponse } from './objectupdateresponse';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -97,13 +97,14 @@ describe('StorageService', () => {
 
   it('should be able to GET all teams', () => {
     const teams = [new Team('team1', 'Team 1'), new Team('team2', 'Team 2')];
-    service.getTeams().subscribe(data => expect(data).toEqual(teams));
+    const teamList = new TeamList(teams, true);
+    service.getTeams().subscribe(data => expect(data).toEqual(teamList));
 
     const req = httpTestingController.expectOne('/api/team/');
 
     expect(req.request.method).toEqual('GET');
 
-    req.flush(teams);
+    req.flush(teamList);
   });
 
   it('should be able to POST a period', () => {
@@ -138,7 +139,7 @@ describe('StorageService', () => {
     const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
 
     expect(req.request.method).toEqual('GET');
-    
+
     req.flush(PERIOD);
   });
 
