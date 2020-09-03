@@ -126,5 +126,6 @@ type ObjectUpdateResponse struct {
 
 // Settings holds stored configuration options
 type Settings struct {
-	ImproveURL string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility
+	ImproveURL         string `datastore:"ImproveUrl"` // Field name overridden for backwards compatibility
+	GeneralPermissions GeneralPermissions
 }

@@ -22,6 +22,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 
 	"firebase.google.com/go/v4"
@@ -120,11 +121,12 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	permissions, err := s.store.GetGeneralPermissions(ctx)
+	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
 		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
+	permissions := settings.GeneralPermissions
 	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionReadTeamList) {
 		teams, err := s.store.GetAllTeams(ctx)
 		if err != nil {
@@ -178,12 +180,18 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	permissions, err := s.store.GetGeneralPermissions(ctx)
+	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
 		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
 		return
 	}
+	permissions := settings.GeneralPermissions
 	if s.auth.CanActOnTeamList(r.Context().Value("user").(auth.User), permissions, auth.ActionAddTeam) {
+		if reflect.DeepEqual(team.Permissions, models.TeamPermissions{}) {
+			team.Permissions.Read = permissions.ReadTeamList
+			team.Permissions.Write = permissions.AddTeam
+		}
+
 		err := s.store.CreateTeam(ctx, team)
 		if err != nil {
 			log.Printf("Could not create team: error: %s", err)

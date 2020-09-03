@@ -53,18 +53,6 @@ func MakeGoogleCDSStore(ctx context.Context, projectID string) (storage.StorageS
 	return &googleCDSStore{client: client}, nil
 }
 
-func (s *googleCDSStore) GetGeneralPermissions(ctx context.Context) (models.GeneralPermissions, error) {
-	key := datastore.NameKey(PermissionsKind, PermissionsEntity, nil)
-	var result models.GeneralPermissions
-	err := s.client.Get(ctx, key, &result)
-	if err == datastore.ErrNoSuchEntity {
-		result = models.GeneralPermissions{}
-	} else if err != nil {
-		return result, err
-	}
-	return result, err
-}
-
 func getTeamKey(teamID string) *datastore.Key {
 	return datastore.NameKey(TeamKind, teamID, nil)
 }

@@ -47,9 +47,8 @@ export class TeamsComponent implements OnInit {
       catchError(error => {
         this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
         console.log(error);
-        return of([]);
+        return of(new TeamList([], false));
       })
-      // @ts-ignore
     ).subscribe((teamList?: TeamList) => {
       if (teamList?.teams) {
         this.teams = teamList.teams.map(t => new ImmutableTeam(t));

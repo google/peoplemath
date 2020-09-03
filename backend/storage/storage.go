@@ -30,6 +30,5 @@ type StorageService interface {
 	CreatePeriod(ctx context.Context, teamID string, period models.Period) error
 	UpdatePeriod(ctx context.Context, teamID string, period models.Period) error
 	GetSettings(ctx context.Context) (models.Settings, error)
-	GetGeneralPermissions(ctx context.Context) (models.GeneralPermissions, error)
 	Close() error
 }
