@@ -63,7 +63,7 @@ func GetAuthProvider(authMode, authDomain string) (authProvider Auth) {
 			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
 			return
 		}
-		firebaseAuth := FirebaseAuth{
+		firebaseAuth := &FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
 			AuthDomain:     authDomain,
