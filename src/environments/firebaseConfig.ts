@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-export const firebaseConfig = {
+/*export const firebaseConfig = {
   firebase: {
     apiKey: 'your-api-key',
     authDomain: 'your-auth-domain',
     projectId: 'your-project-id',
     appId: 'your-app-id',
   }
+};*/
+
+export const firebaseConfig = {
+  firebase: {
+    apiKey: 'AIzaSyCQUWjKP75Q168Y9utysPPEMhd3p0KtOXc',
+    authDomain: 'samicolon-peoplemath-test.firebaseapp.com',
+    projectId: 'samicolon-peoplemath-test',
+    appId: '1:192809429113:web:977f2c0ccad3745e634ca8'
+  }
 };
+
