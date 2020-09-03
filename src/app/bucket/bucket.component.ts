@@ -104,6 +104,8 @@ export class BucketComponent implements OnInit {
   }
 
   moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket) {
+    // Needs to be done in a single operation. Doing a delete in one bucket followed by an
+    // add in the other bucket changes this component in between and doesn't work.
     this.onMoveObjectiveBucket.emit([original, this.bucket!, newObjective, newBucket]);
   }
 
