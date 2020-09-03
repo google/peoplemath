@@ -40,6 +40,7 @@ export class BucketComponent implements OnInit {
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Output() onMoveBucketUp = new EventEmitter<ImmutableBucket>();
   @Output() onMoveBucketDown = new EventEmitter<ImmutableBucket>();
+  @Output() onMoveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
   @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
 
   constructor(public dialog: MatDialog) { }
@@ -103,8 +104,7 @@ export class BucketComponent implements OnInit {
   }
 
   moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket) {
-    this.deleteObjective(original);
-    this.onChanged.emit([newBucket, newBucket.withNewObjective(newObjective)]);
+    this.onMoveObjectiveBucket.emit([original, this.bucket!, newObjective, newBucket]);
   }
 
   deleteObjective(objective: ImmutableObjective): void {

@@ -392,6 +392,11 @@ export class PeriodComponent implements OnInit {
     this.save();
   }
 
+  moveObjectiveToBucket(oldObj: ImmutableObjective, from: ImmutableBucket, newObj: ImmutableObjective, to: ImmutableBucket): void {
+    this.setPeriod(this.period!.withObjectiveMoved(oldObj, from, newObj, to));
+    this.save();
+  }
+
   onBucketChanged(from: ImmutableBucket, to: ImmutableBucket): void {
     this.setPeriod(this.period!.withBucketChanged(from, to));
     this.save();

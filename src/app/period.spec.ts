@@ -173,6 +173,13 @@ describe('ImmutablePeriod', () => {
         expect(updated.resourcesAllocated()).toEqual(period.resourcesAllocated());
     });
 
+    it('should facilitate objective bucket move', () => {
+        const obj = period.buckets[1].objectives[0];
+        const updated = period.withObjectiveMoved(obj, period.buckets[1], obj, period.buckets[0]);
+        expect(updated.buckets[1].objectives).toEqual([]);
+        expect(updated.buckets[0].objectives).toEqual([obj]);
+    });
+
     it('should be immutable', () => {
         // ImmutablePeriod should not be assignable to Period,
         // Therefore, this shouldn't compile. But I don't know how to assert it doesn't. :(
