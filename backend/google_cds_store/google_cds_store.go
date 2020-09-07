@@ -34,10 +34,6 @@ const (
 	SettingsKind = "Settings"
 	// SettingsEntity - entity name for settings
 	SettingsEntity = "Settings"
-	// SettingsKind - Datastore kind name for permissions
-	PermissionsKind = "Permissions"
-	// SettingsEntity - entity name for permissions
-	PermissionsEntity = "Permissions"
 )
 
 // StorageService using Google Cloud Datastore
@@ -186,7 +182,7 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, erro
 	var result models.Settings
 	err := s.client.Get(ctx, key, &result)
 	if err == datastore.ErrNoSuchEntity {
-		result = models.Settings{}
+		result, err = s.CreateAndGetSettings(ctx, key)
 	} else if err != nil {
 		return result, err
 	}
@@ -194,6 +190,18 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, erro
 		result.ImproveURL = "https://github.com/google/peoplemath"
 	}
 	return result, nil
+}
+
+func (s *googleCDSStore) CreateAndGetSettings(ctx context.Context, key *datastore.Key) (models.Settings, error) {
+	var empty models.Settings
+	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
+		if err := tx.Get(key, &empty); err != datastore.ErrNoSuchEntity {
+			return fmt.Errorf("settings already present")
+		}
+		_, err := tx.Put(key, &empty)
+		return err
+	})
+	return empty, err
 }
 
 func (s *googleCDSStore) Close() error {

@@ -101,7 +101,61 @@ To use authorization with [Firebase](https://firebase.google.com/docs/auth) to a
 * Run backend with authmode flag `--authmode firebase`
 * Download your [Firebase config file](https://support.google.com/firebase/answer/7015592#web) and copy the text into the `firebaseConfig.ts` file in the same folder.
 * Download your [Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
-* Set the general permissions in Pantheon after starting the AppEngine instance
+* Add the domain which the AppEngine instance runs on the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
+* Set the general permissions in the Google Cloud Platform Console after starting the AppEngine instance following this example
+(to get there: (Google Cloud Platform -> Datastore -> Entities -> select Kind: Settings -> settings entity details on the right -> edit -> edit GeneralPermissions property)):
+```json
+{
+  "ReadTeamList": {
+    "entityValue": {
+      "properties": {
+        "Allow": {
+          "arrayValue": {
+            "values": [
+              {
+                "entityValue": {
+                  "properties": {
+                    "Type": {
+                      "stringValue": "domain"
+                    },
+                    "ID": {
+                      "stringValue": "google.com"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "AddTeam": {
+    "entityValue": {
+      "properties": {
+        "Allow": {
+          "arrayValue": {
+            "values": [
+              {
+                "entityValue": {
+                  "properties": {
+                    "Type": {
+                      "stringValue": "domain"
+                    },
+                    "ID": {
+                      "stringValue": "google.com"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 Currently, the only authentication method enabled on Firebase is Google Sign-in.
 
