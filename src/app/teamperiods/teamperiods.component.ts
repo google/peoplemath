@@ -28,6 +28,8 @@ import { Bucket, ImmutableBucket } from '../bucket';
 import { Person } from '../person';
 import { Assignment } from '../assignment';
 import { Objective } from '../objective';
+import {AuthService} from '../services/auth.service';
+import {NotificationService} from '../services/notification.service';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
@@ -39,12 +41,15 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;
   periods?: readonly ImmutablePeriod[];
+  userHasEditPermissions = false;
 
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    public authService: AuthService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -68,6 +73,22 @@ export class TeamPeriodsComponent implements OnInit {
     ).subscribe((team?: Team) => {
       if (team) {
         this.team = new ImmutableTeam(team);
+        if (team.teamPermissions !== undefined) {
+          const user = this.authService.user$.getValue();
+          const userEmail = user?.email;
+          const userDomain = user?.domain;
+          const principalTypeEmail = 'email';
+          const principalTypeDomain = 'domain';
+          team.teamPermissions.write.allow.forEach(permission => {
+            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
+              this.userHasEditPermissions = true;
+            }
+          });
+          if (!this.userHasEditPermissions) {
+            this.notificationService.error$.next('You do not have editing priviliges.');
+          }
+        }
       } else {
         this.team = undefined;
       }
