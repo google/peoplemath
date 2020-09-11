@@ -32,31 +32,33 @@ type inMemStore struct {
 }
 
 func MakeInMemStore(defaultDomain string) storage.StorageService {
-	defaultPermissionList := models.Permission{Allow: []models.Principal{{
-		Type: models.PrincipalTypeDomain,
+	defaultPermissionList := models.Permission{Allow: []models.UserMatcher{{
+		Type: models.UserMatcherTypeDomain,
 		ID:   defaultDomain,
 	}}}
 	teamPermissions := models.TeamPermissions{
 		Read:  defaultPermissionList,
 		Write: defaultPermissionList,
 	}
-	userAEmail := "userA@userA.com"
-	userBDomain := "userB.com"
-	userCEmail := "userC@userC.com"
 
-	testPermissionList := models.Permission{Allow: []models.Principal{{
-		Type: models.PrincipalTypeEmail,
+	// Sample users that are used in unit tests
+	userAEmail := "userA@domain.com"
+	userBDomain := "userB.com"
+	userCEmail := "userC@domain.com"
+
+	testPermissionList := models.Permission{Allow: []models.UserMatcher{{
+		Type: models.UserMatcherTypeEmail,
 		ID:   userAEmail,
 	}, {
-		Type: models.PrincipalTypeDomain,
+		Type: models.UserMatcherTypeDomain,
 		ID:   userBDomain,
 	}, {
-		Type: models.PrincipalTypeDomain,
+		Type: models.UserMatcherTypeDomain,
 		ID:   defaultDomain,
 	}}}
 	testPermissionListInclC := testPermissionList
-	testPermissionListInclC.Allow = append(testPermissionListInclC.Allow, models.Principal{
-		Type: models.PrincipalTypeEmail,
+	testPermissionListInclC.Allow = append(testPermissionListInclC.Allow, models.UserMatcher{
+		Type: models.UserMatcherTypeEmail,
 		ID:   userCEmail,
 	})
 	authTestTeamPermissions := models.TeamPermissions{

@@ -87,7 +87,7 @@ The primary supported way of running PeopleMath in a staging or production confi
 There are both general, app-wide permissions and team-specific permissions.
 The general permissions contain a list of users/domains that can read the list of all teams (`ReadTeamList`),
 and a list of users/domains that can add a new team (`AddTeam`).
-Each teams' permissions contain a list of users/domain that can read all the team's information (`Read`),
+Each team's permissions contain a list of users/domain that can read all the team's information (`Read`),
 and a list of users/domains that can edit the team's information (`Write`).
 For each of those permissions, there is currently a list of allowed users/domain which each have a type (`email` or `domain`)
 and the corresponding value.
@@ -102,7 +102,7 @@ To use authorization with [Firebase](https://firebase.google.com/docs/auth) to a
 * Download your [Firebase config file](https://support.google.com/firebase/answer/7015592#web) and copy the text into the `firebaseConfig.ts` file in the same folder.
 * Download your [Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
 * Add the domain which the AppEngine instance runs on the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
-* Set the general permissions in the Google Cloud Platform Console after starting the AppEngine instance following this example
+* Set the general permissions in the Google Cloud Data Store after starting the AppEngine instance following this example
 (to get there: (Google Cloud Platform -> Datastore -> Entities -> select Kind: Settings -> settings entity details on the right -> edit -> edit GeneralPermissions property)):
 ```json
 {
@@ -161,3 +161,5 @@ Currently, the only authentication method enabled on Firebase is Google Sign-in.
 
 To use in memory storage with authentication and authorization,
 set the defaultdomain flag with your account's domain `--defaultdomain yourdomain.com`
+
+Because the permissions have to be set manually, there is currently no way to use authentication and authorization with the Google Cloud emulator.

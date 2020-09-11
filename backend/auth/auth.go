@@ -23,35 +23,28 @@ import (
 
 type Auth interface {
 	Authenticate(next http.HandlerFunc) http.HandlerFunc
-	CanActOnTeam(user User, team models.Team, action string) bool
-	CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool
+	CanActOnTeam(user models.User, team models.Team, action string) bool
+	CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool
 }
 
 const (
-	ActionRead         = "read"
-	ActionWrite        = "write"
-	ActionReadTeamList = "readTeamList"
-	ActionAddTeam      = "addTeam"
+	ActionRead  = "read"
+	ActionWrite = "write"
 )
-
-type User struct {
-	email  string
-	domain string
-}
 
 type NoAuth struct{}
 
 func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctxWithUser := context.WithValue(r.Context(), "user", User{})
+		ctxWithUser := context.WithValue(r.Context(), "user", models.User{})
 		next(w, r.WithContext(ctxWithUser))
 	}
 }
 
-func (auth NoAuth) CanActOnTeam(user User, team models.Team, action string) bool {
+func (auth NoAuth) CanActOnTeam(user models.User, team models.Team, action string) bool {
 	return true
 }
-func (auth NoAuth) CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool {
+func (auth NoAuth) CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool {
 	return true
 }
 

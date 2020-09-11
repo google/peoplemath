@@ -182,7 +182,7 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, erro
 	var result models.Settings
 	err := s.client.Get(ctx, key, &result)
 	if err == datastore.ErrNoSuchEntity {
-		result, err = s.CreateAndGetSettings(ctx, key)
+		result = models.Settings{}
 	} else if err != nil {
 		return result, err
 	}
@@ -190,18 +190,6 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, erro
 		result.ImproveURL = "https://github.com/google/peoplemath"
 	}
 	return result, nil
-}
-
-func (s *googleCDSStore) CreateAndGetSettings(ctx context.Context, key *datastore.Key) (models.Settings, error) {
-	var empty models.Settings
-	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		if err := tx.Get(key, &empty); err != datastore.ErrNoSuchEntity {
-			return fmt.Errorf("settings already present")
-		}
-		_, err := tx.Put(key, &empty)
-		return err
-	})
-	return empty, err
 }
 
 func (s *googleCDSStore) Close() error {

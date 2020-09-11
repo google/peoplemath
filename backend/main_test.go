@@ -477,11 +477,11 @@ func (auth failAuthenticationStub) Authenticate(next http.HandlerFunc) http.Hand
 	}
 }
 
-func (auth failAuthenticationStub) CanActOnTeam(user auth.User, team models.Team, action string) bool {
+func (auth failAuthenticationStub) CanActOnTeam(user models.User, team models.Team, action string) bool {
 	return true
 }
 
-func (auth failAuthenticationStub) CanActOnTeamList(user auth.User, generalPermissions models.GeneralPermissions, action string) bool {
+func (auth failAuthenticationStub) CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool {
 	return true
 }
 
@@ -513,13 +513,14 @@ func TestAuthMiddleware(t *testing.T) {
 }
 
 type AuthClientStub struct {
+	userEmail string
 }
 
-func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
+func (stub AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
 	claims := map[string]interface{}{
 		"user_id":        "id123",
 		"email_verified": true,
-		"email":          "test@google.com",
+		"email":          stub.userEmail,
 	}
 	token := &firebaseAuth.Token{
 		Claims: claims,
@@ -537,7 +538,7 @@ func (AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*fireb
 }
 
 func TestFirebaseAuthentication(t *testing.T) {
-	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{}}
+	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "test@google.com"}}
 	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: &testAuth}
 	handler := server.makeHandler()
 
@@ -555,66 +556,6 @@ func TestFirebaseAuthentication(t *testing.T) {
 	checkResponseStatus(http.StatusUnauthorized, resp, t)
 }
 
-type UserAAuthClientStub struct {
-}
-
-func (UserAAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
-	claims := map[string]interface{}{
-		"user_id":        "userA",
-		"email_verified": true,
-		"email":          "usera@usera.com",
-	}
-	token := &firebaseAuth.Token{
-		Claims: claims,
-	}
-	return token, nil
-}
-
-type UserBAuthClientStub struct {
-}
-
-func (UserBAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
-	claims := map[string]interface{}{
-		"user_id":        "userB",
-		"email_verified": true,
-		"email":          "userb@userb.com",
-	}
-	token := &firebaseAuth.Token{
-		Claims: claims,
-	}
-	return token, nil
-}
-
-type UserCAuthClientStub struct {
-}
-
-func (UserCAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
-	claims := map[string]interface{}{
-		"user_id":        "userC",
-		"email_verified": true,
-		"email":          "userc@userc.com",
-	}
-	token := &firebaseAuth.Token{
-		Claims: claims,
-	}
-	return token, nil
-}
-
-type UserDAuthClientStub struct {
-}
-
-func (UserDAuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*firebaseAuth.Token, error) {
-	claims := map[string]interface{}{
-		"user_id":        "userD",
-		"email_verified": true,
-		"email":          "userd@userd.com",
-	}
-	token := &firebaseAuth.Token{
-		Claims: claims,
-	}
-	return token, nil
-}
-
 func TestFirebaseAuthorization(t *testing.T) {
 	existingTeamId := "teamAuthTest"
 	newTeamId := "teamTest2"
@@ -628,18 +569,21 @@ func TestFirebaseAuthorization(t *testing.T) {
 
 	assertAuthorizationPass := func(handler http.Handler, httpMethod string, target string, body io.Reader) {
 		req := httptest.NewRequest(httpMethod, target, body)
+		req.Header.Add("Authorization", "Bearer pass")
 		resp := makeHTTPRequest(req, handler, t)
 		checkResponseStatus(http.StatusOK, resp, t)
 	}
 
 	assertAuthorizationFail := func(handler http.Handler, httpMethod string, target string, body io.Reader) {
 		req := httptest.NewRequest(httpMethod, target, body)
+		req.Header.Add("Authorization", "Bearer pass")
 		resp := makeHTTPRequest(req, handler, t)
 		checkResponseStatus(http.StatusForbidden, resp, t)
 	}
 
 	assertCorrectPermissionPassedThroughGetAllTeam := func(handler http.Handler, permission bool) {
 		req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
+		req.Header.Add("Authorization", "Bearer pass")
 		resp := makeHTTPRequest(req, handler, t)
 		checkGoodJSONResponse(resp, t)
 		teamList := models.TeamList{}
@@ -654,7 +598,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 	}
 
 	// User A has all permission through their email address
-	testAuth := auth.FirebaseAuth{FirebaseClient: UserAAuthClientStub{}}
+	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "usera@domain.com"}}
 	server := Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
 	handler := server.makeHandler()
 
@@ -673,7 +617,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 	assertCorrectPermissionPassedThroughGetAllTeam(handler, true)
 
 	// User B has all permissions through their email domain
-	testAuth = auth.FirebaseAuth{FirebaseClient: UserBAuthClientStub{}}
+	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userb@userb.com"}}
 	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
 	handler = server.makeHandler()
 
@@ -692,7 +636,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 	assertCorrectPermissionPassedThroughGetAllTeam(handler, true)
 
 	// User C only has read permissions
-	testAuth = auth.FirebaseAuth{FirebaseClient: UserCAuthClientStub{}}
+	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userc@domain.com"}}
 	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
 	handler = server.makeHandler()
 
@@ -711,7 +655,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 	assertCorrectPermissionPassedThroughGetAllTeam(handler, false)
 
 	// User D has no permissions
-	testAuth = auth.FirebaseAuth{FirebaseClient: UserDAuthClientStub{}}
+	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userd@domain.com"}}
 	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
 	handler = server.makeHandler()
 
