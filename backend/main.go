@@ -123,7 +123,7 @@ func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
-		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	permissions := settings.GeneralPermissions
@@ -246,7 +246,7 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 
 	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
@@ -281,7 +281,7 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 
 	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		http.Error(w, "Authorization failed due to internal server error", http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
