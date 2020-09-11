@@ -17,6 +17,7 @@ package auth
 import (
 	"context"
 	"firebase.google.com/go/v4/auth"
+	"log"
 	"net/http"
 	"peoplemath/models"
 	"strings"
@@ -32,7 +33,7 @@ type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (auth *FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
 		defer cancel()
@@ -51,9 +52,9 @@ func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		userEmail := token.Claims["email"].(string)
-		user := User{
-			email:  userEmail,
-			domain: getDomain(userEmail),
+		user := models.User{
+			Email:  userEmail,
+			Domain: getDomain(userEmail),
 		}
 
 		ctxWithUser := context.WithValue(r.Context(), "user", user)
@@ -61,47 +62,36 @@ func (auth FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func getPermissionsFromTeam(team models.Team, action string) []models.Principal {
-	var permissions []models.Principal
+func getTeamAllowedUsers(team models.Team, action string) []models.UserMatcher {
+	var permissions []models.UserMatcher
 	if action == ActionRead {
 		permissions = team.Permissions.Read.Allow
 	} else if action == ActionWrite {
 		permissions = team.Permissions.Write.Allow
+	} else {
+		log.Fatalf("The permission action passed (%v) is not implemented.", action)
 	}
 	return permissions
 }
 
-func getPermissionsFromGeneral(generalPermissions models.GeneralPermissions, action string) []models.Principal {
-	var permissions []models.Principal
-	if action == ActionReadTeamList {
+func getGeneralAllowedUsers(generalPermissions models.GeneralPermissions, action string) []models.UserMatcher {
+	var permissions []models.UserMatcher
+	if action == ActionRead {
 		permissions = generalPermissions.ReadTeamList.Allow
-	} else if action == ActionAddTeam {
+	} else if action == ActionWrite {
 		permissions = generalPermissions.AddTeam.Allow
+	} else {
+		log.Fatalf("The permission action passed (%v) is not implemented.", action)
 	}
 	return permissions
 }
 
-func (user User) has(permission models.Principal) bool {
-	return (permission.Type == models.PrincipalTypeDomain && strings.ToLower(permission.ID) == strings.ToLower(user.domain)) ||
-		(permission.Type == models.PrincipalTypeEmail && strings.ToLower(permission.ID) == strings.ToLower(user.email))
+func (auth *FirebaseAuth) CanActOnTeam(user models.User, team models.Team, action string) bool {
+	permissions := getTeamAllowedUsers(team, action)
+	return user.IsPermitted(permissions)
 }
 
-func (user User) isPermitted(permissions []models.Principal) bool {
-	isPermitted := false
-	for _, permission := range permissions {
-		if user.has(permission) {
-			isPermitted = true
-		}
-	}
-	return isPermitted
-}
-
-func (auth *FirebaseAuth) CanActOnTeam(user User, team models.Team, action string) bool {
-	permissions := getPermissionsFromTeam(team, action)
-	return user.isPermitted(permissions)
-}
-
-func (auth *FirebaseAuth) CanActOnTeamList(user User, generalPermissions models.GeneralPermissions, action string) bool {
-	permissions := getPermissionsFromGeneral(generalPermissions, action)
-	return user.isPermitted(permissions)
+func (auth *FirebaseAuth) CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool {
+	permissions := getGeneralAllowedUsers(generalPermissions, action)
+	return user.IsPermitted(permissions)
 }
