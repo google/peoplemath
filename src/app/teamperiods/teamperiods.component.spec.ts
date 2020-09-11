@@ -22,6 +22,9 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { of } from 'rxjs';
 import {Person} from '../person';
+import {AngularFireModule} from '@angular/fire';
+import {firebaseConfig} from '../../environments/firebaseConfig';
+import {AngularFireAuthModule} from '@angular/fire/auth';
 
 describe('TeamPeriodsComponent', () => {
   let component: TeamPeriodsComponent;
@@ -32,7 +35,11 @@ describe('TeamPeriodsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeamPeriodsComponent ],
-      imports: [ RouterTestingModule, MaterialModule ],
+      imports: [
+        RouterTestingModule,
+        MaterialModule,
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule,],
       providers: [
         {provide: StorageService, useValue: storageServiceSpy},
         {provide: ActivatedRoute, useValue: {paramMap: of(convertToParamMap({team: TEST_TEAM.id}))}},
