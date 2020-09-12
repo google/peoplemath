@@ -67,8 +67,8 @@ const (
 // it adds a boolean as to whether the user has the permission to add a new team (this is just for the UI,
 // as the "AddTeam" button will be disabled if this bool is false)
 type TeamList struct {
-	Teams              []Team `json:"teams"`
-	AddTeamPermissions bool   `json:"addTeamPermissions"`
+	Teams      []Team `json:"teams"`
+	CanAddTeam bool   `json:"canAddTeam"`
 }
 
 // Period model struct

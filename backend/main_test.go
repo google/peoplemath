@@ -35,7 +35,7 @@ import (
 )
 
 func makeHandler() http.Handler {
-	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: auth.NoAuth{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com", false), auth: auth.NoAuth{}}
 	return server.makeHandler()
 }
 
@@ -486,7 +486,7 @@ func (auth failAuthenticationStub) CanActOnTeamList(user models.User, generalPer
 }
 
 func TestAuthMiddleware(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: failAuthenticationStub{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com", false), auth: failAuthenticationStub{}}
 	handler := server.makeHandler()
 
 	assertAuthenticationFailure := func(httpMethod, target string) {
@@ -538,8 +538,8 @@ func (stub AuthClientStub) VerifyIDToken(ctx context.Context, idToken string) (*
 }
 
 func TestFirebaseAuthentication(t *testing.T) {
-	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "test@google.com"}}
-	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: &testAuth}
+	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "usera@domain.com"}}
+	server := Server{store: in_memory_storage.MakeInMemStore("google.com", true), auth: &testAuth}
 	handler := server.makeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
@@ -592,14 +592,14 @@ func TestFirebaseAuthorization(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Could not decode response: %v", err)
 		}
-		if teamList.AddTeamPermissions != permission {
-			t.Fatalf("Passed wrong permission through GetAllTeams handler, expected %v, got %v", permission, teamList.AddTeamPermissions)
+		if teamList.CanAddTeam != permission {
+			t.Fatalf("Passed wrong permission through GetAllTeams handler, expected %v, got %v", permission, teamList.CanAddTeam)
 		}
 	}
 
 	// User A has all permission through their email address
 	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "usera@domain.com"}}
-	server := Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	server := Server{store: in_memory_storage.MakeInMemStore("", true), auth: &testAuth}
 	handler := server.makeHandler()
 
 	t.Log("User A")
@@ -618,7 +618,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 
 	// User B has all permissions through their email domain
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userb@userb.com"}}
-	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	server = Server{store: in_memory_storage.MakeInMemStore("", true), auth: &testAuth}
 	handler = server.makeHandler()
 
 	t.Log("User B")
@@ -637,7 +637,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 
 	// User C only has read permissions
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userc@domain.com"}}
-	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	server = Server{store: in_memory_storage.MakeInMemStore("", true), auth: &testAuth}
 	handler = server.makeHandler()
 
 	t.Log("User C")
@@ -656,7 +656,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 
 	// User D has no permissions
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userd@domain.com"}}
-	server = Server{store: in_memory_storage.MakeInMemStore(""), auth: &testAuth}
+	server = Server{store: in_memory_storage.MakeInMemStore("", true), auth: &testAuth}
 	handler = server.makeHandler()
 
 	t.Log("User D")
@@ -673,7 +673,7 @@ func TestFirebaseAuthorization(t *testing.T) {
 }
 
 func TestDefaultTeamPermissions(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore(""), auth: auth.NoAuth{}}
+	server := Server{store: in_memory_storage.MakeInMemStore("", true), auth: auth.NoAuth{}}
 	handler := server.makeHandler()
 	teamID := "myteam"
 	addTeam(handler, teamID, t)

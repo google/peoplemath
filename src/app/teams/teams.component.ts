@@ -55,7 +55,7 @@ export class TeamsComponent implements OnInit {
       } else {
         this.teams = undefined;
       }
-      if (teamList?.addTeamPermissions) {
+      if (teamList?.canAddTeam) {
         this.addTeamDisabled = false;
       }
       if (this.addTeamDisabled) {

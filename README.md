@@ -161,5 +161,3 @@ Currently, the only authentication method enabled on Firebase is Google Sign-in.
 
 To use in memory storage with authentication and authorization,
 set the defaultdomain flag with your account's domain `--defaultdomain yourdomain.com`
-
-Because the permissions have to be set manually, there is currently no way to use authentication and authorization with the Google Cloud emulator.

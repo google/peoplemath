@@ -25,13 +25,16 @@ import (
 )
 
 // In-memory implementation of StorageService, for local testing
-type inMemStore struct {
+type InMemStore struct {
 	teams    map[string]models.Team
 	periods  map[string]map[string]models.Period
 	settings models.Settings
 }
 
-func MakeInMemStore(defaultDomain string) storage.StorageService {
+// The defaultDomain can be specified as a flag when running the application
+// All permissions will have the defaultDomain in the Allow list,
+// so the application can manually tested with authentication & authorization enabled
+func MakeInMemStore(defaultDomain string, addTestUsers bool) storage.StorageService {
 	defaultPermissionList := models.Permission{Allow: []models.UserMatcher{{
 		Type: models.UserMatcherTypeDomain,
 		ID:   defaultDomain,
@@ -41,38 +44,13 @@ func MakeInMemStore(defaultDomain string) storage.StorageService {
 		Write: defaultPermissionList,
 	}
 
-	// Sample users that are used in unit tests
-	userAEmail := "userA@domain.com"
-	userBDomain := "userB.com"
-	userCEmail := "userC@domain.com"
-
-	testPermissionList := models.Permission{Allow: []models.UserMatcher{{
-		Type: models.UserMatcherTypeEmail,
-		ID:   userAEmail,
-	}, {
-		Type: models.UserMatcherTypeDomain,
-		ID:   userBDomain,
-	}, {
-		Type: models.UserMatcherTypeDomain,
-		ID:   defaultDomain,
-	}}}
-	testPermissionListInclC := testPermissionList
-	testPermissionListInclC.Allow = append(testPermissionListInclC.Allow, models.UserMatcher{
-		Type: models.UserMatcherTypeEmail,
-		ID:   userCEmail,
-	})
-	authTestTeamPermissions := models.TeamPermissions{
-		Read:  testPermissionListInclC,
-		Write: testPermissionList,
-	}
 	teams := map[string]models.Team{
-		"team1":        {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
-		"team2":        {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
-		"teamAuthTest": {ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: authTestTeamPermissions},
+		"team1": {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
+		"team2": {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
 	}
 	generalPermissions := models.GeneralPermissions{
-		ReadTeamList: testPermissionListInclC,
-		AddTeam:      testPermissionList,
+		ReadTeamList: defaultPermissionList,
+		AddTeam:      defaultPermissionList,
 	}
 	periods := map[string]map[string]models.Period{
 		"team1": {
@@ -91,10 +69,45 @@ func MakeInMemStore(defaultDomain string) storage.StorageService {
 		ImproveURL:         "https://github.com/google/peoplemath",
 		GeneralPermissions: generalPermissions,
 	}
-	return &inMemStore{teams: teams, periods: periods, settings: settings}
+
+	if addTestUsers {
+		// Users used in unit tests
+		userAEmail := "userA@domain.com"
+		userBDomain := "userB.com"
+		userCEmail := "userC@domain.com"
+
+		permissionsList := models.Permission{Allow: []models.UserMatcher{{
+			Type: models.UserMatcherTypeEmail,
+			ID:   userAEmail,
+		}, {
+			Type: models.UserMatcherTypeDomain,
+			ID:   userBDomain,
+		}}}
+		permissionsListInclC := permissionsList
+		permissionsListInclC.Allow = append(permissionsListInclC.Allow, models.UserMatcher{
+			Type: models.UserMatcherTypeEmail,
+			ID:   userCEmail,
+		})
+
+		teamPermissions := models.TeamPermissions{
+			Read:  permissionsListInclC,
+			Write: permissionsList,
+		}
+
+		generalPermission := models.GeneralPermissions{
+			ReadTeamList: permissionsListInclC,
+			AddTeam:      permissionsList,
+		}
+
+		teams["teamAuthTest"] = models.Team{ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: teamPermissions}
+		settings.GeneralPermissions = generalPermission
+
+	}
+
+	return &InMemStore{teams: teams, periods: periods, settings: settings}
 }
 
-func (s *inMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
+func (s *InMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 	teamsSlice := make([]models.Team, 0, len(s.teams))
 	for _, t := range s.teams {
 		teamsSlice = append(teamsSlice, t)
@@ -102,25 +115,25 @@ func (s *inMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 	return teamsSlice, nil
 }
 
-func (s *inMemStore) GetTeam(ctx context.Context, teamID string) (models.Team, bool, error) {
+func (s *InMemStore) GetTeam(ctx context.Context, teamID string) (models.Team, bool, error) {
 	team, ok := s.teams[teamID]
 	return team, ok, nil
 }
 
-func (s *inMemStore) CreateTeam(ctx context.Context, team models.Team) error {
+func (s *InMemStore) CreateTeam(ctx context.Context, team models.Team) error {
 	s.teams[team.ID] = team
 	s.periods[team.ID] = map[string]models.Period{}
 	log.Printf("Added new team %s", team.ID)
 	return nil
 }
 
-func (s *inMemStore) UpdateTeam(ctx context.Context, team models.Team) error {
+func (s *InMemStore) UpdateTeam(ctx context.Context, team models.Team) error {
 	s.teams[team.ID] = team
 	log.Printf("Updated team %s", team.ID)
 	return nil
 }
 
-func (s *inMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error) {
+func (s *InMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodSlice := make([]models.Period, 0, len(periodsByName))
 		for _, p := range periodsByName {
@@ -131,7 +144,7 @@ func (s *inMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models
 	return []models.Period{}, false, nil
 }
 
-func (s *inMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
+func (s *InMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		if period, ok := periodsByName[periodID]; ok {
 			return period, true, nil
@@ -140,7 +153,7 @@ func (s *inMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (mo
 	return models.Period{}, false, nil
 }
 
-func (s *inMemStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Added period '%s' for team '%s': %v", period.ID, teamID, period)
@@ -148,7 +161,7 @@ func (s *inMemStore) CreatePeriod(ctx context.Context, teamID string, period mod
 	return nil
 }
 
-func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
@@ -156,11 +169,11 @@ func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period mod
 	return nil
 }
 
-func (s *inMemStore) GetSettings(ctx context.Context) (models.Settings, error) {
+func (s *InMemStore) GetSettings(ctx context.Context) (models.Settings, error) {
 	return s.settings, nil
 }
 
-func (s *inMemStore) Close() error {
+func (s *InMemStore) Close() error {
 	return nil
 }
 

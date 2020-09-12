@@ -57,8 +57,7 @@ export class PeriodComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private changeDet: ChangeDetectorRef,
-    public authService: AuthService,
-    private notificationService: NotificationService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
@@ -287,9 +286,6 @@ export class PeriodComponent implements OnInit {
               this.userHasEditPermissions = true;
             }
           });
-          if (!this.userHasEditPermissions) {
-            this.notificationService.error$.next('You do not have editing priviliges.');
-          }
         }
       } else {
         this.setTeam(undefined);

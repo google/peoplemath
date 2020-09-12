@@ -85,9 +85,6 @@ export class TeamPeriodsComponent implements OnInit {
               this.userHasEditPermissions = true;
             }
           });
-          if (!this.userHasEditPermissions) {
-            this.notificationService.error$.next('You do not have editing priviliges.');
-          }
         }
       } else {
         this.team = undefined;

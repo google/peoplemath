@@ -23,7 +23,7 @@ export class Team {
 export class TeamList {
   constructor(
     public teams: Team[],
-    public addTeamPermissions: boolean
+    public canAddTeam: boolean
   ) {}
 }
 
@@ -39,12 +39,12 @@ export class TeamPermissions {
 
 export class Permission {
   constructor(
-    public allow: Principal[]
+    public allow: UserMatcher[]
   ) {
   }
 }
 
-export class Principal {
+export class UserMatcher {
   constructor(
     public type: string,
     public id: string
