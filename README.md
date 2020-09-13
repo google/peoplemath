@@ -79,12 +79,11 @@ To stop the project, run `docker-compose down`.
 
 The project has a continuous build that uses [Google Cloud Build](https://cloud.google.com/cloud-build/). Pull requests will not be accepted until this continuous build passes.
 
-The build uses the `Dockerfile` in the root of the project. It uses a base image
-which was constructed using the `Dockerfile` in the `build` directory.
+The build uses the `Dockerfile` in the root of the project. It uses a base image which was constructed using the `Dockerfile` in the `build` directory.
 
-To reproduce the behaviour of the continuous build, first construct the base
-image using `docker build -t peoplemath-build-base -f build/Dockerfile build`.
-Then substitute `peoplemath-build-base` into the `FROM` clause of the root `Dockerfile`, and run `docker build -t peoplemath-build .` from the root of the project.
+To reproduce the behaviour of the continuous build, first construct the base image using `docker build -t peoplemath-build-base -f build/Dockerfile build`. Then substitute `peoplemath-build-base` into the `FROM` clause of the root `Dockerfile`, and run `docker build -t peoplemath-build .` from the root of the project.
+
+I hope to make it possible to see the automated build status from GitHub in the future.
 
 ## Deployment to App Engine
 
