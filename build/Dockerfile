@@ -12,14 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:lts
+FROM debian:testing-slim
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "nodejs", "npm", "golang", "findutils", "wget", "xvfb"]
+RUN ["wget", "-q", "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"]
+RUN ["apt", "install", "-y", "./google-chrome-stable_current_amd64.deb"]
 
-WORKDIR /usr/app/
-COPY ./ ./
-RUN rm -rf backend && \
-    rm -rf docker && \
-    npm install -g @angular/cli @angular-devkit/build-angular && \
-    npm install && \
-    sed -i 's/localhost/backend/g' src/devproxy.conf.json
-
-CMD ng serve --port 4200 --host 0.0.0.0 --disable-host-check

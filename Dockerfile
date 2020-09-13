@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:lts
+FROM gcr.io/peoplemath-build/base
 
-WORKDIR /usr/app/
-COPY ./ ./
-RUN rm -rf backend && \
-    rm -rf docker && \
-    npm install -g @angular/cli @angular-devkit/build-angular && \
-    npm install && \
-    sed -i 's/localhost/backend/g' src/devproxy.conf.json
+COPY . /build/
 
-CMD ng serve --port 4200 --host 0.0.0.0 --disable-host-check
+WORKDIR /build/backend
+RUN ["go", "test", "./..."]
+
+WORKDIR /build
+RUN ["npm", "install"]
+RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
+RUN ["bash", "build_appengine.sh"]
+
