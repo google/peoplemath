@@ -81,11 +81,9 @@ The project has a continuous build that uses [Google Cloud Build](https://cloud.
 
 The build uses the `Dockerfile` in the root of the project. It uses a base image which was constructed using the `Dockerfile` in the `build` directory.
 
-To reproduce the behaviour of the continuous build, first construct the base image using `docker build -t peoplemath-build-base -f build/Dockerfile build`. Then substitute `peoplemath-build-base` into the `FROM` clause of the root `Dockerfile`, and run `docker build -t peoplemath-build .` from the root of the project.
+To reproduce the behaviour of the continuous build, first construct the base image using `docker build -t peoplemath-build-base -f build/Dockerfile build`. Then replace the `FROM` clause of the root `Dockerfile` with `FROM peoplemath-build-base`, and run `docker build -t peoplemath-build .` from the root of the project.
 
-If you wish to run the build on Google Cloud Build using your own resources, follow [these instructions](https://cloud.google.com/cloud-build/docs/quickstart-build?hl=en#build_using_dockerfile) using one of your own projects. Run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath-base` from inside the `build` folder to generate the base image, then substitute `gcr.io/YOUR_PROJET_ID/peoplemath-base` into the `FROM` clause in the root `Dockerfile`, and run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath` from the root of the project to run the build.
-
-I hope to make it possible to see the automated build status from GitHub in the future.
+If you wish to run the build on Google Cloud Build using your own resources, follow [these instructions](https://cloud.google.com/cloud-build/docs/quickstart-build?hl=en#build_using_dockerfile) using one of your own projects. Run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath-base` from inside the `build` folder to generate the base image, then substitute that tag into the `FROM` clause in the root `Dockerfile`, and run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath` from the root of the project to run the build.
 
 ## Deployment to App Engine
 
