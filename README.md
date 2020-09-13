@@ -51,6 +51,8 @@ The whole application was designed to run on [Google App Engine](https://cloud.g
 
 ## Development
 
+### Local machine
+
 The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
 
 In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.12 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary. (You can do `go run .` in the `backend` directory as a shortcut to compile and run the backend in a single command.)
@@ -72,6 +74,17 @@ In order to use this workflow for development, you must first [install Docker](h
 Then, you can run PeopleMath by `cd`ing into the project's `docker/dev` folder and running `docker-compose up`. You should then be able to access PeopleMath on `localhost:4200`.
 
 To stop the project, run `docker-compose down`.
+
+### Continuous build
+
+The project has a continuous build that uses [Google Cloud Build](https://cloud.google.com/cloud-build/). Pull requests will not be accepted until this continuous build passes.
+
+The build uses the `Dockerfile` in the root of the project. It uses a base image
+which was constructed using the `Dockerfile` in the `build` directory.
+
+To reproduce the behaviour of the continuous build, first construct the base
+image using `docker build -t peoplemath-build-base -f build/Dockerfile build`.
+Then substitute `peoplemath-build-base` into the `FROM` clause of the root `Dockerfile`, and run `docker build -t peoplemath-build .` from the root of the project.
 
 ## Deployment to App Engine
 
