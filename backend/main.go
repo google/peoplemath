@@ -25,7 +25,7 @@ import (
 	"reflect"
 	"time"
 
-	"firebase.google.com/go/v4"
+	firebase "firebase.google.com/go/v4"
 	"github.com/gorilla/mux"
 
 	"peoplemath/auth"
@@ -127,7 +127,7 @@ func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	permissions := settings.GeneralPermissions
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeamList(user, permissions, auth.ActionRead) {
 		teams, err := s.store.GetAllTeams(ctx)
 		if err != nil {
@@ -161,7 +161,7 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
 		enc := json.NewEncoder(w)
 		w.Header().Set("Content-Type", "application/json")
@@ -188,7 +188,7 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	permissions := settings.GeneralPermissions
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeamList(user, permissions, auth.ActionWrite) {
 		if reflect.DeepEqual(team.Permissions, models.TeamPermissions{}) {
 			team.Permissions.Read = permissions.ReadTeamList
@@ -218,7 +218,7 @@ func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
 		err := s.store.UpdateTeam(ctx, updatedTeam)
 		if err != nil {
@@ -257,7 +257,7 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
 		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
 		if err != nil {
@@ -293,7 +293,7 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
 		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
 		if err != nil {
@@ -338,7 +338,7 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
 		err := s.store.CreatePeriod(ctx, teamID, period)
 		if err != nil {
@@ -372,7 +372,7 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	user := r.Context().Value("user").(models.User)
+	user := r.Context().Value(auth.ContextKey("user")).(models.User)
 	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
 		err := s.store.UpdatePeriod(ctx, teamID, period)
 		if err != nil {
