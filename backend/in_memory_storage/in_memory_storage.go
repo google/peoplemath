@@ -20,7 +20,6 @@ import (
 	"log"
 	"math/rand"
 	"peoplemath/models"
-	"peoplemath/storage"
 	"strings"
 )
 
@@ -34,7 +33,7 @@ type InMemStore struct {
 // The defaultDomain can be specified as a flag when running the application
 // All permissions will have the defaultDomain in the Allow list,
 // so the application can manually tested with authentication & authorization enabled
-func MakeInMemStore(defaultDomain string, addTestUsers bool) storage.StorageService {
+func MakeInMemStore(defaultDomain string) *InMemStore {
 	defaultPermissionList := models.Permission{Allow: []models.UserMatcher{{
 		Type: models.UserMatcherTypeDomain,
 		ID:   defaultDomain,
@@ -70,41 +69,40 @@ func MakeInMemStore(defaultDomain string, addTestUsers bool) storage.StorageServ
 		GeneralPermissions: generalPermissions,
 	}
 
-	if addTestUsers {
-		// Users used in unit tests
-		userAEmail := "userA@domain.com"
-		userBDomain := "userB.com"
-		userCEmail := "userC@domain.com"
+	return &InMemStore{teams: teams, periods: periods, settings: settings}
+}
 
-		permissionsList := models.Permission{Allow: []models.UserMatcher{{
-			Type: models.UserMatcherTypeEmail,
-			ID:   userAEmail,
-		}, {
-			Type: models.UserMatcherTypeDomain,
-			ID:   userBDomain,
-		}}}
-		permissionsListInclC := permissionsList
-		permissionsListInclC.Allow = append(permissionsListInclC.Allow, models.UserMatcher{
-			Type: models.UserMatcherTypeEmail,
-			ID:   userCEmail,
-		})
+// AddAuthTestUsersAndTeam adds some test users plus a team, for unit tests
+func (s *InMemStore) AddAuthTestUsersAndTeam() {
+	userAEmail := "userA@domain.com"
+	userBDomain := "userB.com"
+	userCEmail := "userC@domain.com"
 
-		teamPermissions := models.TeamPermissions{
-			Read:  permissionsListInclC,
-			Write: permissionsList,
-		}
+	permissionsList := models.Permission{Allow: []models.UserMatcher{{
+		Type: models.UserMatcherTypeEmail,
+		ID:   userAEmail,
+	}, {
+		Type: models.UserMatcherTypeDomain,
+		ID:   userBDomain,
+	}}}
+	permissionsListInclC := permissionsList
+	permissionsListInclC.Allow = append(permissionsListInclC.Allow, models.UserMatcher{
+		Type: models.UserMatcherTypeEmail,
+		ID:   userCEmail,
+	})
 
-		generalPermission := models.GeneralPermissions{
-			ReadTeamList: permissionsListInclC,
-			AddTeam:      permissionsList,
-		}
-
-		teams["teamAuthTest"] = models.Team{ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: teamPermissions}
-		settings.GeneralPermissions = generalPermission
-
+	teamPermissions := models.TeamPermissions{
+		Read:  permissionsListInclC,
+		Write: permissionsList,
 	}
 
-	return &InMemStore{teams: teams, periods: periods, settings: settings}
+	generalPermission := models.GeneralPermissions{
+		ReadTeamList: permissionsListInclC,
+		AddTeam:      permissionsList,
+	}
+
+	s.teams["teamAuthTest"] = models.Team{ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: teamPermissions}
+	s.settings.GeneralPermissions = generalPermission
 }
 
 func (s *InMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {

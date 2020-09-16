@@ -430,7 +430,7 @@ func main() {
 	var store storage.StorageService
 	if useInMemStore {
 		log.Printf("Using in-memory store per command-line flag")
-		store = in_memory_storage.MakeInMemStore(defaultDomain, false)
+		store = in_memory_storage.MakeInMemStore(defaultDomain)
 	} else {
 		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 		if gcloudProject == "" {
