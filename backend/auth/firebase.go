@@ -16,14 +16,16 @@ package auth
 
 import (
 	"context"
-	"firebase.google.com/go/v4/auth"
 	"log"
 	"net/http"
 	"peoplemath/models"
 	"strings"
 	"time"
+
+	"firebase.google.com/go/v4/auth"
 )
 
+// FirebaseAuth is an Auth implementation which uses Firebase for authentication.
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
@@ -42,6 +44,7 @@ func (auth *FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 		token, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
+			log.Printf("User authentication failed: %v", err)
 			http.Error(w, "User authentication failed", http.StatusUnauthorized)
 			return
 		}
@@ -57,10 +60,13 @@ func (auth *FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 			Domain: getDomain(userEmail),
 		}
 
-		ctxWithUser := context.WithValue(r.Context(), "user", user)
+		ctxWithUser := context.WithValue(r.Context(), ContextKey("user"), user)
 		next(w, r.WithContext(ctxWithUser))
 	}
 }
+
+// TODO The below code is likely to be the same for any Auth implementation which
+// actually wants to perform permissions checks. Move it into a separate type.
 
 func getTeamAllowedUsers(team models.Team, action string) []models.UserMatcher {
 	var permissions []models.UserMatcher
