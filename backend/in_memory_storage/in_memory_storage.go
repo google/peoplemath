@@ -25,16 +25,32 @@ import (
 )
 
 // In-memory implementation of StorageService, for local testing
-type inMemStore struct {
+type InMemStore struct {
 	teams    map[string]models.Team
 	periods  map[string]map[string]models.Period
 	settings models.Settings
 }
 
-func MakeInMemStore() storage.StorageService {
+// The defaultDomain can be specified as a flag when running the application
+// All permissions will have the defaultDomain in the Allow list,
+// so the application can manually tested with authentication & authorization enabled
+func MakeInMemStore(defaultDomain string, addTestUsers bool) storage.StorageService {
+	defaultPermissionList := models.Permission{Allow: []models.UserMatcher{{
+		Type: models.UserMatcherTypeDomain,
+		ID:   defaultDomain,
+	}}}
+	teamPermissions := models.TeamPermissions{
+		Read:  defaultPermissionList,
+		Write: defaultPermissionList,
+	}
+
 	teams := map[string]models.Team{
-		"team1": {ID: "team1", DisplayName: "Team team1"},
-		"team2": {ID: "team2", DisplayName: "Team team2"},
+		"team1": {ID: "team1", DisplayName: "Team team1", Permissions: teamPermissions},
+		"team2": {ID: "team2", DisplayName: "Team team2", Permissions: teamPermissions},
+	}
+	generalPermissions := models.GeneralPermissions{
+		ReadTeamList: defaultPermissionList,
+		AddTeam:      defaultPermissionList,
 	}
 	periods := map[string]map[string]models.Period{
 		"team1": {
@@ -45,14 +61,53 @@ func MakeInMemStore() storage.StorageService {
 		"team2": {
 			"2018q4": makeFakePeriod("2018q4"),
 		},
+		"teamAuthTest": {
+			"2019q1": makeFakePeriod("2019q1"),
+		},
 	}
 	settings := models.Settings{
-		ImproveURL: "https://github.com/google/peoplemath",
+		ImproveURL:         "https://github.com/google/peoplemath",
+		GeneralPermissions: generalPermissions,
 	}
-	return &inMemStore{teams: teams, periods: periods, settings: settings}
+
+	if addTestUsers {
+		// Users used in unit tests
+		userAEmail := "userA@domain.com"
+		userBDomain := "userB.com"
+		userCEmail := "userC@domain.com"
+
+		permissionsList := models.Permission{Allow: []models.UserMatcher{{
+			Type: models.UserMatcherTypeEmail,
+			ID:   userAEmail,
+		}, {
+			Type: models.UserMatcherTypeDomain,
+			ID:   userBDomain,
+		}}}
+		permissionsListInclC := permissionsList
+		permissionsListInclC.Allow = append(permissionsListInclC.Allow, models.UserMatcher{
+			Type: models.UserMatcherTypeEmail,
+			ID:   userCEmail,
+		})
+
+		teamPermissions := models.TeamPermissions{
+			Read:  permissionsListInclC,
+			Write: permissionsList,
+		}
+
+		generalPermission := models.GeneralPermissions{
+			ReadTeamList: permissionsListInclC,
+			AddTeam:      permissionsList,
+		}
+
+		teams["teamAuthTest"] = models.Team{ID: "teamAuthTest", DisplayName: "Team authTest", Permissions: teamPermissions}
+		settings.GeneralPermissions = generalPermission
+
+	}
+
+	return &InMemStore{teams: teams, periods: periods, settings: settings}
 }
 
-func (s *inMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
+func (s *InMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 	teamsSlice := make([]models.Team, 0, len(s.teams))
 	for _, t := range s.teams {
 		teamsSlice = append(teamsSlice, t)
@@ -60,25 +115,25 @@ func (s *inMemStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 	return teamsSlice, nil
 }
 
-func (s *inMemStore) GetTeam(ctx context.Context, teamID string) (models.Team, bool, error) {
+func (s *InMemStore) GetTeam(ctx context.Context, teamID string) (models.Team, bool, error) {
 	team, ok := s.teams[teamID]
 	return team, ok, nil
 }
 
-func (s *inMemStore) CreateTeam(ctx context.Context, team models.Team) error {
+func (s *InMemStore) CreateTeam(ctx context.Context, team models.Team) error {
 	s.teams[team.ID] = team
 	s.periods[team.ID] = map[string]models.Period{}
 	log.Printf("Added new team %s", team.ID)
 	return nil
 }
 
-func (s *inMemStore) UpdateTeam(ctx context.Context, team models.Team) error {
+func (s *InMemStore) UpdateTeam(ctx context.Context, team models.Team) error {
 	s.teams[team.ID] = team
 	log.Printf("Updated team %s", team.ID)
 	return nil
 }
 
-func (s *inMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error) {
+func (s *InMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodSlice := make([]models.Period, 0, len(periodsByName))
 		for _, p := range periodsByName {
@@ -89,7 +144,7 @@ func (s *inMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models
 	return []models.Period{}, false, nil
 }
 
-func (s *inMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
+func (s *InMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		if period, ok := periodsByName[periodID]; ok {
 			return period, true, nil
@@ -98,7 +153,7 @@ func (s *inMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (mo
 	return models.Period{}, false, nil
 }
 
-func (s *inMemStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Added period '%s' for team '%s': %v", period.ID, teamID, period)
@@ -106,7 +161,7 @@ func (s *inMemStore) CreatePeriod(ctx context.Context, teamID string, period mod
 	return nil
 }
 
-func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		periodsByName[period.ID] = period
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
@@ -114,131 +169,131 @@ func (s *inMemStore) UpdatePeriod(ctx context.Context, teamID string, period mod
 	return nil
 }
 
-func (s *inMemStore) GetSettings(ctx context.Context) (models.Settings, error) {
+func (s *InMemStore) GetSettings(ctx context.Context) (models.Settings, error) {
 	return s.settings, nil
 }
 
-func (s *inMemStore) Close() error {
+func (s *InMemStore) Close() error {
 	return nil
 }
 
 func makeFakePeriod(id string) models.Period {
 	buckets := []models.Bucket{
-		models.Bucket{
+		{
 			DisplayName:          "First bucket",
 			AllocationPercentage: 40,
 			Objectives: []models.Objective{
-				models.Objective{
+				{
 					Name:             "First objective",
 					ResourceEstimate: 10,
 					CommitmentType:   "Committed",
 					Assignments: []models.Assignment{
-						models.Assignment{
+						{
 							PersonID:   "alice",
 							Commitment: 5,
 						},
-						models.Assignment{
+						{
 							PersonID:   "bob",
 							Commitment: 5,
 						},
 					},
 					Groups: []models.ObjectiveGroup{
-						models.ObjectiveGroup{
+						{
 							GroupType: "Project",
 							GroupName: "Project 1",
 						},
 					},
 					Tags: []models.ObjectiveTag{},
 				},
-				models.Objective{
+				{
 					Name:             "Second objective",
 					ResourceEstimate: 15,
 					CommitmentType:   "Aspirational",
 					Notes:            "Some notes",
 					Assignments: []models.Assignment{
-						models.Assignment{
+						{
 							PersonID:   "bob",
 							Commitment: 2,
 						},
 					},
 					Groups: []models.ObjectiveGroup{
-						models.ObjectiveGroup{
+						{
 							GroupType: "Project",
 							GroupName: "Project 2",
 						},
 					},
 					Tags: []models.ObjectiveTag{
-						models.ObjectiveTag{
+						{
 							Name: "tag1",
 						},
-						models.ObjectiveTag{
+						{
 							Name: "tag2",
 						},
 					},
 				},
 			},
 		},
-		models.Bucket{
+		{
 			DisplayName:          "Second bucket",
 			AllocationPercentage: 40,
 			Objectives: []models.Objective{
-				models.Objective{
+				{
 					Name:             "Third objective",
 					ResourceEstimate: 2,
 					CommitmentType:   "Aspirational",
 					Assignments:      []models.Assignment{},
 					Groups: []models.ObjectiveGroup{
-						models.ObjectiveGroup{
+						{
 							GroupType: "Project",
 							GroupName: "Project 1",
 						},
 					},
 					Tags: []models.ObjectiveTag{},
 				},
-				models.Objective{
+				{
 					Name:             "Fourth objective",
 					ResourceEstimate: 8,
 					CommitmentType:   "Aspirational",
 					Assignments: []models.Assignment{
-						models.Assignment{
+						{
 							PersonID:   "charlie",
 							Commitment: 8,
 						},
 					},
 					Groups: []models.ObjectiveGroup{
-						models.ObjectiveGroup{
+						{
 							GroupType: "Project",
 							GroupName: "Project 1",
 						},
 					},
 					Tags: []models.ObjectiveTag{
-						models.ObjectiveTag{
+						{
 							Name: "tag2",
 						},
 					},
 				},
 			},
 		},
-		models.Bucket{
+		{
 			DisplayName:          "Third bucket",
 			AllocationPercentage: 20,
 			Objectives:           []models.Objective{},
 		},
 	}
 	people := []models.Person{
-		models.Person{
+		{
 			ID:           "alice",
 			DisplayName:  "Alice Atkins",
 			Location:     "LON",
 			Availability: 5,
 		},
-		models.Person{
+		{
 			ID:           "bob",
 			DisplayName:  "Bob Brewster",
 			Location:     "LON",
 			Availability: 7,
 		},
-		models.Person{
+		{
 			ID:           "charlie",
 			DisplayName:  "Charlie Case",
 			Location:     "SVL",
@@ -250,7 +305,7 @@ func makeFakePeriod(id string) models.Period {
 		DisplayName: strings.ToUpper(id),
 		Unit:        "person weeks",
 		SecondaryUnits: []models.SecondaryUnit{
-			models.SecondaryUnit{
+			{
 				Name:             "person years",
 				ConversionFactor: 7.0 / 365.0,
 			},
@@ -333,7 +388,7 @@ func (f *randomObjectiveFactory) makeRandomObjective() models.Objective {
 		CommitmentType:   ctype,
 		Assignments:      assignments,
 		Groups: []models.ObjectiveGroup{
-			models.ObjectiveGroup{
+			{
 				GroupType: "Project",
 				GroupName: f.allProjects[rand.Intn(len(f.allProjects))],
 			},
@@ -364,7 +419,7 @@ func makeLargePeriod(id string, personCount, bucketCount, objectivesPerBucket in
 		allProjects:         []string{"Project 1", "Project 2", "Project 3", "Project 4", "Project 5"},
 	}
 	buckets := make([]models.Bucket, bucketCount)
-	var allocRemaining int = 100
+	var allocRemaining = 100
 	for i := 0; i < bucketCount; i++ {
 		allocPct := allocRemaining / (bucketCount - i)
 		objectives := make([]models.Objective, objectivesPerBucket)
@@ -384,7 +439,7 @@ func makeLargePeriod(id string, personCount, bucketCount, objectivesPerBucket in
 		DisplayName: fmt.Sprintf("Large period %v for UI stress testing", strings.ToUpper(id)),
 		Unit:        "person weeks",
 		SecondaryUnits: []models.SecondaryUnit{
-			models.SecondaryUnit{Name: "person years", ConversionFactor: 7.0 / 365.0},
+			{Name: "person years", ConversionFactor: 7.0 / 365.0},
 		},
 		NotesURL:               "https://github.com/google/peoplemath",
 		MaxCommittedPercentage: 50,

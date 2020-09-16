@@ -15,23 +15,59 @@
 export class Team {
     constructor(
         public id: string,
-        public displayName: string
+        public displayName: string,
+        public teamPermissions?: TeamPermissions
     ) {}
 }
 
+export class TeamList {
+  constructor(
+    public teams: Team[],
+    public canAddTeam: boolean
+  ) {}
+}
+
+export class TeamPermissions {
+  constructor(
+    public read: Permission,
+    public write: Permission,
+    public readAllTeams: Permission,
+    public addTeam: Permission,
+  ) {
+  }
+}
+
+export class Permission {
+  constructor(
+    public allow: UserMatcher[]
+  ) {
+  }
+}
+
+export class UserMatcher {
+  constructor(
+    public type: string,
+    public id: string
+  ) {
+  }
+}
+
 export class ImmutableTeam {
-    private readonly _id: string;
-    private readonly _displayName: string;
+  private readonly _id: string;
+  private readonly _displayName: string;
+  private readonly _teamPermissions?: TeamPermissions;
 
-    get id(): string { return this._id; }
-    get displayName(): string { return this._displayName; }
+  get id(): string { return this._id; }
+  get displayName(): string { return this._displayName; }
+  get teamPermissions(): TeamPermissions | undefined { return this._teamPermissions; }
 
-    constructor(t: Team) {
-        this._id = t.id;
-        this._displayName = t.displayName;
-    }
+  constructor(t: Team) {
+    this._id = t.id;
+    this._displayName = t.displayName;
+    this._teamPermissions = t.teamPermissions;
+  }
 
-    toOriginal(): Team {
-        return new Team(this.id, this.displayName);
-    }
+  toOriginal(): Team {
+      return new Team(this.id, this.displayName, this.teamPermissions);
+  }
 }

@@ -13,13 +13,14 @@
 // limitations under the License.
 
 import { Component, OnInit } from '@angular/core';
-import { Team, ImmutableTeam } from '../team';
+import {Team, ImmutableTeam, TeamList} from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-teams',
@@ -28,11 +29,13 @@ import { of } from 'rxjs';
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];
+  addTeamDisabled = true;
 
   constructor(
     private storage: StorageService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -44,13 +47,19 @@ export class TeamsComponent implements OnInit {
       catchError(error => {
         this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
         console.log(error);
-        return of([])
+        return of(new TeamList([], false));
       })
-    ).subscribe((teams?: Team[]) => {
-      if (teams) {
-        this.teams = teams.map(t => new ImmutableTeam(t));
+    ).subscribe((teamList?: TeamList) => {
+      if (teamList?.teams) {
+        this.teams = teamList.teams.map(t => new ImmutableTeam(t));
       } else {
         this.teams = undefined;
+      }
+      if (teamList?.canAddTeam) {
+        this.addTeamDisabled = false;
+      }
+      if (this.addTeamDisabled) {
+        this.notificationService.error$.next('You are not authorized to add a new team.');
       }
     });
   }

@@ -17,22 +17,35 @@ package auth
 import (
 	"context"
 	"net/http"
+	"peoplemath/models"
 	"strings"
 )
 
 type Auth interface {
-	Authenticate(ctx context.Context, token string) (userEmail string, err error)
-	Authorize(next http.HandlerFunc) http.HandlerFunc
+	Authenticate(next http.HandlerFunc) http.HandlerFunc
+	CanActOnTeam(user models.User, team models.Team, action string) bool
+	CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool
 }
+
+const (
+	ActionRead  = "read"
+	ActionWrite = "write"
+)
 
 type NoAuth struct{}
 
-func (auth NoAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
-	return next
+func (auth NoAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctxWithUser := context.WithValue(r.Context(), "user", models.User{})
+		next(w, r.WithContext(ctxWithUser))
+	}
 }
 
-func (auth NoAuth) Authenticate(ctx context.Context, token string) (userEmail string, err error) {
-	return "", nil
+func (auth NoAuth) CanActOnTeam(user models.User, team models.Team, action string) bool {
+	return true
+}
+func (auth NoAuth) CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool {
+	return true
 }
 
 func getDomain(email string) string {

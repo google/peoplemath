@@ -96,17 +96,80 @@ The primary supported way of running PeopleMath in a staging or production confi
 
 ### Authentication & Authorization
 
-A basic authorization mechanism has been implemented which specifies one email domain (like "google.com").
-Every user with an email address ending in that domain has read and write access.
-Any other user will not have access.
+There are both general, app-wide permissions and team-specific permissions.
+The general permissions contain a list of users/domains that can read the list of all teams (`ReadTeamList`),
+and a list of users/domains that can add a new team (`AddTeam`).
+Each team's permissions contain a list of users/domain that can read all the team's information (`Read`),
+and a list of users/domains that can edit the team's information (`Write`).
+For each of those permissions, there is currently a list of allowed users/domain which each have a type (`email` or `domain`)
+and the corresponding value.
 
-To enable authorization with [Firebase](https://firebase.google.com/docs/auth) to authenticate users:
+A new team's permission will default to the general, app-wide permissions
+(the `Read` list will mirror the `ReadTeamList` list and the `Write` list will mirror the `AddTeam` list)
+
+To use authorization with [Firebase](https://firebase.google.com/docs/auth) to authenticate users:
 
 * Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
 * Run backend with authmode flag `--authmode firebase`
 * Download your [Firebase config file](https://support.google.com/firebase/answer/7015592#web) and copy the text into the `firebaseConfig.ts` file in the same folder.
 * Download your [Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
-* Set the email domain for the authorization using the `authdomain` flag. The default is `google.com`
+* Add the domain which the AppEngine instance runs on the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
+* Set the general permissions in the Google Cloud Data Store after starting the AppEngine instance following this example
+(to get there: (Google Cloud Platform -> Datastore -> Entities -> select Kind: Settings -> settings entity details on the right -> edit -> edit GeneralPermissions property)):
+```json
+{
+  "ReadTeamList": {
+    "entityValue": {
+      "properties": {
+        "Allow": {
+          "arrayValue": {
+            "values": [
+              {
+                "entityValue": {
+                  "properties": {
+                    "Type": {
+                      "stringValue": "domain"
+                    },
+                    "ID": {
+                      "stringValue": "google.com"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "AddTeam": {
+    "entityValue": {
+      "properties": {
+        "Allow": {
+          "arrayValue": {
+            "values": [
+              {
+                "entityValue": {
+                  "properties": {
+                    "Type": {
+                      "stringValue": "domain"
+                    },
+                    "ID": {
+                      "stringValue": "google.com"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 Currently, the only authentication method enabled on Firebase is Google Sign-in.
 
+To use in memory storage with authentication and authorization,
+set the defaultdomain flag with your account's domain `--defaultdomain yourdomain.com`

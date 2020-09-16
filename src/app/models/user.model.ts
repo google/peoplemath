@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 export interface User {
-  uid?: string;
+  email: string;
+  domain: string;
   displayName?: string;
 }

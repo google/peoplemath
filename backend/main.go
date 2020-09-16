@@ -22,6 +22,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 
 	"firebase.google.com/go/v4"
@@ -51,29 +52,29 @@ type Server struct {
 func (s *Server) makeHandler() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handleGetTeam)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authorize(s.handleGetAllTeams)).Methods(http.MethodGet)
-	r.HandleFunc("/api/team/", s.auth.Authorize(s.handlePostTeam)).Methods(http.MethodPost)
-	r.HandleFunc("/api/team/{teamID}", s.auth.Authorize(s.handlePutTeam)).Methods(http.MethodPut)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handleGetTeam)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handleGetAllTeams)).Methods(http.MethodGet)
+	r.HandleFunc("/api/team/", s.auth.Authenticate(s.handlePostTeam)).Methods(http.MethodPost)
+	r.HandleFunc("/api/team/{teamID}", s.auth.Authenticate(s.handlePutTeam)).Methods(http.MethodPut)
 
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handleGetPeriod)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handleGetAllPeriods)).Methods(http.MethodGet)
-	r.HandleFunc("/api/period/{teamID}/", s.auth.Authorize(s.handlePostPeriod)).Methods(http.MethodPost)
-	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authorize(s.handlePutPeriod)).Methods(http.MethodPut)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handleGetPeriod)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handleGetAllPeriods)).Methods(http.MethodGet)
+	r.HandleFunc("/api/period/{teamID}/", s.auth.Authenticate(s.handlePostPeriod)).Methods(http.MethodPost)
+	r.HandleFunc("/api/period/{teamID}/{periodID}", s.auth.Authenticate(s.handlePutPeriod)).Methods(http.MethodPut)
 
 	r.HandleFunc("/improve", s.handleImprove).Methods(http.MethodGet)
 
 	return r
 }
 
-func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) bool {
+func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, teamID string, expected bool) (models.Team, bool) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	_, exists, err := s.store.GetTeam(ctx, teamID)
+	team, exists, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
 		log.Printf("Could not validate existence of team '%s': error: %s", teamID, err)
 		http.Error(w, fmt.Sprintf("Could not validate existence of team '%s' (see server log)", teamID), http.StatusInternalServerError)
-		return false
+		return models.Team{}, false
 	}
 	if exists != expected {
 		statusCode := http.StatusBadRequest
@@ -81,9 +82,9 @@ func (s *Server) ensureTeamExistence(w http.ResponseWriter, r *http.Request, tea
 			statusCode = http.StatusNotFound
 		}
 		http.Error(w, fmt.Sprintf("Team with ID '%s' expected exists=%v, found %v", teamID, expected, exists), statusCode)
-		return false
+		return models.Team{}, false
 	}
-	return true
+	return team, true
 }
 
 func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (models.Period, bool) {
@@ -120,15 +121,28 @@ func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, p
 func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	teams, err := s.store.GetAllTeams(ctx)
+	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
-		log.Printf("Could not retrieve teams: error: %s", err)
-		http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve due to internal server error", http.StatusInternalServerError)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(teams)
+	permissions := settings.GeneralPermissions
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeamList(user, permissions, auth.ActionRead) {
+		teams, err := s.store.GetAllTeams(ctx)
+		if err != nil {
+			log.Printf("Could not retrieve teams: error: %s", err)
+			http.Error(w, "Could not retrieve teams (see server log)", http.StatusInternalServerError)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		userCanAddTeam := s.auth.CanActOnTeamList(user, permissions, auth.ActionWrite)
+		teamList := models.TeamList{Teams: teams, CanAddTeam: userCanAddTeam}
+		enc.Encode(teamList)
+	} else {
+		http.Error(w, "You are not authorized to view the team list.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
@@ -146,9 +160,15 @@ func (s *Server) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(team)
+
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(team)
+	} else {
+		http.Error(w, "You are not authorized to view this team.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
@@ -156,34 +176,58 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, team.ID, false) {
+	_, isNew := s.ensureTeamExistence(w, r, team.ID, false)
+	if !isNew {
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreateTeam(ctx, team)
+	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
-		log.Printf("Could not create team: error: %s", err)
-		http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
+		http.Error(w, "The team could not be created because of an internal server error", http.StatusInternalServerError)
 		return
+	}
+	permissions := settings.GeneralPermissions
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeamList(user, permissions, auth.ActionWrite) {
+		if reflect.DeepEqual(team.Permissions, models.TeamPermissions{}) {
+			team.Permissions.Read = permissions.ReadTeamList
+			team.Permissions.Write = permissions.AddTeam
+		}
+
+		err := s.store.CreateTeam(ctx, team)
+		if err != nil {
+			log.Printf("Could not create team: error: %s", err)
+			http.Error(w, "Could not create team (see server log)", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "You are not authorized to create a new team.", http.StatusForbidden)
 	}
 }
 
 func (s *Server) handlePutTeam(w http.ResponseWriter, r *http.Request) {
-	team, ok := readTeamFromBody(w, r)
+	updatedTeam, ok := readTeamFromBody(w, r)
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, team.ID, true) {
+	team, exists := s.ensureTeamExistence(w, r, updatedTeam.ID, true)
+	if !exists {
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdateTeam(ctx, team)
-	if err != nil {
-		log.Printf("Could not update team: error: %s", err)
-		http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
-		return
+
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
+		err := s.store.UpdateTeam(ctx, updatedTeam)
+		if err != nil {
+			log.Printf("Could not update team: error: %s", err)
+			http.Error(w, "Could not update team (see server log)", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "You are not authorized to edit this team.", http.StatusForbidden)
 	}
 }
 
@@ -204,19 +248,33 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 
-	periods, found, err := s.store.GetAllPeriods(ctx, teamID)
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
-		http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(periods)
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
+		periods, found, err := s.store.GetAllPeriods(ctx, teamID)
+		if err != nil {
+			log.Printf("Could not retrieve periods for team '%s': error: %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve periods for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(periods)
+	} else {
+		http.Error(w, "You are not authorized to view this team's periods.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
@@ -225,19 +283,34 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 	periodID := vars["periodID"]
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
+
+	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
-		http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
 		return
 	}
 	if !found {
 		http.NotFound(w, r)
 		return
 	}
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json")
-	enc.Encode(period)
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionRead) {
+		period, found, err := s.store.GetPeriod(ctx, teamID, periodID)
+		if err != nil {
+			log.Printf("Could not retrieve period '%s' for team '%s': error: %s", periodID, teamID, err)
+			http.Error(w, fmt.Sprintf("Could not retrieve period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+			return
+		}
+		if !found {
+			http.NotFound(w, r)
+			return
+		}
+		enc := json.NewEncoder(w)
+		w.Header().Set("Content-Type", "application/json")
+		enc.Encode(period)
+	} else {
+		http.Error(w, "You are not authorized to view this team's periods.", http.StatusForbidden)
+	}
 }
 
 func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period models.Period) {
@@ -254,7 +327,8 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, teamID, true) {
+	team, exists := s.ensureTeamExistence(w, r, teamID, true)
+	if !exists {
 		return
 	}
 	if _, ok := s.ensurePeriodExistence(w, r, teamID, period.ID, false); !ok {
@@ -263,13 +337,19 @@ func (s *Server) handlePostPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.CreatePeriod(ctx, teamID, period)
-	if err != nil {
-		log.Printf("Could not create period for team '%s': error: %s", teamID, err)
-		http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
-		return
+
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
+		err := s.store.CreatePeriod(ctx, teamID, period)
+		if err != nil {
+			log.Printf("Could not create period for team '%s': error: %s", teamID, err)
+			http.Error(w, fmt.Sprintf("Could not create period for team '%s' (see server log)", teamID), http.StatusInternalServerError)
+			return
+		}
+		s.writePeriodUpdateResponse(w, r, period)
+	} else {
+		http.Error(w, "You are not authorized to add new periods for this team.", http.StatusForbidden)
 	}
-	s.writePeriodUpdateResponse(w, r, period)
 }
 
 func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
@@ -280,7 +360,8 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if !s.ensureTeamExistence(w, r, teamID, true) {
+	team, exists := s.ensureTeamExistence(w, r, teamID, true)
+	if !exists {
 		return
 	}
 	savedPeriod, ok := s.ensurePeriodExistence(w, r, teamID, periodID, true)
@@ -290,13 +371,19 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	period.LastUpdateUUID = uuid.New().String()
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
-	err := s.store.UpdatePeriod(ctx, teamID, period)
-	if err != nil {
-		log.Printf("Could not update period '%s' for team '%s': error: %s", periodID, teamID, err)
-		http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
-		return
+
+	user := r.Context().Value("user").(models.User)
+	if s.auth.CanActOnTeam(user, team, auth.ActionWrite) {
+		err := s.store.UpdatePeriod(ctx, teamID, period)
+		if err != nil {
+			log.Printf("Could not update period '%s' for team '%s': error: %s", periodID, teamID, err)
+			http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
+			return
+		}
+		s.writePeriodUpdateResponse(w, r, period)
+	} else {
+		http.Error(w, "You are not authorized to edit this team's periods.", http.StatusForbidden)
 	}
-	s.writePeriodUpdateResponse(w, r, period)
 }
 
 func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, bool) {
@@ -334,16 +421,16 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var useInMemStore bool
 	var authMode string
-	var authDomain string
+	var defaultDomain string
 	flag.BoolVar(&useInMemStore, "inmemstore", false, "Use in-memory datastore")
+	flag.StringVar(&defaultDomain, "defaultdomain", "google.com", "When using inmemstore: the domain that all team permissions are defaulted to")
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
-	flag.StringVar(&authDomain, "authdomain", "google.com", "The email domain with read and write access")
 	flag.Parse()
 
 	var store storage.StorageService
 	if useInMemStore {
 		log.Printf("Using in-memory store per command-line flag")
-		store = in_memory_storage.MakeInMemStore()
+		store = in_memory_storage.MakeInMemStore(defaultDomain, false)
 	} else {
 		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 		if gcloudProject == "" {
@@ -381,7 +468,6 @@ func main() {
 		firebaseAuth := &auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
 			AuthTimeout:    defaultAuthTimeout,
-			AuthDomain:     authDomain,
 		}
 		authProvider = firebaseAuth
 	} else {

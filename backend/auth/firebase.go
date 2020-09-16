@@ -16,9 +16,10 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"firebase.google.com/go/v4/auth"
+	"log"
 	"net/http"
+	"peoplemath/models"
 	"strings"
 	"time"
 )
@@ -26,45 +27,71 @@ import (
 type FirebaseAuth struct {
 	FirebaseClient firebaseAuthClient
 	AuthTimeout    time.Duration
-	AuthDomain     string
 }
 
 type firebaseAuthClient interface {
 	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
 
-func (auth *FirebaseAuth) Authorize(next http.HandlerFunc) http.HandlerFunc {
+func (auth *FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), auth.AuthTimeout)
+		defer cancel()
+
 		idToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
-		userEmail, err := auth.Authenticate(r.Context(), idToken)
+		token, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+			http.Error(w, "User authentication failed", http.StatusUnauthorized)
 			return
 		}
-		if getDomain(userEmail) != auth.AuthDomain {
-			http.Error(w, "You are not authorized to view this resource", http.StatusForbidden)
+		if !token.Claims["email_verified"].(bool) {
+			w.Header().Add("Authorization", "WWW-Authenticate: Bearer")
+			http.Error(w, "User authentication failed, please verify your email address", http.StatusUnauthorized)
 			return
 		}
-		next(w, r)
+
+		userEmail := token.Claims["email"].(string)
+		user := models.User{
+			Email:  userEmail,
+			Domain: getDomain(userEmail),
+		}
+
+		ctxWithUser := context.WithValue(r.Context(), "user", user)
+		next(w, r.WithContext(ctxWithUser))
 	}
 }
 
-func (auth *FirebaseAuth) Authenticate(ctx context.Context, idToken string) (userEmail string, err error) {
-	ctx, cancel := context.WithTimeout(ctx, auth.AuthTimeout)
-	defer cancel()
-
-	token, err := auth.FirebaseClient.VerifyIDToken(ctx, idToken)
-	errorMessage := ""
-	if err != nil {
-		errorMessage = "User authentication failed "
-		return "", errors.New(errorMessage)
+func getTeamAllowedUsers(team models.Team, action string) []models.UserMatcher {
+	var permissions []models.UserMatcher
+	if action == ActionRead {
+		permissions = team.Permissions.Read.Allow
+	} else if action == ActionWrite {
+		permissions = team.Permissions.Write.Allow
+	} else {
+		log.Fatalf("The permission action passed (%v) is not implemented.", action)
 	}
-	if !token.Claims["email_verified"].(bool) {
-		errorMessage = "User authentication failed, please verify your email address"
-		return "", errors.New(errorMessage)
-	}
+	return permissions
+}
 
-	userEmail = token.Claims["email"].(string)
-	return userEmail, nil
+func getGeneralAllowedUsers(generalPermissions models.GeneralPermissions, action string) []models.UserMatcher {
+	var permissions []models.UserMatcher
+	if action == ActionRead {
+		permissions = generalPermissions.ReadTeamList.Allow
+	} else if action == ActionWrite {
+		permissions = generalPermissions.AddTeam.Allow
+	} else {
+		log.Fatalf("The permission action passed (%v) is not implemented.", action)
+	}
+	return permissions
+}
+
+func (auth *FirebaseAuth) CanActOnTeam(user models.User, team models.Team, action string) bool {
+	permissions := getTeamAllowedUsers(team, action)
+	return user.IsPermitted(permissions)
+}
+
+func (auth *FirebaseAuth) CanActOnTeamList(user models.User, generalPermissions models.GeneralPermissions, action string) bool {
+	permissions := getGeneralAllowedUsers(generalPermissions, action)
+	return user.IsPermitted(permissions)
 }

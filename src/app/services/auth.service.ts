@@ -37,17 +37,14 @@ export class AuthService {
   ) {
     if (environment.requireAuth) {
       angularFireAuth.onAuthStateChanged((firebaseUser: firebaseUserModel | null) => {
-        if (firebaseUser != null) {
-          const user: User = {uid: firebaseUser.uid};
-          if (firebaseUser.displayName != null) {
-            user.displayName = firebaseUser?.displayName;
-          }
-          this.user$.next(user);
-        } else {
-          this.user$.next(null);
-        }
+        this.updateUserData(firebaseUser);
       });
       }
+  }
+
+  getDomain(email: string): string {
+    const emailParts: string[] = email.split('@');
+    return emailParts[emailParts.length - 1];
   }
 
   googleSignin(): void {
@@ -64,11 +61,15 @@ export class AuthService {
   }
 
   private updateUserData(firebaseUser: firebase.User | null): void {
-    const user: User = {uid: firebaseUser?.uid};
-    if (firebaseUser?.displayName != null) {
-      user.displayName = firebaseUser?.displayName;
+    if (firebaseUser != null && firebaseUser.email != null) {
+      const user: User = {email: firebaseUser.email, domain: this.getDomain(firebaseUser.email)};
+      if (firebaseUser.displayName != null) {
+        user.displayName = firebaseUser.displayName;
+      }
+      this.user$.next(user);
+    } else {
+      this.user$.next(null);
     }
-    this.user$.next(user);
   }
 
   public getIdToken(): Observable<string | null> {

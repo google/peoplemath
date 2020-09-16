@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
-import { Team, ImmutableTeam } from '../team';
+import {Team, ImmutableTeam} from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,6 +30,8 @@ import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
 import { AggregateBy } from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
+import {AuthService} from '../services/auth.service';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-period',
@@ -44,16 +46,18 @@ export class PeriodComponent implements OnInit {
   period?: ImmutablePeriod;
   isEditingEnabled: boolean = false;
   showOrderButtons: boolean = false;
+  userHasEditPermissions: boolean = false;
   readonly eventsRequiringSave = new Subject<any>();
   // To enable access to this enum from the template
   readonly AggregateBy = AggregateBy;
- 
+
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private changeDet: ChangeDetectorRef,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
@@ -197,7 +201,7 @@ export class PeriodComponent implements OnInit {
     });
     return totalCommitted;
   }
-  
+
   /**
    * Fraction of allocated resources which is allocated to committed objectives
    */
@@ -270,6 +274,19 @@ export class PeriodComponent implements OnInit {
     ).subscribe((team?: Team) => {
       if (team) {
         this.setTeam(new ImmutableTeam(team));
+        if (team.teamPermissions !== undefined) {
+          const user = this.authService.user$.getValue();
+          const userEmail = user?.email;
+          const userDomain = user?.domain;
+          const principalTypeEmail = 'email';
+          const principalTypeDomain = 'domain';
+          team.teamPermissions.write.allow.forEach(permission => {
+            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
+              this.userHasEditPermissions = true;
+            }
+          });
+        }
       } else {
         this.setTeam(undefined);
       }
