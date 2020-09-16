@@ -123,6 +123,7 @@ func (s *Server) handleGetAllTeams(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
+		log.Printf("Could not retrieve settings: %v", err)
 		http.Error(w, "Could not retrieve due to internal server error", http.StatusInternalServerError)
 		return
 	}
@@ -184,6 +185,7 @@ func (s *Server) handlePostTeam(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
+		log.Printf("Could not get settings: %v", err)
 		http.Error(w, "The team could not be created because of an internal server error", http.StatusInternalServerError)
 		return
 	}
@@ -250,7 +252,8 @@ func (s *Server) handleGetAllPeriods(w http.ResponseWriter, r *http.Request) {
 
 	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
+		log.Printf("Could not retrieve team: %v", err)
+		http.Error(w, "Could not retrieve team", http.StatusInternalServerError)
 		return
 	}
 	if !found {
@@ -286,7 +289,8 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 
 	team, found, err := s.store.GetTeam(ctx, teamID)
 	if err != nil {
-		http.Error(w, "Could not retrieve period due to internal server error", http.StatusInternalServerError)
+		log.Printf("Could not retrieve team: %v", err)
+		http.Error(w, "Could not retrieve team", http.StatusInternalServerError)
 		return
 	}
 	if !found {
@@ -412,7 +416,8 @@ func (s *Server) handleImprove(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	settings, err := s.store.GetSettings(ctx)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Could not retrieve settings: %v", err), http.StatusInternalServerError)
+		log.Printf("Could not retrieve settings: %v", err)
+		http.Error(w, "Could not retrieve settings", http.StatusInternalServerError)
 		return
 	}
 	http.Redirect(w, r, settings.ImproveURL, http.StatusFound)
