@@ -45,7 +45,7 @@ Groups are a mutually-exclusive concept: for a single grouping key, each objecti
 
 ### Permissions
 
-Thanks to contributions from [Samrthi](https://github.com/Samrthi), It is possible to configure PeopleMath so that read and write access is limited to certain users.
+Thanks to contributions from [Samrthi](https://github.com/Samrthi), it is possible to configure PeopleMath so that read and write access is limited to certain users.
 
 Users are identified using [Firebase Authentication](https://firebase.google.com/docs/auth). Currently, the only underlying authentication method supported is [Google Sign-in](https://developers.google.com/identity/sign-in/web).
 
