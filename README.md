@@ -43,11 +43,36 @@ It is also useful to be able to mark objectives with particular themes. For this
 
 Groups are a mutually-exclusive concept: for a single grouping key, each objective is a member of at most one group. Tags, by contrast, have a free many-to-many relationship with objectives.
 
+### Permissions
+
+Thanks to contributions from [Samrthi](https://github.com/Samrthi), It is possible to configure PeopleMath so that read and write access is limited to certain users.
+
+Users are identified using [Firebase Authentication](https://firebase.google.com/docs/auth). Currently, the only underlying authentication method supported is [Google Sign-in](https://developers.google.com/identity/sign-in/web).
+
+Users can be granted permissions individually (e.g. "allow Alice to write team X") or by the domain of their verified email address (e.g. "let anyone with a verified @google.com email address read team Y").
+
+Permissions to read the list of teams, or add a new team, are app-wide and live in the `GeneralPermissions` on the stored `Settings` object. Permissions to read and write data associated with specific teams are stored in each `Team` object under `Permissions`.
+
+This feature is not yet quite complete: we do not yet have any functionality in the user interface to edit permissions. The only way to do this currently is by editing the settings or the team JSON manually.
+
+The authentication functionality is disabled by default. To turn it on:
+
+* Create a Firebase project in [the Firebase console](https://console.firebase.google.com/) and register your web app in it
+* Add your web application's domain to the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
+* [Download your Firebase config](https://support.google.com/firebase/answer/7015592#web) and copy the configuration object into `src/environments/firebaseConfig.ts`
+* Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
+* [Download your Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"` (do NOT check these into version control)
+* Run the backend with `--authmode firebase`
+
 ## Implementation
 
 The front end was built using [Angular](https://angular.io) and [Angular Material](https://material.angular.io). The API server in the `backend` directory was written in [Go](https://golang.org).
 
 The whole application was designed to run on [Google App Engine](https://cloud.google.com/appengine/), using [Google Cloud Datastore](https://cloud.google.com/datastore/) for persistence, though the front-end could be deployed with a back-end that used an entirely different persistence mechanism or runtime platform.
+
+Storage functionality is abstracted in the backend using the `StorageService` interface.
+
+The permissions functionality uses [Firebase Authentication](https://firebase.google.com/docs/auth). This is abstracted in the back-end using the `Auth` interface, but substituting a different authentication system into the front-end would be more difficult.
 
 ## Development
 
@@ -62,6 +87,8 @@ The simplest way to run it is with `peoplemath --inmemstore`, which will use a s
 To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and run `peoplemath` with no arguments.
 
 The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
+
+By default, the permissions functionality is turned off. If you would like to test it using the in-memory datastore, follow the general instructions for turning on authentication above, and use the `--inmemstore` flag along with `--defaultdomain your.domain`. This `defaultdomain` will be granted both read and write access to all parts of the application, while users from other domains will be denied.
 
 ### Using Docker
 
@@ -93,83 +120,3 @@ The primary supported way of running PeopleMath in a staging or production confi
 * Run `gcloud config set project [YOUR_PROJECT_ID]`
 * Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
 * `cd appengine_dist` and `gcloud app deploy`
-
-### Authentication & Authorization
-
-There are both general, app-wide permissions and team-specific permissions.
-The general permissions contain a list of users/domains that can read the list of all teams (`ReadTeamList`),
-and a list of users/domains that can add a new team (`AddTeam`).
-Each team's permissions contain a list of users/domain that can read all the team's information (`Read`),
-and a list of users/domains that can edit the team's information (`Write`).
-For each of those permissions, there is currently a list of allowed users/domain which each have a type (`email` or `domain`)
-and the corresponding value.
-
-A new team's permission will default to the general, app-wide permissions
-(the `Read` list will mirror the `ReadTeamList` list and the `Write` list will mirror the `AddTeam` list)
-
-To use authorization with [Firebase](https://firebase.google.com/docs/auth) to authenticate users:
-
-* Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
-* Run backend with authmode flag `--authmode firebase`
-* Download your [Firebase config file](https://support.google.com/firebase/answer/7015592#web) and copy the text into the `firebaseConfig.ts` file in the same folder.
-* Download your [Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"`
-* Add the domain which the AppEngine instance runs on the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
-* Set the general permissions in the Google Cloud Data Store after starting the AppEngine instance following this example
-(to get there: (Google Cloud Platform -> Datastore -> Entities -> select Kind: Settings -> settings entity details on the right -> edit -> edit GeneralPermissions property)):
-```json
-{
-  "ReadTeamList": {
-    "entityValue": {
-      "properties": {
-        "Allow": {
-          "arrayValue": {
-            "values": [
-              {
-                "entityValue": {
-                  "properties": {
-                    "Type": {
-                      "stringValue": "domain"
-                    },
-                    "ID": {
-                      "stringValue": "google.com"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      }
-    }
-  },
-  "AddTeam": {
-    "entityValue": {
-      "properties": {
-        "Allow": {
-          "arrayValue": {
-            "values": [
-              {
-                "entityValue": {
-                  "properties": {
-                    "Type": {
-                      "stringValue": "domain"
-                    },
-                    "ID": {
-                      "stringValue": "google.com"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-Currently, the only authentication method enabled on Firebase is Google Sign-in.
-
-To use in memory storage with authentication and authorization,
-set the defaultdomain flag with your account's domain `--defaultdomain yourdomain.com`
