@@ -25,8 +25,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"peoplemath/auth"
+	"peoplemath/controllers"
 	"peoplemath/in_memory_storage"
 	"peoplemath/models"
+	"peoplemath/storage"
 	"reflect"
 	"strings"
 	"testing"
@@ -34,9 +36,13 @@ import (
 	firebaseAuth "firebase.google.com/go/v4/auth"
 )
 
+func makeServer(store storage.StorageService, auth auth.Auth) controllers.Server {
+	return controllers.MakeServer(store, defaultStoreTimeout, auth)
+}
+
 func makeHandler() http.Handler {
-	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: auth.NoAuth{}}
-	return server.makeHandler()
+	server := makeServer(in_memory_storage.MakeInMemStore("google.com"), auth.NoAuth{})
+	return server.MakeHandler()
 }
 
 func makeHTTPRequest(request *http.Request, handler http.Handler, t *testing.T) *http.Response {
@@ -486,8 +492,8 @@ func (auth failAuthenticationStub) CanActOnTeamList(user models.User, generalPer
 }
 
 func TestAuthMiddleware(t *testing.T) {
-	server := Server{store: in_memory_storage.MakeInMemStore("google.com"), auth: failAuthenticationStub{}}
-	handler := server.makeHandler()
+	server := makeServer(in_memory_storage.MakeInMemStore("google.com"), failAuthenticationStub{})
+	handler := server.MakeHandler()
 
 	assertAuthenticationFailure := func(httpMethod, target string) {
 		req := httptest.NewRequest(httpMethod, target, nil)
@@ -541,8 +547,8 @@ func TestFirebaseAuthentication(t *testing.T) {
 	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "usera@domain.com"}}
 	store := in_memory_storage.MakeInMemStore("google.com")
 	store.AddAuthTestUsersAndTeam()
-	server := Server{store: store, auth: &testAuth}
-	handler := server.makeHandler()
+	server := makeServer(store, &testAuth)
+	handler := server.MakeHandler()
 
 	req := httptest.NewRequest(http.MethodGet, "/api/team/", nil)
 	req.Header.Add("Authorization", "Bearer pass")
@@ -603,8 +609,8 @@ func TestFirebaseAuthorization(t *testing.T) {
 	testAuth := auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "usera@domain.com"}}
 	store := in_memory_storage.MakeInMemStore("")
 	store.AddAuthTestUsersAndTeam()
-	server := Server{store: store, auth: &testAuth}
-	handler := server.makeHandler()
+	server := makeServer(store, &testAuth)
+	handler := server.MakeHandler()
 
 	t.Log("User A")
 	assertAuthorizationPass(handler, http.MethodGet, "/api/team/"+existingTeamId, nil)
@@ -624,8 +630,8 @@ func TestFirebaseAuthorization(t *testing.T) {
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userb@userb.com"}}
 	store = in_memory_storage.MakeInMemStore("")
 	store.AddAuthTestUsersAndTeam()
-	server = Server{store: store, auth: &testAuth}
-	handler = server.makeHandler()
+	server = makeServer(store, &testAuth)
+	handler = server.MakeHandler()
 
 	t.Log("User B")
 	assertAuthorizationPass(handler, http.MethodGet, "/api/team/"+existingTeamId, nil)
@@ -645,8 +651,8 @@ func TestFirebaseAuthorization(t *testing.T) {
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userc@domain.com"}}
 	store = in_memory_storage.MakeInMemStore("")
 	store.AddAuthTestUsersAndTeam()
-	server = Server{store: store, auth: &testAuth}
-	handler = server.makeHandler()
+	server = makeServer(store, &testAuth)
+	handler = server.MakeHandler()
 
 	t.Log("User C")
 	assertAuthorizationPass(handler, http.MethodGet, "/api/team/"+existingTeamId, nil)
@@ -666,8 +672,8 @@ func TestFirebaseAuthorization(t *testing.T) {
 	testAuth = auth.FirebaseAuth{FirebaseClient: AuthClientStub{userEmail: "userd@domain.com"}}
 	store = in_memory_storage.MakeInMemStore("")
 	store.AddAuthTestUsersAndTeam()
-	server = Server{store: store, auth: &testAuth}
-	handler = server.makeHandler()
+	server = makeServer(store, &testAuth)
+	handler = server.MakeHandler()
 
 	t.Log("User D")
 	assertAuthorizationFail(handler, http.MethodGet, "/api/team/"+existingTeamId, nil)
@@ -685,13 +691,13 @@ func TestFirebaseAuthorization(t *testing.T) {
 func TestDefaultTeamPermissions(t *testing.T) {
 	store := in_memory_storage.MakeInMemStore("")
 	store.AddAuthTestUsersAndTeam()
-	server := Server{store: store, auth: auth.NoAuth{}}
-	handler := server.makeHandler()
+	server := makeServer(store, auth.NoAuth{})
+	handler := server.MakeHandler()
 	teamID := "myteam"
 	addTeam(handler, teamID, t)
 	team := getTeam(handler, teamID, t)
 
-	settings, err := server.store.GetSettings(context.Background())
+	settings, err := store.GetSettings(context.Background())
 	if err != nil {
 		t.Fatalf("Failed to get settings from server")
 	}
