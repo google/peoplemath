@@ -74,23 +74,21 @@ export class TeamPeriodsComponent implements OnInit {
     ).subscribe((team?: Team) => {
       if (team) {
         this.team = new ImmutableTeam(team);
-        if (team.teamPermissions !== undefined) {
+        // TODO(#83) Replace this logic with something determined by the server, like CanAddTeam
+        if (environment.requireAuth && team.teamPermissions !== undefined) {
           const user = this.authService.user$.getValue();
           const userEmail = user?.email;
           const userDomain = user?.domain;
           const principalTypeEmail = 'email';
           const principalTypeDomain = 'domain';
-          // TODO Replace this logic with something determined by the server, like CanAddTeam
-          if (environment.requireAuth) {
-            team.teamPermissions.write.allow.forEach(permission => {
-              if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
-                (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
-                this.userHasEditPermissions = true;
-              }
-            });
-          } else {
-            this.userHasEditPermissions = true;
-          }
+          team.teamPermissions.write.allow.forEach(permission => {
+            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
+              this.userHasEditPermissions = true;
+            }
+          });
+        } else {
+          this.userHasEditPermissions = true;
         }
       } else {
         this.team = undefined;
