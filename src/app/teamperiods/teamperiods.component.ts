@@ -42,7 +42,7 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;
   periods?: readonly ImmutablePeriod[];
-  userHasEditPermissions = false;
+  userHasEditPermissions: boolean = true;
 
   constructor(
     private storage: StorageService,
@@ -50,7 +50,6 @@ export class TeamPeriodsComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     public authService: AuthService,
-    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -87,8 +86,6 @@ export class TeamPeriodsComponent implements OnInit {
               this.userHasEditPermissions = true;
             }
           });
-        } else {
-          this.userHasEditPermissions = true;
         }
       } else {
         this.team = undefined;
