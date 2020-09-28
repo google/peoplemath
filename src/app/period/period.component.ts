@@ -32,6 +32,7 @@ import { AggregateBy } from '../assignments-classify/assignments-classify.compon
 import { ThemePalette } from '@angular/material/core';
 import {AuthService} from '../services/auth.service';
 import {NotificationService} from '../services/notification.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-period',
@@ -280,12 +281,17 @@ export class PeriodComponent implements OnInit {
           const userDomain = user?.domain;
           const principalTypeEmail = 'email';
           const principalTypeDomain = 'domain';
-          team.teamPermissions.write.allow.forEach(permission => {
-            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
-              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
-              this.userHasEditPermissions = true;
-            }
-          });
+          // TODO Replace this logic with something determined by the server, like CanAddTeam
+          if (environment.requireAuth) {
+            team.teamPermissions.write.allow.forEach(permission => {
+              if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+                (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
+                this.userHasEditPermissions = true;
+              }
+            });
+          } else {
+            this.userHasEditPermissions = true;
+          }
         }
       } else {
         this.setTeam(undefined);
