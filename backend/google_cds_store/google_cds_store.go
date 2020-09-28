@@ -70,6 +70,7 @@ func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]models.Team, error)
 		if err != nil {
 			return result, err
 		}
+		scrubLoadedTeam(&t)
 		result = append(result, t)
 	}
 	return result, nil
@@ -85,6 +86,7 @@ func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (models.Tea
 	if err != nil {
 		return team, true, err
 	}
+	scrubLoadedTeam(&team)
 	return team, true, nil
 }
 
@@ -198,6 +200,7 @@ func (s *googleCDSStore) Close() error {
 
 // Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
 // they may be nil. This function is to avoid clients having to deal with this.
+// TODO Consider moving this function into the controller so it applies to all storage implementations.
 func scrubLoadedPeriod(period *models.Period) {
 	if period.People == nil {
 		period.People = []models.Person{}
@@ -223,5 +226,17 @@ func scrubLoadedPeriod(period *models.Period) {
 				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
 			}
 		}
+	}
+}
+
+// Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
+// they may be nil. This function is to avoid clients having to deal with this.
+// TODO Consider moving this function into the controller so it applies to all storage implementations.
+func scrubLoadedTeam(team *models.Team) {
+	if team.Permissions.Read.Allow == nil {
+		team.Permissions.Read.Allow = []models.UserMatcher{}
+	}
+	if team.Permissions.Write.Allow == nil {
+		team.Permissions.Write.Allow = []models.UserMatcher{}
 	}
 }
