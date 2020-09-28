@@ -80,6 +80,7 @@ export class TeamPeriodsComponent implements OnInit {
           const userDomain = user?.domain;
           const principalTypeEmail = 'email';
           const principalTypeDomain = 'domain';
+          this.userHasEditPermissions = false;
           team.teamPermissions.write.allow.forEach(permission => {
             if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
               (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
