@@ -47,7 +47,7 @@ export class PeriodComponent implements OnInit {
   period?: ImmutablePeriod;
   isEditingEnabled: boolean = false;
   showOrderButtons: boolean = false;
-  userHasEditPermissions: boolean = false;
+  userHasEditPermissions: boolean = true;
   readonly eventsRequiringSave = new Subject<any>();
   // To enable access to this enum from the template
   readonly AggregateBy = AggregateBy;
@@ -288,8 +288,6 @@ export class PeriodComponent implements OnInit {
               this.userHasEditPermissions = true;
             }
           });
-        } else {
-          this.userHasEditPermissions = true;
         }
       } else {
         this.setTeam(undefined);
