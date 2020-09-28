@@ -200,7 +200,7 @@ func (s *googleCDSStore) Close() error {
 
 // Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
 // they may be nil. This function is to avoid clients having to deal with this.
-// TODO Consider moving this function into the controller so it applies to all storage implementations.
+// TODO(#82) Consider moving this function into the controller so it applies to all storage implementations.
 func scrubLoadedPeriod(period *models.Period) {
 	if period.People == nil {
 		period.People = []models.Person{}
@@ -231,7 +231,7 @@ func scrubLoadedPeriod(period *models.Period) {
 
 // Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
 // they may be nil. This function is to avoid clients having to deal with this.
-// TODO Consider moving this function into the controller so it applies to all storage implementations.
+// TODO(#82) Consider moving this function into the controller so it applies to all storage implementations.
 func scrubLoadedTeam(team *models.Team) {
 	if team.Permissions.Read.Allow == nil {
 		team.Permissions.Read.Allow = []models.UserMatcher{}

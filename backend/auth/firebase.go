@@ -65,7 +65,7 @@ func (auth *FirebaseAuth) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// TODO The below code is likely to be the same for any Auth implementation which
+// TODO(#81) The below code is likely to be the same for any Auth implementation which
 // actually wants to perform permissions checks. Move it into a separate type.
 
 func getTeamAllowedUsers(team models.Team, action string) []models.UserMatcher {
