@@ -20,7 +20,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-teams',
@@ -29,13 +28,12 @@ import {NotificationService} from '../services/notification.service';
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];
-  addTeamDisabled = true;
+  addTeamDisabled: boolean = false;
 
   constructor(
     private storage: StorageService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -55,12 +53,7 @@ export class TeamsComponent implements OnInit {
       } else {
         this.teams = undefined;
       }
-      if (teamList?.canAddTeam) {
-        this.addTeamDisabled = false;
-      }
-      if (this.addTeamDisabled) {
-        this.notificationService.error$.next('You are not authorized to add a new team.');
-      }
+      this.addTeamDisabled = !teamList?.canAddTeam;
     });
   }
 
