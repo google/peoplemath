@@ -13,4 +13,4 @@ require (
 	google.golang.org/genproto v0.0.0-20200925023002-c2d885f95484 // indirect
 )
 
-go 1.13
+go 1.14
