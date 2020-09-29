@@ -78,15 +78,15 @@ The permissions functionality uses [Firebase Authentication](https://firebase.go
 
 ### Local machine
 
-The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`ng serve`, `ng test` etc), after an `npm install` to install the dependencies.
+The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`npx ng serve`, `npx ng test` etc), after an `npm install` to install the dependencies.
 
-In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`. To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.14 or later), run `go build` in the `backend` directory, and run the resulting `peoplemath` binary. (You can do `go run .` in the `backend` directory as a shortcut to compile and run the backend in a single command.)
+In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`.
 
-The simplest way to run it is with `peoplemath --inmemstore`, which will use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
+To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.14 or later), and run `go run . --inmemstore` in the `backend` directory. The `--inmemstore` argument will make the backend use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
 
-To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and run `peoplemath` with no arguments.
+To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and start the backend server by running `go run .` with no arguments.
 
-The front-end tests can be run via `ng test`, and the back-end tests via `go test` in the `backend` directory.
+The front-end tests can be run via `npx ng test`, and the back-end tests via `go test ./...` in the `backend` directory.
 
 By default, the permissions functionality is turned off. If you would like to test it using the in-memory datastore, follow the general instructions for turning on authentication above, and use the `--inmemstore` flag along with `--defaultdomain your.domain`. This `defaultdomain` will be granted both read and write access to all parts of the application, while users from other domains will be denied.
 
@@ -111,6 +111,8 @@ The build uses the `Dockerfile` in the root of the project. It uses a base image
 To reproduce the behaviour of the continuous build, first construct the base image using `docker build -t peoplemath-build-base -f build/Dockerfile build`. Then replace the `FROM` clause of the root `Dockerfile` with `FROM peoplemath-build-base`, and run `docker build -t peoplemath-build .` from the root of the project.
 
 If you wish to run the build on Google Cloud Build using your own resources, follow [these instructions](https://cloud.google.com/cloud-build/docs/quickstart-build?hl=en#build_using_dockerfile) using one of your own projects. Run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath-base` from inside the `build` folder to generate the base image, then substitute that tag into the `FROM` clause in the root `Dockerfile`, and run `gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/peoplemath` from the root of the project to run the build.
+
+Running the commands in the `Dockerfile` manually should give a pretty good sense of whether the build is likely to pass or not.
 
 ## Deployment to App Engine
 
