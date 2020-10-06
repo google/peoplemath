@@ -37,7 +37,7 @@ export class ObjectiveComponent implements OnInit {
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
-  
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -67,8 +67,12 @@ export class ObjectiveComponent implements OnInit {
     let assignmentData: PersonAssignmentData[] = [];
     this.unallocatedTime!.forEach((unallocated, personId) => {
       let currentAssignment = this.currentAssignment(personId);
-      assignmentData.push(new PersonAssignmentData(
-        personId, unallocated + currentAssignment, currentAssignment));
+      const availableWeeks = unallocated + currentAssignment;
+      if (availableWeeks > 0) {
+        assignmentData.push(
+          new PersonAssignmentData(personId, availableWeeks, currentAssignment)
+        );
+      }
     });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective!.toOriginal(),
