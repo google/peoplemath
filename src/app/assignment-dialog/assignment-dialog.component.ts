@@ -59,10 +59,6 @@ export class AssignmentDialogComponent implements OnInit {
     row.assign = 0;
   }
 
-  assignAll(row: PersonAssignmentData): void {
-    row.assign = Math.min(row.available, this.data.objective.resourceEstimate);
-  }
-
   assignRemaining(row: PersonAssignmentData): void {
     row.assign = Math.min(row.available, this.unassignedTime() + row.assign);
   }
