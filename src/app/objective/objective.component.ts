@@ -37,10 +37,24 @@ export class ObjectiveComponent implements OnInit {
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
+  assignmentData: PersonAssignmentData[] = [];
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
+    this.createAvailableAssignmentData();
+  }
+
+  createAvailableAssignmentData(): void {
+    this.unallocatedTime!.forEach((unallocated, personId) => {
+      let currentAssignment = this.currentAssignment(personId);
+      const availableWeeks = unallocated + currentAssignment;
+      if (availableWeeks > 0) {
+        this.assignmentData.push(
+          new PersonAssignmentData(personId, availableWeeks, currentAssignment)
+        );
+      }
+    });
   }
 
   isFullyAllocated(): boolean {
@@ -64,19 +78,9 @@ export class ObjectiveComponent implements OnInit {
     if (!this.isEditingEnabled) {
       return;
     }
-    let assignmentData: PersonAssignmentData[] = [];
-    this.unallocatedTime!.forEach((unallocated, personId) => {
-      let currentAssignment = this.currentAssignment(personId);
-      const availableWeeks = unallocated + currentAssignment;
-      if (availableWeeks > 0) {
-        assignmentData.push(
-          new PersonAssignmentData(personId, availableWeeks, currentAssignment)
-        );
-      }
-    });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective!.toOriginal(),
-      'people': assignmentData,
+      'people': this.assignmentData,
       'unit': this.unit!,
       'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
@@ -125,6 +129,10 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0;
+    return (
+      !!this.isEditingEnabled &&
+      this.objective!.resourceEstimate > 0 &&
+      this.assignmentData.length > 0
+    );
   }
 }
