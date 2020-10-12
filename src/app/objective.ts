@@ -88,7 +88,7 @@ export class ImmutableObjective {
   readonly groups: readonly ImmutableObjectiveGroup[];
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
-  
+
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
     this.resourceEstimate = o.resourceEstimate;
@@ -97,6 +97,7 @@ export class ImmutableObjective {
     this.groups = o.groups;
     this.tags = o.tags;
     this.assignments = o.assignments;
+    this.assignments.length > 0;
   }
 
   static fromObjective(objective: Objective): ImmutableObjective {

@@ -37,24 +37,22 @@ export class ObjectiveComponent implements OnInit {
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
-  assignmentData: PersonAssignmentData[] = [];
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.createAvailableAssignmentData();
   }
 
-  createAvailableAssignmentData(): void {
-    this.unallocatedTime!.forEach((unallocated, personId) => {
-      let currentAssignment = this.currentAssignment(personId);
-      const availableWeeks = unallocated + currentAssignment;
-      if (availableWeeks > 0) {
-        this.assignmentData.push(
-          new PersonAssignmentData(personId, availableWeeks, currentAssignment)
-        );
+  hasPeopleAvailable() {
+    if (this.objective!.assignments.length) {
+      return true;
+    }
+    for (const weeks of this.unallocatedTime!.keys()) {
+      if (this.unallocatedTime!.get(weeks)) {
+        return true;
       }
-    });
+    }
+    return false;
   }
 
   isFullyAllocated(): boolean {
@@ -75,12 +73,21 @@ export class ObjectiveComponent implements OnInit {
   }
 
   assign(): void {
-    if (!this.isEditingEnabled) {
+    if (!this.enableAssignButton()) {
       return;
     }
+    let assignmentData: PersonAssignmentData[] = [];
+    this.unallocatedTime!.forEach((unallocated, personId) => {
+      let currentAssignment = this.currentAssignment(personId);
+      const availableWeeks = unallocated + currentAssignment;
+      if (availableWeeks){
+        assignmentData.push(new PersonAssignmentData(
+          personId, availableWeeks, currentAssignment));
+      }
+    });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective!.toOriginal(),
-      'people': this.assignmentData,
+      'people': assignmentData,
       'unit': this.unit!,
       'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
@@ -129,10 +136,6 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return (
-      !!this.isEditingEnabled &&
-      this.objective!.resourceEstimate > 0 &&
-      this.assignmentData.length > 0
-    );
+    return this.hasPeopleAvailable() && !!this.isEditingEnabled && this.objective!.resourceEstimate > 0;
   }
 }

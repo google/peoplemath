@@ -4,4 +4,4 @@
 </span>
 <span *ngIf="objective?.notes" class="icons"><i (click)="edit()" matTooltip="{{objective?.notes}}" matTooltipShowDelay="200" matTooltipHideDelay="2000" class="material-icons notes-icon">note</i></span>
 <span (click)="assign()" class="assignments" [class.fully-allocated]="isFullyAllocated()" [class.warning]="!isFullyAllocated()">{{assignmentSummary()}}</span>
-<span class="assign-button" [class.assign-button-enabled]="enableAssignButton()" [class.assign-button-disabled]="!enableAssignButton()"><a *ngIf="showAssignButton()" (click)="enableAssignButton() ? assign() : false">Assign</a></span>
+<span class="assign-button" [class.assign-button-enabled]="enableAssignButton()" [class.assign-button-disabled]="!enableAssignButton()"><a *ngIf="showAssignButton()" (click)="assign()">Assign</a></span>
