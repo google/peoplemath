@@ -44,15 +44,10 @@ export class ObjectiveComponent implements OnInit {
   }
 
   hasPeopleAvailable() {
-    if (this.objective!.assignments.length) {
-      return true;
-    }
-    for (const weeks of this.unallocatedTime!.keys()) {
-      if (this.unallocatedTime!.get(weeks)) {
-        return true;
-      }
-    }
-    return false;
+    return (
+      this.objective!.assignments.find((a) => a.commitment > 0) ||
+      Array.from(this.unallocatedTime!.values()).find((t) => t > 0)
+    );
   }
 
   isFullyAllocated(): boolean {
@@ -136,6 +131,6 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return this.hasPeopleAvailable() && !!this.isEditingEnabled && this.objective!.resourceEstimate > 0;
+    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0 && !!this.hasPeopleAvailable();
   }
 }
