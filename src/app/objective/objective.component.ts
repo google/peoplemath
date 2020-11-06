@@ -37,10 +37,17 @@ export class ObjectiveComponent implements OnInit {
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
-  
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  hasPeopleAvailable() {
+    return (
+      this.objective!.assignments.find((a) => a.commitment > 0) ||
+      Array.from(this.unallocatedTime!.values()).find((t) => t > 0)
+    );
   }
 
   isFullyAllocated(): boolean {
@@ -61,14 +68,17 @@ export class ObjectiveComponent implements OnInit {
   }
 
   assign(): void {
-    if (!this.isEditingEnabled) {
+    if (!this.enableAssignButton()) {
       return;
     }
     let assignmentData: PersonAssignmentData[] = [];
     this.unallocatedTime!.forEach((unallocated, personId) => {
       let currentAssignment = this.currentAssignment(personId);
-      assignmentData.push(new PersonAssignmentData(
-        personId, unallocated + currentAssignment, currentAssignment));
+      const availableWeeks = unallocated + currentAssignment;
+      if (availableWeeks){
+        assignmentData.push(new PersonAssignmentData(
+          personId, availableWeeks, currentAssignment));
+      }
     });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective!.toOriginal(),
@@ -121,6 +131,6 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0;
+    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0 && !!this.hasPeopleAvailable();
   }
 }

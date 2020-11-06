@@ -28,7 +28,7 @@ export class ImmutableObjectiveGroup {
 
   get groupType(): string { return this._groupType; }
   get groupName(): string { return this._groupName; }
-  
+
   constructor(g: ObjectiveGroup) {
     this._groupType = g.groupType;
     this._groupName = g.groupName;
@@ -88,7 +88,7 @@ export class ImmutableObjective {
   readonly groups: readonly ImmutableObjectiveGroup[];
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
-  
+
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
     this.resourceEstimate = o.resourceEstimate;
