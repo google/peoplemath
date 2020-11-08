@@ -4,6 +4,7 @@
 .notes-icon { vertical-align: middle; font-size: 16px; }
 .assignments { margin-left: 10px; font-weight: bold }
 .unassigned { color: grey }
+.zero-resource-estimate { color: #b8b8b8; }
 .fully-allocated { color: green }
 .assign-button { font-weight: bold; }
 .assign-button-enabled a { color: #674ab7; text-decoration: none; }

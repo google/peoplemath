@@ -1,4 +1,4 @@
-<span (click)="edit()" [class.unassigned]="!objective?.assignments?.length">
+<span (click)="edit()" [class.unassigned]="!objective?.assignments?.length" [class.zero-resource-estimate]="!objective!.resourceEstimate">
     <app-pill *ngIf="isCommitted()">C</app-pill>{{objective?.name}}
     <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>
 </span>
