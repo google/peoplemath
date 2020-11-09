@@ -42,6 +42,7 @@ export class BucketComponent implements OnInit {
   @Output() onMoveBucketDown = new EventEmitter<ImmutableBucket>();
   @Output() onMoveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
   @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
+  @Output() onDelete = new EventEmitter<ImmutableBucket>();
 
   constructor(public dialog: MatDialog) { }
 
@@ -61,8 +62,12 @@ export class BucketComponent implements OnInit {
       return;
     }
     const dialogData: EditBucketDialogData = {
-      'bucket': this.bucket!.toOriginal(), 'okAction': 'OK', 'allowCancel': false,
-      'title': 'Edit bucket "' + this.bucket!.displayName + '"',
+      bucket: this.bucket!.toOriginal(),
+      original: this.bucket!,
+      okAction: 'OK',
+      allowCancel: false,
+      title: 'Edit bucket "' + this.bucket!.displayName + '"',
+      onDelete: this.onDelete,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe((bucket?: Bucket) => {

@@ -31,7 +31,6 @@ import { Assignment, ImmutableAssignment } from '../assignment';
 import { AggregateBy } from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
 import {AuthService} from '../services/auth.service';
-import {NotificationService} from '../services/notification.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -403,6 +402,11 @@ export class PeriodComponent implements OnInit {
       this.setPeriod(this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket)));
       this.save();
     });
+  }
+
+  deleteBucket(bucket: ImmutableBucket): void {
+    this.setPeriod(this.period!.withBucketDeleted(bucket));
+    this.save();
   }
 
   moveBucketUpOne(bucket: ImmutableBucket): void {

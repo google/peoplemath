@@ -39,6 +39,7 @@
     (onMoveBucketUp)="moveBucketUpOne($event)"
     (onMoveBucketDown)="moveBucketDownOne($event)"
     (onMoveObjectiveBucket)="moveObjectiveToBucket($event[0], $event[1], $event[2], $event[3])"
+    (onDelete)="deleteBucket($event)"
     (onChanged)="onBucketChanged($event[0], $event[1])"></app-bucket>
 
 <div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
