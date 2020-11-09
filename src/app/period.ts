@@ -119,6 +119,10 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     return new ImmutablePeriod({...this, lastUpdateUUID: lastUpdateUUID});
   }
 
+  withNewBuckets(newBuckets: readonly ImmutableBucket[]): ImmutablePeriod {
+    return new ImmutablePeriod({...this, buckets: newBuckets});
+  }
+
   withNewBucket(bucket: ImmutableBucket): ImmutablePeriod {
     return new ImmutablePeriod({...this, buckets: this.buckets.concat([bucket])});
   }
@@ -151,6 +155,20 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     let newBuckets = [...this.buckets];
     newBuckets[index] = to;
     return new ImmutablePeriod({...this, buckets: newBuckets});
+  }
+
+  private bucketIndex(bucket: ImmutableBucket): number {
+    return this.buckets.findIndex(b => b === bucket);
+  }
+
+  withBucketDeleted(bucket: ImmutableBucket): ImmutablePeriod {
+    const index = this.bucketIndex(bucket);
+    if (index < 0) {
+      return this;
+    }
+    const newBuckets = [...this.buckets];
+    newBuckets.splice(index, 1);
+    return this.withNewBuckets(newBuckets);
   }
 
   private withNewPeople(people: ImmutablePerson[]): ImmutablePeriod {
