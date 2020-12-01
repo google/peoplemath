@@ -355,10 +355,8 @@ export class PeriodComponent implements OnInit {
       catchError(error => {
         if (error.status == 409) {
           this.notificationService.error$.next("This period was modified in another session. Try reloading the page and reapplying your edit.");
-          //this.snackBar.open('This period was modified in another session. Try reloading the page and reapplying your edit.', 'Dismiss');
         } else {
           this.notificationService.error$.next("Failed to save period: "+ error.error);
-          //this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
         }
         console.log(error);
         return of(undefined);
