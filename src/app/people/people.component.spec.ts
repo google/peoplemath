@@ -36,7 +36,7 @@ describe('PeopleComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(PeopleComponent);
     component = fixture.componentInstance;
     component.people = [
@@ -62,7 +62,7 @@ describe('PeopleComponent', () => {
     component.peopleAllocations = new Map();
     component.peopleAssignmentCounts = new Map();
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

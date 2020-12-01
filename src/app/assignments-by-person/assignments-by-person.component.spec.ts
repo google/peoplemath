@@ -30,7 +30,7 @@ describe('AssignmentsByPersonComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(AssignmentsByPersonComponent);
     component = fixture.componentInstance;
     component.period = ImmutablePeriod.fromPeriod({
@@ -45,7 +45,7 @@ describe('AssignmentsByPersonComponent', () => {
       lastUpdateUUID: '',
     });
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

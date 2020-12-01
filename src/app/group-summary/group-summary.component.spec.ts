@@ -57,12 +57,12 @@ describe('GroupSummaryComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(GroupSummaryComponent);
     component = fixture.componentInstance;
     component.period = ImmutablePeriod.fromPeriod(PERIOD);
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -87,11 +87,11 @@ describe('PeriodSummaryComponent', () => {
     storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(PeriodSummaryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

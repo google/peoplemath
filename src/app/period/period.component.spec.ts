@@ -79,17 +79,17 @@ describe('PeriodComponent', () => {
     storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(PeriodComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should only rename groups of the same group type', () => {
+  it('should only rename groups of the same group type', waitForAsync(() => {
     component.period = ImmutablePeriod.fromPeriod({...TEST_PERIOD, buckets: [
       {
         allocationPercentage: 100,
@@ -115,5 +115,5 @@ describe('PeriodComponent', () => {
       new ImmutableObjectiveGroup({groupType: 'type1', groupName: 'thenewname'}),
       new ImmutableObjectiveGroup({groupType: 'type2', groupName: 'thename'}),
     ]);
-  });
+  }));
 });
