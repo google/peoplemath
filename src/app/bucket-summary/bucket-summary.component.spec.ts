@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BucketSummaryComponent } from './bucket-summary.component';
 import { MaterialModule } from '../material/material.module';
@@ -40,7 +40,7 @@ describe('BucketSummaryComponent', () => {
   };
   let BUCKET: Bucket = new Bucket('my bucket', 50, [NO_COMMITMENTTYPE_OBJECTIVE]);
   
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         BucketSummaryComponent,

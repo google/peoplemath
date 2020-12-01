@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditBucketDialogComponent, EditBucketDialogData } from './edit-bucket-dialog.component';
 import { MaterialModule } from '../material/material.module';
@@ -32,7 +32,7 @@ describe('EditBucketDialogComponent', () => {
     title: 'My test dialog',
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EditBucketDialogComponent ],
       imports: [

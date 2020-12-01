@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RenameClassDialog, RenameClassDialogData } from './rename-class-dialog.component';
 import { MaterialModule } from '../material/material.module';
@@ -28,7 +28,7 @@ describe('RenameClassDialog', () => {
   let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
   let DIALOG_DATA: RenameClassDialogData = {classType: 'group', currentName: 'thing'};
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RenameClassDialog ],
       imports: [

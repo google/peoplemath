@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditTeamDialogComponent, EditTeamDialogData } from './edit-team-dialog.component';
 import { MaterialModule } from '../material/material.module';
@@ -33,7 +33,7 @@ describe('EditTeamDialogComponent', () => {
     allowEditID: false,
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EditTeamDialogComponent ],
       imports: [

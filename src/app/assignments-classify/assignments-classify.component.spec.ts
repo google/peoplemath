@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AssignmentsClassifyComponent, AggregateBy } from './assignments-classify.component';
 import { MaterialModule } from '../material/material.module';
@@ -25,7 +25,7 @@ describe('AssignmentsClassifyComponent', () => {
   let component: AssignmentsClassifyComponent;
   let fixture: ComponentFixture<AssignmentsClassifyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         AssignmentsClassifyComponent,
