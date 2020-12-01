@@ -54,14 +54,14 @@ describe('BucketSummaryComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(BucketSummaryComponent);
     component = fixture.componentInstance;
     component.bucket = ImmutableBucket.fromBucket(BUCKET);
     component.bucketAllocationFraction = 50;
     component.unit = 'things';
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

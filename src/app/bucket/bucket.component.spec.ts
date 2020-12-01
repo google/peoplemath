@@ -37,12 +37,12 @@ describe('BucketComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(BucketComponent);
     component = fixture.componentInstance;
     component.bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, []));
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

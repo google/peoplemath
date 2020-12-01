@@ -38,24 +38,28 @@ describe('AppComponent', () => {
       ],
     }).compileComponents();
   }));
+
   it('should create the app', waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
+
   it(`should have as title 'PeopleMath'`, waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('PeopleMath');
   }));
+
   it('should render title in a h1 tag', waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain('PeopleMath');
   }));
+
   it('should not show log out button if no user is logged in',
-    inject([AuthService], (auth: AuthService) => {
+    waitForAsync(inject([AuthService], (auth: AuthService) => {
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
       const compiled = fixture.debugElement.nativeElement;
@@ -64,5 +68,5 @@ describe('AppComponent', () => {
           expect(compiled.querySelector('#logout-button')).toBe(null);
         }
       });
-  }));
+  })));
 });

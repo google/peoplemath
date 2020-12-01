@@ -38,7 +38,7 @@ describe('AssignmentsClassifyComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(AssignmentsClassifyComponent);
     component = fixture.componentInstance;
     component.aggregateBy = AggregateBy.Group;
@@ -54,7 +54,7 @@ describe('AssignmentsClassifyComponent', () => {
       lastUpdateUUID: '',
     });
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

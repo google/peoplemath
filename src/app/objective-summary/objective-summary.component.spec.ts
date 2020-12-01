@@ -34,7 +34,7 @@ describe('ObjectiveSummaryComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(ObjectiveSummaryComponent);
     component = fixture.componentInstance;
     component.objective = ImmutableObjective.fromObjective({
@@ -48,7 +48,7 @@ describe('ObjectiveSummaryComponent', () => {
     });
     component.unit = '';
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

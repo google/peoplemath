@@ -50,11 +50,11 @@ describe('TeamPeriodsComponent', () => {
     storageServiceSpy.getPeriods.and.returnValue(of([]));
   }));
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(TeamPeriodsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
