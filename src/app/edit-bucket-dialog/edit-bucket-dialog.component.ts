@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { Bucket } from '../bucket';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import { Bucket, ImmutableBucket } from '../bucket';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface EditBucketDialogData {
   bucket: Bucket;
+  original?: ImmutableBucket;
   okAction: string;
   allowCancel: boolean;
   title: string;
+  onDelete?: EventEmitter<ImmutableBucket>;
 }
 
 @Component({
@@ -34,6 +36,8 @@ export class EditBucketDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditBucketDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData) { }
 
+  showDeleteConfirm: boolean = false;
+
   ngOnInit() {
   }
 
@@ -43,5 +47,18 @@ export class EditBucketDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  onDelete(): void {
+    this.showDeleteConfirm = true;
+  }
+
+  onConfirmDelete(): void {
+    this.data.onDelete!.emit(this.data.original);
+    this.dialogRef.close();
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteConfirm = false;
   }
 }
