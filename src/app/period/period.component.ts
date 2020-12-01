@@ -32,6 +32,7 @@ import { AggregateBy } from '../assignments-classify/assignments-classify.compon
 import { ThemePalette } from '@angular/material/core';
 import {AuthService} from '../services/auth.service';
 import { environment } from 'src/environments/environment';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-period',
