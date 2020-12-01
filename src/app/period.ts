@@ -119,7 +119,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     return new ImmutablePeriod({...this, lastUpdateUUID: lastUpdateUUID});
   }
 
-  withNewBuckets(newBuckets: readonly ImmutableBucket[]): ImmutablePeriod {
+  private withNewBuckets(newBuckets: readonly ImmutableBucket[]): ImmutablePeriod {
     return new ImmutablePeriod({...this, buckets: newBuckets});
   }
 
@@ -134,7 +134,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       newBuckets[index] = newBuckets[index - 1];
       newBuckets[index - 1] = bucket;
     }
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return this.withNewBuckets(newBuckets);
   }
 
   withBucketMovedDownOne(bucket: ImmutableBucket): ImmutablePeriod {
@@ -144,7 +144,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       newBuckets[index] = newBuckets[index + 1];
       newBuckets[index + 1] = bucket;
     }
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return this.withNewBuckets(newBuckets);
   }
 
   withBucketChanged(from: ImmutableBucket, to: ImmutableBucket): ImmutablePeriod {
@@ -188,7 +188,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       throw Error('Could not find new bucket');
     }
     newBuckets[toIdx] = newBuckets[toIdx].withNewObjective(newObj);
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return this.withNewBuckets(newBuckets);
   }
 
   withPersonChanged(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): ImmutablePeriod {
@@ -228,12 +228,12 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
 
   withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutablePeriod {
     const newBuckets = this.buckets.map(b => b.withGroupRenamed(groupType, oldName, newName));
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return this.withNewBuckets(newBuckets);
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutablePeriod {
     const newBuckets = this.buckets.map(b => b.withTagRenamed(oldName, newName));
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return this.withNewBuckets(newBuckets);
   }
 
   /**
