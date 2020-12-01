@@ -59,6 +59,7 @@ export class PeriodComponent implements OnInit {
     private snackBar: MatSnackBar,
     private changeDet: ChangeDetectorRef,
     private authService: AuthService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -353,9 +354,11 @@ export class PeriodComponent implements OnInit {
     this.storage.updatePeriod(this.team.id, this.period.toOriginal()).pipe(
       catchError(error => {
         if (error.status == 409) {
-          this.snackBar.open('This period was modified in another session. Try reloading the page and reapplying your edit.', 'Dismiss');
+          this.notificationService.error$.next("This period was modified in another session. Try reloading the page and reapplying your edit.");
+          //this.snackBar.open('This period was modified in another session. Try reloading the page and reapplying your edit.', 'Dismiss');
         } else {
-          this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
+          this.notificationService.error$.next("Failed to save period: "+ error.error);
+          //this.snackBar.open('Failed to save period: ' + error.error, 'Dismiss');
         }
         console.log(error);
         return of(undefined);
