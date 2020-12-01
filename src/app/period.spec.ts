@@ -180,6 +180,18 @@ describe('ImmutablePeriod', () => {
         expect(updated.buckets[0].objectives).toEqual([obj]);
     });
 
+    it('should facilitate deleted bucket', () => {
+        const bucket = period.buckets[0];
+        const updated = period.withBucketDeleted(bucket);
+        expect(updated.buckets).toEqual([period.buckets[1]]);
+    });
+
+    it('should be unaffected by deleting nonexistent bucket', () => {
+        const nonExistent = ImmutableBucket.fromBucket({displayName: 'nonexist', allocationPercentage: 17, objectives: []});
+        const updated = period.withBucketDeleted(nonExistent);
+        expect(updated).toEqual(period);
+    });
+
     it('should be immutable', () => {
         // ImmutablePeriod should not be assignable to Period,
         // Therefore, this shouldn't compile. But I don't know how to assert it doesn't. :(
