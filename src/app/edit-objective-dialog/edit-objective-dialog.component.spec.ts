@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective, makeTags, makeGroups, EditedObjective } from './edit-objective-dialog.component';
 import { MaterialModule } from '../material/material.module';
@@ -50,7 +50,7 @@ describe('EditObjectiveDialogComponent', () => {
     onDelete: undefined,
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EditObjectiveDialogComponent ],
       imports: [

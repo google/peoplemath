@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResourceQuantityComponent } from './resource-quantity.component';
 import { ImmutableSecondaryUnit } from '../period';
@@ -23,7 +23,7 @@ describe('ResourceQuantityComponent', () => {
   let component: ResourceQuantityComponent;
   let fixture: ComponentFixture<ResourceQuantityComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ResourceQuantityComponent ]
     })

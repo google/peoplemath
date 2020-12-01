@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AssignmentComponent } from './assignment.component';
 import { MaterialModule } from '../material/material.module';
@@ -24,7 +24,7 @@ describe('AssignmentComponent', () => {
   let component: AssignmentComponent;
   let fixture: ComponentFixture<AssignmentComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AssignmentComponent ],
       imports: [

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TagSummaryComponent } from './tag-summary.component';
 import { Period, ImmutablePeriod } from '../period';
@@ -36,7 +36,7 @@ describe('TagSummaryComponent', () => {
     lastUpdateUUID: '',
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         TagSummaryComponent,
