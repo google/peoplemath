@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { PeriodComponent } from './period.component';
@@ -92,7 +92,7 @@ describe('PeriodComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should only rename groups of the same group type', waitForAsync(() => {
+  it('should only rename groups of the same group type', fakeAsync(() => {
     component.period = ImmutablePeriod.fromPeriod({...TEST_PERIOD, buckets: [
       {
         allocationPercentage: 100,
@@ -118,5 +118,7 @@ describe('PeriodComponent', () => {
       new ImmutableObjectiveGroup({groupType: 'type1', groupName: 'thenewname'}),
       new ImmutableObjectiveGroup({groupType: 'type2', groupName: 'thename'}),
     ]);
+    tick(3000);
+    expect(storageServiceSpy.updatePeriod).toHaveBeenCalled();
   }));
 });
