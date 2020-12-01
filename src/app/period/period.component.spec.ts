@@ -32,11 +32,12 @@ import { CommitmentType, ImmutableObjectiveGroup } from '../objective';
 import {AngularFireModule} from '@angular/fire';
 import {firebaseConfig} from '../../environments/firebaseConfig';
 import {AngularFireAuthModule} from '@angular/fire/auth';
+import { ObjectUpdateResponse } from '../objectupdateresponse';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
   let fixture: ComponentFixture<PeriodComponent>;
-  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
+  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod', 'updatePeriod']);
   let TEST_TEAM = new Team('testTeam', 'My test team');
   let TEST_PERIOD: Period = {
     id: 'testPeriod',
@@ -49,6 +50,7 @@ describe('PeriodComponent', () => {
     buckets: [],
     lastUpdateUUID: '',
   };
+  let UPDATE_RESPONSE: ObjectUpdateResponse = {lastUpdateUUID: 'abcd'};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -77,6 +79,7 @@ describe('PeriodComponent', () => {
     .compileComponents();
     storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
     storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
+    storageServiceSpy.updatePeriod.and.returnValue(of(UPDATE_RESPONSE));
   }));
 
   beforeEach(waitForAsync(() => {
