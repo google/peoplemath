@@ -16,8 +16,8 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {User as firebaseUserModel} from 'firebase';
-import {auth} from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {User} from '../models/user.model';
@@ -36,7 +36,7 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-      angularFireAuth.onAuthStateChanged((firebaseUser: firebaseUserModel | null) => {
+      angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
         this.updateUserData(firebaseUser);
       });
       }
@@ -48,8 +48,8 @@ export class AuthService {
   }
 
   googleSignin(): void {
-    const provider = new auth.GoogleAuthProvider();
-    this.angularFireAuth.signInWithPopup(provider).then((result: auth.UserCredential) => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    this.angularFireAuth.signInWithPopup(provider).then((result: firebase.auth.UserCredential) => {
       const user = result.user;
       this.notificationService.notification$.next('Signed in as ' + user?.displayName);
       this.router.navigate(['/']);
