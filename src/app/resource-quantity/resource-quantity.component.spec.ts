@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResourceQuantityComponent } from './resource-quantity.component';
 import { ImmutableSecondaryUnit } from '../period';
@@ -40,25 +40,25 @@ describe('ResourceQuantityComponent', () => {
     // https://github.com/angular/angular/issues/12313
   });
 
-  it('should create', () => {
+  it('should create', fakeAsync(() => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
-  });
+  }));
 
-  it('should render primary unit', () => {
+  it('should render primary unit', fakeAsync(() => {
     fixture.detectChanges();
     let element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 things');
-  });
+  }));
 
-  it('should render ofQuantity', () => {
+  it('should render ofQuantity', fakeAsync(() => {
     component.ofQuantity = 1000;
     fixture.detectChanges();
     let element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things');
-  });
+  }));
 
-  it('should render single secondaryUnit with ofQuantity', () => {
+  it('should render single secondaryUnit with ofQuantity', fakeAsync(() => {
     component.ofQuantity = 1000;
     component.secondaryUnits = [
       new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
@@ -66,18 +66,18 @@ describe('ResourceQuantityComponent', () => {
     fixture.detectChanges();
     let element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings)');
-  });
+  }));
 
-  it('should render single secondaryUnit without ofQuantity', () => {
+  it('should render single secondaryUnit without ofQuantity', fakeAsync(() => {
     component.secondaryUnits = [
       new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
     ];
     fixture.detectChanges();
     let element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 things (0.5 millithings)');
-  });
+  }));
 
-  it('should render multiple secondaryUnits', () => {
+  it('should render multiple secondaryUnits', fakeAsync(() => {
     component.ofQuantity = 1000;
     component.secondaryUnits = [
       new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
@@ -86,5 +86,5 @@ describe('ResourceQuantityComponent', () => {
     fixture.detectChanges();
     let element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings, 5 of 10 centithings)');
-  });
+  }));
 });
