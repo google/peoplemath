@@ -44,10 +44,8 @@ export class ObjectiveComponent implements OnInit {
   }
 
   hasPeopleAvailable() {
-    return (
-      this.objective!.assignments.find((a) => a.commitment > 0) ||
-      Array.from(this.unallocatedTime!.values()).find((t) => t > 0)
-    );
+    return this.objective!.assignments.find(a => a.commitment > 0) ||
+      Array.from(this.unallocatedTime!.values()).find(t => t > 0);
   }
 
   isFullyAllocated(): boolean {
