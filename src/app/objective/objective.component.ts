@@ -49,14 +49,22 @@ export class ObjectiveComponent implements OnInit {
   }
 
   isFullyAllocated(): boolean {
-    let assigned = this.objective!.assignments.map(a => a.commitment)
-        .reduce((sum, current) => sum + current, 0);
-    return assigned >= this.objective!.resourceEstimate;
+    return this.totalAssignedResources() >= this.objective!.resourceEstimate;
+  }
+
+  isOverAllocated(): boolean {
+    // Use a small increment here to avoid potential floating-point issues
+    return this.totalAssignedResources() > this.objective!.resourceEstimate + 1e-6;
   }
 
   assignmentSummary(): string {
     return this.objective!.assignments.filter(a => a.commitment > 0)
         .map(a => a.personId + ": " + a.commitment).join(", ");
+  }
+
+  totalAssignedResources(): number {
+    return this.objective!.assignments.map(a => a.commitment)
+        .reduce((sum, current) => sum + current, 0);
   }
 
   currentAssignment(personId: string): number {
