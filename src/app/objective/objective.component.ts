@@ -43,9 +43,9 @@ export class ObjectiveComponent implements OnInit {
   ngOnInit() {
   }
 
-  hasPeopleAvailable() {
-    return this.objective!.assignments.find(a => a.commitment > 0) ||
-      Array.from(this.unallocatedTime!.values()).find(t => t > 0);
+  hasPeopleAvailable(): boolean {
+    return !!this.objective!.assignments.find(a => a.commitment > 0) ||
+      !!Array.from(this.unallocatedTime!.values()).find(t => t > 0);
   }
 
   isFullyAllocated(): boolean {
