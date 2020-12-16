@@ -143,6 +143,8 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return !!this.isEditingEnabled && this.objective!.resourceEstimate > 0 && this.hasPeopleAvailable();
+    return !!this.isEditingEnabled &&
+        (this.objective!.resourceEstimate > 0 || this.objective!.assignments.length > 0) &&
+        this.hasPeopleAvailable();
   }
 }
