@@ -73,22 +73,28 @@ export class ObjectiveComponent implements OnInit {
         .reduce((sum, current) => sum + current, 0);
   }
 
+  personAssignmentData(): PersonAssignmentData[] {
+    let assignmentData: PersonAssignmentData[] = [];
+    this.unallocatedTime!.forEach((unallocated, personId) => {
+      let currentAssignment = this.currentAssignment(personId);
+      if (unallocated > 0 || currentAssignment > 0) {
+        assignmentData.push({
+          username: personId,
+          available: unallocated + currentAssignment,
+          assign: currentAssignment,
+        });
+      }
+    });
+    return assignmentData;
+  }
+
   assign(): void {
     if (!this.enableAssignButton()) {
       return;
     }
-    let assignmentData: PersonAssignmentData[] = [];
-    this.unallocatedTime!.forEach((unallocated, personId) => {
-      let currentAssignment = this.currentAssignment(personId);
-      const availableWeeks = unallocated + currentAssignment;
-      if (availableWeeks){
-        assignmentData.push(new PersonAssignmentData(
-          personId, availableWeeks, currentAssignment));
-      }
-    });
     const dialogData: AssignmentDialogData = {
       'objective': this.objective!.toOriginal(),
-      'people': assignmentData,
+      'people': this.personAssignmentData(),
       'unit': this.unit!,
       'columns': ['person', 'available', 'assign', 'actions']};
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
