@@ -16,11 +16,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Objective } from '../objective';
 
-export class PersonAssignmentData {
-  constructor(
-    public username: string,
-    public available: number,
-    public assign: number) {}
+export interface PersonAssignmentData {
+    username: string;
+    available: number;
+    assign: number;
 }
 
 export interface AssignmentDialogData {
