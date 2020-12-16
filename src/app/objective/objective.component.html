@@ -7,4 +7,6 @@
     [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
     [class.warning]="!isFullyAllocated()"
     [class.error]="isOverAllocated()">{{assignmentSummary()}}</span>
-<span class="assign-button" [class.assign-button-enabled]="enableAssignButton()" [class.assign-button-disabled]="!enableAssignButton()"><a *ngIf="showAssignButton()" (click)="assign()">Assign</a></span>
+<span *ngIf="showAssignButton()" class="assign-button"
+    [class.assign-button-enabled]="enableAssignButton()"
+    [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
