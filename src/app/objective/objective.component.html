@@ -1,3 +1,5 @@
+<div class="container">
+<div class="objective">
 <span (click)="edit()" [class.unassigned]="!objective?.assignments?.length">
     <app-pill *ngIf="isCommitted()">C</app-pill>{{objective?.name}}
     <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>
@@ -10,3 +12,8 @@
 <span *ngIf="showAssignButton()" class="assign-button"
     [class.assign-button-enabled]="enableAssignButton()"
     [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
+</div>
+<div class="sum">
+<span [ngClass]="setBackground()" class="csum">{{totalSum}}</span>
+</div>
+</div>

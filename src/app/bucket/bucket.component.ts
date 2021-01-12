@@ -43,6 +43,7 @@ export class BucketComponent implements OnInit {
   @Output() onMoveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
   @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableBucket>();
+  @Input() cumilativeSum?:number=0;
 
   constructor(public dialog: MatDialog) { }
 
@@ -161,4 +162,10 @@ export class BucketComponent implements OnInit {
     let total = this.resourcesAllocated();
     return total ? this.committedResourcesAllocated() / total : 0;
   }
+
+  setCumilativeSum(sum:number) {
+    this.cumilativeSum=sum;
+
 }
+}
+

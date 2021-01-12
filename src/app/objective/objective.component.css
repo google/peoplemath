@@ -9,3 +9,10 @@
 .assign-button-enabled a { color: #674ab7; text-decoration: none; }
 .assign-button-enabled a:hover { text-decoration: underline; }
 .assign-button-disabled { color: grey; }
+.sum { display: flex; justify-content: center;   width: 10%; align-items: center;} 
+.csum { float: right;  font-weight: bold;}
+.objective {float: left; width: 90%;}
+.container {display: flex;}
+.background-safe { color: grey; }
+.background-neutral { color: orange;}
+.background-risk { color: red;}
