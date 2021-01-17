@@ -1,14 +1,16 @@
 <mat-spinner *ngIf="!isLoaded()" color="accent"></mat-spinner>
 <div *ngIf="isLoaded()" class="grid-container">
-<mat-card>
-<mat-card-header>
-  <mat-card-title>Teams</mat-card-title>
-</mat-card-header>
-<mat-card-content>
-<mat-list>
-  <mat-list-item *ngFor="let team of teams"><a routerLink="/team/{{team.id}}">{{team.displayName}}</a></mat-list-item>
-</mat-list>
-<button [disabled]="addTeamDisabled" mat-raised-button (click)="addTeam()" color="primary">Add Team</button>
-</mat-card-content>
-</mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Teams</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-nav-list>
+        <a mat-list-item *ngFor="let team of teams" routerLink="/team/{{team.id}}">{{team.displayName}}</a>
+      </mat-nav-list>
+    </mat-card-content>
+    <mat-card-actions>
+      <button [disabled]="addTeamDisabled" mat-button (click)="addTeam()" color="primary">Add Team</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

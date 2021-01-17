@@ -1,0 +1,7 @@
+:host .mat-card-title {
+  display: flex;
+  align-items: center;
+}
+:host .mat-card-title .mat-icon-button {
+  margin-left: 8px;
+}
