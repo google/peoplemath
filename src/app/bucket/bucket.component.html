@@ -21,11 +21,10 @@
 </mat-card-header>
 <mat-card-content>
 <mat-list dense *ngIf="!showOrderButtons" class="app-mat-list">
-    <mat-list-item *ngFor="let objective of bucket!.objectives">
+    <mat-list-item *ngFor="let displayObjective of displayObjectives()">
     <app-objective
-        [objective]="objective" [unit]="unit"
-        [sum]="cumilativeSum"
-        (cumiliativeSum)=setCumilativeSum($event)
+        [objective]="displayObjective.objective" [unit]="unit"
+        [cumulativeSum]="displayObjective.cumulativeSum"
         [bucketAllocationLimit]="bucketAllocationLimit()"
         [unallocatedTime]="unallocatedTime"
         [isEditingEnabled]="isEditingEnabled"
@@ -33,16 +32,15 @@
         [otherBuckets]="otherBuckets"
         (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
         (onDelete)="deleteObjective($event)"
-        (onChanged)="onObjectiveChanged($event[0], $event[1])" class="width"></app-objective>
+        (onChanged)="onObjectiveChanged($event[0], $event[1])" ></app-objective>
     </mat-list-item>
 </mat-list>
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)" class="app-mat-list">
-    <mat-list-item *ngFor="let objective of bucket!.objectives" cdkDrag>
+    <mat-list-item *ngFor="let displayObjective of displayObjectives()" cdkDrag>
         <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
         <app-objective
-            [objective]="objective" [unit]="unit"
-            (cumiliativeSum)=setCumilativeSum($event)
-            [sum]="cumilativeSum"
+            [objective]="displayObjective.objective" [unit]="unit"
+            [cumulativeSum]="displayObjective.cumulativeSum"
             [bucketAllocationLimit]="bucketAllocationLimit()"
             [unallocatedTime]="unallocatedTime"
             [isEditingEnabled]="isEditingEnabled"
@@ -50,7 +48,7 @@
             [otherBuckets]="otherBuckets"
             (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
             (onDelete)="deleteObjective($event)"
-            (onChanged)="onObjectiveChanged($event[0], $event[1])" class="width"></app-objective>
+            (onChanged)="onObjectiveChanged($event[0], $event[1])" ></app-objective>
     </mat-list-item>
 </mat-list>
 </mat-card-content>

@@ -34,18 +34,15 @@ export class ObjectiveComponent implements OnInit {
   @Input() isEditingEnabled?: boolean;
   @Input() isReorderingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
+  @Input() bucketAllocationLimit?:number;
+  @Input() cumulativeSum!:number;
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
-  @Input() sum?:number;
-  @Input() bucketAllocationLimit?:number;
-  @Output() cumiliativeSum= new EventEmitter<number>();
-  @Input() totalSum!:number;
-
+  
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.totalSum = this.displaySum();
   }
 
   hasPeopleAvailable(): boolean {
@@ -152,23 +149,17 @@ export class ObjectiveComponent implements OnInit {
         (this.objective!.resourceEstimate > 0 || this.objective!.assignments.length > 0) &&
         this.hasPeopleAvailable();
   }
-  displaySum() {
-    console.log("The sum is ");
-    let sum = Number(this.sum!) + Number(this.objective!.resourceEstimate)
-    console.log(sum);
-    this.cumiliativeSum.emit(sum);
-    return  sum;
-  }
-
-  setBackground() {
-    if(this.totalSum<this.bucketAllocationLimit!) { 
-      return "background-safe";
+  
+  getCumulativeSumClass():string {
+    if(this.cumulativeSum<this.bucketAllocationLimit!) { 
+      return "resource-csum-ok";
     }
-    else if (Number(this.totalSum)=== Number(this.bucketAllocationLimit!)) {
-      return "background-neutral";
+    else if (this.cumulativeSum - this.objective?.resourceEstimate!<= this.bucketAllocationLimit!) {
+      return "resource-csum-marginal";
     }
     else { 
-      return "background-risk";
+      return "resource-csum-excess";
     }
   }
+  
 }

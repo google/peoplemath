@@ -43,7 +43,6 @@ export class BucketComponent implements OnInit {
   @Output() onMoveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
   @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableBucket>();
-  @Input() cumilativeSum?:number=0;
 
   constructor(public dialog: MatDialog) { }
 
@@ -124,8 +123,7 @@ export class BucketComponent implements OnInit {
     moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex != event.currentIndex) {
       this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
-    }
-  }
+    }  }
 
   onObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): void {
     this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
@@ -163,9 +161,25 @@ export class BucketComponent implements OnInit {
     return total ? this.committedResourcesAllocated() / total : 0;
   }
 
-  setCumilativeSum(sum:number) {
-    this.cumilativeSum=sum;
-
+displayObjectives():DisplayObjective[] {
+  
+  let displayObjectives:Array<DisplayObjective>=[];
+  let cumulativeSum =0;
+  for(let postion=0;postion< (this.bucket!.objectives)?.length;postion++ ) { 
+    let currentoObjective = this.bucket!.objectives[postion]
+     if (postion == 0) {
+      cumulativeSum = currentoObjective.resourceEstimate
+     }
+     else {
+        cumulativeSum += currentoObjective.resourceEstimate
+     }
+    displayObjectives.push({objective:currentoObjective,cumulativeSum:cumulativeSum})
+}
+return displayObjectives;
 }
 }
-
+ 
+interface DisplayObjective {
+  objective:ImmutableObjective;
+  cumulativeSum:number;
+}

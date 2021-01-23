@@ -13,7 +13,7 @@
     [class.assign-button-enabled]="enableAssignButton()"
     [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
 </div>
-<div class="sum-all">
-<span [ngClass]="setBackground()" class="sum">{{totalSum}}</span>
+<div class="resource-csum">
+<span [ngClass]="getCumulativeSumClass()">{{cumulativeSum}}</span>
 </div>
 </div>
