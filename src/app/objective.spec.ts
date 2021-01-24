@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag, Objective, ImmutableObjective, CommitmentType } from './objective';
+import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag,
+         Objective, ImmutableObjective, CommitmentType } from './objective';
 import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableObjectiveGroup', () => {
