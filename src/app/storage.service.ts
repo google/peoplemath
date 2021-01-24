@@ -32,12 +32,12 @@ export class StorageService {
     return this.http.get<Team>('/api/team/' + teamId);
   }
 
-  addTeam(team: Team): Observable<any> {
+  addTeam(team: Team): Observable<unknown> {
     const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.post('/api/team/', team, options);
   }
 
-  updateTeam(team: Team): Observable<any> {
+  updateTeam(team: Team): Observable<unknown> {
     const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.put('/api/team/' + team.id, team, options);
   }
