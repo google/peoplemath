@@ -48,7 +48,9 @@
           {"selector": "typeLike", "format": ["PascalCase"]},
           {"selector": "property", "format": ["camelCase", "PascalCase", "snake_case"], "leadingUnderscore": "allow"},
           {"selector": "enumMember", "format": ["PascalCase"]}
-        ]
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     },
     {
