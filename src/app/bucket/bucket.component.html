@@ -30,7 +30,7 @@
         [otherBuckets]="otherBuckets"
         [resourcesCumulativeSum]="displayObjective.cumulativeSum"
         [bucketAllocationLimit]="bucketAllocationLimit()"
-        (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
+        (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
         (delete)="deleteObjective($event)"
         (changed)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
@@ -46,7 +46,7 @@
             [otherBuckets]="otherBuckets"
             [resourcesCumulativeSum]="displayObjective.cumulativeSum"
             [bucketAllocationLimit]="bucketAllocationLimit()"
-            (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
+            (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
             (delete)="deleteObjective($event)"
             (changed)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
