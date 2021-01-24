@@ -153,7 +153,7 @@ export class PeopleComponent implements OnInit {
       allowDelete: false, showDeleteConfirm: false,
       allowUsernameEdit: true, onDelete: undefined,
     };
-    const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
+    const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
         this.onNew.emit(new ImmutablePerson(person));
@@ -171,7 +171,7 @@ export class PeopleComponent implements OnInit {
       allowDelete: true, showDeleteConfirm: false,
       allowUsernameEdit: false, onDelete: this.onDelete,
     };
-    const dialogRef = this.dialog.open(EditPersonDialog, {data: dialogData});
+    const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe((ok: boolean) => {
       if (ok) {
         this.onChanged.emit([p, new ImmutablePerson(dialogData.person)]);
@@ -197,14 +197,14 @@ export interface EditPersonDialogData {
   selector: 'app-edit-person-dialog',
   templateUrl: 'edit-person-dialog.html'
 })
-export class EditPersonDialog {
+export class EditPersonDialogComponent {
   userIdControl: FormControl;
   locationControl: FormControl;
   displayNameControl: FormControl;
   availabilityControl: FormControl;
 
   constructor(
-    public dialogRef: MatDialogRef<EditPersonDialog>,
+    public dialogRef: MatDialogRef<EditPersonDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {
       this.userIdControl = new FormControl(data.person.id, [this.validateUserId, Validators.required]);
       this.locationControl = new FormControl(data.person.location);
