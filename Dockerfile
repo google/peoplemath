@@ -22,6 +22,7 @@ RUN ["/bin/bash", "-c", "if [[ \"$(gofmt -l . | wc -l)\" -gt 0 ]]; then echo Go 
 
 WORKDIR /build
 RUN ["npm", "install", "--quiet"]
+RUN ["npx", "ng", "lint"]
 RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
 RUN ["bash", "build_appengine.sh"]
 RUN ["ls", "-lhR", "appengine_dist"]
