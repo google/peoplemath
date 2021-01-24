@@ -48,7 +48,7 @@ export class PeriodComponent implements OnInit {
   isEditingEnabled = false;
   showOrderButtons = false;
   userHasEditPermissions = true;
-  readonly eventsRequiringSave = new Subject<any>();
+  readonly eventsRequiringSave = new Subject<unknown>();
   // To enable access to this enum from the template
   readonly AggregateBy = AggregateBy;
 
