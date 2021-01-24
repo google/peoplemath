@@ -13,7 +13,7 @@
 // limitations under the License.
 
 export class Assignment {
-    constructor (
+    constructor(
         public personId: string,
         public commitment: number,
     ) {}

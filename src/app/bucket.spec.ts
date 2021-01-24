@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Bucket, ImmutableBucket } from "./bucket";
+import { Bucket, ImmutableBucket } from './bucket';
 import { CommitmentType, Objective, ImmutableObjective } from './objective';
 
 describe('ImmutableBucket', () => {
@@ -51,8 +51,8 @@ describe('ImmutableBucket', () => {
     it('should be immutable', () => {
         // This should not compile, in order not to provide a circumvention vector to the type system.
         // However, I don't know how to assert it doesn't. :(
-            
-        //const shadow: Bucket = bucket;
+
+        // const shadow: Bucket = bucket;
     });
 
     it('should support new objective', () => {

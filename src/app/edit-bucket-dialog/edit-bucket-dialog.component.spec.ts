@@ -24,8 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('EditBucketDialogComponent', () => {
   let component: EditBucketDialogComponent;
   let fixture: ComponentFixture<EditBucketDialogComponent>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let DIALOG_DATA: EditBucketDialogData = {
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const DIALOG_DATA: EditBucketDialogData = {
     bucket: new Bucket('My test bucket', 76, []),
     okAction: 'OK',
     allowCancel: true,

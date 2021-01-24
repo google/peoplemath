@@ -25,8 +25,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('RenameClassDialog', () => {
   let component: RenameClassDialog;
   let fixture: ComponentFixture<RenameClassDialog>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
-  let DIALOG_DATA: RenameClassDialogData = {classType: 'group', currentName: 'thing'};
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+  const DIALOG_DATA: RenameClassDialogData = {classType: 'group', currentName: 'thing'};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

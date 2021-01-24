@@ -34,9 +34,9 @@ export class AssignmentsByPersonComponent implements OnInit {
   }
 
   hasAssignments(person: ImmutablePerson): boolean {
-    for (let bucket of this.period!.buckets) {
-      for (let objective of bucket.objectives) {
-        for (let assignment of objective.assignments) {
+    for (const bucket of this.period!.buckets) {
+      for (const objective of bucket.objectives) {
+        for (const assignment of objective.assignments) {
           if (assignment.personId === person.id) {
             return true;
           }
@@ -52,12 +52,12 @@ export class AssignmentsByPersonComponent implements OnInit {
       bucket.objectives.forEach(objective => {
         objective.assignments.filter(assignment => assignment.personId === person.id)
                              .forEach(assignment => {
-          result.push({objective: objective, assignment: assignment});
+          result.push({objective, assignment});
         });
       });
     });
     // Sort in descending order of commitment
-    result.sort((a,b) => b.assignment.commitment - a.assignment.commitment);
+    result.sort((a, b) => b.assignment.commitment - a.assignment.commitment);
     return result;
   }
 
@@ -75,6 +75,6 @@ export class AssignmentsByPersonComponent implements OnInit {
 }
 
 interface ObjectiveAssignment {
-  objective: ImmutableObjective,
-  assignment: ImmutableAssignment,
+  objective: ImmutableObjective;
+  assignment: ImmutableAssignment;
 }

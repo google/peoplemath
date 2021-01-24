@@ -24,7 +24,7 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
 describe('TagSummaryComponent', () => {
   let component: TagSummaryComponent;
   let fixture: ComponentFixture<TagSummaryComponent>;
-  let PERIOD: Period = {
+  const PERIOD: Period = {
     id: 'p',
     displayName: 'Period',
     maxCommittedPercentage: 50,

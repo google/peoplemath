@@ -29,8 +29,8 @@ import {AngularFireAuthModule} from '@angular/fire/auth';
 describe('TeamPeriodsComponent', () => {
   let component: TeamPeriodsComponent;
   let fixture: ComponentFixture<TeamPeriodsComponent>;
-  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriods']);
-  let TEST_TEAM = new Team('testTeam', 'My test team');
+  const storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriods']);
+  const TEST_TEAM = new Team('testTeam', 'My test team');
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -39,7 +39,8 @@ describe('TeamPeriodsComponent', () => {
         RouterTestingModule,
         MaterialModule,
         AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
-        AngularFireAuthModule,],
+        AngularFireAuthModule,
+      ],
       providers: [
         {provide: StorageService, useValue: storageServiceSpy},
         {provide: ActivatedRoute, useValue: {paramMap: of(convertToParamMap({team: TEST_TEAM.id}))}},

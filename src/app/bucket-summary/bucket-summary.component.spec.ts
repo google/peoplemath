@@ -27,7 +27,7 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
 describe('BucketSummaryComponent', () => {
   let component: BucketSummaryComponent;
   let fixture: ComponentFixture<BucketSummaryComponent>;
-  let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
+  const NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
     name: 'An objective with no commitment type',
     resourceEstimate: 10,
     commitmentType: undefined,
@@ -38,8 +38,8 @@ describe('BucketSummaryComponent', () => {
       new Assignment('person1', 5),
     ],
   };
-  let BUCKET: Bucket = new Bucket('my bucket', 50, [NO_COMMITMENTTYPE_OBJECTIVE]);
-  
+  const BUCKET: Bucket = new Bucket('my bucket', 50, [NO_COMMITMENTTYPE_OBJECTIVE]);
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [

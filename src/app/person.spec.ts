@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Person, ImmutablePerson } from "./person";
+import { Person, ImmutablePerson } from './person';
 
 describe('ImmutablePerson', () => {
     const _mut: Person = new Person('test', 'Test Person', 'LOC', 1);

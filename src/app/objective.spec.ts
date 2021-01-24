@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag, Objective, ImmutableObjective, CommitmentType } from "./objective";
+import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag, Objective, ImmutableObjective, CommitmentType } from './objective';
 import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableObjectiveGroup', () => {
@@ -47,7 +47,7 @@ describe('ImmutableObjectiveTag', () => {
 
     it('should be immutable', () => {
         const shadow: ObjectiveTag = tag;
-        expect(() => {shadow.name = 'another';}).toThrowError(/Cannot set property name/);
+        expect(() => {shadow.name = 'another'; }).toThrowError(/Cannot set property name/);
         expect(tag.name).toEqual('mytag');
     });
 });
@@ -71,14 +71,14 @@ describe('ImmutableObjective', () => {
     it('should be immutable', () => {
         // In order not to be a type system circumvention vector, the below should not compile.
         // However, I don't know how to assert it doesn't. :(
-            
-        //const shadow: Objective = obj;
+
+        // const shadow: Objective = obj;
     });
 
     it('should support new assignments', () => {
         const assignment: Assignment = new Assignment('bob', 2);
         const newObj = obj.withAssignments([new ImmutableAssignment(assignment)]);
-        const expected: Objective = {..._mut, assignments: [assignment]}
+        const expected: Objective = {..._mut, assignments: [assignment]};
         expect(newObj.toOriginal()).toEqual(expected);
     });
 

@@ -33,12 +33,12 @@ export class StorageService {
   }
 
   addTeam(team: Team): Observable<any> {
-    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.post('/api/team/', team, options);
   }
 
   updateTeam(team: Team): Observable<any> {
-    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.put('/api/team/' + team.id, team, options);
   }
 
@@ -51,12 +51,12 @@ export class StorageService {
   }
 
   addPeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.post<ObjectUpdateResponse>('/api/period/' + teamId + '/', period, options);
   }
 
   updatePeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    let options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
     return this.http.put<ObjectUpdateResponse>('/api/period/' + teamId + '/' + period.id, period, options);
   }
 }

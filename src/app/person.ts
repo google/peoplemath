@@ -27,10 +27,10 @@ export class ImmutablePerson {
     private readonly _location: string;
     private readonly _availability: number;
 
-    get id(): string { return this._id }
-    get displayName(): string { return this._displayName }
-    get location(): string { return this._location }
-    get availability(): number { return this._availability }
+    get id(): string { return this._id; }
+    get displayName(): string { return this._displayName; }
+    get location(): string { return this._location; }
+    get availability(): number { return this._availability; }
 
     constructor(person: Person) {
         this._id = person.id;
@@ -47,6 +47,6 @@ export class ImmutablePerson {
         if (this.id == this.displayName || !this.displayName) {
             return this.id;
         }
-        return this.displayName + " (" + this.id + ")";
+        return this.displayName + ' (' + this.id + ')';
     }
 }

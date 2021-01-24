@@ -24,7 +24,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 describe('StorageService', () => {
   let httpTestingController: HttpTestingController;
   let service: StorageService;
-  let PERIOD: Period = {
+  const PERIOD: Period = {
     id: 'testperiod',
     displayName: 'Test period',
     unit: 'units',
@@ -154,7 +154,7 @@ describe('StorageService', () => {
       people: [],
       buckets: [],
       lastUpdateUUID: '',
-    }});
+    }; });
     service.getPeriods('testteam').subscribe(data => expect(data).toEqual(periods));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');

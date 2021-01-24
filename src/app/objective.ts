@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Assignment, ImmutableAssignment } from "./assignment";
+import { Assignment, ImmutableAssignment } from './assignment';
 import { ImmutablePerson } from './person';
 
-export enum CommitmentType { Aspirational = "Aspirational", Committed = "Committed" }
+export enum CommitmentType { Aspirational = 'Aspirational', Committed = 'Committed' }
 
 export interface ObjectiveGroup {
   groupType: string;
@@ -58,13 +58,13 @@ export class ImmutableObjectiveTag {
 }
 
 export interface Objective {
-  name: string,
-  resourceEstimate: number,
-  commitmentType?: CommitmentType,
-  notes: string,
-  groups: ObjectiveGroup[],
-  tags: ObjectiveTag[],
-  assignments: Assignment[],
+  name: string;
+  resourceEstimate: number;
+  commitmentType?: CommitmentType;
+  notes: string;
+  groups: ObjectiveGroup[];
+  tags: ObjectiveTag[];
+  assignments: Assignment[];
 }
 
 // Boilerplate avoidance device
@@ -137,7 +137,7 @@ export class ImmutableObjective {
       return this;
     }
     const newGroups = [...this.groups];
-    newGroups[index] = new ImmutableObjectiveGroup({groupType: groupType, groupName: newName});
+    newGroups[index] = new ImmutableObjectiveGroup({groupType, groupName: newName});
     return new ImmutableObjective({...this, groups: newGroups});
   }
 

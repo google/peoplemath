@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Period, ImmutablePeriod, SecondaryUnit, ImmutableSecondaryUnit } from "./period";
+import { Period, ImmutablePeriod, SecondaryUnit, ImmutableSecondaryUnit } from './period';
 import { Bucket, ImmutableBucket } from './bucket';
 import { Person, ImmutablePerson } from './person';
 import { Assignment } from './assignment';
@@ -34,7 +34,7 @@ describe('ImmutableSecondaryUnit', () => {
 
     it('should be immutable', () => {
         // Should not compile
-        //su.name = 'something else';
+        // su.name = 'something else';
         const s: SecondaryUnit = su;
         expect(() => { s.name = 'something else'; }).toThrowError(/Cannot set property name/);
         expect(su.name).toEqual('test');
@@ -197,6 +197,6 @@ describe('ImmutablePeriod', () => {
         // Therefore, this shouldn't compile. But I don't know how to assert it doesn't. :(
         // This is required to ensure this isn't a vector for circumventing the type system.
 
-        //const p: Period = period;
+        // const p: Period = period;
     });
 });

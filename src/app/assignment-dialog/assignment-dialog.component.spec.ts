@@ -22,8 +22,8 @@ import { CommitmentType } from '../objective';
 describe('AssignmentDialogComponent', () => {
   let component: AssignmentDialogComponent;
   let fixture: ComponentFixture<AssignmentDialogComponent>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let DIALOG_DATA: AssignmentDialogData = {
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const DIALOG_DATA: AssignmentDialogData = {
     objective: {
       name: 'My Test Objective',
       resourceEstimate: 10,

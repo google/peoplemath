@@ -24,8 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('EditTeamDialogComponent', () => {
   let component: EditTeamDialogComponent;
   let fixture: ComponentFixture<EditTeamDialogComponent>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let DIALOG_DATA: EditTeamDialogData = {
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const DIALOG_DATA: EditTeamDialogData = {
     team: new Team('test', 'My test team'),
     title: 'My test title',
     okAction: 'OK',

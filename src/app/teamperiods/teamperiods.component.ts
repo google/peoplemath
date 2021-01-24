@@ -42,7 +42,7 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;
   periods?: readonly ImmutablePeriod[];
-  userHasEditPermissions: boolean = true;
+  userHasEditPermissions = true;
 
   constructor(
     private storage: StorageService,
@@ -97,7 +97,7 @@ export class TeamPeriodsComponent implements OnInit {
       catchError(error => {
         this.snackBar.open('Could not load periods for team "' + teamId + '": ' + error.error, 'Dismiss');
         console.log(error);
-        return of([])
+        return of([]);
       })
     ).subscribe((periods?: Period[]) => {
       if (periods) {
@@ -113,7 +113,7 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   sortedPeriods(): ImmutablePeriod[] {
-    let result = this.periods!.slice();
+    const result = this.periods!.slice();
     result.sort((a, b) => a.displayName < b.displayName ? 1 : (a.displayName > b.displayName ? -1 : 0));
     return result;
   }
@@ -137,7 +137,7 @@ export class TeamPeriodsComponent implements OnInit {
         lastUpdateUUID: '',
       },
       createMethod: CreateMethod.Blank,
-      existingPeriods: existingPeriods,
+      existingPeriods,
       copyFromPeriodID: existingPeriods[0].id,
       copyUnit: true,
       copyPeople: true,
@@ -150,11 +150,11 @@ export class TeamPeriodsComponent implements OnInit {
       if (!data) {
         return;
       }
-      var newPeriod: Period;
+      let newPeriod: Period;
       if (data.createMethod == CreateMethod.Blank) {
         newPeriod = data.period;
       } else if (data.createMethod == CreateMethod.Copy) {
-        let copiedPeriod = this.periods!.find(p => p.id == data.copyFromPeriodID);
+        const copiedPeriod = this.periods!.find(p => p.id == data.copyFromPeriodID);
         if (!copiedPeriod) {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
@@ -179,22 +179,22 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   copyPeople(orig: Person[]): Person[] {
-    let result = [];
-    for (let p of orig) {
+    const result = [];
+    for (const p of orig) {
       result.push(new Person(p.id, p.displayName, p.location, p.availability));
     }
     return result;
   }
 
   copyBuckets(orig: readonly ImmutableBucket[], copyObjectives: boolean, copyAssignments: boolean): Bucket[] {
-    let result = [];
-    for (let b of orig) {
-      let objectives: Objective[] = [];
+    const result = [];
+    for (const b of orig) {
+      const objectives: Objective[] = [];
       if (copyObjectives) {
-        for (let o of b.objectives) {
-          let assignments = [];
+        for (const o of b.objectives) {
+          const assignments = [];
           if (copyAssignments) {
-            for (let a of o.assignments) {
+            for (const a of o.assignments) {
               assignments.push(new Assignment(a.personId, a.commitment));
             }
           }
@@ -205,7 +205,7 @@ export class TeamPeriodsComponent implements OnInit {
             notes: o.notes,
             groups: o.groups.map(g => g.toOriginal()),
             tags: o.tags.map(t => t.toOriginal()),
-            assignments: assignments,
+            assignments,
           });
         }
       }
@@ -268,10 +268,10 @@ export class TeamPeriodsComponent implements OnInit {
         catchError(error => {
           this.snackBar.open('Could not save team: ' + error.error, 'Dismiss');
           console.log(error);
-          return of("error");
+          return of('error');
         })
       ).subscribe(res => {
-        if (res != "error") {
+        if (res != 'error') {
           this.snackBar.open('Saved', '', {duration: 2000});
           this.team = new ImmutableTeam(team);
         }

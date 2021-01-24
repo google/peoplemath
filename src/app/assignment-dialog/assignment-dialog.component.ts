@@ -50,7 +50,7 @@ export class AssignmentDialogComponent implements OnInit {
    * Amount of the estimated time for the objective which isn't yet assigned
    */
   unassignedTime(): number {
-    let assigned = this.data.people.map(d => d.assign).reduce((sum, current) => sum + current, 0);
+    const assigned = this.data.people.map(d => d.assign).reduce((sum, current) => sum + current, 0);
     return this.data.objective.resourceEstimate - assigned;
   }
 
