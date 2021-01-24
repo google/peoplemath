@@ -53,7 +53,7 @@ export class PeopleComponent implements OnInit {
   @Input() isEditingEnabled?: boolean;
   @Output() onNew = new EventEmitter<ImmutablePerson>();
   @Output() changed = new EventEmitter<[ImmutablePerson, ImmutablePerson]>();
-  @Output() onDelete = new EventEmitter<ImmutablePerson>();
+  @Output() delete = new EventEmitter<ImmutablePerson>();
   @ViewChild(MatSort) sort?: MatSort;
 
   constructor(public dialog: MatDialog) { }
@@ -169,7 +169,7 @@ export class PeopleComponent implements OnInit {
       person: p.toOriginal(), original: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: 'OK',
       existingUserIDs: [], // Doesn't matter for existing people
       allowDelete: true, showDeleteConfirm: false,
-      allowUsernameEdit: false, onDelete: this.onDelete,
+      allowUsernameEdit: false, onDelete: this.delete,
     };
     const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe((ok: boolean) => {
