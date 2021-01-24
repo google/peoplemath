@@ -35,7 +35,7 @@ export class ObjectiveComponent implements OnInit {
   @Input() isReorderingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Input() bucketAllocationLimit?:number;
-  @Input() cumulativeSum!:number;
+  @Input() resourcesCumulativeSum!:number;
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
@@ -150,14 +150,14 @@ export class ObjectiveComponent implements OnInit {
         this.hasPeopleAvailable();
   }
   
-  getCumulativeSumClass():string {
-    if(this.cumulativeSum<this.bucketAllocationLimit!) { 
+  getCumulativeSumClass(): string {
+    if (this.resourcesCumulativeSum < this.bucketAllocationLimit!) {
       return "resource-csum-ok";
     }
-    else if (this.cumulativeSum - this.objective?.resourceEstimate!<= this.bucketAllocationLimit!) {
+    else if (this.resourcesCumulativeSum - this.objective?.resourceEstimate! <= this.bucketAllocationLimit!) {
       return "resource-csum-marginal";
     }
-    else { 
+    else {
       return "resource-csum-excess";
     }
   }

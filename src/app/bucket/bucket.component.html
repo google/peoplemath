@@ -24,31 +24,29 @@
     <mat-list-item *ngFor="let displayObjective of displayObjectives()">
     <app-objective
         [objective]="displayObjective.objective" [unit]="unit"
-        [cumulativeSum]="displayObjective.cumulativeSum"
-        [bucketAllocationLimit]="bucketAllocationLimit()"
         [unallocatedTime]="unallocatedTime"
         [isEditingEnabled]="isEditingEnabled"
         [isReorderingEnabled]="showOrderButtons"
         [otherBuckets]="otherBuckets"
+        [resourcesCumulativeSum]="displayObjective.cumulativeSum"
+        [bucketAllocationLimit]="bucketAllocationLimit()"
         (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
         (onDelete)="deleteObjective($event)"
-        (onChanged)="onObjectiveChanged($event[0], $event[1])" ></app-objective>
+        (onChanged)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
 </mat-list>
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)" class="app-mat-list">
-    <mat-list-item *ngFor="let displayObjective of displayObjectives()" cdkDrag>
+    <mat-list-item *ngFor="let objective of bucket!.objectives" cdkDrag>
         <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
         <app-objective
-            [objective]="displayObjective.objective" [unit]="unit"
-            [cumulativeSum]="displayObjective.cumulativeSum"
-            [bucketAllocationLimit]="bucketAllocationLimit()"
+            [objective]="objective" [unit]="unit"
             [unallocatedTime]="unallocatedTime"
             [isEditingEnabled]="isEditingEnabled"
             [isReorderingEnabled]="showOrderButtons"
             [otherBuckets]="otherBuckets"
             (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
             (onDelete)="deleteObjective($event)"
-            (onChanged)="onObjectiveChanged($event[0], $event[1])" ></app-objective>
+            (onChanged)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
 </mat-list>
 </mat-card-content>

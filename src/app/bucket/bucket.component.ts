@@ -123,7 +123,8 @@ export class BucketComponent implements OnInit {
     moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex != event.currentIndex) {
       this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
-    }  }
+    } 
+  }
 
   onObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): void {
     this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
@@ -161,25 +162,18 @@ export class BucketComponent implements OnInit {
     return total ? this.committedResourcesAllocated() / total : 0;
   }
 
-displayObjectives():DisplayObjective[] {
-  
-  let displayObjectives:Array<DisplayObjective>=[];
-  let cumulativeSum =0;
-  for(let postion=0;postion< (this.bucket!.objectives)?.length;postion++ ) { 
-    let currentoObjective = this.bucket!.objectives[postion]
-     if (postion == 0) {
-      cumulativeSum = currentoObjective.resourceEstimate
-     }
-     else {
-        cumulativeSum += currentoObjective.resourceEstimate
-     }
-    displayObjectives.push({objective:currentoObjective,cumulativeSum:cumulativeSum})
-}
-return displayObjectives;
-}
-}
+  displayObjectives(): Array<DisplayObjective> {
+    let displayObjectives: Array<DisplayObjective> = [];
+    let cumulativeSum = 0;
+    for (let objective of this.bucket!.objectives) {
+      cumulativeSum += objective.resourceEstimate
+      displayObjectives.push({ objective: objective, cumulativeSum: cumulativeSum })
+    }
+    return displayObjectives;
+  }
+} 
  
 interface DisplayObjective {
-  objective:ImmutableObjective;
-  cumulativeSum:number;
+  objective: ImmutableObjective;
+  cumulativeSum: number;
 }
