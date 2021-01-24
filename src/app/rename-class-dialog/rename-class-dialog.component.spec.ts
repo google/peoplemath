@@ -16,21 +16,21 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RenameClassDialog, RenameClassDialogData } from './rename-class-dialog.component';
+import { RenameClassDialogComponent, RenameClassDialogData } from './rename-class-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RenameClassDialog', () => {
-  let component: RenameClassDialog;
-  let fixture: ComponentFixture<RenameClassDialog>;
+  let component: RenameClassDialogComponent;
+  let fixture: ComponentFixture<RenameClassDialogComponent>;
   const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
   const DIALOG_DATA: RenameClassDialogData = {classType: 'group', currentName: 'thing'};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RenameClassDialog ],
+      declarations: [ RenameClassDialogComponent ],
       imports: [
         MaterialModule,
         FormsModule,
@@ -45,7 +45,7 @@ describe('RenameClassDialog', () => {
   }));
 
   beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(RenameClassDialog);
+    fixture = TestBed.createComponent(RenameClassDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

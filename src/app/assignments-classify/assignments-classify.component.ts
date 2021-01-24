@@ -18,7 +18,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
-import { RenameClassDialog, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
+import { RenameClassDialogComponent, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
 
 export enum AggregateBy {
   Group = 'group',
@@ -123,7 +123,7 @@ export class AssignmentsClassifyComponent implements OnInit {
       classType: this.aggregateBy || '',
       currentName: cname,
     };
-    const dialog = this.dialog.open(RenameClassDialog, {data});
+    const dialog = this.dialog.open(RenameClassDialogComponent, {data});
     dialog.afterClosed().subscribe(newName => {
       if (newName) {
         this.onRename.emit([cname, newName]);
