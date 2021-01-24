@@ -40,8 +40,8 @@ describe('ObjectiveComponent', () => {
   }));
 
   const makeComponent = (resourceEstimate: number, assignments: Assignment[]): ObjectiveComponent => {
-    const component = fixture.componentInstance;
-    component.objective = ImmutableObjective.fromObjective({
+    const result = fixture.componentInstance;
+    result.objective = ImmutableObjective.fromObjective({
       name: 'test objective',
       resourceEstimate,
       commitmentType: CommitmentType.Aspirational,
@@ -50,15 +50,15 @@ describe('ObjectiveComponent', () => {
       notes: '',
       assignments,
     });
-    component.unit = 'person weeks';
+    result.unit = 'person weeks';
     const unallocatedTime = new Map();
     unallocatedTime.set('alice', -1);  // Temporary over-allocation for alice
     unallocatedTime.set('bob', 0);
     unallocatedTime.set('charlie', 3);
     unallocatedTime.set('dave', 0);
-    component.unallocatedTime = unallocatedTime;
-    component.isEditingEnabled = true;
-    return component;
+    result.unallocatedTime = unallocatedTime;
+    result.isEditingEnabled = true;
+    return result;
   };
 
   beforeEach(waitForAsync(() => {
