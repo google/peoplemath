@@ -32,7 +32,7 @@
         [bucketAllocationLimit]="bucketAllocationLimit()"
         (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
         (onDelete)="deleteObjective($event)"
-        (onChanged)="onObjectiveChanged($event[0], $event[1])"></app-objective>
+        (changed)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
 </mat-list>
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)" class="app-mat-list">
@@ -48,7 +48,7 @@
             [bucketAllocationLimit]="bucketAllocationLimit()"
             (onMoveBucket)="moveObjective($event[0], $event[1], $event[2])"
             (onDelete)="deleteObjective($event)"
-            (onChanged)="onObjectiveChanged($event[0], $event[1])"></app-objective>
+            (changed)="onObjectiveChanged($event[0], $event[1])"></app-objective>
     </mat-list-item>
 </mat-list>
 </mat-card-content>

@@ -41,7 +41,7 @@ export class BucketComponent implements OnInit {
   @Output() moveBucketUp = new EventEmitter<ImmutableBucket>();
   @Output() moveBucketDown = new EventEmitter<ImmutableBucket>();
   @Output() moveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
-  @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
+  @Output() changed = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableBucket>();
 
   constructor(public dialog: MatDialog) { }
@@ -72,7 +72,7 @@ export class BucketComponent implements OnInit {
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe((bucket?: Bucket) => {
       if (bucket) {
-        this.onChanged.emit([this.bucket!, ImmutableBucket.fromBucket(bucket)]);
+        this.changed.emit([this.bucket!, ImmutableBucket.fromBucket(bucket)]);
       }
     });
   }
@@ -104,7 +104,7 @@ export class BucketComponent implements OnInit {
       if (!objective) {
         return;
       }
-      this.onChanged.emit([this.bucket!, this.bucket!.withNewObjective(objective)]);
+      this.changed.emit([this.bucket!, this.bucket!.withNewObjective(objective)]);
     });
   }
 
@@ -115,19 +115,19 @@ export class BucketComponent implements OnInit {
   }
 
   deleteObjective(objective: ImmutableObjective): void {
-    this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveDeleted(objective)]);
+    this.changed.emit([this.bucket!, this.bucket!.withObjectiveDeleted(objective)]);
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
     const newObjectives = [...this.bucket!.objectives];
     moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex !== event.currentIndex) {
-      this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
+      this.changed.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
     }
   }
 
   onObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): void {
-    this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
+    this.changed.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
   }
 
   onMoveBucketUp(): void {

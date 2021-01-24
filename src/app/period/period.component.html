@@ -40,7 +40,7 @@
     (moveBucketDown)="moveBucketDownOne($event)"
     (moveObjectiveBucket)="moveObjectiveToBucket($event[0], $event[1], $event[2], $event[3])"
     (onDelete)="deleteBucket($event)"
-    (onChanged)="onBucketChanged($event[0], $event[1])"></app-bucket>
+    (changed)="onBucketChanged($event[0], $event[1])"></app-bucket>
 
 <div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
 
@@ -58,7 +58,7 @@
     [unit]="period?.unit"
     [isEditingEnabled]="isEditingEnabled"
     (onNew)="onNewPerson($event)"
-    (onChanged)="onChangedPerson($event[0], $event[1])"
+    (changed)="onChangedPerson($event[0], $event[1])"
     (onDelete)="deletePerson($event)">
 </app-people>
 <app-assignments-by-person [period]="period"></app-assignments-by-person>
