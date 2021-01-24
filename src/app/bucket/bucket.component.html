@@ -2,8 +2,8 @@
 <mat-card-header>
 <mat-card-title>
     <span *ngIf="showOrderButtons" class="order-buttons">
-        <button (click)="moveBucketUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
-        <button (click)="moveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
+        <button (click)="onMoveBucketUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
+        <button (click)="onMoveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
     </span>
     <span (click)="edit()">{{bucket?.displayName}}
     <span [class.error]="isOverAllocated()"> ({{bucket?.allocationPercentage}}%)</span>

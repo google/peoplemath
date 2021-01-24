@@ -38,9 +38,9 @@ export class BucketComponent implements OnInit {
   @Input() showOrderButtons?: boolean;
   @Input() isEditingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
-  @Output() onMoveBucketUp = new EventEmitter<ImmutableBucket>();
-  @Output() onMoveBucketDown = new EventEmitter<ImmutableBucket>();
-  @Output() onMoveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
+  @Output() moveBucketUp = new EventEmitter<ImmutableBucket>();
+  @Output() moveBucketDown = new EventEmitter<ImmutableBucket>();
+  @Output() moveObjectiveBucket = new EventEmitter<[ImmutableObjective, ImmutableBucket, ImmutableObjective, ImmutableBucket]>();
   @Output() onChanged = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableBucket>();
 
@@ -111,7 +111,7 @@ export class BucketComponent implements OnInit {
   moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket): void {
     // Needs to be done in a single operation. Doing a delete in one bucket followed by an
     // add in the other bucket changes this component in between and doesn't work.
-    this.onMoveObjectiveBucket.emit([original, this.bucket!, newObjective, newBucket]);
+    this.moveObjectiveBucket.emit([original, this.bucket!, newObjective, newBucket]);
   }
 
   deleteObjective(objective: ImmutableObjective): void {
@@ -130,12 +130,12 @@ export class BucketComponent implements OnInit {
     this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveChanged(original, newObjective)]);
   }
 
-  moveBucketUp(): void {
-    this.onMoveBucketUp.emit(this.bucket);
+  onMoveBucketUp(): void {
+    this.moveBucketUp.emit(this.bucket);
   }
 
-  moveBucketDown(): void {
-    this.onMoveBucketDown.emit(this.bucket);
+  onMoveBucketDown(): void {
+    this.moveBucketDown.emit(this.bucket);
   }
 
   resourcesAllocated(): number {

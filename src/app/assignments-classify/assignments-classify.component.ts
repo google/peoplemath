@@ -38,7 +38,7 @@ export class AssignmentsClassifyComponent implements OnInit {
   @Input() groupType?: string;
   @Input() title?: string;
   @Input() isEditingEnabled?: boolean;
-  @Output() onRename = new EventEmitter<[string, string]>();
+  @Output() rename = new EventEmitter<[string, string]>();
 
   constructor(
     private dialog: MatDialog,
@@ -126,7 +126,7 @@ export class AssignmentsClassifyComponent implements OnInit {
     const dialog = this.dialog.open(RenameClassDialogComponent, {data});
     dialog.afterClosed().subscribe(newName => {
       if (newName) {
-        this.onRename.emit([cname, newName]);
+        this.rename.emit([cname, newName]);
       }
     });
   }
