@@ -15,7 +15,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
-import {Team, ImmutableTeam, TeamPermissions, Permission} from '../team';
+import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -29,7 +29,6 @@ import { Person } from '../person';
 import { Assignment } from '../assignment';
 import { Objective } from '../objective';
 import {AuthService} from '../services/auth.service';
-import {NotificationService} from '../services/notification.service';
 import { environment } from 'src/environments/environment';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
@@ -52,7 +51,7 @@ export class TeamPeriodsComponent implements OnInit {
     public authService: AuthService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.paramMap.subscribe(m => {
       const teamId = m.get('team');
       if (teamId) {
@@ -109,7 +108,7 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   isLoaded(): boolean {
-    return this.team != undefined && this.periods != undefined;
+    return this.team !== undefined && this.periods !== undefined;
   }
 
   sortedPeriods(): ImmutablePeriod[] {
@@ -119,7 +118,7 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   addPeriod(): void {
-    if (this.periods!.length == 0) {
+    if (this.periods!.length === 0) {
       this.addBlankPeriod();
       return;
     }
@@ -151,10 +150,10 @@ export class TeamPeriodsComponent implements OnInit {
         return;
       }
       let newPeriod: Period;
-      if (data.createMethod == CreateMethod.Blank) {
+      if (data.createMethod === CreateMethod.Blank) {
         newPeriod = data.period;
-      } else if (data.createMethod == CreateMethod.Copy) {
-        const copiedPeriod = this.periods!.find(p => p.id == data.copyFromPeriodID);
+      } else if (data.createMethod === CreateMethod.Copy) {
+        const copiedPeriod = this.periods!.find(p => p.id === data.copyFromPeriodID);
         if (!copiedPeriod) {
           console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
           return;
@@ -271,7 +270,7 @@ export class TeamPeriodsComponent implements OnInit {
           return of('error');
         })
       ).subscribe(res => {
-        if (res != 'error') {
+        if (res !== 'error') {
           this.snackBar.open('Saved', '', {duration: 2000});
           this.team = new ImmutableTeam(team);
         }

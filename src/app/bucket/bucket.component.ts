@@ -46,7 +46,7 @@ export class BucketComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   /**
@@ -108,7 +108,7 @@ export class BucketComponent implements OnInit {
     });
   }
 
-  moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket) {
+  moveObjective(original: ImmutableObjective, newObjective: ImmutableObjective, newBucket: ImmutableBucket): void {
     // Needs to be done in a single operation. Doing a delete in one bucket followed by an
     // add in the other bucket changes this component in between and doesn't work.
     this.onMoveObjectiveBucket.emit([original, this.bucket!, newObjective, newBucket]);
@@ -118,10 +118,10 @@ export class BucketComponent implements OnInit {
     this.onChanged.emit([this.bucket!, this.bucket!.withObjectiveDeleted(objective)]);
   }
 
-  reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>) {
+  reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
     const newObjectives = [...this.bucket!.objectives];
     moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
-    if (event.previousIndex != event.currentIndex) {
+    if (event.previousIndex !== event.currentIndex) {
       this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
     }
   }

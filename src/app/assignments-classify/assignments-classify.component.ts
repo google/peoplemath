@@ -51,7 +51,7 @@ export class AssignmentsClassifyComponent implements OnInit {
     const obsByGroup = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        const mgs = o.groups.filter(g => g.groupType == this.groupType);
+        const mgs = o.groups.filter(g => g.groupType === this.groupType);
         if (mgs.length > 0) {
           const groupName = mgs[0].groupName;
           if (obsByGroup.has(groupName)) {
@@ -118,7 +118,7 @@ export class AssignmentsClassifyComponent implements OnInit {
     return totalResourcesAllocated(objectives);
   }
 
-  renameClass(cname: string) {
+  renameClass(cname: string): void {
     const data: RenameClassDialogData = {
       classType: this.aggregateBy || '',
       currentName: cname,

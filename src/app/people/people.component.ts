@@ -58,7 +58,7 @@ export class PeopleComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   displayedColumns(): string[] {
@@ -189,7 +189,7 @@ export interface EditPersonDialogData {
   allowDelete: boolean;
   showDeleteConfirm: boolean;
   allowUsernameEdit: boolean;
-  existingUserIDs: Array<String>;
+  existingUserIDs: string[];
   onDelete?: EventEmitter<ImmutablePerson>;
 }
 

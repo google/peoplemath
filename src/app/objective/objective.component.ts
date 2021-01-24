@@ -42,7 +42,7 @@ export class ObjectiveComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   hasPeopleAvailable(): boolean {
@@ -137,7 +137,7 @@ export class ObjectiveComponent implements OnInit {
   }
 
   isCommitted(): boolean {
-    return this.objective!.commitmentType == CommitmentType.Committed;
+    return this.objective!.commitmentType === CommitmentType.Committed;
   }
 
   showAssignButton(): boolean {

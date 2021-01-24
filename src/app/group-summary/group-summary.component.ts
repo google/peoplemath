@@ -43,7 +43,7 @@ export class GroupSummaryComponent implements OnInit {
     const obsByGroup = new Map<string, ImmutableObjective[]>();
     const noGroup: ImmutableObjective[] = [];
     bucket.objectives.forEach(o => {
-      const gs = o.groups.filter(g => g.groupType == this.groupType);
+      const gs = o.groups.filter(g => g.groupType === this.groupType);
       if (gs.length > 0) {
         const groupName = gs[0].groupName;
         if (obsByGroup.has(groupName)) {
@@ -72,7 +72,7 @@ export class GroupSummaryComponent implements OnInit {
     const noGroup: ImmutableObjective[] = [];
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        const gs = o.groups.filter(g => g.groupType == this.groupType);
+        const gs = o.groups.filter(g => g.groupType === this.groupType);
         if (gs.length > 0) {
           const groupName = gs[0].groupName;
           const obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
@@ -112,7 +112,7 @@ export class GroupSummaryComponent implements OnInit {
     });
   }
 
-  totalResourcesAllocated(objectives: readonly ImmutableObjective[]) {
+  totalResourcesAllocated(objectives: readonly ImmutableObjective[]): number {
     return totalResourcesAllocated(objectives);
   }
 }

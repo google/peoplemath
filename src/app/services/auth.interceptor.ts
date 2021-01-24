@@ -35,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (environment.requireAuth) {
       return this.authService.getIdToken().pipe(
         switchMap((token: string | null) => {
-          if (token != null) {
+          if (token !== null) {
             const cloned = req.clone({
               headers: req.headers.set('Authorization', 'Bearer ' + token)
             });

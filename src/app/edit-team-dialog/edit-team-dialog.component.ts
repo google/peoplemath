@@ -35,14 +35,14 @@ export class EditTeamDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditTeamDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditTeamDialogData) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onCancel() {
+  onCancel(): void {
     this.dialogRef.close();
   }
 
   isDataValid(): boolean {
-    return this.data.team.id != '' && this.data.team.displayName != '';
+    return this.data.team.id !== '' && this.data.team.displayName !== '';
   }
 }

@@ -36,7 +36,7 @@ export class TeamsComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadData();
   }
 
@@ -58,7 +58,7 @@ export class TeamsComponent implements OnInit {
   }
 
   isLoaded(): boolean {
-    return this.teams != undefined;
+    return this.teams !== undefined;
   }
 
   addTeam(): void {
@@ -81,7 +81,7 @@ export class TeamsComponent implements OnInit {
           return of('error');
         }),
       ).subscribe(res => {
-        if (res != 'error') {
+        if (res !== 'error') {
           this.teams = this.teams!.concat(new ImmutableTeam(team));
         }
       });
