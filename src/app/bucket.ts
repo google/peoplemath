@@ -110,7 +110,7 @@ export class ImmutableBucket {
    * Sum of resources allocated to committed resources within the bucket.
    */
   committedResourcesAllocated(): number {
-    return this.objectives.filter(o => o.commitmentType == CommitmentType.Committed)
+    return this.objectives.filter(o => o.commitmentType === CommitmentType.Committed)
         .map(o => o.resourcesAllocated())
         .reduce((sum, current) => sum + current, 0);
   }

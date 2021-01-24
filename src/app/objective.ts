@@ -128,11 +128,11 @@ export class ImmutableObjective {
   }
 
   withPersonDeleted(person: ImmutablePerson): ImmutableObjective {
-    return this.withAssignments(this.assignments.filter(a => a.personId != person.id));
+    return this.withAssignments(this.assignments.filter(a => a.personId !== person.id));
   }
 
   withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutableObjective {
-    const index = this.groups.findIndex(g => (g.groupType == groupType && g.groupName == oldName));
+    const index = this.groups.findIndex(g => (g.groupType === groupType && g.groupName === oldName));
     if (index < 0) {
       return this;
     }
@@ -142,12 +142,12 @@ export class ImmutableObjective {
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutableObjective {
-    const index = this.tags.findIndex(t => t.name == oldName);
+    const index = this.tags.findIndex(t => t.name === oldName);
     if (index < 0) {
       return this;
     }
     const newTags = [...this.tags];
-    if (newTags.find(t => t.name == newName)) {
+    if (newTags.find(t => t.name === newName)) {
       // Tag with the new name already exists. Just delete the old tag.
       newTags.splice(index, 1);
     } else {

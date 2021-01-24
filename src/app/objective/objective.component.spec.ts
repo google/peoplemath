@@ -39,7 +39,7 @@ describe('ObjectiveComponent', () => {
     .compileComponents();
   }));
 
-  const makeComponent = function(resourceEstimate: number, assignments: Assignment[]): ObjectiveComponent {
+  const makeComponent = (resourceEstimate: number, assignments: Assignment[]): ObjectiveComponent => {
     const component = fixture.componentInstance;
     component.objective = ImmutableObjective.fromObjective({
       name: 'test objective',
@@ -73,10 +73,10 @@ describe('ObjectiveComponent', () => {
 
   it('should generate correct assignment data', () => {
     const assignmentData = component.personAssignmentData();
-    expect(assignmentData.filter(d => d.username == 'bob')).toEqual([{username: 'bob', available: 2, assign: 2}]);
-    expect(assignmentData.filter(d => d.username == 'charlie')).toEqual([{username: 'charlie', available: 3, assign: 0}]);
-    expect(assignmentData.filter(d => d.username == 'alice')).toEqual([{username: 'alice', available: 0, assign: 1}]);
-    expect(assignmentData.filter(d => d.username == 'dave')).toEqual([]);
+    expect(assignmentData.filter(d => d.username === 'bob')).toEqual([{username: 'bob', available: 2, assign: 2}]);
+    expect(assignmentData.filter(d => d.username === 'charlie')).toEqual([{username: 'charlie', available: 3, assign: 0}]);
+    expect(assignmentData.filter(d => d.username === 'alice')).toEqual([{username: 'alice', available: 0, assign: 1}]);
+    expect(assignmentData.filter(d => d.username === 'dave')).toEqual([]);
   });
 
   it('should enable assign button if there are assignments but estimate = 0', () => {

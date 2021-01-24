@@ -50,7 +50,7 @@ export class EditPeriodDialogComponent implements OnInit {
     this.maxCommitPctControl = new FormControl(data.period.maxCommittedPercentage, [Validators.min(0), Validators.max(100)]);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   parseSecondaryUnits(): SecondaryUnit[] {

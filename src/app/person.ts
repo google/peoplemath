@@ -44,7 +44,7 @@ export class ImmutablePerson {
     }
 
     displayNameWithUsername(): string {
-        if (this.id == this.displayName || !this.displayName) {
+        if (this.id === this.displayName || !this.displayName) {
             return this.id;
         }
         return this.displayName + ' (' + this.id + ')';

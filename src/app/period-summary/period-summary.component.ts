@@ -39,7 +39,7 @@ export class PeriodSummaryComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.paramMap.subscribe(m => {
       const teamId = m.get('team');
       const periodId = m.get('period');
@@ -51,7 +51,7 @@ export class PeriodSummaryComponent implements OnInit {
 
   bucketAllocationFraction(bucket: ImmutableBucket): number {
     const total = this.period!.resourcesAllocated();
-    return (total == 0) ? 0 : bucket.resourcesAllocated() / total;
+    return (total === 0) ? 0 : bucket.resourcesAllocated() / total;
   }
 
   allGroupTypes(): string[] {
@@ -80,7 +80,7 @@ export class PeriodSummaryComponent implements OnInit {
     return result;
   }
 
-  loadDataFor(teamId: string, periodId: string) {
+  loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;
     this.storage.getTeam(teamId).pipe(

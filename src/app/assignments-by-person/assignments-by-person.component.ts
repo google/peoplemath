@@ -30,7 +30,7 @@ export class AssignmentsByPersonComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   hasAssignments(person: ImmutablePerson): boolean {

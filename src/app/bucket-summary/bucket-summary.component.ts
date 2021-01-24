@@ -41,7 +41,7 @@ export class BucketSummaryComponent implements OnInit {
 
   committedObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
-      o => o.commitmentType == CommitmentType.Committed &&
+      o => o.commitmentType === CommitmentType.Committed &&
       o.resourcesAllocated() > 0);
   }
 
@@ -51,7 +51,7 @@ export class BucketSummaryComponent implements OnInit {
 
   aspirationalObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
-      o => o.commitmentType != CommitmentType.Committed &&
+      o => o.commitmentType !== CommitmentType.Committed &&
       o.resourcesAllocated() > 0);
   }
 

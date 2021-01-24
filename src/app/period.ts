@@ -192,7 +192,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withPersonChanged(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): ImmutablePeriod {
-    if (oldPerson.id != newPerson.id) {
+    if (oldPerson.id !== newPerson.id) {
       // We aren't doing the assignment updates etc that would be necessary for this
       throw Error('Cannot change person id');
     }

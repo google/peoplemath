@@ -38,7 +38,7 @@ export class EditBucketDialogComponent implements OnInit {
 
   showDeleteConfirm = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   isDataValid(): boolean {

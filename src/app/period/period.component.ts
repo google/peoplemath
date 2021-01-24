@@ -62,7 +62,7 @@ export class PeriodComponent implements OnInit {
     private notificationService: NotificationService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.paramMap.subscribe(m => {
       const teamId = m.get('team');
       const periodId = m.get('period');
@@ -163,7 +163,7 @@ export class PeriodComponent implements OnInit {
 
   peopleCommittedAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
-      (o: ImmutableObjective) => o.commitmentType == CommitmentType.Committed,
+      (o: ImmutableObjective) => o.commitmentType === CommitmentType.Committed,
       (a: ImmutableAssignment) => a.commitment);
   }
 
@@ -194,7 +194,7 @@ export class PeriodComponent implements OnInit {
     let totalCommitted = 0;
     this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(o => {
-        if (o.commitmentType == CommitmentType.Committed) {
+        if (o.commitmentType === CommitmentType.Committed) {
           o.assignments.forEach(a => {
             totalCommitted += a.commitment;
           });
@@ -256,7 +256,7 @@ export class PeriodComponent implements OnInit {
     }
   }
 
-  renameTag(oldName: string, newName: string) {
+  renameTag(oldName: string, newName: string): void {
     const newPeriod = this.period!.withTagRenamed(oldName, newName);
     if (newPeriod !== this.period) {
       this.setPeriod(newPeriod);
@@ -323,7 +323,7 @@ export class PeriodComponent implements OnInit {
   }
 
   isLoaded(): boolean {
-    return this.team != undefined && this.period != undefined;
+    return this.team !== undefined && this.period !== undefined;
   }
 
   save(): void {
@@ -353,7 +353,7 @@ export class PeriodComponent implements OnInit {
     }
     this.storage.updatePeriod(this.team.id, this.period.toOriginal()).pipe(
       catchError(error => {
-        if (error.status == 409) {
+        if (error.status === 409) {
           this.notificationService.error$.next('This period was modified in another session. Try reloading the page and reapplying your edit.');
         } else {
           this.notificationService.error$.next('Failed to save period: ' + error.error);
@@ -428,12 +428,12 @@ export class PeriodComponent implements OnInit {
     this.save();
   }
 
-  setPeriod(newPeriod?: ImmutablePeriod) {
+  setPeriod(newPeriod?: ImmutablePeriod): void {
     this.period = newPeriod;
     this.changeDet.detectChanges();
   }
 
-  setTeam(newTeam?: ImmutableTeam) {
+  setTeam(newTeam?: ImmutableTeam): void {
     this.team = newTeam;
     this.changeDet.detectChanges();
   }

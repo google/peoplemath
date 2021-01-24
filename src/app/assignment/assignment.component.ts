@@ -35,6 +35,6 @@ export class AssignmentComponent implements OnInit {
   }
 
   isCommitted(): boolean {
-    return this.objective?.commitmentType == CommitmentType.Committed;
+    return this.objective?.commitmentType === CommitmentType.Committed;
   }
 }

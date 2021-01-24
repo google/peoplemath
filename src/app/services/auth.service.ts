@@ -61,9 +61,9 @@ export class AuthService {
   }
 
   private updateUserData(firebaseUser: firebase.User | null): void {
-    if (firebaseUser != null && firebaseUser.email != null) {
+    if (firebaseUser !== null && firebaseUser.email !== null) {
       const user: User = {email: firebaseUser.email, domain: this.getDomain(firebaseUser.email)};
-      if (firebaseUser.displayName != null) {
+      if (firebaseUser.displayName !== null) {
         user.displayName = firebaseUser.displayName;
       }
       this.user$.next(user);

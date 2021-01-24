@@ -49,19 +49,19 @@ export class AddPeriodDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onCancel() {
+  onCancel(): void {
     this.dialogRef.close();
   }
 
   isCopy(): boolean {
-    return this.data.createMethod == CreateMethod.Copy;
+    return this.data.createMethod === CreateMethod.Copy;
   }
 
   isUnitRequired(): boolean {
-    return this.data.createMethod == CreateMethod.Blank || !this.data.copyUnit;
+    return this.data.createMethod === CreateMethod.Blank || !this.data.copyUnit;
   }
 
   isMaxCommittedPercentageRequired(): boolean {
@@ -81,14 +81,14 @@ export class AddPeriodDialogComponent implements OnInit {
       }
     }
 
-    if (this.data.createMethod == CreateMethod.Copy) {
+    if (this.data.createMethod === CreateMethod.Copy) {
       if (!this.data.copyFromPeriodID) {
         return false;
       }
-      if (!this.data.existingPeriods.find(p => p.id == this.data.copyFromPeriodID)) {
+      if (!this.data.existingPeriods.find(p => p.id === this.data.copyFromPeriodID)) {
         return false;
       }
-    } else if (this.data.createMethod != CreateMethod.Blank) {
+    } else if (this.data.createMethod !== CreateMethod.Blank) {
       return false;
     }
     return true;

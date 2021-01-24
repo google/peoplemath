@@ -61,7 +61,7 @@ export function makeGroups(groupsStr: string): ObjectiveGroup[] {
   return groupsStr.split(',').map(pairStr => {
     const parts = pairStr.split(':').map(s => s.trim());
     let result: ObjectiveGroup;
-    if (parts.length == 2) {
+    if (parts.length === 2) {
       result = {groupType: parts[0], groupName: parts[1]};
     } else {
       result = {groupType: 'Group', groupName: pairStr};
@@ -107,7 +107,7 @@ export class EditObjectiveDialogComponent implements OnInit {
 
   showDeleteConfirm = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   isDataValid(): boolean {

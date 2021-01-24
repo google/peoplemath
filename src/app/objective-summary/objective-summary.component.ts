@@ -32,7 +32,7 @@ export class ObjectiveSummaryComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   allocatedResources(): number {
@@ -58,7 +58,7 @@ export class ObjectiveSummaryComponent implements OnInit {
   }
 
   isCommittedAndFullyAllocated(): boolean {
-    return this.objective!.commitmentType == CommitmentType.Committed &&
+    return this.objective!.commitmentType === CommitmentType.Committed &&
       this.allocatedResources() >= this.objective!.resourceEstimate;
   }
 }
