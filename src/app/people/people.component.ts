@@ -51,7 +51,7 @@ export class PeopleComponent implements OnInit {
   @Input() totalAssignmentCount?: number;
   @Input() unit?: string;
   @Input() isEditingEnabled?: boolean;
-  @Output() onNew = new EventEmitter<ImmutablePerson>();
+  @Output() newPerson = new EventEmitter<ImmutablePerson>();
   @Output() changed = new EventEmitter<[ImmutablePerson, ImmutablePerson]>();
   @Output() delete = new EventEmitter<ImmutablePerson>();
   @ViewChild(MatSort) sort?: MatSort;
@@ -156,7 +156,7 @@ export class PeopleComponent implements OnInit {
     const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
     dialogRef.afterClosed().subscribe(ok => {
       if (ok) {
-        this.onNew.emit(new ImmutablePerson(person));
+        this.newPerson.emit(new ImmutablePerson(person));
       }
     });
   }
