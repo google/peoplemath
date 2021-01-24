@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Team, ImmutableTeam } from "./team";
+import { Team, ImmutableTeam } from './team';
 
 describe('ImmutableTeam', () => {
     const _mut: Team = new Team('myteam', 'My Team');

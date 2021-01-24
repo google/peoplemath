@@ -38,9 +38,9 @@ import {DisplayObjectivesPipe} from '../bucket/displayobjectives.pipe';
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
   let fixture: ComponentFixture<PeriodComponent>;
-  let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod', 'updatePeriod']);
-  let TEST_TEAM = new Team('testTeam', 'My test team');
-  let TEST_PERIOD: Period = {
+  const storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod', 'updatePeriod']);
+  const TEST_TEAM = new Team('testTeam', 'My test team');
+  const TEST_PERIOD: Period = {
     id: 'testPeriod',
     displayName: 'My test period',
     unit: 'person weeks',
@@ -51,7 +51,7 @@ describe('PeriodComponent', () => {
     buckets: [],
     lastUpdateUUID: '',
   };
-  let UPDATE_RESPONSE: ObjectUpdateResponse = {lastUpdateUUID: 'abcd'};
+  const UPDATE_RESPONSE: ObjectUpdateResponse = {lastUpdateUUID: 'abcd'};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

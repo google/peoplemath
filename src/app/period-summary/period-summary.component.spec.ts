@@ -31,8 +31,8 @@ import { Assignment } from '../assignment';
 import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
-let TEST_TEAM = new Team('teamid', 'Team Name');
-let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
+const TEST_TEAM = new Team('teamid', 'Team Name');
+const NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
   name: 'An objective with no commitment type',
   resourceEstimate: 10,
   commitmentType: undefined,
@@ -43,10 +43,10 @@ let NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
     new Assignment('person1', 5),
   ],
 };
-let BUCKETS = [new Bucket('Bucket 1', 100, [
+const BUCKETS = [new Bucket('Bucket 1', 100, [
   NO_COMMITMENTTYPE_OBJECTIVE,
 ])];
-let TEST_PERIOD: Period = {
+const TEST_PERIOD: Period = {
   id: 'periodid',
   displayName: 'Period Name',
   unit: 'units',
@@ -57,7 +57,7 @@ let TEST_PERIOD: Period = {
   people: [],
   lastUpdateUUID: '',
 };
-let storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
+const storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
 
 describe('PeriodSummaryComponent', () => {
   let component: PeriodSummaryComponent;

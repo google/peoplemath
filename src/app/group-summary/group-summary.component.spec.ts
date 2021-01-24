@@ -25,7 +25,7 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
 describe('GroupSummaryComponent', () => {
   let component: GroupSummaryComponent;
   let fixture: ComponentFixture<GroupSummaryComponent>;
-  let PERIOD: Period = {
+  const PERIOD: Period = {
     id: 'p',
     displayName: 'Period',
     unit: 'things',

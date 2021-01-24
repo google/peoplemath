@@ -48,12 +48,12 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   objectivesByGroup(): Array<[string, ImmutableObjective[]]> {
-    let obsByGroup = new Map<string, ImmutableObjective[]>();
+    const obsByGroup = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        let mgs = o.groups.filter(g => g.groupType == this.groupType);
+        const mgs = o.groups.filter(g => g.groupType == this.groupType);
         if (mgs.length > 0) {
-          let groupName = mgs[0].groupName;
+          const groupName = mgs[0].groupName;
           if (obsByGroup.has(groupName)) {
             obsByGroup.get(groupName)!.push(o);
           } else {
@@ -62,20 +62,20 @@ export class AssignmentsClassifyComponent implements OnInit {
         }
       });
     });
-    for (let [_g, obs] of obsByGroup) {
+    for (const [_g, obs] of obsByGroup) {
       obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
-    let result = Array.from(obsByGroup.entries());
+    const result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
-      let resources1 = this.totalAssignedResources(obs1);
-      let resources2 = this.totalAssignedResources(obs2);
+      const resources1 = this.totalAssignedResources(obs1);
+      const resources2 = this.totalAssignedResources(obs2);
       return (resources2 - resources1) || g1.localeCompare(g2);
     });
     return result;
   }
 
   objectivesByTag(): Array<[string, ImmutableObjective[]]> {
-    let obsByTag = new Map<string, ImmutableObjective[]>();
+    const obsByTag = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.tags.forEach(t => {
@@ -87,10 +87,10 @@ export class AssignmentsClassifyComponent implements OnInit {
         });
       });
     });
-    for (let [_g, obs] of obsByTag) {
+    for (const [_g, obs] of obsByTag) {
       obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
-    let result = Array.from(obsByTag.entries());
+    const result = Array.from(obsByTag.entries());
     result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
     return result;
   }
@@ -119,11 +119,11 @@ export class AssignmentsClassifyComponent implements OnInit {
   }
 
   renameClass(cname: string) {
-    let data: RenameClassDialogData = {
+    const data: RenameClassDialogData = {
       classType: this.aggregateBy || '',
       currentName: cname,
     };
-    let dialog = this.dialog.open(RenameClassDialog, {data: data});
+    const dialog = this.dialog.open(RenameClassDialog, {data});
     dialog.afterClosed().subscribe(newName => {
       if (newName) {
         this.onRename.emit([cname, newName]);

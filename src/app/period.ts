@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Bucket, ImmutableBucket } from "./bucket";
-import { Person, ImmutablePerson } from "./person";
+import { Bucket, ImmutableBucket } from './bucket';
+import { Person, ImmutablePerson } from './person';
 import { ImmutableObjective } from './objective';
 
 export interface SecondaryUnit {
-  name: string,
-  conversionFactor: number,
+  name: string;
+  conversionFactor: number;
 }
 
 export class ImmutableSecondaryUnit {
@@ -39,15 +39,15 @@ export class ImmutableSecondaryUnit {
 }
 
 export interface Period {
-  id: string,
-  displayName: string,
-  unit: string,
-  notesURL: string,
-  maxCommittedPercentage: number,
-  buckets: Bucket[],
-  people: Person[],
-  secondaryUnits: SecondaryUnit[],
-  lastUpdateUUID: string,
+  id: string;
+  displayName: string;
+  unit: string;
+  notesURL: string;
+  maxCommittedPercentage: number;
+  buckets: Bucket[];
+  people: Person[];
+  secondaryUnits: SecondaryUnit[];
+  lastUpdateUUID: string;
 }
 
 // Boilerplate-reduction device
@@ -59,7 +59,7 @@ interface ImmutablePeriodIF {
   readonly maxCommittedPercentage: number;
   readonly buckets: readonly ImmutableBucket[];
   readonly people: readonly ImmutablePerson[];
-  readonly secondaryUnits:  readonly ImmutableSecondaryUnit[];
+  readonly secondaryUnits: readonly ImmutableSecondaryUnit[];
   readonly lastUpdateUUID: string;
 }
 
@@ -72,7 +72,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   readonly maxCommittedPercentage: number;
   readonly buckets: readonly ImmutableBucket[];
   readonly people: readonly ImmutablePerson[];
-  readonly secondaryUnits:  readonly ImmutableSecondaryUnit[];
+  readonly secondaryUnits: readonly ImmutableSecondaryUnit[];
   readonly lastUpdateUUID: string;
 
   private constructor(from: ImmutablePeriodIF) {
@@ -116,7 +116,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withNewLastUpdateUUID(lastUpdateUUID: string): ImmutablePeriod {
-    return new ImmutablePeriod({...this, lastUpdateUUID: lastUpdateUUID});
+    return new ImmutablePeriod({...this, lastUpdateUUID});
   }
 
   private withNewBuckets(newBuckets: readonly ImmutableBucket[]): ImmutablePeriod {
@@ -128,8 +128,8 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withBucketMovedUpOne(bucket: ImmutableBucket): ImmutablePeriod {
-    let index = this.buckets.findIndex(b => b === bucket);
-    let newBuckets: ImmutableBucket[] = [...this.buckets];
+    const index = this.buckets.findIndex(b => b === bucket);
+    const newBuckets: ImmutableBucket[] = [...this.buckets];
     if (index > 0) {
       newBuckets[index] = newBuckets[index - 1];
       newBuckets[index - 1] = bucket;
@@ -138,8 +138,8 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withBucketMovedDownOne(bucket: ImmutableBucket): ImmutablePeriod {
-    let index = this.buckets.findIndex(b => b === bucket);
-    let newBuckets: ImmutableBucket[] = [...this.buckets];
+    const index = this.buckets.findIndex(b => b === bucket);
+    const newBuckets: ImmutableBucket[] = [...this.buckets];
     if (index >= 0 && index < this.buckets.length - 1) {
       newBuckets[index] = newBuckets[index + 1];
       newBuckets[index + 1] = bucket;
@@ -148,11 +148,11 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withBucketChanged(from: ImmutableBucket, to: ImmutableBucket): ImmutablePeriod {
-    let index = this.buckets.findIndex(b => b === from);
+    const index = this.buckets.findIndex(b => b === from);
     if (index < 0) {
       return this;
     }
-    let newBuckets = [...this.buckets];
+    const newBuckets = [...this.buckets];
     newBuckets[index] = to;
     return new ImmutablePeriod({...this, buckets: newBuckets});
   }
@@ -172,18 +172,18 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   private withNewPeople(people: ImmutablePerson[]): ImmutablePeriod {
-    people.sort((a,b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
-    return new ImmutablePeriod({...this, people: people});
+    people.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
+    return new ImmutablePeriod({...this, people});
   }
 
   withObjectiveMoved(oldObj: ImmutableObjective, from: ImmutableBucket, newObj: ImmutableObjective, to: ImmutableBucket): ImmutablePeriod {
-    let newBuckets = [...this.buckets];
-    let fromIdx = newBuckets.findIndex(b => b === from);
+    const newBuckets = [...this.buckets];
+    const fromIdx = newBuckets.findIndex(b => b === from);
     if (fromIdx < 0) {
       throw Error('Could not find old bucket');
     }
     newBuckets[fromIdx] = newBuckets[fromIdx].withObjectiveDeleted(oldObj);
-    let toIdx = newBuckets.findIndex(b => b === to);
+    const toIdx = newBuckets.findIndex(b => b === to);
     if (toIdx < 0) {
       throw Error('Could not find new bucket');
     }
@@ -196,11 +196,11 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       // We aren't doing the assignment updates etc that would be necessary for this
       throw Error('Cannot change person id');
     }
-    let index = this.people.findIndex(p => p === oldPerson);
+    const index = this.people.findIndex(p => p === oldPerson);
     if (index < 0) {
       return this;
     }
-    let newPeople = [...this.people];
+    const newPeople = [...this.people];
     newPeople[index] = newPerson;
     return this.withNewPeople(newPeople);
   }
@@ -209,7 +209,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     if (this.people.find(p => p.id === person.id)) {
       throw Error('A person with id ' + person.id + ' already exists');
     }
-    let newPeople = [...this.people];
+    const newPeople = [...this.people];
     newPeople.push(person);
     return this.withNewPeople(newPeople);
   }

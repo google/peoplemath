@@ -47,14 +47,14 @@ describe('ResourceQuantityComponent', () => {
 
   it('should render primary unit', waitForAsync(() => {
     fixture.detectChanges();
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 things');
   }));
 
   it('should render ofQuantity', waitForAsync(() => {
     component.ofQuantity = 1000;
     fixture.detectChanges();
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things');
   }));
 
@@ -64,7 +64,7 @@ describe('ResourceQuantityComponent', () => {
       new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
     ];
     fixture.detectChanges();
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings)');
   }));
 
@@ -73,7 +73,7 @@ describe('ResourceQuantityComponent', () => {
       new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
     ];
     fixture.detectChanges();
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 things (0.5 millithings)');
   }));
 
@@ -84,7 +84,7 @@ describe('ResourceQuantityComponent', () => {
       new ImmutableSecondaryUnit({name: 'centithings', conversionFactor: 0.01}),
     ];
     fixture.detectChanges();
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings, 5 of 10 centithings)');
   }));
 });

@@ -23,8 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('AddPeriodDialogComponent', () => {
   let component: AddPeriodDialogComponent;
   let fixture: ComponentFixture<AddPeriodDialogComponent>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let DIALOG_DATA: AddPeriodDialogData = {
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const DIALOG_DATA: AddPeriodDialogData = {
     period: {
       id: 'test',
       displayName: 'Test Period',

@@ -55,7 +55,7 @@ export class PeriodSummaryComponent implements OnInit {
   }
 
   allGroupTypes(): string[] {
-    let groupTypes = new Set<string>();
+    const groupTypes = new Set<string>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.groups.forEach(g => {
@@ -63,19 +63,19 @@ export class PeriodSummaryComponent implements OnInit {
         });
       });
     });
-    let result = Array.from(groupTypes);
+    const result = Array.from(groupTypes);
     result.sort();
     return result;
   }
 
   allTags(): string[] {
-    let tags = new Set<string>();
+    const tags = new Set<string>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         o.tags.forEach(t => tags.add(t.name));
       });
     });
-    let result = Array.from(tags);
+    const result = Array.from(tags);
     result.sort();
     return result;
   }

@@ -43,6 +43,6 @@ export class EditTeamDialogComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    return this.data.team.id != "" && this.data.team.displayName != "";
+    return this.data.team.id != '' && this.data.team.displayName != '';
   }
 }

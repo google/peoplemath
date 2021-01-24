@@ -24,8 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('EditObjectiveDialogComponent', () => {
   let component: EditObjectiveDialogComponent;
   let fixture: ComponentFixture<EditObjectiveDialogComponent>;
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let objective = ImmutableObjective.fromObjective({
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const objective = ImmutableObjective.fromObjective({
     name: 'My test objective',
     resourceEstimate: 17,
     commitmentType: CommitmentType.Aspirational,
@@ -39,7 +39,7 @@ describe('EditObjectiveDialogComponent', () => {
     notes: '',
     assignments: [],
   });
-  let DIALOG_DATA: EditObjectiveDialogData = {
+  const DIALOG_DATA: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
     original: objective,
     title: 'My test dialog',
@@ -79,7 +79,7 @@ describe('EditObjectiveDialogComponent', () => {
   it('should convert tags as expected', () => {
     expect(makeTags('')).toEqual([]);
     expect(makeTags('single')).toEqual([{name: 'single'}]);
-    expect(makeTags('one, two ,three ')).toEqual([{name: 'one'}, {name: 'two'}, {name: 'three'}])
+    expect(makeTags('one, two ,three ')).toEqual([{name: 'one'}, {name: 'two'}, {name: 'three'}]);
   });
 
   it('should convert groups as expected', () => {
@@ -92,7 +92,7 @@ describe('EditObjectiveDialogComponent', () => {
   });
 
   it('should create editable objective as expected', () => {
-    let expected: EditedObjective = {
+    const expected: EditedObjective = {
       name: 'My test objective',
       resourceEstimate: 17,
       commitmentType: CommitmentType.Aspirational,

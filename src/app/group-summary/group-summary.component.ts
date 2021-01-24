@@ -29,8 +29,8 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 export class GroupSummaryComponent implements OnInit {
   @Input() period?: ImmutablePeriod;
   @Input() groupType?: string;
-  showObjectives: boolean = false;
-  showByBucket: boolean = true;
+  showObjectives = false;
+  showByBucket = true;
 
   constructor() { }
 
@@ -39,13 +39,13 @@ export class GroupSummaryComponent implements OnInit {
 
   bucketObjectivesByGroup(bucket: ImmutableBucket): Array<[string, ImmutableObjective[]]> {
     // We order groups by the order the first item from each appears within the bucket
-    let groupOrder: string[] = [];
-    let obsByGroup = new Map<string, ImmutableObjective[]>();
-    let noGroup: ImmutableObjective[] = [];
+    const groupOrder: string[] = [];
+    const obsByGroup = new Map<string, ImmutableObjective[]>();
+    const noGroup: ImmutableObjective[] = [];
     bucket.objectives.forEach(o => {
-      let gs = o.groups.filter(g => g.groupType == this.groupType);
+      const gs = o.groups.filter(g => g.groupType == this.groupType);
       if (gs.length > 0) {
-        let groupName = gs[0].groupName;
+        const groupName = gs[0].groupName;
         if (obsByGroup.has(groupName)) {
           obsByGroup.get(groupName)!.push(o);
         } else {
@@ -60,7 +60,7 @@ export class GroupSummaryComponent implements OnInit {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    let result: Array<[string, ImmutableObjective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
+    const result: Array<[string, ImmutableObjective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
@@ -68,14 +68,14 @@ export class GroupSummaryComponent implements OnInit {
   }
 
   allObjectivesByGroup(): Array<[string, ImmutableObjective[]]> {
-    let obsByGroup = new Map<string, ImmutableObjective[]>();
-    let noGroup: ImmutableObjective[] = [];
+    const obsByGroup = new Map<string, ImmutableObjective[]>();
+    const noGroup: ImmutableObjective[] = [];
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
-        let gs = o.groups.filter(g => g.groupType == this.groupType);
+        const gs = o.groups.filter(g => g.groupType == this.groupType);
         if (gs.length > 0) {
-          let groupName = gs[0].groupName;
-          let obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
+          const groupName = gs[0].groupName;
+          const obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
           obs.push(o);
           obsByGroup.set(groupName, obs);
         } else {
@@ -85,12 +85,12 @@ export class GroupSummaryComponent implements OnInit {
     });
 
     // Sort objectives in each group by descending allocation
-    for (let [_, obs] of obsByGroup) {
+    for (const [_, obs] of obsByGroup) {
       obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
-    let result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
+    const result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) =>
       (totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1)) || g1.localeCompare(g2));
     if (noGroup.length > 0) {

@@ -28,7 +28,7 @@ import { of } from 'rxjs';
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];
-  addTeamDisabled: boolean = false;
+  addTeamDisabled = false;
 
   constructor(
     private storage: StorageService,
@@ -76,12 +76,12 @@ export class TeamsComponent implements OnInit {
       }
       this.storage.addTeam(team).pipe(
         catchError(error => {
-          this.snackBar.open("Could not save new team: " + error.error, 'Dismiss');
+          this.snackBar.open('Could not save new team: ' + error.error, 'Dismiss');
           console.log(error);
-          return of("error");
+          return of('error');
         }),
       ).subscribe(res => {
-        if (res != "error") {
+        if (res != 'error') {
           this.teams = this.teams!.concat(new ImmutableTeam(team));
         }
       });

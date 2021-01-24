@@ -39,19 +39,19 @@ describe('ObjectiveComponent', () => {
     .compileComponents();
   }));
 
-  let makeComponent = function(resourceEstimate: number, assignments: Assignment[]): ObjectiveComponent {
-    let component = fixture.componentInstance;
+  const makeComponent = function(resourceEstimate: number, assignments: Assignment[]): ObjectiveComponent {
+    const component = fixture.componentInstance;
     component.objective = ImmutableObjective.fromObjective({
       name: 'test objective',
-      resourceEstimate: resourceEstimate,
+      resourceEstimate,
       commitmentType: CommitmentType.Aspirational,
       groups: [],
       tags: [],
       notes: '',
-      assignments: assignments,
+      assignments,
     });
     component.unit = 'person weeks';
-    let unallocatedTime = new Map();
+    const unallocatedTime = new Map();
     unallocatedTime.set('alice', -1);  // Temporary over-allocation for alice
     unallocatedTime.set('bob', 0);
     unallocatedTime.set('charlie', 3);
@@ -59,7 +59,7 @@ describe('ObjectiveComponent', () => {
     component.unallocatedTime = unallocatedTime;
     component.isEditingEnabled = true;
     return component;
-  }
+  };
 
   beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(ObjectiveComponent);
@@ -72,7 +72,7 @@ describe('ObjectiveComponent', () => {
   });
 
   it('should generate correct assignment data', () => {
-    let assignmentData = component.personAssignmentData();
+    const assignmentData = component.personAssignmentData();
     expect(assignmentData.filter(d => d.username == 'bob')).toEqual([{username: 'bob', available: 2, assign: 2}]);
     expect(assignmentData.filter(d => d.username == 'charlie')).toEqual([{username: 'charlie', available: 3, assign: 0}]);
     expect(assignmentData.filter(d => d.username == 'alice')).toEqual([{username: 'alice', available: 0, assign: 1}]);

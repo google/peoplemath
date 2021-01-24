@@ -45,9 +45,9 @@ import { NotificationService } from '../services/notification.service';
 export class PeriodComponent implements OnInit {
   team?: ImmutableTeam;
   period?: ImmutablePeriod;
-  isEditingEnabled: boolean = false;
-  showOrderButtons: boolean = false;
-  userHasEditPermissions: boolean = true;
+  isEditingEnabled = false;
+  showOrderButtons = false;
+  userHasEditPermissions = true;
   readonly eventsRequiringSave = new Subject<any>();
   // To enable access to this enum from the template
   readonly AggregateBy = AggregateBy;
@@ -97,7 +97,7 @@ export class PeriodComponent implements OnInit {
   }
 
   reorderButtonColour(): ThemePalette {
-    return this.showOrderButtons ? "accent" : undefined;
+    return this.showOrderButtons ? 'accent' : undefined;
   }
 
   /**
@@ -140,19 +140,19 @@ export class PeriodComponent implements OnInit {
   sumAssignmentValByPerson(
     objPred: (o: ImmutableObjective) => boolean,
     valFunc: (a: ImmutableAssignment) => number): ReadonlyMap<string, number> {
-    let result: Map<string, number> = new Map();
+    const result: Map<string, number> = new Map();
     this.period!.buckets.forEach(bucket => {
       bucket.objectives.forEach(objective => {
         if (objPred(objective)) {
           objective.assignments.forEach(assignment => {
-            let personId = assignment.personId;
+            const personId = assignment.personId;
             if (!result.has(personId)) {
               result.set(personId, 0);
             }
             result.set(personId, result.get(personId)! + valFunc(assignment));
-          })
+          });
         }
-      })
+      });
     });
     return result;
   }
@@ -174,8 +174,8 @@ export class PeriodComponent implements OnInit {
   /**
    * Amount of unallocated time for each person
    */
-  unallocatedTime(): ReadonlyMap<string,number> {
-    let result = new Map();
+  unallocatedTime(): ReadonlyMap<string, number> {
+    const result = new Map();
     this.period!.people.forEach(p => result.set(p.id, p.availability));
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
@@ -197,9 +197,9 @@ export class PeriodComponent implements OnInit {
         if (o.commitmentType == CommitmentType.Committed) {
           o.assignments.forEach(a => {
             totalCommitted += a.commitment;
-          })
+          });
         }
-      })
+      });
     });
     return totalCommitted;
   }
@@ -208,7 +208,7 @@ export class PeriodComponent implements OnInit {
    * Fraction of allocated resources which is allocated to committed objectives
    */
   committedAllocationRatio(): number {
-    let totalAllocated = this.totalAllocated();
+    const totalAllocated = this.totalAllocated();
     if (!totalAllocated) {
       return 0;
     }
@@ -224,7 +224,7 @@ export class PeriodComponent implements OnInit {
   }
 
   groupTypesWithAssignments(): string[] {
-    let result = new Set<string>();
+    const result = new Set<string>();
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.assignments.length > 0) {
@@ -238,8 +238,8 @@ export class PeriodComponent implements OnInit {
   }
 
   hasTagsWithAssignments(): boolean {
-    for (let bucket of this.period!.buckets) {
-      for (let objective of bucket.objectives) {
+    for (const bucket of this.period!.buckets) {
+      for (const objective of bucket.objectives) {
         if (objective.assignments.length > 0 && objective.tags.length > 0) {
           return true;
         }
@@ -354,9 +354,9 @@ export class PeriodComponent implements OnInit {
     this.storage.updatePeriod(this.team.id, this.period.toOriginal()).pipe(
       catchError(error => {
         if (error.status == 409) {
-          this.notificationService.error$.next("This period was modified in another session. Try reloading the page and reapplying your edit.");
+          this.notificationService.error$.next('This period was modified in another session. Try reloading the page and reapplying your edit.');
         } else {
-          this.notificationService.error$.next("Failed to save period: "+ error.error);
+          this.notificationService.error$.next('Failed to save period: ' + error.error);
         }
         console.log(error);
         return of(undefined);

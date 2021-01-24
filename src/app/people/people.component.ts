@@ -62,7 +62,7 @@ export class PeopleComponent implements OnInit {
   }
 
   displayedColumns(): string[] {
-    let columnLabels = ['personDesc'];
+    const columnLabels = ['personDesc'];
     if (this.people!.find(p => p.location)) {
       columnLabels.push('location');
     }
@@ -71,10 +71,10 @@ export class PeopleComponent implements OnInit {
   }
 
   tableData(): MatTableDataSource<PersonData> {
-    let data = this.people!.map(p => new PersonData(p.displayNameWithUsername(), p.location, p.availability,
+    const data = this.people!.map(p => new PersonData(p.displayNameWithUsername(), p.location, p.availability,
       this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
       this.personCommitFraction(p), this.isPersonOverallocated(p), p));
-    let result = new MatTableDataSource(data);
+    const result = new MatTableDataSource(data);
     result.sort = this.sort!;
     return result;
   }
@@ -104,11 +104,11 @@ export class PeopleComponent implements OnInit {
    * Fraction of a person's assignments which are committed objectives
    */
   personCommitFraction(person: Person): number {
-    let totalAllocated = this.personAllocated(person);
+    const totalAllocated = this.personAllocated(person);
     if (!totalAllocated) {
       return 0;
     }
-    let committed = this.peopleCommittedAllocations!.has(person.id) ? this.peopleCommittedAllocations!.get(person.id)! : 0;
+    const committed = this.peopleCommittedAllocations!.has(person.id) ? this.peopleCommittedAllocations!.get(person.id)! : 0;
     return committed / totalAllocated;
   }
 
@@ -124,7 +124,7 @@ export class PeopleComponent implements OnInit {
    * Just calculate the modal availability
    */
   defaultPersonAvailability(): number {
-    let availCounts = new Map<number, number>();
+    const availCounts = new Map<number, number>();
     this.people!.forEach(p => {
       if (!availCounts.get(p.availability)) {
         availCounts.set(p.availability, 0);
@@ -138,7 +138,7 @@ export class PeopleComponent implements OnInit {
         maxFreq = freq;
         mode = a;
       }
-    })
+    });
     return mode;
   }
 
@@ -148,7 +148,7 @@ export class PeopleComponent implements OnInit {
     }
     const person = new Person('', '', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
-      person: person, unit: this.unit!, title: "Add person", okAction: "Add",
+      person, unit: this.unit!, title: 'Add person', okAction: 'Add',
       existingUserIDs: this.people!.map(p => p.id),
       allowDelete: false, showDeleteConfirm: false,
       allowUsernameEdit: true, onDelete: undefined,
@@ -166,7 +166,7 @@ export class PeopleComponent implements OnInit {
       return;
     }
     const dialogData: EditPersonDialogData = {
-      person: p.toOriginal(), original: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: "OK",
+      person: p.toOriginal(), original: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: 'OK',
       existingUserIDs: [], // Doesn't matter for existing people
       allowDelete: true, showDeleteConfirm: false,
       allowUsernameEdit: false, onDelete: this.onDelete,
@@ -215,7 +215,7 @@ export class EditPersonDialog {
   get validateUserId(): ValidatorFn {
     return (c: AbstractControl) => {
       if (this.data.allowUsernameEdit && this.data.existingUserIDs.includes(c.value)) {
-        return {'nonunique': true};
+        return {nonunique: true};
       }
       return null;
     };

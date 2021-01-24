@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Assignment, ImmutableAssignment } from "./assignment";
+import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableAssignment', () => {
     const _mut: Assignment = new Assignment('alice', 7);

@@ -36,7 +36,7 @@ export class EditBucketDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditBucketDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData) { }
 
-  showDeleteConfirm: boolean = false;
+  showDeleteConfirm = false;
 
   ngOnInit() {
   }

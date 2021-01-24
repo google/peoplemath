@@ -35,7 +35,7 @@ export class TagSummaryComponent implements OnInit {
   }
 
   taggedObjectives(): ImmutableObjective[] {
-    let result: ImmutableObjective[] = [];
+    const result: ImmutableObjective[] = [];
     this.period!.buckets.forEach(b => {
       b.objectives.forEach(o => {
         if (o.tags.map(t => t.name).includes(this.tag!)) {

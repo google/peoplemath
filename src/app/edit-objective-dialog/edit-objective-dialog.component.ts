@@ -25,7 +25,7 @@ export interface EditedObjective {
   groups: string;
   tags: string;
   notes: string;
-  assignments: Assignment[],
+  assignments: Assignment[];
 }
 
 export interface EditObjectiveDialogData {
@@ -40,8 +40,8 @@ export interface EditObjectiveDialogData {
 }
 
 export function makeEditedObjective(objective: ImmutableObjective): EditedObjective {
-  let groupsStr = objective.groups.map(g => g.groupType + ":" + g.groupName).join(",");
-  let tagsStr = objective.tags.map(t => t.name).join(",");
+  const groupsStr = objective.groups.map(g => g.groupType + ':' + g.groupName).join(',');
+  const tagsStr = objective.tags.map(t => t.name).join(',');
 
   return {
     name: objective.name,
@@ -58,24 +58,24 @@ export function makeGroups(groupsStr: string): ObjectiveGroup[] {
   if (!groupsStr.trim()) {
     return [];
   }
-  return groupsStr.split(",").map(pairStr => {
-    let parts = pairStr.split(":").map(s => s.trim());
+  return groupsStr.split(',').map(pairStr => {
+    const parts = pairStr.split(':').map(s => s.trim());
     let result: ObjectiveGroup;
     if (parts.length == 2) {
       result = {groupType: parts[0], groupName: parts[1]};
     } else {
-      result = {groupType: "Group", groupName: pairStr};
+      result = {groupType: 'Group', groupName: pairStr};
     }
     return result;
-  })
+  });
 }
 
 export function makeTags(tagsStr: string): ObjectiveTag[] {
   if (!tagsStr.trim()) {
     return [];
   }
-  return tagsStr.split(",").map(s => {
-    let result: ObjectiveTag = {
+  return tagsStr.split(',').map(s => {
+    const result: ObjectiveTag = {
       name: s.trim(),
     };
     return result;
@@ -105,7 +105,7 @@ export class EditObjectiveDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditObjectiveDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData) { }
 
-  showDeleteConfirm: boolean = false;
+  showDeleteConfirm = false;
 
   ngOnInit() {
   }
@@ -123,7 +123,7 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onMove(newBucket: ImmutableBucket): void {
-    let newObjective = makeObjective(this.data.objective);
+    const newObjective = makeObjective(this.data.objective);
     this.data.onMoveBucket!.emit([this.data.original!, newObjective, newBucket]);
     this.dialogRef.close();
   }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Objective, CommitmentType, ImmutableObjective } from "./objective";
+import { Objective, CommitmentType, ImmutableObjective } from './objective';
 import { ImmutablePerson } from './person';
 
 export class Bucket {
@@ -21,7 +21,7 @@ export class Bucket {
     public allocationPercentage: number,
     public objectives: Objective[],
   ) {}
-};
+}
 
 export class ImmutableBucket {
   // The readonly array means ImmutableBucket should not be assignable to Bucket,

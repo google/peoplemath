@@ -158,7 +158,7 @@ export class BucketComponent implements OnInit {
    * Fraction of resources allocated within this bucket to committed objectives
    */
   commitRatio(): number {
-    let total = this.resourcesAllocated();
+    const total = this.resourcesAllocated();
     return total ? this.committedResourcesAllocated() / total : 0;
   }
 
