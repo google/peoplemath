@@ -169,6 +169,5 @@ export class ImmutableObjective {
 /**
  * Sum of resources allocated to a number of objectives.
  */
-export function totalResourcesAllocated(objectives: readonly ImmutableObjective[]): number {
-  return objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);
-}
+export const totalResourcesAllocated = (objectives: readonly ImmutableObjective[]): number =>
+  objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);

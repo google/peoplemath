@@ -39,7 +39,7 @@ export interface EditObjectiveDialogData {
   onDelete?: EventEmitter<ImmutableObjective>;
 }
 
-export function makeEditedObjective(objective: ImmutableObjective): EditedObjective {
+export const makeEditedObjective = (objective: ImmutableObjective): EditedObjective => {
   const groupsStr = objective.groups.map(g => g.groupType + ':' + g.groupName).join(',');
   const tagsStr = objective.tags.map(t => t.name).join(',');
 
@@ -52,9 +52,9 @@ export function makeEditedObjective(objective: ImmutableObjective): EditedObject
     notes: objective.notes,
     assignments: objective.assignments.map(a => a.toOriginal()),
   };
-}
+};
 
-export function makeGroups(groupsStr: string): ObjectiveGroup[] {
+export const makeGroups = (groupsStr: string): ObjectiveGroup[] => {
   if (!groupsStr.trim()) {
     return [];
   }
@@ -68,9 +68,9 @@ export function makeGroups(groupsStr: string): ObjectiveGroup[] {
     }
     return result;
   });
-}
+};
 
-export function makeTags(tagsStr: string): ObjectiveTag[] {
+export const makeTags = (tagsStr: string): ObjectiveTag[] => {
   if (!tagsStr.trim()) {
     return [];
   }
@@ -80,10 +80,9 @@ export function makeTags(tagsStr: string): ObjectiveTag[] {
     };
     return result;
   });
-}
+};
 
-function makeObjective(edited: EditedObjective): ImmutableObjective {
-  return ImmutableObjective.fromObjective({
+const makeObjective = (edited: EditedObjective): ImmutableObjective => ImmutableObjective.fromObjective({
     name: edited.name,
     resourceEstimate: edited.resourceEstimate,
     commitmentType: edited.commitmentType,
@@ -92,7 +91,6 @@ function makeObjective(edited: EditedObjective): ImmutableObjective {
     notes: edited.notes,
     assignments: edited.assignments,
   });
-}
 
 @Component({
   selector: 'app-edit-objective-dialog',

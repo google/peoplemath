@@ -354,7 +354,8 @@ export class PeriodComponent implements OnInit {
     this.storage.updatePeriod(this.team.id, this.period.toOriginal()).pipe(
       catchError(error => {
         if (error.status === 409) {
-          this.notificationService.error$.next('This period was modified in another session. Try reloading the page and reapplying your edit.');
+          this.notificationService.error$.next(
+            'This period was modified in another session. Try reloading the page and reapplying your edit.');
         } else {
           this.notificationService.error$.next('Failed to save period: ' + error.error);
         }
