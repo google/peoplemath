@@ -40,7 +40,15 @@
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/member-ordering": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {"selector": "default", "format": ["camelCase"], "leadingUnderscore": "allow", "trailingUnderscore": "allow"},
+          {"selector": "variable", "format": ["camelCase", "UPPER_CASE"], "leadingUnderscore": "allow", "trailingUnderscore": "allow"},
+          {"selector": "typeLike", "format": ["PascalCase"]},
+          {"selector": "property", "format": ["camelCase", "PascalCase", "snake_case"], "leadingUnderscore": "allow"},
+          {"selector": "enumMember", "format": ["PascalCase"]}
+        ]
       }
     },
     {
