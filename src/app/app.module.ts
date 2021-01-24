@@ -48,7 +48,7 @@ import { BucketSummaryComponent } from './bucket-summary/bucket-summary.componen
 import { GroupSummaryComponent } from './group-summary/group-summary.component';
 import { TagSummaryComponent } from './tag-summary/tag-summary.component';
 import { ResourceQuantityComponent } from './resource-quantity/resource-quantity.component';
-import { RenameClassDialog } from './rename-class-dialog/rename-class-dialog.component';
+import { RenameClassDialogComponent } from './rename-class-dialog/rename-class-dialog.component';
 import { PillComponent } from './pill/pill.component';
 import { LoginComponent } from './login/login.component';
 import {NotificationService} from './services/notification.service';
@@ -84,7 +84,7 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
     GroupSummaryComponent,
     TagSummaryComponent,
     ResourceQuantityComponent,
-    RenameClassDialog,
+    RenameClassDialogComponent,
     PillComponent,
     LoginComponent,
     ModalComponent,

@@ -27,11 +27,11 @@ export interface RenameClassDialogData {
   templateUrl: './rename-class-dialog.component.html',
   styleUrls: ['./rename-class-dialog.component.css']
 })
-export class RenameClassDialog implements OnInit {
+export class RenameClassDialogComponent implements OnInit {
   newName = '';
 
   constructor(
-    public dialogRef: MatDialogRef<RenameClassDialog>,
+    public dialogRef: MatDialogRef<RenameClassDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RenameClassDialogData,
   ) { }
 
