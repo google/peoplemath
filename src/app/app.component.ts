@@ -25,6 +25,8 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  title = 'PeopleMath';
+
   constructor(
     public auth: AuthService,
     private notificationService: NotificationService,
@@ -38,5 +40,4 @@ export class AppComponent {
       this.dialog.open(ModalComponent, {data: message});
     });
   }
-  title = 'PeopleMath';
 }

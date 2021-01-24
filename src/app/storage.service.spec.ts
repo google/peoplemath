@@ -144,9 +144,9 @@ describe('StorageService', () => {
   });
 
   it('should be able to GET all periods for a team', () => {
-    const periods: Period[] = [1, 2].map(i => { return {
+    const periods: Period[] = [1, 2].map(i => ({
       id: 'p' + i,
-      displayName: 'Pd ' + i,
+    displayName: 'Pd ' + i,
       unit: 'units',
       secondaryUnits: [],
       notesURL: '',
@@ -154,7 +154,7 @@ describe('StorageService', () => {
       people: [],
       buckets: [],
       lastUpdateUUID: '',
-    }; });
+    }));
     service.getPeriods('testteam').subscribe(data => expect(data).toEqual(periods));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');

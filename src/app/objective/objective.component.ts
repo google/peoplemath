@@ -17,7 +17,8 @@ import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
-import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective } from '../edit-objective-dialog/edit-objective-dialog.component';
+import { EditObjectiveDialogComponent, EditObjectiveDialogData,
+         makeEditedObjective } from '../edit-objective-dialog/edit-objective-dialog.component';
 import { ImmutableBucket } from '../bucket';
 
 @Component({
