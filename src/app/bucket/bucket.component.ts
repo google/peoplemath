@@ -99,7 +99,7 @@ export class BucketComponent implements OnInit {
       onMoveBucket: undefined,
       onDelete: undefined,
     };
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, { data: dialogData });
     dialogRef.afterClosed().subscribe(objective => {
       if (!objective) {
         return;
@@ -161,4 +161,10 @@ export class BucketComponent implements OnInit {
     let total = this.resourcesAllocated();
     return total ? this.committedResourcesAllocated() / total : 0;
   }
+
+}
+
+export interface DisplayObjective {
+  objective: ImmutableObjective;
+  cumulativeSum: number;
 }

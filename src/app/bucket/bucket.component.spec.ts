@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { MaterialModule } from '../material/material.module';
+import {DisplayobjectivesPipe} from './displayobjectives.pipe';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -29,6 +30,7 @@ describe('BucketComponent', () => {
       declarations: [
         BucketComponent,
         ObjectiveComponent,
+        DisplayobjectivesPipe
       ],
       imports: [ FormsModule, MaterialModule ],
       providers: [

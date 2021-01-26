@@ -34,10 +34,12 @@ export class ObjectiveComponent implements OnInit {
   @Input() isEditingEnabled?: boolean;
   @Input() isReorderingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
+  @Input() bucketAllocationLimit?:number;
+  @Input() resourcesCumulativeSum!:number;
   @Output() onMoveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
   @Output() onDelete = new EventEmitter<ImmutableObjective>();
   @Output() onChanged = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
-
+  
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -147,4 +149,17 @@ export class ObjectiveComponent implements OnInit {
         (this.objective!.resourceEstimate > 0 || this.objective!.assignments.length > 0) &&
         this.hasPeopleAvailable();
   }
+  
+  getCumulativeSumClass(): string {
+    if (this.resourcesCumulativeSum < this.bucketAllocationLimit!) {
+      return "resource-csum-ok";
+    }
+    else if (this.resourcesCumulativeSum - this.objective?.resourceEstimate! <= this.bucketAllocationLimit!) {
+      return "resource-csum-marginal";
+    }
+    else {
+      return "resource-csum-excess";
+    }
+  }
+  
 }
