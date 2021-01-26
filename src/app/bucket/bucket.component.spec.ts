@@ -19,7 +19,6 @@ import { FormsModule } from '@angular/forms';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { MaterialModule } from '../material/material.module';
-import { Objective } from '../objective';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -41,37 +40,11 @@ describe('BucketComponent', () => {
   beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(BucketComponent);
     component = fixture.componentInstance;
-    let mockObjective1: Objective = {
-      name: "",
-      resourceEstimate: 10,
-      notes: "",
-      groups: [],
-      tags: [],
-      assignments: []
-
-    }
-
-    let mockObjective2: Objective = {
-      name: "",
-      resourceEstimate: 10,
-      notes: "",
-      groups: [],
-      tags: [],
-      assignments: []
-    }
-
-    component.bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, [mockObjective1,mockObjective2]));   
+    component.bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, []));
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-   it('should return a cumulative sum', () => {
-     expect(component.displayObjectives()[0].cumulativeSum).toEqual(10);
-     expect(component.displayObjectives()[1].cumulativeSum).toEqual(20);
-   });
 });
-
-

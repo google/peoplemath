@@ -99,7 +99,7 @@ export class BucketComponent implements OnInit {
       onMoveBucket: undefined,
       onDelete: undefined,
     };
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, { data: dialogData });
     dialogRef.afterClosed().subscribe(objective => {
       if (!objective) {
         return;
@@ -123,7 +123,7 @@ export class BucketComponent implements OnInit {
     moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
     if (event.previousIndex != event.currentIndex) {
       this.onChanged.emit([this.bucket!, this.bucket!.withNewObjectives(newObjectives)]);
-    } 
+    }
   }
 
   onObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): void {
@@ -162,18 +162,9 @@ export class BucketComponent implements OnInit {
     return total ? this.committedResourcesAllocated() / total : 0;
   }
 
-  displayObjectives(): Array<DisplayObjective> {
-    let displayObjectives: Array<DisplayObjective> = [];
-    let cumulativeSum = 0;
-    for (let objective of this.bucket!.objectives) {
-      cumulativeSum += objective.resourceEstimate
-      displayObjectives.push({ objective: objective, cumulativeSum: cumulativeSum })
-    }
-    return displayObjectives;
-  }
-} 
- 
-interface DisplayObjective {
+}
+
+export interface DisplayObjective {
   objective: ImmutableObjective;
   cumulativeSum: number;
 }
