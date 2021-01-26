@@ -56,7 +56,7 @@ import {AuthInterceptor} from './services/auth.interceptor';
 import {firebaseConfig} from '../environments/firebaseConfig';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
 import {ModalComponent} from './modal/modal.component';
-import { DisplayobjectivesPipe } from './bucket/displayobjectives.pipe';
+import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 
 
 @NgModule({
@@ -88,7 +88,7 @@ import { DisplayobjectivesPipe } from './bucket/displayobjectives.pipe';
     PillComponent,
     LoginComponent,
     ModalComponent,
-    DisplayobjectivesPipe,
+    DisplayObjectivesPipe,
   ],
   imports: [
     BrowserModule,
