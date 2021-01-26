@@ -78,7 +78,7 @@ The permissions functionality uses [Firebase Authentication](https://firebase.go
 
 This section has information on how to work with this codebase.
 
-If you intend to submit contributions to this repository, please also read [CONTRIBUTING.md] first.
+If you intend to submit contributions to this repository, please also read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ### Local machine
 

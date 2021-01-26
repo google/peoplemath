@@ -6,7 +6,7 @@ just a few small guidelines you need to follow.
 ## Continuous build
 
 Pull requests will not be accepted if they cause the continuous build to fail
-(see [README.md#continuous-build]).
+(see [README.md](README.md#continuous-build)).
 
 Here is a list of checks run, and ways to make sure they pass while developing:
 
