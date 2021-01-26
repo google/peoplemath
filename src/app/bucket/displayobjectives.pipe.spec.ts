@@ -13,7 +13,7 @@ let bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, DEFAULT_O
 describe('DisplayobjectivesPipe', () => {
   it('should calculate the cumulative sum', () => {
     const pipe = new DisplayObjectivesPipe();
-    let displayObjectives = pipe.transform(bucket);
+    let displayObjectives = pipe.transform(bucket.objectives);
     
     expect(displayObjectives[0].cumulativeSum).toBe(10)
     expect(displayObjectives[1].cumulativeSum).toBe(30)
