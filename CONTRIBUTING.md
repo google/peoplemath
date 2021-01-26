@@ -12,6 +12,8 @@ Here is a list of checks run, and ways to make sure they pass while developing:
 
 * Go backend tests must pass (run `go test ./...` from the `backend` directory)
 * Angular tests must pass (keep `ng test` running in the background)
+* Angular lint checks must pass (run `ng lint` - adding `--fix` will
+  automatically fix many problems for you)
 * Go code must be formatted according to [the `gofmt`
   command](https://golang.org/cmd/gofmt/) (many editors can be configured to do
   this automatically on save - for example [see
