@@ -76,6 +76,10 @@ The permissions functionality uses [Firebase Authentication](https://firebase.go
 
 ## Development
 
+This section has information on how to work with this codebase.
+
+If you intend to submit contributions to this repository, please also read [CONTRIBUTING.md] first.
+
 ### Local machine
 
 The easiest way to work on the front end is to use the [Angular CLI](https://cli.angular.io/) (`npx ng serve`, `npx ng test` etc), after an `npm install` to install the dependencies.

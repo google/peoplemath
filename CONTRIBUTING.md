@@ -3,6 +3,24 @@
 We'd love to accept your patches and contributions to this project. There are
 just a few small guidelines you need to follow.
 
+## Continuous build
+
+Pull requests will not be accepted if they cause the continuous build to fail
+(see [README.md#continuous-build]).
+
+Here is a list of checks run, and ways to make sure they pass while developing:
+
+* Go backend tests must pass (run `go test ./...` from the `backend` directory)
+* Angular tests must pass (keep `ng test` running in the background)
+* Go code must be formatted according to [the `gofmt`
+  command](https://golang.org/cmd/gofmt/) (many editors can be configured to do
+  this automatically on save - for example [see
+  here](https://code.visualstudio.com/docs/languages/go#_formatting) for Visual
+  Studio Code)
+
+See the [Dockerfile](Dockerfile) in the root of the project for an authoritative
+up-to-date list of checks performed.
+
 ## Contributor License Agreement
 
 Contributions to this project must be accompanied by a Contributor License

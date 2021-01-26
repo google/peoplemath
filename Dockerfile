@@ -18,6 +18,7 @@ COPY . /build/
 
 WORKDIR /build/backend
 RUN ["go", "test", "./..."]
+RUN ["/bin/bash", "-c", "if [[ \"$(gofmt -l . | wc -l)\" -gt 0 ]]; then echo Go formatting violations exist; exit 1; else echo Go formatting check passed ; fi"]
 
 WORKDIR /build
 RUN ["npm", "install", "--quiet"]
