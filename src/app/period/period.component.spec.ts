@@ -33,7 +33,7 @@ import {AngularFireModule} from '@angular/fire';
 import {firebaseConfig} from '../../environments/firebaseConfig';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { ObjectUpdateResponse } from '../objectupdateresponse';
-import {DisplayobjectivesPipe} from '../bucket/displayobjectives.pipe';
+import {DisplayObjectivesPipe} from '../bucket/displayobjectives.pipe';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -61,7 +61,7 @@ describe('PeriodComponent', () => {
         ObjectiveComponent,
         PeopleComponent,
         AssignmentsByPersonComponent,
-        DisplayobjectivesPipe
+        DisplayObjectivesPipe
       ],
       imports: [
         RouterTestingModule,

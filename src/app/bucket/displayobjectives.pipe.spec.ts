@@ -1,4 +1,4 @@
-import { DisplayobjectivesPipe } from './displayobjectives.pipe';
+import { DisplayObjectivesPipe } from './displayobjectives.pipe';
 import { Objective } from '../objective';
 import { Bucket, ImmutableBucket } from '../bucket';
 
@@ -12,7 +12,7 @@ let bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, DEFAULT_O
 
 describe('DisplayobjectivesPipe', () => {
   it('should calculate the cumulative sum', () => {
-    const pipe = new DisplayobjectivesPipe();
+    const pipe = new DisplayObjectivesPipe();
     let displayObjectives = pipe.transform(bucket);
     
     expect(displayObjectives[0].cumulativeSum).toBe(10)

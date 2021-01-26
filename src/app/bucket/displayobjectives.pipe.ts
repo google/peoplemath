@@ -5,7 +5,7 @@ import { ImmutableBucket } from '../bucket';
 @Pipe({
   name: 'displayObjectives'
 })
-export class DisplayobjectivesPipe implements PipeTransform {
+export class DisplayObjectivesPipe implements PipeTransform {
 
   transform(bucket: ImmutableBucket, ...args: unknown[]): Array<DisplayObjective> {
     let displayObjectives: Array<DisplayObjective> = [];
