@@ -24,5 +24,6 @@ WORKDIR /build
 RUN ["npm", "install", "--quiet"]
 RUN ["npx", "ng", "lint"]
 RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
+RUN ["npx", "prettier", "--check", "."]
 RUN ["bash", "build_appengine.sh"]
 RUN ["ls", "-lhR", "appengine_dist"]
