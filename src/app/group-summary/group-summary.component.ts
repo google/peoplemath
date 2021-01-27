@@ -106,7 +106,7 @@ export class GroupSummaryComponent implements OnInit {
       commitmentType: undefined,
       resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
       assignments: [{personId: '', commitment: totalResourcesAllocated(objectives)}],
-      notes: 'Dummy objective representing ' + this.groupType + ' ' + groupName,
+      notes: 'Summary objective for ' + this.groupType + ' ' + groupName,
       groups: [],
       tags: [],
     });
