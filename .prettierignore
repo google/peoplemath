@@ -1,0 +1,9 @@
+# compiled output
+/dist
+/dist-server
+/tmp
+/out-tsc
+/appengine_dist
+
+# dependencies
+/node_modules

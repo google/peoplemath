@@ -13,18 +13,21 @@
 // limitations under the License.
 
 import { Component, OnInit } from '@angular/core';
-import {Team, ImmutableTeam, TeamList} from '../team';
+import { Team, ImmutableTeam, TeamList } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
+import {
+  EditTeamDialogComponent,
+  EditTeamDialogData,
+} from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.css']
+  styleUrls: ['./teams.component.css'],
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];
@@ -33,28 +36,31 @@ export class TeamsComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-  ) { }
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
   loadData(): void {
-    this.storage.getTeams().pipe(
-      catchError(error => {
-        this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
-        console.log(error);
-        return of(new TeamList([], false));
-      })
-    ).subscribe((teamList?: TeamList) => {
-      if (teamList?.teams) {
-        this.teams = teamList.teams.map(t => new ImmutableTeam(t));
-      } else {
-        this.teams = undefined;
-      }
-      this.addTeamDisabled = !teamList?.canAddTeam;
-    });
+    this.storage
+      .getTeams()
+      .pipe(
+        catchError((error) => {
+          this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
+          console.log(error);
+          return of(new TeamList([], false));
+        })
+      )
+      .subscribe((teamList?: TeamList) => {
+        if (teamList?.teams) {
+          this.teams = teamList.teams.map((t) => new ImmutableTeam(t));
+        } else {
+          this.teams = undefined;
+        }
+        this.addTeamDisabled = !teamList?.canAddTeam;
+      });
   }
 
   isLoaded(): boolean {
@@ -69,22 +75,30 @@ export class TeamsComponent implements OnInit {
       allowCancel: true,
       allowEditID: true,
     };
-    const dialogRef = this.dialog.open(EditTeamDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(team => {
+    const dialogRef = this.dialog.open(EditTeamDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((team) => {
       if (!team) {
         return;
       }
-      this.storage.addTeam(team).pipe(
-        catchError(error => {
-          this.snackBar.open('Could not save new team: ' + error.error, 'Dismiss');
-          console.log(error);
-          return of('error');
-        }),
-      ).subscribe(res => {
-        if (res !== 'error') {
-          this.teams = this.teams!.concat(new ImmutableTeam(team));
-        }
-      });
+      this.storage
+        .addTeam(team)
+        .pipe(
+          catchError((error) => {
+            this.snackBar.open(
+              'Could not save new team: ' + error.error,
+              'Dismiss'
+            );
+            console.log(error);
+            return of('error');
+          })
+        )
+        .subscribe((res) => {
+          if (res !== 'error') {
+            this.teams = this.teams!.concat(new ImmutableTeam(team));
+          }
+        });
     });
   }
 }

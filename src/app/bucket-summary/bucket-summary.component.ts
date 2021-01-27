@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 
@@ -30,10 +35,9 @@ export class BucketSummaryComponent implements OnInit {
   @Input() bucketAllocationFraction?: number;
   @Input() unit?: string;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   hasCommittedObjectives(): boolean {
     return this.committedObjectives().length > 0;
@@ -41,8 +45,10 @@ export class BucketSummaryComponent implements OnInit {
 
   committedObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
-      o => o.commitmentType === CommitmentType.Committed &&
-      o.resourcesAllocated() > 0);
+      (o) =>
+        o.commitmentType === CommitmentType.Committed &&
+        o.resourcesAllocated() > 0
+    );
   }
 
   hasAspirationalObjectives(): boolean {
@@ -51,8 +57,10 @@ export class BucketSummaryComponent implements OnInit {
 
   aspirationalObjectives(): ImmutableObjective[] {
     return this.bucket!.objectives.filter(
-      o => o.commitmentType !== CommitmentType.Committed &&
-      o.resourcesAllocated() > 0);
+      (o) =>
+        o.commitmentType !== CommitmentType.Committed &&
+        o.resourcesAllocated() > 0
+    );
   }
 
   hasRejectedObjectives(): boolean {
@@ -60,6 +68,6 @@ export class BucketSummaryComponent implements OnInit {
   }
 
   rejectedObjectives(): ImmutableObjective[] {
-    return this.bucket!.objectives.filter(o => o.resourcesAllocated() <= 0);
+    return this.bucket!.objectives.filter((o) => o.resourcesAllocated() <= 0);
   }
 }

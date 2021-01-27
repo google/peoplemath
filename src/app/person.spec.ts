@@ -17,16 +17,18 @@
 import { Person, ImmutablePerson } from './person';
 
 describe('ImmutablePerson', () => {
-    const _mut: Person = new Person('test', 'Test Person', 'LOC', 1);
-    const person = new ImmutablePerson(_mut);
+  const _mut: Person = new Person('test', 'Test Person', 'LOC', 1);
+  const person = new ImmutablePerson(_mut);
 
-    it('should convert', () => {
-        expect(person.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(person.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        const p: Person = person;
-        expect(() => { p.displayName = 'Bobby'; }).toThrowError(/Cannot set property displayName/);
-        expect(person.displayName).toEqual('Test Person');
-    });
+  it('should be immutable', () => {
+    const p: Person = person;
+    expect(() => {
+      p.displayName = 'Bobby';
+    }).toThrowError(/Cannot set property displayName/);
+    expect(person.displayName).toEqual('Test Person');
+  });
 });

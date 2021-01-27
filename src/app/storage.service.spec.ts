@@ -15,8 +15,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { StorageService } from './storage.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {Team, TeamList} from './team';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { Team, TeamList } from './team';
 import { Period } from './period';
 import { ObjectUpdateResponse } from './objectupdateresponse';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -39,9 +42,7 @@ describe('StorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [StorageService],
-      imports: [
-        HttpClientTestingModule,
-      ],
+      imports: [HttpClientTestingModule],
     });
 
     httpTestingController = TestBed.inject(HttpTestingController);
@@ -59,7 +60,7 @@ describe('StorageService', () => {
   it('should be able to POST a team', () => {
     const team = new Team('testteam', 'Test team');
     const response = '';
-    service.addTeam(team).subscribe(data => expect(data).toEqual(response));
+    service.addTeam(team).subscribe((data) => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne('/api/team/');
 
@@ -73,7 +74,9 @@ describe('StorageService', () => {
   it('should be able to PUT a team', () => {
     const team = new Team('testteam', 'Test team');
     const response = '';
-    service.updateTeam(team).subscribe(data => expect(data).toEqual(response));
+    service
+      .updateTeam(team)
+      .subscribe((data) => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne('/api/team/testteam');
 
@@ -86,7 +89,7 @@ describe('StorageService', () => {
 
   it('should be able to GET a team', () => {
     const team = new Team('testteam', 'Test team');
-    service.getTeam('testteam').subscribe(data => expect(data).toEqual(team));
+    service.getTeam('testteam').subscribe((data) => expect(data).toEqual(team));
 
     const req = httpTestingController.expectOne('/api/team/testteam');
 
@@ -98,7 +101,7 @@ describe('StorageService', () => {
   it('should be able to GET all teams', () => {
     const teams = [new Team('team1', 'Team 1'), new Team('team2', 'Team 2')];
     const teamList = new TeamList(teams, true);
-    service.getTeams().subscribe(data => expect(data).toEqual(teamList));
+    service.getTeams().subscribe((data) => expect(data).toEqual(teamList));
 
     const req = httpTestingController.expectOne('/api/team/');
 
@@ -108,8 +111,10 @@ describe('StorageService', () => {
   });
 
   it('should be able to POST a period', () => {
-    const response: ObjectUpdateResponse = {lastUpdateUUID: 'newuuid'};
-    service.addPeriod('testteam', PERIOD).subscribe(data => expect(data).toEqual(response));
+    const response: ObjectUpdateResponse = { lastUpdateUUID: 'newuuid' };
+    service
+      .addPeriod('testteam', PERIOD)
+      .subscribe((data) => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');
 
@@ -121,10 +126,14 @@ describe('StorageService', () => {
   });
 
   it('should be able to PUT a period', () => {
-    const response: ObjectUpdateResponse = {lastUpdateUUID: 'newuuid'};
-    service.updatePeriod('testteam', PERIOD).subscribe(data => expect(data).toEqual(response));
+    const response: ObjectUpdateResponse = { lastUpdateUUID: 'newuuid' };
+    service
+      .updatePeriod('testteam', PERIOD)
+      .subscribe((data) => expect(data).toEqual(response));
 
-    const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
+    const req = httpTestingController.expectOne(
+      '/api/period/testteam/testperiod'
+    );
 
     expect(req.request.method).toEqual('PUT');
     expect(req.request.headers.get('Content-Type')).toEqual('application/json');
@@ -134,9 +143,13 @@ describe('StorageService', () => {
   });
 
   it('should be able to GET a period', () => {
-    service.getPeriod('testteam', 'testperiod').subscribe(data => expect(data).toEqual(PERIOD));
+    service
+      .getPeriod('testteam', 'testperiod')
+      .subscribe((data) => expect(data).toEqual(PERIOD));
 
-    const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
+    const req = httpTestingController.expectOne(
+      '/api/period/testteam/testperiod'
+    );
 
     expect(req.request.method).toEqual('GET');
 
@@ -144,9 +157,9 @@ describe('StorageService', () => {
   });
 
   it('should be able to GET all periods for a team', () => {
-    const periods: Period[] = [1, 2].map(i => ({
+    const periods: Period[] = [1, 2].map((i) => ({
       id: 'p' + i,
-    displayName: 'Pd ' + i,
+      displayName: 'Pd ' + i,
       unit: 'units',
       secondaryUnits: [],
       notesURL: '',
@@ -155,7 +168,9 @@ describe('StorageService', () => {
       buckets: [],
       lastUpdateUUID: '',
     }));
-    service.getPeriods('testteam').subscribe(data => expect(data).toEqual(periods));
+    service
+      .getPeriods('testteam')
+      .subscribe((data) => expect(data).toEqual(periods));
 
     const req = httpTestingController.expectOne('/api/period/testteam/');
 
@@ -168,15 +183,17 @@ describe('StorageService', () => {
     const message = '404 message';
 
     service.getPeriod('testteam', 'testperiod').subscribe(
-      data => fail('should have failed with the 404 error'),
+      (data) => fail('should have failed with the 404 error'),
       (error: HttpErrorResponse) => {
         expect(error.status).toEqual(404, 'status');
         expect(error.error).toEqual(message, 'message');
       }
     );
 
-    const req = httpTestingController.expectOne('/api/period/testteam/testperiod');
+    const req = httpTestingController.expectOne(
+      '/api/period/testteam/testperiod'
+    );
 
-    req.flush(message, {status: 404, statusText: 'Not Found'});
+    req.flush(message, { status: 404, statusText: 'Not Found' });
   });
 });

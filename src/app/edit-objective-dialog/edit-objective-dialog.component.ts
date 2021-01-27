@@ -14,7 +14,12 @@
 
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CommitmentType, ObjectiveGroup, ObjectiveTag, ImmutableObjective } from '../objective';
+import {
+  CommitmentType,
+  ObjectiveGroup,
+  ObjectiveTag,
+  ImmutableObjective,
+} from '../objective';
 import { ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
 
@@ -35,13 +40,19 @@ export interface EditObjectiveDialogData {
   okAction: string;
   unit: string;
   otherBuckets: readonly ImmutableBucket[];
-  onMoveBucket?: EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>;
+  onMoveBucket?: EventEmitter<
+    [ImmutableObjective, ImmutableObjective, ImmutableBucket]
+  >;
   onDelete?: EventEmitter<ImmutableObjective>;
 }
 
-export const makeEditedObjective = (objective: ImmutableObjective): EditedObjective => {
-  const groupsStr = objective.groups.map(g => g.groupType + ':' + g.groupName).join(',');
-  const tagsStr = objective.tags.map(t => t.name).join(',');
+export const makeEditedObjective = (
+  objective: ImmutableObjective
+): EditedObjective => {
+  const groupsStr = objective.groups
+    .map((g) => g.groupType + ':' + g.groupName)
+    .join(',');
+  const tagsStr = objective.tags.map((t) => t.name).join(',');
 
   return {
     name: objective.name,
@@ -50,7 +61,7 @@ export const makeEditedObjective = (objective: ImmutableObjective): EditedObject
     groups: groupsStr,
     tags: tagsStr,
     notes: objective.notes,
-    assignments: objective.assignments.map(a => a.toOriginal()),
+    assignments: objective.assignments.map((a) => a.toOriginal()),
   };
 };
 
@@ -58,13 +69,13 @@ export const makeGroups = (groupsStr: string): ObjectiveGroup[] => {
   if (!groupsStr.trim()) {
     return [];
   }
-  return groupsStr.split(',').map(pairStr => {
-    const parts = pairStr.split(':').map(s => s.trim());
+  return groupsStr.split(',').map((pairStr) => {
+    const parts = pairStr.split(':').map((s) => s.trim());
     let result: ObjectiveGroup;
     if (parts.length === 2) {
-      result = {groupType: parts[0], groupName: parts[1]};
+      result = { groupType: parts[0], groupName: parts[1] };
     } else {
-      result = {groupType: 'Group', groupName: pairStr};
+      result = { groupType: 'Group', groupName: pairStr };
     }
     return result;
   });
@@ -74,7 +85,7 @@ export const makeTags = (tagsStr: string): ObjectiveTag[] => {
   if (!tagsStr.trim()) {
     return [];
   }
-  return tagsStr.split(',').map(s => {
+  return tagsStr.split(',').map((s) => {
     const result: ObjectiveTag = {
       name: s.trim(),
     };
@@ -82,7 +93,8 @@ export const makeTags = (tagsStr: string): ObjectiveTag[] => {
   });
 };
 
-const makeObjective = (edited: EditedObjective): ImmutableObjective => ImmutableObjective.fromObjective({
+const makeObjective = (edited: EditedObjective): ImmutableObjective =>
+  ImmutableObjective.fromObjective({
     name: edited.name,
     resourceEstimate: edited.resourceEstimate,
     commitmentType: edited.commitmentType,
@@ -95,21 +107,22 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective => Immutable
 @Component({
   selector: 'app-edit-objective-dialog',
   templateUrl: './edit-objective-dialog.component.html',
-  styleUrls: ['./edit-objective-dialog.component.css']
+  styleUrls: ['./edit-objective-dialog.component.css'],
 })
 export class EditObjectiveDialogComponent implements OnInit {
-
   constructor(
     public dialogRef: MatDialogRef<EditObjectiveDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData
+  ) {}
 
   showDeleteConfirm = false;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   isDataValid(): boolean {
-    return !!this.data.objective.name && this.data.objective.resourceEstimate >= 0;
+    return (
+      !!this.data.objective.name && this.data.objective.resourceEstimate >= 0
+    );
   }
 
   onSave(): void {
@@ -122,7 +135,11 @@ export class EditObjectiveDialogComponent implements OnInit {
 
   onMove(newBucket: ImmutableBucket): void {
     const newObjective = makeObjective(this.data.objective);
-    this.data.onMoveBucket!.emit([this.data.original!, newObjective, newBucket]);
+    this.data.onMoveBucket!.emit([
+      this.data.original!,
+      newObjective,
+      newBucket,
+    ]);
     this.dialogRef.close();
   }
 

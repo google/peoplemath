@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019, 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,26 +24,23 @@ describe('TeamsComponent', () => {
   let component: TeamsComponent;
   let fixture: ComponentFixture<TeamsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TeamsComponent ],
-      imports: [
-        RouterTestingModule,
-        MaterialModule,
-        HttpClientTestingModule,
-      ],
-      providers: [
-        StorageService,
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [TeamsComponent],
+        imports: [RouterTestingModule, MaterialModule, HttpClientTestingModule],
+        providers: [StorageService],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(TeamsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(TeamsComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

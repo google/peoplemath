@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2019, 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,54 +19,68 @@ import { StorageService } from './storage.service';
 import { MaterialModule } from './material/material.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import {firebaseConfig} from '../environments/firebaseConfig';
-import {AuthService} from './services/auth.service';
+import { firebaseConfig } from '../environments/firebaseConfig';
+import { AuthService } from './services/auth.service';
 describe('AppComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-      imports: [
-        RouterTestingModule,
-        MaterialModule,
-        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
-        AngularFireAuthModule
-      ],
-      providers: [
-        StorageService,
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AppComponent],
+        imports: [
+          RouterTestingModule,
+          MaterialModule,
+          AngularFireModule.initializeApp(
+            firebaseConfig.firebase,
+            'firebaseApp'
+          ),
+          AngularFireAuthModule,
+        ],
+        providers: [StorageService],
+      }).compileComponents();
+    })
+  );
 
-  it('should create the app', waitForAsync(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
+  it(
+    'should create the app',
+    waitForAsync(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      expect(app).toBeTruthy();
+    })
+  );
 
-  it(`should have as title 'PeopleMath'`, waitForAsync(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('PeopleMath');
-  }));
+  it(
+    `should have as title 'PeopleMath'`,
+    waitForAsync(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      expect(app.title).toEqual('PeopleMath');
+    })
+  );
 
-  it('should render title in a h1 tag', waitForAsync(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('PeopleMath');
-  }));
-
-  it('should not show log out button if no user is logged in',
-    waitForAsync(inject([AuthService], (auth: AuthService) => {
+  it(
+    'should render title in a h1 tag',
+    waitForAsync(() => {
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
       const compiled = fixture.debugElement.nativeElement;
-      auth.user$.subscribe(user => {
-        if (!user) {
-          expect(compiled.querySelector('#logout-button')).toBe(null);
-        }
-      });
-  })));
+      expect(compiled.querySelector('h1').textContent).toContain('PeopleMath');
+    })
+  );
+
+  it(
+    'should not show log out button if no user is logged in',
+    waitForAsync(
+      inject([AuthService], (auth: AuthService) => {
+        const fixture = TestBed.createComponent(AppComponent);
+        fixture.detectChanges();
+        const compiled = fixture.debugElement.nativeElement;
+        auth.user$.subscribe((user) => {
+          if (!user) {
+            expect(compiled.querySelector('#logout-button')).toBe(null);
+          }
+        });
+      })
+    )
+  );
 });

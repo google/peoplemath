@@ -6,11 +6,23 @@
     </mat-card-header>
     <mat-card-content>
       <mat-nav-list>
-        <a mat-list-item *ngFor="let team of teams" routerLink="/team/{{team.id}}">{{team.displayName}}</a>
+        <a
+          mat-list-item
+          *ngFor="let team of teams"
+          routerLink="/team/{{ team.id }}"
+          >{{ team.displayName }}</a
+        >
       </mat-nav-list>
     </mat-card-content>
     <mat-card-actions>
-      <button [disabled]="addTeamDisabled" mat-button (click)="addTeam()" color="primary">Add Team</button>
+      <button
+        [disabled]="addTeamDisabled"
+        mat-button
+        (click)="addTeam()"
+        color="primary"
+      >
+        Add Team
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -1,8 +1,16 @@
-.mat-toolbar h1 a { color: white; text-decoration: none; font-weight: bold }
-.flex-spacer { flex-grow: 1; }
+.mat-toolbar h1 a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.flex-spacer {
+  flex-grow: 1;
+}
 /* The following breaks printing */
 @media screen {
-    .mat-sidenav-container { height: 100% }
+  .mat-sidenav-container {
+    height: 100%;
+  }
 }
 
 #logout-button {

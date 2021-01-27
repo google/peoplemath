@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {AuthService} from './auth.service';
-import {catchError, switchMap} from 'rxjs/operators';
-import {environment} from '../../environments/environment';
-import {of, Observable} from 'rxjs';
-import {Router} from '@angular/router';
-import {NotificationService} from './notification.service';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpErrorResponse,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+import { catchError, switchMap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { of, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { NotificationService } from './notification.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -31,16 +37,19 @@ export class AuthInterceptor implements HttpInterceptor {
     private notificationService: NotificationService
   ) {}
 
-  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(
+    req: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
     if (environment.requireAuth) {
       return this.authService.getIdToken().pipe(
         switchMap((token: string | null) => {
           if (token !== null) {
             const cloned = req.clone({
-              headers: req.headers.set('Authorization', 'Bearer ' + token)
+              headers: req.headers.set('Authorization', 'Bearer ' + token),
             });
             return next.handle(cloned).pipe(
-              catchError(err => {
+              catchError((err) => {
                 console.log(err);
                 if (err instanceof HttpErrorResponse) {
                   if (err.status === 401) {

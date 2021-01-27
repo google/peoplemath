@@ -1,10 +1,18 @@
-
 <mat-card>
   <mat-card-header>
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
-  <mat-card-content>You are not currently authenticated.<br>Please log in to continue.</mat-card-content>
+  <mat-card-content
+    >You are not currently authenticated.<br />Please log in to
+    continue.</mat-card-content
+  >
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="authService.googleSignin()">Login with Google</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="authService.googleSignin()"
+    >
+      Login with Google
+    </button>
   </mat-card-actions>
 </mat-card>

@@ -3,11 +3,13 @@ import { DisplayObjective } from './bucket.component';
 import { ImmutableObjective } from '../objective';
 
 @Pipe({
-  name: 'displayObjectives'
+  name: 'displayObjectives',
 })
 export class DisplayObjectivesPipe implements PipeTransform {
-
-  transform(objectives: readonly ImmutableObjective[], ...args: unknown[]): Array<DisplayObjective> {
+  transform(
+    objectives: readonly ImmutableObjective[],
+    ...args: unknown[]
+  ): Array<DisplayObjective> {
     const displayObjectives: Array<DisplayObjective> = [];
     let cumulativeSum = 0;
     for (const objective of objectives) {
@@ -16,5 +18,4 @@ export class DisplayObjectivesPipe implements PipeTransform {
     }
     return displayObjectives;
   }
-
 }

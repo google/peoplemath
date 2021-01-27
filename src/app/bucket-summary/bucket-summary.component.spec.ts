@@ -34,41 +34,44 @@ describe('BucketSummaryComponent', () => {
     groups: [],
     tags: [],
     notes: '',
-    assignments: [
-      new Assignment('person1', 5),
-    ],
+    assignments: [new Assignment('person1', 5)],
   };
-  const BUCKET: Bucket = new Bucket('my bucket', 50, [NO_COMMITMENTTYPE_OBJECTIVE]);
+  const BUCKET: Bucket = new Bucket('my bucket', 50, [
+    NO_COMMITMENTTYPE_OBJECTIVE,
+  ]);
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        BucketSummaryComponent,
-        ObjectiveSummaryComponent,
-        ResourceQuantityComponent,
-      ],
-      imports: [
-        MaterialModule,
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          BucketSummaryComponent,
+          ObjectiveSummaryComponent,
+          ResourceQuantityComponent,
+        ],
+        imports: [MaterialModule],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(BucketSummaryComponent);
-    component = fixture.componentInstance;
-    component.bucket = ImmutableBucket.fromBucket(BUCKET);
-    component.bucketAllocationFraction = 50;
-    component.unit = 'things';
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(BucketSummaryComponent);
+      component = fixture.componentInstance;
+      component.bucket = ImmutableBucket.fromBucket(BUCKET);
+      component.bucketAllocationFraction = 50;
+      component.unit = 'things';
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should classify objective with no commitment type as aspirational', () => {
-    const actual = component.aspirationalObjectives().map(o => o.toOriginal());
+    const actual = component
+      .aspirationalObjectives()
+      .map((o) => o.toOriginal());
     expect(actual).toEqual([NO_COMMITMENTTYPE_OBJECTIVE]);
   });
 });

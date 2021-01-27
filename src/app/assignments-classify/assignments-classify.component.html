@@ -1,28 +1,38 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>{{title}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div class="assignments">
-            <div *ngFor="let classobjs of objectivesByClass(); trackBy: classTrackBy">
-                <h3>{{classobjs[0]}}<span *ngIf="isEditingEnabled"> (<span class="rename-button"><a (click)="renameClass(classobjs[0])">Rename</a></span>)</span></h3>
-                <ul>
-                    <li *ngFor="let objective of classobjs[1]">
-                        <app-assignment
-                            [objective]="objective"
-                            [assignedResources]="assignedResources(objective)"
-                            [unit]="period?.unit"
-                            [class.no-resources-assigned]="assignedResources(objective) <= 0">
-                        </app-assignment>
-                    </li>
-                    <li *ngIf="classobjs[1].length > 1">
-                        <b>Total:</b> <app-resource-quantity
-                            [quantity]="totalAssignedResources(classobjs[1])"
-                            [primaryUnit]="period?.unit"
-                            [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </mat-card-content>
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="assignments">
+      <div *ngFor="let classobjs of objectivesByClass(); trackBy: classTrackBy">
+        <h3>
+          {{ classobjs[0]
+          }}<span *ngIf="isEditingEnabled">
+            (<span class="rename-button"
+              ><a (click)="renameClass(classobjs[0])">Rename</a></span
+            >)</span
+          >
+        </h3>
+        <ul>
+          <li *ngFor="let objective of classobjs[1]">
+            <app-assignment
+              [objective]="objective"
+              [assignedResources]="assignedResources(objective)"
+              [unit]="period?.unit"
+              [class.no-resources-assigned]="assignedResources(objective) <= 0"
+            >
+            </app-assignment>
+          </li>
+          <li *ngIf="classobjs[1].length > 1">
+            <b>Total:</b>
+            <app-resource-quantity
+              [quantity]="totalAssignedResources(classobjs[1])"
+              [primaryUnit]="period?.unit"
+              [secondaryUnits]="period?.secondaryUnits"
+            ></app-resource-quantity>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>

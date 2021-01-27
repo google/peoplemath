@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import {RouterTestingModule} from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import {firebaseConfig} from '../../environments/firebaseConfig';
+import { firebaseConfig } from '../../environments/firebaseConfig';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -30,8 +30,8 @@ describe('AuthService', () => {
       imports: [
         RouterTestingModule.withRoutes([]),
         AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
-        AngularFireAuthModule
-      ]
+        AngularFireAuthModule,
+      ],
     });
     service = TestBed.inject(AuthService);
   });

@@ -16,7 +16,10 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RenameClassDialogComponent, RenameClassDialogData } from './rename-class-dialog.component';
+import {
+  RenameClassDialogComponent,
+  RenameClassDialogData,
+} from './rename-class-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -26,29 +29,31 @@ describe('RenameClassDialog', () => {
   let component: RenameClassDialogComponent;
   let fixture: ComponentFixture<RenameClassDialogComponent>;
   const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
-  const DIALOG_DATA: RenameClassDialogData = {classType: 'group', currentName: 'thing'};
+  const DIALOG_DATA: RenameClassDialogData = {
+    classType: 'group',
+    currentName: 'thing',
+  };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RenameClassDialogComponent ],
-      imports: [
-        MaterialModule,
-        FormsModule,
-        BrowserAnimationsModule,
-      ],
-      providers: [
-        {provide: MatDialogRef, useValue: dialogSpy},
-        {provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA},
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [RenameClassDialogComponent],
+        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(RenameClassDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(RenameClassDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

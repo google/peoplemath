@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 import { MatDialog } from '@angular/material/dialog';
-import { RenameClassDialogComponent, RenameClassDialogData } from '../rename-class-dialog/rename-class-dialog.component';
+import {
+  RenameClassDialogComponent,
+  RenameClassDialogData,
+} from '../rename-class-dialog/rename-class-dialog.component';
 
 export enum AggregateBy {
   Group = 'group',
@@ -40,18 +50,15 @@ export class AssignmentsClassifyComponent implements OnInit {
   @Input() isEditingEnabled?: boolean;
   @Output() rename = new EventEmitter<[string, string]>();
 
-  constructor(
-    private dialog: MatDialog,
-  ) { }
+  constructor(private dialog: MatDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   objectivesByGroup(): Array<[string, ImmutableObjective[]]> {
     const obsByGroup = new Map<string, ImmutableObjective[]>();
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        const mgs = o.groups.filter(g => g.groupType === this.groupType);
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        const mgs = o.groups.filter((g) => g.groupType === this.groupType);
         if (mgs.length > 0) {
           const groupName = mgs[0].groupName;
           if (obsByGroup.has(groupName)) {
@@ -69,16 +76,16 @@ export class AssignmentsClassifyComponent implements OnInit {
     result.sort(([g1, obs1], [g2, obs2]) => {
       const resources1 = this.totalAssignedResources(obs1);
       const resources2 = this.totalAssignedResources(obs2);
-      return (resources2 - resources1) || g1.localeCompare(g2);
+      return resources2 - resources1 || g1.localeCompare(g2);
     });
     return result;
   }
 
   objectivesByTag(): Array<[string, ImmutableObjective[]]> {
     const obsByTag = new Map<string, ImmutableObjective[]>();
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.tags.forEach(t => {
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        o.tags.forEach((t) => {
           if (obsByTag.has(t.name)) {
             obsByTag.get(t.name)!.push(o);
           } else {
@@ -106,7 +113,10 @@ export class AssignmentsClassifyComponent implements OnInit {
     return [];
   }
 
-  classTrackBy(_index: number, classobj: [string, ImmutableObjective[]]): string {
+  classTrackBy(
+    _index: number,
+    classobj: [string, ImmutableObjective[]]
+  ): string {
     return classobj[0];
   }
 
@@ -123,8 +133,8 @@ export class AssignmentsClassifyComponent implements OnInit {
       classType: this.aggregateBy || '',
       currentName: cname,
     };
-    const dialog = this.dialog.open(RenameClassDialogComponent, {data});
-    dialog.afterClosed().subscribe(newName => {
+    const dialog = this.dialog.open(RenameClassDialogComponent, { data });
+    dialog.afterClosed().subscribe((newName) => {
       if (newName) {
         this.rename.emit([cname, newName]);
       }

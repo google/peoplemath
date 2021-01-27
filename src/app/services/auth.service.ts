@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {Observable, BehaviorSubject} from 'rxjs';
-import {User} from '../models/user.model';
-import {NotificationService} from './notification.service';
-import {environment} from '../../environments/environment';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { User } from '../models/user.model';
+import { NotificationService } from './notification.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   readonly user$ = new BehaviorSubject<User | null | undefined>(undefined);
@@ -36,10 +36,12 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth
   ) {
     if (environment.requireAuth) {
-      angularFireAuth.onAuthStateChanged((firebaseUser: firebase.User | null) => {
-        this.updateUserData(firebaseUser);
-      });
-      }
+      angularFireAuth.onAuthStateChanged(
+        (firebaseUser: firebase.User | null) => {
+          this.updateUserData(firebaseUser);
+        }
+      );
+    }
   }
 
   getDomain(email: string): string {
@@ -49,20 +51,28 @@ export class AuthService {
 
   googleSignin(): void {
     const provider = new firebase.auth.GoogleAuthProvider();
-    this.angularFireAuth.signInWithPopup(provider).then((result: firebase.auth.UserCredential) => {
-      const user = result.user;
-      this.notificationService.notification$.next('Signed in as ' + user?.displayName);
-      this.router.navigate(['/']);
-      return this.updateUserData(user);
-    }).catch(error => {
-      this.notificationService.error$.next(error);
-      return error;
-    });
+    this.angularFireAuth
+      .signInWithPopup(provider)
+      .then((result: firebase.auth.UserCredential) => {
+        const user = result.user;
+        this.notificationService.notification$.next(
+          'Signed in as ' + user?.displayName
+        );
+        this.router.navigate(['/']);
+        return this.updateUserData(user);
+      })
+      .catch((error) => {
+        this.notificationService.error$.next(error);
+        return error;
+      });
   }
 
   private updateUserData(firebaseUser: firebase.User | null): void {
     if (firebaseUser !== null && firebaseUser.email !== null) {
-      const user: User = {email: firebaseUser.email, domain: this.getDomain(firebaseUser.email)};
+      const user: User = {
+        email: firebaseUser.email,
+        domain: this.getDomain(firebaseUser.email),
+      };
       if (firebaseUser.displayName !== null) {
         user.displayName = firebaseUser.displayName;
       }
@@ -77,11 +87,14 @@ export class AuthService {
   }
 
   public signOut(): void {
-    this.angularFireAuth.signOut().then(() => {
-      this.user$.next(null);
-      this.router.navigate(['/login']);
-    }).catch(error => {
-      this.notificationService.error$.next(error);
-    });
+    this.angularFireAuth
+      .signOut()
+      .then(() => {
+        this.user$.next(null);
+        this.router.navigate(['/login']);
+      })
+      .catch((error) => {
+        this.notificationService.error$.next(error);
+      });
   }
 }

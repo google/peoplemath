@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,18 +13,15 @@
 // limitations under the License.
 
 export class Team {
-    constructor(
-        public id: string,
-        public displayName: string,
-        public teamPermissions?: TeamPermissions
-    ) {}
+  constructor(
+    public id: string,
+    public displayName: string,
+    public teamPermissions?: TeamPermissions
+  ) {}
 }
 
 export class TeamList {
-  constructor(
-    public teams: Team[],
-    public canAddTeam: boolean
-  ) {}
+  constructor(public teams: Team[], public canAddTeam: boolean) {}
 }
 
 export class TeamPermissions {
@@ -32,24 +29,16 @@ export class TeamPermissions {
     public read: Permission,
     public write: Permission,
     public readAllTeams: Permission,
-    public addTeam: Permission,
-  ) {
-  }
+    public addTeam: Permission
+  ) {}
 }
 
 export class Permission {
-  constructor(
-    public allow: UserMatcher[]
-  ) {
-  }
+  constructor(public allow: UserMatcher[]) {}
 }
 
 export class UserMatcher {
-  constructor(
-    public type: string,
-    public id: string
-  ) {
-  }
+  constructor(public type: string, public id: string) {}
 }
 
 export class ImmutableTeam {
@@ -57,9 +46,15 @@ export class ImmutableTeam {
   private readonly _displayName: string;
   private readonly _teamPermissions?: TeamPermissions;
 
-  get id(): string { return this._id; }
-  get displayName(): string { return this._displayName; }
-  get teamPermissions(): TeamPermissions | undefined { return this._teamPermissions; }
+  get id(): string {
+    return this._id;
+  }
+  get displayName(): string {
+    return this._displayName;
+  }
+  get teamPermissions(): TeamPermissions | undefined {
+    return this._teamPermissions;
+  }
 
   constructor(t: Team) {
     this._id = t.id;
@@ -68,6 +63,6 @@ export class ImmutableTeam {
   }
 
   toOriginal(): Team {
-      return new Team(this.id, this.displayName, this.teamPermissions);
+    return new Team(this.id, this.displayName, this.teamPermissions);
   }
 }

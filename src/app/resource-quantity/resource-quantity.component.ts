@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
 
 @Component({
@@ -30,10 +35,9 @@ export class ResourceQuantityComponent implements OnInit {
   @Input() primaryUnit?: string;
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   quantityIn(quantity: number, unit: SecondaryUnit): number {
     return quantity * unit.conversionFactor;

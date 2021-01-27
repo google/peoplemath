@@ -1,47 +1,94 @@
 <mat-card>
-<mat-card-content>
-<div class="table-container">
-<table mat-table [dataSource]="tableData()" matSort>
-  <ng-container matColumnDef="personDesc">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Person</th>
-    <td mat-cell *matCellDef="let element">{{element.personDesc}}</td>
-    <td mat-footer-cell *matFooterCellDef>Total</td>
-  </ng-container>
-  <ng-container matColumnDef="location">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
-    <td mat-cell *matCellDef="let element">{{element.location}}</td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-  <ng-container matColumnDef="availability">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Available</th>
-    <td mat-cell *matCellDef="let element">{{element.availability}}</td>
-    <td mat-footer-cell *matFooterCellDef>{{totalAvailable}}</td>
-  </ng-container>
-  <ng-container matColumnDef="allocated">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Allocated</th>
-    <td mat-cell *matCellDef="let element" [class.overallocated]="element.isOverallocated">{{element.allocated}}</td>
-    <td mat-footer-cell *matFooterCellDef [class.overallocated]="isTeamOverallocated()">{{totalAllocated}}</td>
-  </ng-container>
-  <ng-container matColumnDef="unallocated">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Free</th>
-    <td mat-cell *matCellDef="let element" [class.overallocated]="element.isOverallocated">{{element.unallocated}}</td>
-    <td mat-footer-cell *matFooterCellDef [class.overallocated]="isTeamOverallocated()">{{totalUnallocated}}</td>
-  </ng-container>
-  <ng-container matColumnDef="assignmentCount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Assignments</th>
-    <td mat-cell *matCellDef="let element">{{element.assignmentCount}}</td>
-    <td mat-footer-cell *matFooterCellDef>{{totalAssignmentCount}}</td>
-  </ng-container>
-  <ng-container matColumnDef="commitFraction">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Commit%</th>
-    <td mat-cell *matCellDef="let element">{{element.commitFraction | percent}}</td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns();" (click)="editPerson(row.person)"></tr>
-  <tr mat-footer-row *matFooterRowDef="displayedColumns(); sticky: true"></tr>
-</table>
-</div>
-<p><button (click)="addPerson()" mat-button [disabled]="!isEditingEnabled" color="primary">Add</button></p>
-</mat-card-content>
+  <mat-card-content>
+    <div class="table-container">
+      <table mat-table [dataSource]="tableData()" matSort>
+        <ng-container matColumnDef="personDesc">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Person</th>
+          <td mat-cell *matCellDef="let element">{{ element.personDesc }}</td>
+          <td mat-footer-cell *matFooterCellDef>Total</td>
+        </ng-container>
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+          <td mat-cell *matCellDef="let element">{{ element.location }}</td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="availability">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Available</th>
+          <td mat-cell *matCellDef="let element">{{ element.availability }}</td>
+          <td mat-footer-cell *matFooterCellDef>{{ totalAvailable }}</td>
+        </ng-container>
+        <ng-container matColumnDef="allocated">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Allocated</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [class.overallocated]="element.isOverallocated"
+          >
+            {{ element.allocated }}
+          </td>
+          <td
+            mat-footer-cell
+            *matFooterCellDef
+            [class.overallocated]="isTeamOverallocated()"
+          >
+            {{ totalAllocated }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="unallocated">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Free</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [class.overallocated]="element.isOverallocated"
+          >
+            {{ element.unallocated }}
+          </td>
+          <td
+            mat-footer-cell
+            *matFooterCellDef
+            [class.overallocated]="isTeamOverallocated()"
+          >
+            {{ totalUnallocated }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="assignmentCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Assignments</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.assignmentCount }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef>{{ totalAssignmentCount }}</td>
+        </ng-container>
+        <ng-container matColumnDef="commitFraction">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Commit%</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.commitFraction | percent }}
+          </td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns(); sticky: true"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns()"
+          (click)="editPerson(row.person)"
+        ></tr>
+        <tr
+          mat-footer-row
+          *matFooterRowDef="displayedColumns(); sticky: true"
+        ></tr>
+      </table>
+    </div>
+    <p>
+      <button
+        (click)="addPerson()"
+        mat-button
+        [disabled]="!isEditingEnabled"
+        color="primary"
+      >
+        Add
+      </button>
+    </p>
+  </mat-card-content>
 </mat-card>

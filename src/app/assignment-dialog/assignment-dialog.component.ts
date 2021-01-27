@@ -17,9 +17,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Objective } from '../objective';
 
 export interface PersonAssignmentData {
-    username: string;
-    available: number;
-    assign: number;
+  username: string;
+  available: number;
+  assign: number;
 }
 
 export interface AssignmentDialogData {
@@ -32,7 +32,7 @@ export interface AssignmentDialogData {
 @Component({
   selector: 'app-assignment-dialog',
   templateUrl: './assignment-dialog.component.html',
-  styleUrls: ['./assignment-dialog.component.css']
+  styleUrls: ['./assignment-dialog.component.css'],
 })
 export class AssignmentDialogComponent implements OnInit {
   constructor(
@@ -50,7 +50,9 @@ export class AssignmentDialogComponent implements OnInit {
    * Amount of the estimated time for the objective which isn't yet assigned
    */
   unassignedTime(): number {
-    const assigned = this.data.people.map(d => d.assign).reduce((sum, current) => sum + current, 0);
+    const assigned = this.data.people
+      .map((d) => d.assign)
+      .reduce((sum, current) => sum + current, 0);
     return this.data.objective.resourceEstimate - assigned;
   }
 

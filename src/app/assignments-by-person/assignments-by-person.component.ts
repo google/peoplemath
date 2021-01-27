@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
@@ -28,10 +33,9 @@ import { ImmutablePerson } from '../person';
 export class AssignmentsByPersonComponent implements OnInit {
   @Input() period?: ImmutablePeriod;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   hasAssignments(person: ImmutablePerson): boolean {
     for (const bucket of this.period!.buckets) {
@@ -48,12 +52,13 @@ export class AssignmentsByPersonComponent implements OnInit {
 
   assignmentsFor(person: ImmutablePerson): ObjectiveAssignment[] {
     const result: ObjectiveAssignment[] = [];
-    this.period!.buckets.forEach(bucket => {
-      bucket.objectives.forEach(objective => {
-        objective.assignments.filter(assignment => assignment.personId === person.id)
-                             .forEach(assignment => {
-          result.push({objective, assignment});
-        });
+    this.period!.buckets.forEach((bucket) => {
+      bucket.objectives.forEach((objective) => {
+        objective.assignments
+          .filter((assignment) => assignment.personId === person.id)
+          .forEach((assignment) => {
+            result.push({ objective, assignment });
+          });
       });
     });
     // Sort in descending order of commitment
