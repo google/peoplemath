@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,22 +18,34 @@ import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
 import { PeriodComponent } from './period/period.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
-import {LoginComponent} from './login/login.component';
-import {AuthGuard} from './auth.guard';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/teams', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent},
-  { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard]},
-  { path: 'team/:team', component: TeamPeriodsComponent, canActivate: [AuthGuard]},
-  { path: 'team/:team/period/:period', component: PeriodComponent, canActivate: [AuthGuard]},
-  { path: 'team/:team/periodsummary/:period', component: PeriodSummaryComponent, canActivate: [AuthGuard]},
+  { path: 'login', component: LoginComponent },
+  { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'team/:team',
+    component: TeamPeriodsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'team/:team/period/:period',
+    component: PeriodComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'team/:team/periodsummary/:period',
+    component: PeriodSummaryComponent,
+    canActivate: [AuthGuard],
+  },
 
   { path: 'unauthenticated', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

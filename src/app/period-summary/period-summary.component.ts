@@ -27,7 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-period-summary',
   templateUrl: './period-summary.component.html',
-  styleUrls: ['./period-summary.component.css']
+  styleUrls: ['./period-summary.component.css'],
 })
 export class PeriodSummaryComponent implements OnInit {
   team?: ImmutableTeam;
@@ -36,11 +36,11 @@ export class PeriodSummaryComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-  ) { }
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(m => {
+    this.route.paramMap.subscribe((m) => {
       const teamId = m.get('team');
       const periodId = m.get('period');
       if (teamId && periodId) {
@@ -51,14 +51,14 @@ export class PeriodSummaryComponent implements OnInit {
 
   bucketAllocationFraction(bucket: ImmutableBucket): number {
     const total = this.period!.resourcesAllocated();
-    return (total === 0) ? 0 : bucket.resourcesAllocated() / total;
+    return total === 0 ? 0 : bucket.resourcesAllocated() / total;
   }
 
   allGroupTypes(): string[] {
     const groupTypes = new Set<string>();
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.groups.forEach(g => {
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        o.groups.forEach((g) => {
           groupTypes.add(g.groupType);
         });
       });
@@ -70,9 +70,9 @@ export class PeriodSummaryComponent implements OnInit {
 
   allTags(): string[] {
     const tags = new Set<string>();
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        o.tags.forEach(t => tags.add(t.name));
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        o.tags.forEach((t) => tags.add(t.name));
       });
     });
     const result = Array.from(tags);
@@ -83,33 +83,50 @@ export class PeriodSummaryComponent implements OnInit {
   loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;
-    this.storage.getTeam(teamId).pipe(
-      catchError(err => {
-        this.snackBar.open('Could not load team "' + teamId + '": ' + err.error, 'Dismiss');
-        console.error(err);
-        return of(undefined);
-      })
-    ).subscribe(team => {
-      if (team) {
-        this.team = new ImmutableTeam(team);
-      } else {
-        this.team = undefined;
-      }
-    });
+    this.storage
+      .getTeam(teamId)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(
+            'Could not load team "' + teamId + '": ' + err.error,
+            'Dismiss'
+          );
+          console.error(err);
+          return of(undefined);
+        })
+      )
+      .subscribe((team) => {
+        if (team) {
+          this.team = new ImmutableTeam(team);
+        } else {
+          this.team = undefined;
+        }
+      });
 
-    this.storage.getPeriod(teamId, periodId).pipe(
-      catchError(err => {
-        this.snackBar.open('Could not load period "' + periodId + '" for team "' + teamId + '": ' + err.error, 'Dismiss');
-        console.error(err);
-        return of(undefined);
-      })
-    ).subscribe(period => {
-      if (period) {
-        this.period = ImmutablePeriod.fromPeriod(period);
-      } else {
-        this.period = undefined;
-      }
-    });
+    this.storage
+      .getPeriod(teamId, periodId)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(
+            'Could not load period "' +
+              periodId +
+              '" for team "' +
+              teamId +
+              '": ' +
+              err.error,
+            'Dismiss'
+          );
+          console.error(err);
+          return of(undefined);
+        })
+      )
+      .subscribe((period) => {
+        if (period) {
+          this.period = ImmutablePeriod.fromPeriod(period);
+        } else {
+          this.period = undefined;
+        }
+      });
   }
 
   isLoaded(): boolean {

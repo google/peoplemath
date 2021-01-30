@@ -17,16 +17,18 @@
 import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableAssignment', () => {
-    const _mut: Assignment = new Assignment('alice', 7);
-    const assignment = new ImmutableAssignment(_mut);
+  const _mut: Assignment = new Assignment('alice', 7);
+  const assignment = new ImmutableAssignment(_mut);
 
-    it('should convert', () => {
-        expect(assignment.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(assignment.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        const shadow: Assignment = assignment;
-        expect(() => { shadow.personId = 'fred'; }).toThrowError(/Cannot set property personId/);
-        expect(assignment.personId).toEqual('alice');
-    });
+  it('should be immutable', () => {
+    const shadow: Assignment = assignment;
+    expect(() => {
+      shadow.personId = 'fred';
+    }).toThrowError(/Cannot set property personId/);
+    expect(assignment.personId).toEqual('alice');
+  });
 });

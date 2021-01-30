@@ -23,11 +23,12 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-// Uncomment to enable console debug tools, such as ng.profiler.timeChangeDetection()
-/*.then(moduleRef => {
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  // Uncomment to enable console debug tools, such as ng.profiler.timeChangeDetection()
+  /*.then(moduleRef => {
   const applicationRef = moduleRef.injector.get(ApplicationRef);
   const componentRef = applicationRef.components[0];
   enableDebugTools(componentRef);
 })*/
-.catch(err => console.log(err));
+  .catch((err) => console.log(err));

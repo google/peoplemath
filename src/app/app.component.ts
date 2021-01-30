@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Component} from '@angular/core';
-import {AuthService} from './services/auth.service';
-import {NotificationService} from './services/notification.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ModalComponent} from './modal/modal.component';
-import {MatDialog} from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { AuthService } from './services/auth.service';
+import { NotificationService } from './services/notification.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalComponent } from './modal/modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'PeopleMath';
@@ -33,11 +33,11 @@ export class AppComponent {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    this.notificationService.notification$.subscribe(message => {
+    this.notificationService.notification$.subscribe((message) => {
       this.snackBar.open(message, 'Dismiss');
     });
-    this.notificationService.error$.subscribe(message => {
-      this.dialog.open(ModalComponent, {data: message});
+    this.notificationService.error$.subscribe((message) => {
+      this.dialog.open(ModalComponent, { data: message });
     });
   }
 }

@@ -14,7 +14,10 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AssignmentDialogComponent, AssignmentDialogData } from './assignment-dialog.component';
+import {
+  AssignmentDialogComponent,
+  AssignmentDialogData,
+} from './assignment-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType } from '../objective';
@@ -38,25 +41,26 @@ describe('AssignmentDialogComponent', () => {
     columns: [],
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AssignmentDialogComponent ],
-      imports: [
-        MaterialModule,
-      ],
-      providers: [
-        {provide: MatDialogRef, useValue: dialogSpy},
-        {provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA},
-      ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AssignmentDialogComponent],
+        imports: [MaterialModule],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(AssignmentDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(AssignmentDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

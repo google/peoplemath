@@ -25,8 +25,12 @@ export class ImmutableSecondaryUnit {
   private readonly _name: string;
   private readonly _conversionFactor: number;
 
-  get name(): string { return this._name; }
-  get conversionFactor(): number { return this._conversionFactor; }
+  get name(): string {
+    return this._name;
+  }
+  get conversionFactor(): number {
+    return this._conversionFactor;
+  }
 
   constructor(su: SecondaryUnit) {
     this._name = su.name;
@@ -34,7 +38,7 @@ export class ImmutableSecondaryUnit {
   }
 
   toOriginal(): SecondaryUnit {
-    return {name: this.name, conversionFactor: this.conversionFactor};
+    return { name: this.name, conversionFactor: this.conversionFactor };
   }
 }
 
@@ -76,15 +80,15 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   readonly lastUpdateUUID: string;
 
   private constructor(from: ImmutablePeriodIF) {
-      this.id = from.id;
-      this.displayName = from.displayName;
-      this.unit = from.unit;
-      this.notesURL = from.notesURL;
-      this.maxCommittedPercentage = from.maxCommittedPercentage;
-      this.buckets = from.buckets;
-      this.people = from.people;
-      this.secondaryUnits = from.secondaryUnits;
-      this.lastUpdateUUID = from.lastUpdateUUID;
+    this.id = from.id;
+    this.displayName = from.displayName;
+    this.unit = from.unit;
+    this.notesURL = from.notesURL;
+    this.maxCommittedPercentage = from.maxCommittedPercentage;
+    this.buckets = from.buckets;
+    this.people = from.people;
+    this.secondaryUnits = from.secondaryUnits;
+    this.lastUpdateUUID = from.lastUpdateUUID;
   }
 
   static fromPeriod(period: Period): ImmutablePeriod {
@@ -94,9 +98,11 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       unit: period.unit,
       notesURL: period.notesURL,
       maxCommittedPercentage: period.maxCommittedPercentage,
-      buckets: period.buckets.map(b => ImmutableBucket.fromBucket(b)),
-      people: period.people.map(p => new ImmutablePerson(p)),
-      secondaryUnits: period.secondaryUnits.map(su => new ImmutableSecondaryUnit(su)),
+      buckets: period.buckets.map((b) => ImmutableBucket.fromBucket(b)),
+      people: period.people.map((p) => new ImmutablePerson(p)),
+      secondaryUnits: period.secondaryUnits.map(
+        (su) => new ImmutableSecondaryUnit(su)
+      ),
       lastUpdateUUID: period.lastUpdateUUID,
     });
   }
@@ -108,27 +114,32 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       unit: this.unit,
       notesURL: this.notesURL,
       maxCommittedPercentage: this.maxCommittedPercentage,
-      buckets: this.buckets.map(b => b.toOriginal()),
-      people: this.people.map(p => p.toOriginal()),
-      secondaryUnits: this.secondaryUnits.map(su => su.toOriginal()),
+      buckets: this.buckets.map((b) => b.toOriginal()),
+      people: this.people.map((p) => p.toOriginal()),
+      secondaryUnits: this.secondaryUnits.map((su) => su.toOriginal()),
       lastUpdateUUID: this.lastUpdateUUID,
     };
   }
 
   withNewLastUpdateUUID(lastUpdateUUID: string): ImmutablePeriod {
-    return new ImmutablePeriod({...this, lastUpdateUUID});
+    return new ImmutablePeriod({ ...this, lastUpdateUUID });
   }
 
-  private withNewBuckets(newBuckets: readonly ImmutableBucket[]): ImmutablePeriod {
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+  private withNewBuckets(
+    newBuckets: readonly ImmutableBucket[]
+  ): ImmutablePeriod {
+    return new ImmutablePeriod({ ...this, buckets: newBuckets });
   }
 
   withNewBucket(bucket: ImmutableBucket): ImmutablePeriod {
-    return new ImmutablePeriod({...this, buckets: this.buckets.concat([bucket])});
+    return new ImmutablePeriod({
+      ...this,
+      buckets: this.buckets.concat([bucket]),
+    });
   }
 
   withBucketMovedUpOne(bucket: ImmutableBucket): ImmutablePeriod {
-    const index = this.buckets.findIndex(b => b === bucket);
+    const index = this.buckets.findIndex((b) => b === bucket);
     const newBuckets: ImmutableBucket[] = [...this.buckets];
     if (index > 0) {
       newBuckets[index] = newBuckets[index - 1];
@@ -138,7 +149,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withBucketMovedDownOne(bucket: ImmutableBucket): ImmutablePeriod {
-    const index = this.buckets.findIndex(b => b === bucket);
+    const index = this.buckets.findIndex((b) => b === bucket);
     const newBuckets: ImmutableBucket[] = [...this.buckets];
     if (index >= 0 && index < this.buckets.length - 1) {
       newBuckets[index] = newBuckets[index + 1];
@@ -147,18 +158,21 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     return this.withNewBuckets(newBuckets);
   }
 
-  withBucketChanged(from: ImmutableBucket, to: ImmutableBucket): ImmutablePeriod {
-    const index = this.buckets.findIndex(b => b === from);
+  withBucketChanged(
+    from: ImmutableBucket,
+    to: ImmutableBucket
+  ): ImmutablePeriod {
+    const index = this.buckets.findIndex((b) => b === from);
     if (index < 0) {
       return this;
     }
     const newBuckets = [...this.buckets];
     newBuckets[index] = to;
-    return new ImmutablePeriod({...this, buckets: newBuckets});
+    return new ImmutablePeriod({ ...this, buckets: newBuckets });
   }
 
   private bucketIndex(bucket: ImmutableBucket): number {
-    return this.buckets.findIndex(b => b === bucket);
+    return this.buckets.findIndex((b) => b === bucket);
   }
 
   withBucketDeleted(bucket: ImmutableBucket): ImmutablePeriod {
@@ -172,18 +186,23 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   private withNewPeople(people: ImmutablePerson[]): ImmutablePeriod {
-    people.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
-    return new ImmutablePeriod({...this, people});
+    people.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    return new ImmutablePeriod({ ...this, people });
   }
 
-  withObjectiveMoved(oldObj: ImmutableObjective, from: ImmutableBucket, newObj: ImmutableObjective, to: ImmutableBucket): ImmutablePeriod {
+  withObjectiveMoved(
+    oldObj: ImmutableObjective,
+    from: ImmutableBucket,
+    newObj: ImmutableObjective,
+    to: ImmutableBucket
+  ): ImmutablePeriod {
     const newBuckets = [...this.buckets];
-    const fromIdx = newBuckets.findIndex(b => b === from);
+    const fromIdx = newBuckets.findIndex((b) => b === from);
     if (fromIdx < 0) {
       throw Error('Could not find old bucket');
     }
     newBuckets[fromIdx] = newBuckets[fromIdx].withObjectiveDeleted(oldObj);
-    const toIdx = newBuckets.findIndex(b => b === to);
+    const toIdx = newBuckets.findIndex((b) => b === to);
     if (toIdx < 0) {
       throw Error('Could not find new bucket');
     }
@@ -191,12 +210,15 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     return this.withNewBuckets(newBuckets);
   }
 
-  withPersonChanged(oldPerson: ImmutablePerson, newPerson: ImmutablePerson): ImmutablePeriod {
+  withPersonChanged(
+    oldPerson: ImmutablePerson,
+    newPerson: ImmutablePerson
+  ): ImmutablePeriod {
     if (oldPerson.id !== newPerson.id) {
       // We aren't doing the assignment updates etc that would be necessary for this
       throw Error('Cannot change person id');
     }
-    const index = this.people.findIndex(p => p === oldPerson);
+    const index = this.people.findIndex((p) => p === oldPerson);
     if (index < 0) {
       return this;
     }
@@ -206,7 +228,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withNewPerson(person: ImmutablePerson): ImmutablePeriod {
-    if (this.people.find(p => p.id === person.id)) {
+    if (this.people.find((p) => p.id === person.id)) {
       throw Error('A person with id ' + person.id + ' already exists');
     }
     const newPeople = [...this.people];
@@ -215,24 +237,38 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   withPersonDeleted(person: ImmutablePerson): ImmutablePeriod {
-    const index = this.people.findIndex(p => p === person);
+    const index = this.people.findIndex((p) => p === person);
     if (index < 0) {
       return this;
     }
     const newPeople = [...this.people];
     newPeople.splice(index, 1);
     // Deleting a person requires ensuring their assignments are deleted as well
-    const newBuckets: ImmutableBucket[] = this.buckets.map(b => b.withPersonDeleted(person));
-    return new ImmutablePeriod({...this, people: newPeople, buckets: newBuckets});
+    const newBuckets: ImmutableBucket[] = this.buckets.map((b) =>
+      b.withPersonDeleted(person)
+    );
+    return new ImmutablePeriod({
+      ...this,
+      people: newPeople,
+      buckets: newBuckets,
+    });
   }
 
-  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutablePeriod {
-    const newBuckets = this.buckets.map(b => b.withGroupRenamed(groupType, oldName, newName));
+  withGroupRenamed(
+    groupType: string,
+    oldName: string,
+    newName: string
+  ): ImmutablePeriod {
+    const newBuckets = this.buckets.map((b) =>
+      b.withGroupRenamed(groupType, oldName, newName)
+    );
     return this.withNewBuckets(newBuckets);
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutablePeriod {
-    const newBuckets = this.buckets.map(b => b.withTagRenamed(oldName, newName));
+    const newBuckets = this.buckets.map((b) =>
+      b.withTagRenamed(oldName, newName)
+    );
     return this.withNewBuckets(newBuckets);
   }
 
@@ -241,7 +277,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
    */
   resourcesAllocated(): number {
     return this.buckets
-        .map(b => b.resourcesAllocated())
-        .reduce((sum, prev) => sum + prev, 0);
+      .map((b) => b.resourcesAllocated())
+      .reduce((sum, prev) => sum + prev, 0);
   }
 }

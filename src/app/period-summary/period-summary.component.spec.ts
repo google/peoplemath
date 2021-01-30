@@ -39,13 +39,9 @@ const NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
   groups: [],
   tags: [],
   notes: '',
-  assignments: [
-    new Assignment('person1', 5),
-  ],
+  assignments: [new Assignment('person1', 5)],
 };
-const BUCKETS = [new Bucket('Bucket 1', 100, [
-  NO_COMMITMENTTYPE_OBJECTIVE,
-])];
+const BUCKETS = [new Bucket('Bucket 1', 100, [NO_COMMITMENTTYPE_OBJECTIVE])];
 const TEST_PERIOD: Period = {
   id: 'periodid',
   displayName: 'Period Name',
@@ -57,41 +53,52 @@ const TEST_PERIOD: Period = {
   people: [],
   lastUpdateUUID: '',
 };
-const storageServiceSpy = jasmine.createSpyObj('StorageService', ['getTeam', 'getPeriod']);
+const storageServiceSpy = jasmine.createSpyObj('StorageService', [
+  'getTeam',
+  'getPeriod',
+]);
 
 describe('PeriodSummaryComponent', () => {
   let component: PeriodSummaryComponent;
   let fixture: ComponentFixture<PeriodSummaryComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        PeriodSummaryComponent,
-        BucketSummaryComponent,
-        ObjectiveSummaryComponent,
-        ResourceQuantityComponent,
-      ],
-      imports: [
-        RouterTestingModule,
-        MaterialModule,
-      ],
-      providers: [
-        {provide: StorageService, useValue: storageServiceSpy},
-        {provide: ActivatedRoute, useValue: {
-          paramMap: of(convertToParamMap({team: TEST_TEAM.id, period: TEST_PERIOD.id}))},
-        },
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          PeriodSummaryComponent,
+          BucketSummaryComponent,
+          ObjectiveSummaryComponent,
+          ResourceQuantityComponent,
+        ],
+        imports: [RouterTestingModule, MaterialModule],
+        providers: [
+          { provide: StorageService, useValue: storageServiceSpy },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              paramMap: of(
+                convertToParamMap({
+                  team: TEST_TEAM.id,
+                  period: TEST_PERIOD.id,
+                })
+              ),
+            },
+          },
+        ],
+      }).compileComponents();
+      storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
+      storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
     })
-    .compileComponents();
-    storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
-    storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(PeriodSummaryComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(PeriodSummaryComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -14,7 +14,10 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { EditPeriodDialogComponent, EditPeriodDialogData } from './edit-period-dialog.component';
+import {
+  EditPeriodDialogComponent,
+  EditPeriodDialogData,
+} from './edit-period-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -36,31 +39,36 @@ describe('EditPeriodDialogComponent', () => {
       buckets: [],
       lastUpdateUUID: '',
     },
-    okAction: 'OK', title: 'My Test Title', allowEditID: false,
+    okAction: 'OK',
+    title: 'My Test Title',
+    allowEditID: false,
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EditPeriodDialogComponent ],
-      imports: [
-        MaterialModule,
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-      ],
-      providers: [
-        {provide: MatDialogRef, useValue: dialogSpy},
-        {provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA},
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EditPeriodDialogComponent],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          ReactiveFormsModule,
+          BrowserAnimationsModule,
+        ],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(EditPeriodDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(EditPeriodDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -72,13 +80,13 @@ describe('EditPeriodDialogComponent', () => {
 
     component.secondaryUnitsControl.setValue('person days:7');
     expect(component.parseSecondaryUnits()).toEqual([
-      {name: 'person days', conversionFactor: 7},
+      { name: 'person days', conversionFactor: 7 },
     ]);
 
     component.secondaryUnitsControl.setValue('person days:7, person hours:168');
     expect(component.parseSecondaryUnits()).toEqual([
-      {name: 'person days', conversionFactor: 7},
-      {name: 'person hours', conversionFactor: 168},
+      { name: 'person days', conversionFactor: 7 },
+      { name: 'person hours', conversionFactor: 168 },
     ]);
   });
 });

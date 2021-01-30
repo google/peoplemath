@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,32 +24,31 @@ describe('AssignmentComponent', () => {
   let component: AssignmentComponent;
   let fixture: ComponentFixture<AssignmentComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AssignmentComponent ],
-      imports: [
-        MaterialModule,
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AssignmentComponent],
+        imports: [MaterialModule],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(AssignmentComponent);
-    component = fixture.componentInstance;
-    component.objective = ImmutableObjective.fromObjective({
-      name: 'Thing',
-      resourceEstimate: 3,
-      commitmentType: CommitmentType.Aspirational,
-      groups: [],
-      tags: [],
-      notes: '',
-      assignments: [
-        {commitment: 5, personId: 'alice'},
-      ],
-    });
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(AssignmentComponent);
+      component = fixture.componentInstance;
+      component.objective = ImmutableObjective.fromObjective({
+        name: 'Thing',
+        resourceEstimate: 3,
+        commitmentType: CommitmentType.Aspirational,
+        groups: [],
+        tags: [],
+        notes: '',
+        assignments: [{ commitment: 5, personId: 'alice' }],
+      });
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

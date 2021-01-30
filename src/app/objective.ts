@@ -15,7 +15,10 @@
 import { Assignment, ImmutableAssignment } from './assignment';
 import { ImmutablePerson } from './person';
 
-export enum CommitmentType { Aspirational = 'Aspirational', Committed = 'Committed' }
+export enum CommitmentType {
+  Aspirational = 'Aspirational',
+  Committed = 'Committed',
+}
 
 export interface ObjectiveGroup {
   groupType: string;
@@ -26,8 +29,12 @@ export class ImmutableObjectiveGroup {
   private readonly _groupType: string;
   private readonly _groupName: string;
 
-  get groupType(): string { return this._groupType; }
-  get groupName(): string { return this._groupName; }
+  get groupType(): string {
+    return this._groupType;
+  }
+  get groupName(): string {
+    return this._groupName;
+  }
 
   constructor(g: ObjectiveGroup) {
     this._groupType = g.groupType;
@@ -35,7 +42,7 @@ export class ImmutableObjectiveGroup {
   }
 
   toOriginal(): ObjectiveGroup {
-    return {groupType: this.groupType, groupName: this.groupName};
+    return { groupType: this.groupType, groupName: this.groupName };
   }
 }
 
@@ -46,14 +53,16 @@ export interface ObjectiveTag {
 export class ImmutableObjectiveTag {
   private readonly _name: string;
 
-  get name(): string { return this._name; }
+  get name(): string {
+    return this._name;
+  }
 
   constructor(t: ObjectiveTag) {
     this._name = t.name;
   }
 
   toOriginal(): ObjectiveTag {
-    return {name: this.name};
+    return { name: this.name };
   }
 }
 
@@ -105,9 +114,9 @@ export class ImmutableObjective {
       resourceEstimate: objective.resourceEstimate,
       commitmentType: objective.commitmentType,
       notes: objective.notes,
-      groups: objective.groups.map(g => new ImmutableObjectiveGroup(g)),
-      tags: objective.tags.map(t => new ImmutableObjectiveTag(t)),
-      assignments: objective.assignments.map(a => new ImmutableAssignment(a)),
+      groups: objective.groups.map((g) => new ImmutableObjectiveGroup(g)),
+      tags: objective.tags.map((t) => new ImmutableObjectiveTag(t)),
+      assignments: objective.assignments.map((a) => new ImmutableAssignment(a)),
     });
   }
 
@@ -117,43 +126,56 @@ export class ImmutableObjective {
       resourceEstimate: this.resourceEstimate,
       commitmentType: this.commitmentType,
       notes: this.notes,
-      groups: this.groups.map(g => g.toOriginal()),
-      tags: this.tags.map(t => t.toOriginal()),
-      assignments: this.assignments.map(a => a.toOriginal()),
+      groups: this.groups.map((g) => g.toOriginal()),
+      tags: this.tags.map((t) => t.toOriginal()),
+      assignments: this.assignments.map((a) => a.toOriginal()),
     };
   }
 
-  withAssignments(newAssignments: readonly ImmutableAssignment[]): ImmutableObjective {
-    return new ImmutableObjective({...this, assignments: newAssignments});
+  withAssignments(
+    newAssignments: readonly ImmutableAssignment[]
+  ): ImmutableObjective {
+    return new ImmutableObjective({ ...this, assignments: newAssignments });
   }
 
   withPersonDeleted(person: ImmutablePerson): ImmutableObjective {
-    return this.withAssignments(this.assignments.filter(a => a.personId !== person.id));
+    return this.withAssignments(
+      this.assignments.filter((a) => a.personId !== person.id)
+    );
   }
 
-  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutableObjective {
-    const index = this.groups.findIndex(g => (g.groupType === groupType && g.groupName === oldName));
+  withGroupRenamed(
+    groupType: string,
+    oldName: string,
+    newName: string
+  ): ImmutableObjective {
+    const index = this.groups.findIndex(
+      (g) => g.groupType === groupType && g.groupName === oldName
+    );
     if (index < 0) {
       return this;
     }
     const newGroups = [...this.groups];
-    newGroups[index] = new ImmutableObjectiveGroup({groupType, groupName: newName});
-    return new ImmutableObjective({...this, groups: newGroups});
+    newGroups[index] = new ImmutableObjectiveGroup({
+      groupType,
+      groupName: newName,
+    });
+    return new ImmutableObjective({ ...this, groups: newGroups });
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutableObjective {
-    const index = this.tags.findIndex(t => t.name === oldName);
+    const index = this.tags.findIndex((t) => t.name === oldName);
     if (index < 0) {
       return this;
     }
     const newTags = [...this.tags];
-    if (newTags.find(t => t.name === newName)) {
+    if (newTags.find((t) => t.name === newName)) {
       // Tag with the new name already exists. Just delete the old tag.
       newTags.splice(index, 1);
     } else {
-      newTags[index] = new ImmutableObjectiveTag({name: newName});
+      newTags[index] = new ImmutableObjectiveTag({ name: newName });
     }
-    return new ImmutableObjective({...this, tags: newTags});
+    return new ImmutableObjective({ ...this, tags: newTags });
   }
 
   /**
@@ -161,7 +183,7 @@ export class ImmutableObjective {
    */
   resourcesAllocated(): number {
     return this.assignments
-      .map(assignment => assignment.commitment)
+      .map((assignment) => assignment.commitment)
       .reduce((sum, current) => sum + current, 0);
   }
 }
@@ -169,5 +191,6 @@ export class ImmutableObjective {
 /**
  * Sum of resources allocated to a number of objectives.
  */
-export const totalResourcesAllocated = (objectives: readonly ImmutableObjective[]): number =>
-  objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);
+export const totalResourcesAllocated = (
+  objectives: readonly ImmutableObjective[]
+): number => objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);

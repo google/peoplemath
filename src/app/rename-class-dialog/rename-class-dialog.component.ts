@@ -25,15 +25,15 @@ export interface RenameClassDialogData {
 @Component({
   selector: 'app-rename-class-dialog',
   templateUrl: './rename-class-dialog.component.html',
-  styleUrls: ['./rename-class-dialog.component.css']
+  styleUrls: ['./rename-class-dialog.component.css'],
 })
 export class RenameClassDialogComponent implements OnInit {
   newName = '';
 
   constructor(
     public dialogRef: MatDialogRef<RenameClassDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: RenameClassDialogData,
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: RenameClassDialogData
+  ) {}
 
   ngOnInit(): void {
     this.newName = this.data.currentName;

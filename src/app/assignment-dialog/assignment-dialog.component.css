@@ -1,2 +1,8 @@
-table { width: 100% }
-.ellipsis-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+table {
+  width: 100%;
+}
+.ellipsis-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

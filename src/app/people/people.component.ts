@@ -12,24 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, Inject, EventEmitter, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Inject,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Person, ImmutablePerson } from '../person';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms';
+import {
+  FormControl,
+  ValidatorFn,
+  AbstractControl,
+  Validators,
+} from '@angular/forms';
 
 class PersonData {
   constructor(
-      public personDesc: string,
-      public location: string,
-      public availability: number,
-      public allocated: number,
-      public unallocated: number,
-      public assignmentCount: number,
-      public commitFraction: number,
-      public isOverallocated: boolean,
-      public person: Person,
+    public personDesc: string,
+    public location: string,
+    public availability: number,
+    public allocated: number,
+    public unallocated: number,
+    public assignmentCount: number,
+    public commitFraction: number,
+    public isOverallocated: boolean,
+    public person: Person
   ) {}
 }
 
@@ -56,24 +74,40 @@ export class PeopleComponent implements OnInit {
   @Output() delete = new EventEmitter<ImmutablePerson>();
   @ViewChild(MatSort) sort?: MatSort;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   displayedColumns(): string[] {
     const columnLabels = ['personDesc'];
-    if (this.people!.find(p => p.location)) {
+    if (this.people!.find((p) => p.location)) {
       columnLabels.push('location');
     }
-    columnLabels.push('availability', 'allocated', 'unallocated', 'assignmentCount', 'commitFraction');
+    columnLabels.push(
+      'availability',
+      'allocated',
+      'unallocated',
+      'assignmentCount',
+      'commitFraction'
+    );
     return columnLabels;
   }
 
   tableData(): MatTableDataSource<PersonData> {
-    const data = this.people!.map(p => new PersonData(p.displayNameWithUsername(), p.location, p.availability,
-      this.personAllocated(p), this.personUnallocated(p), this.personAssignmentCount(p),
-      this.personCommitFraction(p), this.isPersonOverallocated(p), p));
+    const data = this.people!.map(
+      (p) =>
+        new PersonData(
+          p.displayNameWithUsername(),
+          p.location,
+          p.availability,
+          this.personAllocated(p),
+          this.personUnallocated(p),
+          this.personAssignmentCount(p),
+          this.personCommitFraction(p),
+          this.isPersonOverallocated(p),
+          p
+        )
+    );
     const result = new MatTableDataSource(data);
     result.sort = this.sort!;
     return result;
@@ -83,7 +117,9 @@ export class PeopleComponent implements OnInit {
    * Amount of the given person's resources allocated to objectives during this period.
    */
   personAllocated(person: Person): number {
-    return this.peopleAllocations!.has(person.id) ? this.peopleAllocations!.get(person.id)! : 0;
+    return this.peopleAllocations!.has(person.id)
+      ? this.peopleAllocations!.get(person.id)!
+      : 0;
   }
 
   /**
@@ -97,7 +133,9 @@ export class PeopleComponent implements OnInit {
    * Number of distinct assignments for the person during this period.
    */
   personAssignmentCount(person: Person): number {
-    return this.peopleAssignmentCounts!.has(person.id) ? this.peopleAssignmentCounts!.get(person.id)! : 0;
+    return this.peopleAssignmentCounts!.has(person.id)
+      ? this.peopleAssignmentCounts!.get(person.id)!
+      : 0;
   }
 
   /**
@@ -108,7 +146,9 @@ export class PeopleComponent implements OnInit {
     if (!totalAllocated) {
       return 0;
     }
-    const committed = this.peopleCommittedAllocations!.has(person.id) ? this.peopleCommittedAllocations!.get(person.id)! : 0;
+    const committed = this.peopleCommittedAllocations!.has(person.id)
+      ? this.peopleCommittedAllocations!.get(person.id)!
+      : 0;
     return committed / totalAllocated;
   }
 
@@ -125,7 +165,7 @@ export class PeopleComponent implements OnInit {
    */
   defaultPersonAvailability(): number {
     const availCounts = new Map<number, number>();
-    this.people!.forEach(p => {
+    this.people!.forEach((p) => {
       if (!availCounts.get(p.availability)) {
         availCounts.set(p.availability, 0);
       }
@@ -148,13 +188,20 @@ export class PeopleComponent implements OnInit {
     }
     const person = new Person('', '', '', this.defaultPersonAvailability());
     const dialogData: EditPersonDialogData = {
-      person, unit: this.unit!, title: 'Add person', okAction: 'Add',
-      existingUserIDs: this.people!.map(p => p.id),
-      allowDelete: false, showDeleteConfirm: false,
-      allowUsernameEdit: true, onDelete: undefined,
+      person,
+      unit: this.unit!,
+      title: 'Add person',
+      okAction: 'Add',
+      existingUserIDs: this.people!.map((p) => p.id),
+      allowDelete: false,
+      showDeleteConfirm: false,
+      allowUsernameEdit: true,
+      onDelete: undefined,
     };
-    const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(ok => {
+    const dialogRef = this.dialog.open(EditPersonDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((ok) => {
       if (ok) {
         this.newPerson.emit(new ImmutablePerson(person));
       }
@@ -166,12 +213,20 @@ export class PeopleComponent implements OnInit {
       return;
     }
     const dialogData: EditPersonDialogData = {
-      person: p.toOriginal(), original: p, unit: this.unit!, title: 'Edit person "' + p.id + '"', okAction: 'OK',
+      person: p.toOriginal(),
+      original: p,
+      unit: this.unit!,
+      title: 'Edit person "' + p.id + '"',
+      okAction: 'OK',
       existingUserIDs: [], // Doesn't matter for existing people
-      allowDelete: true, showDeleteConfirm: false,
-      allowUsernameEdit: false, onDelete: this.delete,
+      allowDelete: true,
+      showDeleteConfirm: false,
+      allowUsernameEdit: false,
+      onDelete: this.delete,
     };
-    const dialogRef = this.dialog.open(EditPersonDialogComponent, {data: dialogData});
+    const dialogRef = this.dialog.open(EditPersonDialogComponent, {
+      data: dialogData,
+    });
     dialogRef.afterClosed().subscribe((ok: boolean) => {
       if (ok) {
         this.changed.emit([p, new ImmutablePerson(dialogData.person)]);
@@ -195,7 +250,7 @@ export interface EditPersonDialogData {
 
 @Component({
   selector: 'app-edit-person-dialog',
-  templateUrl: 'edit-person-dialog.html'
+  templateUrl: 'edit-person-dialog.html',
 })
 export class EditPersonDialogComponent {
   userIdControl: FormControl;
@@ -205,25 +260,35 @@ export class EditPersonDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<EditPersonDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData) {
-      this.userIdControl = new FormControl(data.person.id, [this.validateUserId, Validators.required]);
-      this.locationControl = new FormControl(data.person.location);
-      this.displayNameControl = new FormControl(data.person.displayName);
-      this.availabilityControl = new FormControl(data.person.availability);
+    @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData
+  ) {
+    this.userIdControl = new FormControl(data.person.id, [
+      this.validateUserId,
+      Validators.required,
+    ]);
+    this.locationControl = new FormControl(data.person.location);
+    this.displayNameControl = new FormControl(data.person.displayName);
+    this.availabilityControl = new FormControl(data.person.availability);
   }
 
   get validateUserId(): ValidatorFn {
     return (c: AbstractControl) => {
-      if (this.data.allowUsernameEdit && this.data.existingUserIDs.includes(c.value)) {
-        return {nonunique: true};
+      if (
+        this.data.allowUsernameEdit &&
+        this.data.existingUserIDs.includes(c.value)
+      ) {
+        return { nonunique: true };
       }
       return null;
     };
   }
 
   isDataValid(): boolean {
-    return this.userIdControl.valid && this.displayNameControl.valid
-        && this.availabilityControl.valid;
+    return (
+      this.userIdControl.valid &&
+      this.displayNameControl.valid &&
+      this.availabilityControl.valid
+    );
   }
 
   onOK(): void {

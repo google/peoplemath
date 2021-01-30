@@ -21,7 +21,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import {AppComponent} from './app.component';
+import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TeamsComponent } from './teams/teams.component';
 import { TeamPeriodsComponent } from './teamperiods/teamperiods.component';
@@ -29,7 +29,10 @@ import { PeriodComponent } from './period/period.component';
 import { StorageService } from './storage.service';
 import { BucketComponent } from './bucket/bucket.component';
 import { ObjectiveComponent } from './objective/objective.component';
-import { PeopleComponent, EditPersonDialogComponent } from './people/people.component';
+import {
+  PeopleComponent,
+  EditPersonDialogComponent,
+} from './people/people.component';
 import { AssignmentsByPersonComponent } from './assignments-by-person/assignments-by-person.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
@@ -38,7 +41,7 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
 import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
 import { ObjectiveSummaryComponent } from './objective-summary/objective-summary.component';
@@ -51,13 +54,12 @@ import { ResourceQuantityComponent } from './resource-quantity/resource-quantity
 import { RenameClassDialogComponent } from './rename-class-dialog/rename-class-dialog.component';
 import { PillComponent } from './pill/pill.component';
 import { LoginComponent } from './login/login.component';
-import {NotificationService} from './services/notification.service';
-import {AuthInterceptor} from './services/auth.interceptor';
-import {firebaseConfig} from '../environments/firebaseConfig';
-import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from '@angular/material/snack-bar';
-import {ModalComponent} from './modal/modal.component';
+import { NotificationService } from './services/notification.service';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { firebaseConfig } from '../environments/firebaseConfig';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { ModalComponent } from './modal/modal.component';
 import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
-
 
 @NgModule({
   declarations: [
@@ -101,7 +103,7 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
     FlexLayoutModule,
     HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig.firebase),
-    AngularFireAuthModule
+    AngularFireAuthModule,
   ],
   providers: [
     StorageService,
@@ -109,13 +111,13 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useValue: {duration: 2500}
-    }
+      useValue: { duration: 2500 },
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

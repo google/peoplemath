@@ -36,10 +36,9 @@ export interface AddPeriodDialogData {
 @Component({
   selector: 'app-add-period-dialog',
   templateUrl: './add-period-dialog.component.html',
-  styleUrls: ['./add-period-dialog.component.css']
+  styleUrls: ['./add-period-dialog.component.css'],
 })
 export class AddPeriodDialogComponent implements OnInit {
-
   // I'd like to switch this to use reactive forms so you can use validations,
   // but then you lose the ability to disable controls via data-driven methods,
   // which seems like a net usability loss. :-(
@@ -47,10 +46,9 @@ export class AddPeriodDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPeriodDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCancel(): void {
     this.dialogRef.close();
@@ -76,7 +74,10 @@ export class AddPeriodDialogComponent implements OnInit {
       return false;
     }
     if (this.isMaxCommittedPercentageRequired()) {
-      if (this.data.period.maxCommittedPercentage < 0 || this.data.period.maxCommittedPercentage > 100) {
+      if (
+        this.data.period.maxCommittedPercentage < 0 ||
+        this.data.period.maxCommittedPercentage > 100
+      ) {
         return false;
       }
     }
@@ -85,7 +86,11 @@ export class AddPeriodDialogComponent implements OnInit {
       if (!this.data.copyFromPeriodID) {
         return false;
       }
-      if (!this.data.existingPeriods.find(p => p.id === this.data.copyFromPeriodID)) {
+      if (
+        !this.data.existingPeriods.find(
+          (p) => p.id === this.data.copyFromPeriodID
+        )
+      ) {
         return false;
       }
     } else if (this.data.createMethod !== CreateMethod.Blank) {

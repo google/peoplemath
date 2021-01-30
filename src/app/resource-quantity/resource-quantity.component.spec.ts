@@ -23,12 +23,13 @@ describe('ResourceQuantityComponent', () => {
   let component: ResourceQuantityComponent;
   let fixture: ComponentFixture<ResourceQuantityComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ResourceQuantityComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ResourceQuantityComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResourceQuantityComponent);
@@ -40,51 +41,85 @@ describe('ResourceQuantityComponent', () => {
     // https://github.com/angular/angular/issues/12313
   });
 
-  it('should create', waitForAsync(() => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-  }));
+  it(
+    'should create',
+    waitForAsync(() => {
+      fixture.detectChanges();
+      expect(component).toBeTruthy();
+    })
+  );
 
-  it('should render primary unit', waitForAsync(() => {
-    fixture.detectChanges();
-    const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toEqual('500 things');
-  }));
+  it(
+    'should render primary unit',
+    waitForAsync(() => {
+      fixture.detectChanges();
+      const element: HTMLElement = fixture.nativeElement;
+      expect(element.textContent).toEqual('500 things');
+    })
+  );
 
-  it('should render ofQuantity', waitForAsync(() => {
-    component.ofQuantity = 1000;
-    fixture.detectChanges();
-    const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toEqual('500 of 1000 things');
-  }));
+  it(
+    'should render ofQuantity',
+    waitForAsync(() => {
+      component.ofQuantity = 1000;
+      fixture.detectChanges();
+      const element: HTMLElement = fixture.nativeElement;
+      expect(element.textContent).toEqual('500 of 1000 things');
+    })
+  );
 
-  it('should render single secondaryUnit with ofQuantity', waitForAsync(() => {
-    component.ofQuantity = 1000;
-    component.secondaryUnits = [
-      new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
-    ];
-    fixture.detectChanges();
-    const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings)');
-  }));
+  it(
+    'should render single secondaryUnit with ofQuantity',
+    waitForAsync(() => {
+      component.ofQuantity = 1000;
+      component.secondaryUnits = [
+        new ImmutableSecondaryUnit({
+          name: 'millithings',
+          conversionFactor: 0.001,
+        }),
+      ];
+      fixture.detectChanges();
+      const element: HTMLElement = fixture.nativeElement;
+      expect(element.textContent).toEqual(
+        '500 of 1000 things (0.5 of 1 millithings)'
+      );
+    })
+  );
 
-  it('should render single secondaryUnit without ofQuantity', waitForAsync(() => {
-    component.secondaryUnits = [
-      new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
-    ];
-    fixture.detectChanges();
-    const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toEqual('500 things (0.5 millithings)');
-  }));
+  it(
+    'should render single secondaryUnit without ofQuantity',
+    waitForAsync(() => {
+      component.secondaryUnits = [
+        new ImmutableSecondaryUnit({
+          name: 'millithings',
+          conversionFactor: 0.001,
+        }),
+      ];
+      fixture.detectChanges();
+      const element: HTMLElement = fixture.nativeElement;
+      expect(element.textContent).toEqual('500 things (0.5 millithings)');
+    })
+  );
 
-  it('should render multiple secondaryUnits', waitForAsync(() => {
-    component.ofQuantity = 1000;
-    component.secondaryUnits = [
-      new ImmutableSecondaryUnit({name: 'millithings', conversionFactor: 0.001}),
-      new ImmutableSecondaryUnit({name: 'centithings', conversionFactor: 0.01}),
-    ];
-    fixture.detectChanges();
-    const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toEqual('500 of 1000 things (0.5 of 1 millithings, 5 of 10 centithings)');
-  }));
+  it(
+    'should render multiple secondaryUnits',
+    waitForAsync(() => {
+      component.ofQuantity = 1000;
+      component.secondaryUnits = [
+        new ImmutableSecondaryUnit({
+          name: 'millithings',
+          conversionFactor: 0.001,
+        }),
+        new ImmutableSecondaryUnit({
+          name: 'centithings',
+          conversionFactor: 0.01,
+        }),
+      ];
+      fixture.detectChanges();
+      const element: HTMLElement = fixture.nativeElement;
+      expect(element.textContent).toEqual(
+        '500 of 1000 things (0.5 of 1 millithings, 5 of 10 centithings)'
+      );
+    })
+  );
 });

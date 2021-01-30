@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 
@@ -29,16 +34,15 @@ export class TagSummaryComponent implements OnInit {
   @Input() period?: ImmutablePeriod;
   @Input() tag?: string;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   taggedObjectives(): ImmutableObjective[] {
     const result: ImmutableObjective[] = [];
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        if (o.tags.map(t => t.name).includes(this.tag!)) {
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        if (o.tags.map((t) => t.name).includes(this.tag!)) {
           result.push(o);
         }
       });

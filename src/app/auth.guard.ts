@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,29 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router
+  Router,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from './services/auth.service';
-import {map, take, tap} from 'rxjs/operators';
-import {environment} from '../environments/environment';
+import { map, take, tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | boolean {
+    state: RouterStateSnapshot
+  ): Observable<boolean> | boolean {
     if (environment.requireAuth) {
       return this.auth.angularFireAuth.authState.pipe(
         take(1),
-        map(user => !!user),
-        tap(loggedIn => {
+        map((user) => !!user),
+        tap((loggedIn) => {
           if (!loggedIn) {
             console.log('not logged in, access denied');
             this.router.navigate(['unauthenticated']);

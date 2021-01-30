@@ -17,16 +17,18 @@
 import { Team, ImmutableTeam } from './team';
 
 describe('ImmutableTeam', () => {
-    const _mut: Team = new Team('myteam', 'My Team');
-    const team = new ImmutableTeam(_mut);
+  const _mut: Team = new Team('myteam', 'My Team');
+  const team = new ImmutableTeam(_mut);
 
-    it('should convert', () => {
-        expect(team.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(team.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        const shadow: Team = team;
-        expect(() => {shadow.displayName = 'random'; }).toThrowError(/Cannot set property displayName/);
-        expect(team.displayName).toEqual('My Team');
-    });
+  it('should be immutable', () => {
+    const shadow: Team = team;
+    expect(() => {
+      shadow.displayName = 'random';
+    }).toThrowError(/Cannot set property displayName/);
+    expect(team.displayName).toEqual('My Team');
+  });
 });

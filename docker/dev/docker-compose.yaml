@@ -1,7 +1,6 @@
 version: '3.7'
 
 services:
-
   backend:
     build:
       context: ../../
@@ -10,7 +9,7 @@ services:
       - local
     container_name: backend
     expose:
-      - "8080"
+      - '8080'
     ports:
       - 8080:8080
 

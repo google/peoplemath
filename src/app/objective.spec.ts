@@ -14,82 +14,92 @@
  * limitations under the License.
  */
 
-import { ObjectiveGroup, ImmutableObjectiveGroup, ObjectiveTag, ImmutableObjectiveTag,
-         Objective, ImmutableObjective, CommitmentType } from './objective';
+import {
+  ObjectiveGroup,
+  ImmutableObjectiveGroup,
+  ObjectiveTag,
+  ImmutableObjectiveTag,
+  Objective,
+  ImmutableObjective,
+  CommitmentType,
+} from './objective';
 import { Assignment, ImmutableAssignment } from './assignment';
 
 describe('ImmutableObjectiveGroup', () => {
-    const _mut: ObjectiveGroup = {
-        groupType: 'mytype',
-        groupName: 'myname',
-    };
-    const og = new ImmutableObjectiveGroup(_mut);
+  const _mut: ObjectiveGroup = {
+    groupType: 'mytype',
+    groupName: 'myname',
+  };
+  const og = new ImmutableObjectiveGroup(_mut);
 
-    it('should convert', () => {
-        expect(og.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(og.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        const shadow: ObjectiveGroup = og;
-        expect(() => { shadow.groupType = 'thing'; }).toThrowError(/Cannot set property groupType/);
-        expect(og.groupType).toEqual('mytype');
-    });
+  it('should be immutable', () => {
+    const shadow: ObjectiveGroup = og;
+    expect(() => {
+      shadow.groupType = 'thing';
+    }).toThrowError(/Cannot set property groupType/);
+    expect(og.groupType).toEqual('mytype');
+  });
 });
 
 describe('ImmutableObjectiveTag', () => {
-    const _mut: ObjectiveTag = {
-        name: 'mytag',
-    };
-    const tag = new ImmutableObjectiveTag(_mut);
+  const _mut: ObjectiveTag = {
+    name: 'mytag',
+  };
+  const tag = new ImmutableObjectiveTag(_mut);
 
-    it('should convert', () => {
-        expect(tag.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(tag.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        const shadow: ObjectiveTag = tag;
-        expect(() => {shadow.name = 'another'; }).toThrowError(/Cannot set property name/);
-        expect(tag.name).toEqual('mytag');
-    });
+  it('should be immutable', () => {
+    const shadow: ObjectiveTag = tag;
+    expect(() => {
+      shadow.name = 'another';
+    }).toThrowError(/Cannot set property name/);
+    expect(tag.name).toEqual('mytag');
+  });
 });
 
 describe('ImmutableObjective', () => {
-    const _mut: Objective = {
-        name: 'My Objective',
-        commitmentType: CommitmentType.Aspirational,
-        notes: 'Some notes',
-        resourceEstimate: 5,
-        groups: [{groupType: 'class', groupName: 'myclass'}],
-        tags: [{name: 'tag1'}, {name: 'tag2'}],
-        assignments: [new Assignment('alice', 1)],
-    };
-    const obj = ImmutableObjective.fromObjective(_mut);
+  const _mut: Objective = {
+    name: 'My Objective',
+    commitmentType: CommitmentType.Aspirational,
+    notes: 'Some notes',
+    resourceEstimate: 5,
+    groups: [{ groupType: 'class', groupName: 'myclass' }],
+    tags: [{ name: 'tag1' }, { name: 'tag2' }],
+    assignments: [new Assignment('alice', 1)],
+  };
+  const obj = ImmutableObjective.fromObjective(_mut);
 
-    it('should convert', () => {
-        expect(obj.toOriginal()).toEqual(_mut);
-    });
+  it('should convert', () => {
+    expect(obj.toOriginal()).toEqual(_mut);
+  });
 
-    it('should be immutable', () => {
-        // In order not to be a type system circumvention vector, the below should not compile.
-        // However, I don't know how to assert it doesn't. :(
+  it('should be immutable', () => {
+    // In order not to be a type system circumvention vector, the below should not compile.
+    // However, I don't know how to assert it doesn't. :(
+    // const shadow: Objective = obj;
+  });
 
-        // const shadow: Objective = obj;
-    });
+  it('should support new assignments', () => {
+    const assignment: Assignment = new Assignment('bob', 2);
+    const newObj = obj.withAssignments([new ImmutableAssignment(assignment)]);
+    const expected: Objective = { ..._mut, assignments: [assignment] };
+    expect(newObj.toOriginal()).toEqual(expected);
+  });
 
-    it('should support new assignments', () => {
-        const assignment: Assignment = new Assignment('bob', 2);
-        const newObj = obj.withAssignments([new ImmutableAssignment(assignment)]);
-        const expected: Objective = {..._mut, assignments: [assignment]};
-        expect(newObj.toOriginal()).toEqual(expected);
-    });
+  it('should support tag rename', () => {
+    const updated = obj.withTagRenamed('tag2', 'tag3');
+    expect(updated.tags.map((t) => t.name)).toEqual(['tag1', 'tag3']);
+  });
 
-    it('should support tag rename', () => {
-        const updated = obj.withTagRenamed('tag2', 'tag3');
-        expect(updated.tags.map(t => t.name)).toEqual(['tag1', 'tag3']);
-    });
-
-    it('should keep tags unique under rename', () => {
-        const updated = obj.withTagRenamed('tag1', 'tag2');
-        expect(updated.tags.map(t => t.name)).toEqual(['tag2']);
-    });
+  it('should keep tags unique under rename', () => {
+    const updated = obj.withTagRenamed('tag1', 'tag2');
+    expect(updated.tags.map((t) => t.name)).toEqual(['tag2']);
+  });
 });

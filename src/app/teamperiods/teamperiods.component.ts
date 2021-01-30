@@ -19,16 +19,26 @@ import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EditPeriodDialogComponent, EditPeriodDialogData } from '../edit-period-dialog/edit-period-dialog.component';
-import { EditTeamDialogComponent, EditTeamDialogData } from '../edit-team-dialog/edit-team-dialog.component';
+import {
+  EditPeriodDialogComponent,
+  EditPeriodDialogData,
+} from '../edit-period-dialog/edit-period-dialog.component';
+import {
+  EditTeamDialogComponent,
+  EditTeamDialogData,
+} from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { AddPeriodDialogData, AddPeriodDialogComponent, CreateMethod } from '../add-period-dialog/add-period-dialog.component';
+import {
+  AddPeriodDialogData,
+  AddPeriodDialogComponent,
+  CreateMethod,
+} from '../add-period-dialog/add-period-dialog.component';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { Person } from '../person';
 import { Assignment } from '../assignment';
 import { Objective } from '../objective';
-import {AuthService} from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
@@ -36,7 +46,7 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 @Component({
   selector: 'app-teamperiods',
   templateUrl: './teamperiods.component.html',
-  styleUrls: ['./teamperiods.component.css']
+  styleUrls: ['./teamperiods.component.css'],
 })
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;
@@ -48,11 +58,11 @@ export class TeamPeriodsComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    public authService: AuthService,
-  ) { }
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(m => {
+    this.route.paramMap.subscribe((m) => {
       const teamId = m.get('team');
       if (teamId) {
         this.loadDataFor(teamId);
@@ -63,48 +73,64 @@ export class TeamPeriodsComponent implements OnInit {
   loadDataFor(teamId: string): void {
     this.team = undefined;
     this.periods = undefined;
-    this.storage.getTeam(teamId).pipe(
-      catchError(error => {
-        this.snackBar.open('Could not load team "' + teamId + '": ' + error.error, 'Dismiss');
-        console.log(error);
-        return of(new Team('', ''));
-      })
-    ).subscribe((team?: Team) => {
-      if (team) {
-        this.team = new ImmutableTeam(team);
-        // TODO(#83) Replace this logic with something determined by the server, like CanAddTeam
-        if (environment.requireAuth && team.teamPermissions !== undefined) {
-          const user = this.authService.user$.getValue();
-          const userEmail = user?.email;
-          const userDomain = user?.domain;
-          const principalTypeEmail = 'email';
-          const principalTypeDomain = 'domain';
-          this.userHasEditPermissions = false;
-          team.teamPermissions.write.allow.forEach(permission => {
-            if ((permission.type === principalTypeDomain && permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
-              (permission.type === principalTypeEmail && permission.id.toLowerCase() === userEmail?.toLowerCase())) {
-              this.userHasEditPermissions = true;
-            }
-          });
+    this.storage
+      .getTeam(teamId)
+      .pipe(
+        catchError((error) => {
+          this.snackBar.open(
+            'Could not load team "' + teamId + '": ' + error.error,
+            'Dismiss'
+          );
+          console.log(error);
+          return of(new Team('', ''));
+        })
+      )
+      .subscribe((team?: Team) => {
+        if (team) {
+          this.team = new ImmutableTeam(team);
+          // TODO(#83) Replace this logic with something determined by the server, like CanAddTeam
+          if (environment.requireAuth && team.teamPermissions !== undefined) {
+            const user = this.authService.user$.getValue();
+            const userEmail = user?.email;
+            const userDomain = user?.domain;
+            const principalTypeEmail = 'email';
+            const principalTypeDomain = 'domain';
+            this.userHasEditPermissions = false;
+            team.teamPermissions.write.allow.forEach((permission) => {
+              if (
+                (permission.type === principalTypeDomain &&
+                  permission.id.toLowerCase() === userDomain?.toLowerCase()) ||
+                (permission.type === principalTypeEmail &&
+                  permission.id.toLowerCase() === userEmail?.toLowerCase())
+              ) {
+                this.userHasEditPermissions = true;
+              }
+            });
+          }
+        } else {
+          this.team = undefined;
         }
-      } else {
-        this.team = undefined;
-      }
-    });
+      });
 
-    this.storage.getPeriods(teamId).pipe(
-      catchError(error => {
-        this.snackBar.open('Could not load periods for team "' + teamId + '": ' + error.error, 'Dismiss');
-        console.log(error);
-        return of([]);
-      })
-    ).subscribe((periods?: Period[]) => {
-      if (periods) {
-        this.periods = periods.map(p => ImmutablePeriod.fromPeriod(p));
-      } else {
-        this.periods = undefined;
-      }
-    });
+    this.storage
+      .getPeriods(teamId)
+      .pipe(
+        catchError((error) => {
+          this.snackBar.open(
+            'Could not load periods for team "' + teamId + '": ' + error.error,
+            'Dismiss'
+          );
+          console.log(error);
+          return of([]);
+        })
+      )
+      .subscribe((periods?: Period[]) => {
+        if (periods) {
+          this.periods = periods.map((p) => ImmutablePeriod.fromPeriod(p));
+        } else {
+          this.periods = undefined;
+        }
+      });
   }
 
   isLoaded(): boolean {
@@ -113,7 +139,9 @@ export class TeamPeriodsComponent implements OnInit {
 
   sortedPeriods(): ImmutablePeriod[] {
     const result = this.periods!.slice();
-    result.sort((a, b) => a.displayName < b.displayName ? 1 : (a.displayName > b.displayName ? -1 : 0));
+    result.sort((a, b) =>
+      a.displayName < b.displayName ? 1 : a.displayName > b.displayName ? -1 : 0
+    );
     return result;
   }
 
@@ -144,8 +172,10 @@ export class TeamPeriodsComponent implements OnInit {
       copyObjectives: false,
       copyAssignments: false,
     };
-    const dialogRef = this.dialog.open(AddPeriodDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(data => {
+    const dialogRef = this.dialog.open(AddPeriodDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((data) => {
       if (!data) {
         return;
       }
@@ -153,20 +183,36 @@ export class TeamPeriodsComponent implements OnInit {
       if (data.createMethod === CreateMethod.Blank) {
         newPeriod = data.period;
       } else if (data.createMethod === CreateMethod.Copy) {
-        const copiedPeriod = this.periods!.find(p => p.id === data.copyFromPeriodID);
+        const copiedPeriod = this.periods!.find(
+          (p) => p.id === data.copyFromPeriodID
+        );
         if (!copiedPeriod) {
-          console.error('Cannot find period with ID "' + data.copyFromPeriodID + '"');
+          console.error(
+            'Cannot find period with ID "' + data.copyFromPeriodID + '"'
+          );
           return;
         }
         newPeriod = {
           id: data.period.id,
           displayName: data.period.displayName,
           unit: data.copyUnit ? copiedPeriod.unit : data.period.unit,
-          secondaryUnits: data.copyUnit ? copiedPeriod.secondaryUnits : data.period.secondaryUnits,
+          secondaryUnits: data.copyUnit
+            ? copiedPeriod.secondaryUnits
+            : data.period.secondaryUnits,
           notesURL: data.period.notesURL,
-          maxCommittedPercentage: data.copyUnit ? copiedPeriod.maxCommittedPercentage : data.period.maxCommittedPercentage,
-          buckets: data.copyBuckets ? this.copyBuckets(copiedPeriod.buckets, data.copyObjectives, data.copyAssignments) : [],
-          people: data.copyPeople ? copiedPeriod.people.map(p => p.toOriginal()) : [],
+          maxCommittedPercentage: data.copyUnit
+            ? copiedPeriod.maxCommittedPercentage
+            : data.period.maxCommittedPercentage,
+          buckets: data.copyBuckets
+            ? this.copyBuckets(
+                copiedPeriod.buckets,
+                data.copyObjectives,
+                data.copyAssignments
+              )
+            : [],
+          people: data.copyPeople
+            ? copiedPeriod.people.map((p) => p.toOriginal())
+            : [],
           lastUpdateUUID: '',
         };
       } else {
@@ -185,7 +231,11 @@ export class TeamPeriodsComponent implements OnInit {
     return result;
   }
 
-  copyBuckets(orig: readonly ImmutableBucket[], copyObjectives: boolean, copyAssignments: boolean): Bucket[] {
+  copyBuckets(
+    orig: readonly ImmutableBucket[],
+    copyObjectives: boolean,
+    copyAssignments: boolean
+  ): Bucket[] {
     const result = [];
     for (const b of orig) {
       const objectives: Objective[] = [];
@@ -202,13 +252,15 @@ export class TeamPeriodsComponent implements OnInit {
             resourceEstimate: o.resourceEstimate,
             commitmentType: o.commitmentType,
             notes: o.notes,
-            groups: o.groups.map(g => g.toOriginal()),
-            tags: o.tags.map(t => t.toOriginal()),
+            groups: o.groups.map((g) => g.toOriginal()),
+            tags: o.tags.map((t) => t.toOriginal()),
             assignments,
           });
         }
       }
-      result.push(new Bucket(b.displayName, b.allocationPercentage, objectives));
+      result.push(
+        new Bucket(b.displayName, b.allocationPercentage, objectives)
+      );
     }
     return result;
   }
@@ -230,8 +282,10 @@ export class TeamPeriodsComponent implements OnInit {
       okAction: 'Add',
       allowEditID: true,
     };
-    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(ok => {
+    const dialogRef = this.dialog.open(EditPeriodDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((ok) => {
       if (ok) {
         this.storeNewPeriod(dialogData.period);
       }
@@ -239,18 +293,26 @@ export class TeamPeriodsComponent implements OnInit {
   }
 
   storeNewPeriod(period: Period): void {
-    this.storage.addPeriod(this.team!.id, period).pipe(
-      catchError(error => {
-        this.snackBar.open('Could not save new period: ' + error.error, 'Dismiss');
-        console.log(error);
-        return of(undefined);
-      })
-    ).subscribe(updateResponse => {
-      if (updateResponse) {
-        period.lastUpdateUUID = updateResponse.lastUpdateUUID;
-        this.periods = this.periods!.concat([ImmutablePeriod.fromPeriod(period)]);
-      }
-    });
+    this.storage
+      .addPeriod(this.team!.id, period)
+      .pipe(
+        catchError((error) => {
+          this.snackBar.open(
+            'Could not save new period: ' + error.error,
+            'Dismiss'
+          );
+          console.log(error);
+          return of(undefined);
+        })
+      )
+      .subscribe((updateResponse) => {
+        if (updateResponse) {
+          period.lastUpdateUUID = updateResponse.lastUpdateUUID;
+          this.periods = this.periods!.concat([
+            ImmutablePeriod.fromPeriod(period),
+          ]);
+        }
+      });
   }
 
   editTeam(): void {
@@ -261,20 +323,28 @@ export class TeamPeriodsComponent implements OnInit {
       allowCancel: false,
       allowEditID: false,
     };
-    const dialogRef = this.dialog.open(EditTeamDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(team => {
-      this.storage.updateTeam(team).pipe(
-        catchError(error => {
-          this.snackBar.open('Could not save team: ' + error.error, 'Dismiss');
-          console.log(error);
-          return of('error');
-        })
-      ).subscribe(res => {
-        if (res !== 'error') {
-          this.snackBar.open('Saved', '', {duration: 2000});
-          this.team = new ImmutableTeam(team);
-        }
-      });
+    const dialogRef = this.dialog.open(EditTeamDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((team) => {
+      this.storage
+        .updateTeam(team)
+        .pipe(
+          catchError((error) => {
+            this.snackBar.open(
+              'Could not save team: ' + error.error,
+              'Dismiss'
+            );
+            console.log(error);
+            return of('error');
+          })
+        )
+        .subscribe((res) => {
+          if (res !== 'error') {
+            this.snackBar.open('Saved', '', { duration: 2000 });
+            this.team = new ImmutableTeam(team);
+          }
+        });
     });
   }
 }

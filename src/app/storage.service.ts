@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Injectable } from '@angular/core';
-import {Team, TeamList} from './team';
+import { Team, TeamList } from './team';
 import { Period } from './period';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -21,8 +21,7 @@ import { ObjectUpdateResponse } from './objectupdateresponse';
 
 @Injectable()
 export class StorageService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTeams(): Observable<TeamList> {
     return this.http.get<TeamList>('/api/team/');
@@ -33,12 +32,16 @@ export class StorageService {
   }
 
   addTeam(team: Team): Observable<unknown> {
-    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    };
     return this.http.post('/api/team/', team, options);
   }
 
   updateTeam(team: Team): Observable<unknown> {
-    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+    const options = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    };
     return this.http.put('/api/team/' + team.id, team, options);
   }
 
@@ -51,12 +54,27 @@ export class StorageService {
   }
 
   addPeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
-    return this.http.post<ObjectUpdateResponse>('/api/period/' + teamId + '/', period, options);
+    const options = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    };
+    return this.http.post<ObjectUpdateResponse>(
+      '/api/period/' + teamId + '/',
+      period,
+      options
+    );
   }
 
-  updatePeriod(teamId: string, period: Period): Observable<ObjectUpdateResponse> {
-    const options = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
-    return this.http.put<ObjectUpdateResponse>('/api/period/' + teamId + '/' + period.id, period, options);
+  updatePeriod(
+    teamId: string,
+    period: Period
+  ): Observable<ObjectUpdateResponse> {
+    const options = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    };
+    return this.http.put<ObjectUpdateResponse>(
+      '/api/period/' + teamId + '/' + period.id,
+      period,
+      options
+    );
   }
 }
