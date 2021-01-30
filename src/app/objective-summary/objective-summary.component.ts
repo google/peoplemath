@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { ImmutableSecondaryUnit } from '../period';
 
@@ -30,10 +35,9 @@ export class ObjectiveSummaryComponent implements OnInit {
   @Input() unit?: string;
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   allocatedResources(): number {
     return this.objective!.resourcesAllocated();
@@ -43,7 +47,9 @@ export class ObjectiveSummaryComponent implements OnInit {
     if (this.isRejected()) {
       return this.objective!.resourceEstimate + '';
     } else if (this.isPartiallyAllocated()) {
-      return this.allocatedResources() + ' of ' + this.objective!.resourceEstimate;
+      return (
+        this.allocatedResources() + ' of ' + this.objective!.resourceEstimate
+      );
     } else {
       return this.allocatedResources() + '';
     }
@@ -54,11 +60,16 @@ export class ObjectiveSummaryComponent implements OnInit {
   }
 
   isPartiallyAllocated(): boolean {
-    return !this.isRejected() && this.allocatedResources() < this.objective!.resourceEstimate;
+    return (
+      !this.isRejected() &&
+      this.allocatedResources() < this.objective!.resourceEstimate
+    );
   }
 
   isCommittedAndFullyAllocated(): boolean {
-    return this.objective!.commitmentType === CommitmentType.Committed &&
-      this.allocatedResources() >= this.objective!.resourceEstimate;
+    return (
+      this.objective!.commitmentType === CommitmentType.Committed &&
+      this.allocatedResources() >= this.objective!.resourceEstimate
+    );
   }
 }

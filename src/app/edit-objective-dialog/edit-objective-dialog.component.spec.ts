@@ -14,8 +14,14 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { EditObjectiveDialogComponent, EditObjectiveDialogData, makeEditedObjective,
-         makeTags, makeGroups, EditedObjective } from './edit-objective-dialog.component';
+import {
+  EditObjectiveDialogComponent,
+  EditObjectiveDialogData,
+  makeEditedObjective,
+  makeTags,
+  makeGroups,
+  EditedObjective,
+} from './edit-objective-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -31,12 +37,10 @@ describe('EditObjectiveDialogComponent', () => {
     resourceEstimate: 17,
     commitmentType: CommitmentType.Aspirational,
     groups: [
-      {groupType: 'G1', groupName: 'v1'},
-      {groupType: 'G2', groupName: 'v2'},
+      { groupType: 'G1', groupName: 'v1' },
+      { groupType: 'G2', groupName: 'v2' },
     ],
-    tags: [
-      {name: 't1'}, {name: 't2'},
-    ],
+    tags: [{ name: 't1' }, { name: 't2' }],
     notes: '',
     assignments: [],
   });
@@ -51,27 +55,26 @@ describe('EditObjectiveDialogComponent', () => {
     onDelete: undefined,
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EditObjectiveDialogComponent ],
-      imports: [
-        MaterialModule,
-        FormsModule,
-        BrowserAnimationsModule,
-      ],
-      providers: [
-        {provide: MatDialogRef, useValue: dialogSpy},
-        {provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA},
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EditObjectiveDialogComponent],
+        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(EditObjectiveDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(EditObjectiveDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -79,17 +82,27 @@ describe('EditObjectiveDialogComponent', () => {
 
   it('should convert tags as expected', () => {
     expect(makeTags('')).toEqual([]);
-    expect(makeTags('single')).toEqual([{name: 'single'}]);
-    expect(makeTags('one, two ,three ')).toEqual([{name: 'one'}, {name: 'two'}, {name: 'three'}]);
+    expect(makeTags('single')).toEqual([{ name: 'single' }]);
+    expect(makeTags('one, two ,three ')).toEqual([
+      { name: 'one' },
+      { name: 'two' },
+      { name: 'three' },
+    ]);
   });
 
   it('should convert groups as expected', () => {
     expect(makeGroups('')).toEqual([]);
-    expect(makeGroups('Single:val')).toEqual([{groupType: 'Single', groupName: 'val'}]);
+    expect(makeGroups('Single:val')).toEqual([
+      { groupType: 'Single', groupName: 'val' },
+    ]);
     expect(makeGroups('G1:val1, G2: val2')).toEqual([
-      {groupType: 'G1', groupName: 'val1'}, {groupType: 'G2', groupName: 'val2'}]);
+      { groupType: 'G1', groupName: 'val1' },
+      { groupType: 'G2', groupName: 'val2' },
+    ]);
     expect(makeGroups('val1,G2:val2')).toEqual([
-      {groupType: 'Group', groupName: 'val1'}, {groupType: 'G2', groupName: 'val2'}]);
+      { groupType: 'Group', groupName: 'val1' },
+      { groupType: 'G2', groupName: 'val2' },
+    ]);
   });
 
   it('should create editable objective as expected', () => {

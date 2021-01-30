@@ -1,17 +1,17 @@
 .pill {
-    display: inline-block;
-    padding: .3em .6em .3em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: text-bottom;
-    border-radius: 10rem;
-    margin-right: .6em;
+  display: inline-block;
+  padding: 0.3em 0.6em 0.3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: text-bottom;
+  border-radius: 10rem;
+  margin-right: 0.6em;
 }
 
 .pill-primary {
-    color: white;
-    background-color: #674ab7;
+  color: white;
+  background-color: #674ab7;
 }

@@ -27,16 +27,15 @@ export interface EditTeamDialogData {
 @Component({
   selector: 'app-edit-team-dialog',
   templateUrl: './edit-team-dialog.component.html',
-  styleUrls: ['./edit-team-dialog.component.css']
+  styleUrls: ['./edit-team-dialog.component.css'],
 })
 export class EditTeamDialogComponent implements OnInit {
-
   constructor(
     public dialogRef: MatDialogRef<EditTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTeamDialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: EditTeamDialogData
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCancel(): void {
     this.dialogRef.close();

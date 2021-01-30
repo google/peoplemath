@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Google LLC
+ * Copyright 2019-2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,31 +24,31 @@ describe('ObjectiveSummaryComponent', () => {
   let component: ObjectiveSummaryComponent;
   let fixture: ComponentFixture<ObjectiveSummaryComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ObjectiveSummaryComponent,
-        ResourceQuantityComponent,
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ObjectiveSummaryComponent, ResourceQuantityComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(ObjectiveSummaryComponent);
-    component = fixture.componentInstance;
-    component.objective = ImmutableObjective.fromObjective({
-      name: '',
-      resourceEstimate: 0,
-      commitmentType: CommitmentType.Aspirational,
-      groups: [],
-      tags: [],
-      notes: '',
-      assignments: [],
-    });
-    component.unit = '';
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(ObjectiveSummaryComponent);
+      component = fixture.componentInstance;
+      component.objective = ImmutableObjective.fromObjective({
+        name: '',
+        resourceEstimate: 0,
+        commitmentType: CommitmentType.Aspirational,
+        groups: [],
+        tags: [],
+        notes: '',
+        assignments: [],
+      });
+      component.unit = '';
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

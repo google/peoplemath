@@ -1,5 +1,18 @@
-.editor-options { position: fixed; bottom: 30px; right: 50px; z-index: 999; }
-.editor-options button { margin-left: 20px }
-.title-buttons { margin-left: 20px }
-.title-buttons a { margin-right: 10px; }
-.period-title { margin-bottom: 0 }
+.editor-options {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  z-index: 999;
+}
+.editor-options button {
+  margin-left: 20px;
+}
+.title-buttons {
+  margin-left: 20px;
+}
+.title-buttons a {
+  margin-right: 10px;
+}
+.period-title {
+  margin-bottom: 0;
+}

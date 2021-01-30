@@ -10,11 +10,14 @@ Pull requests will not be accepted if they cause the continuous build to fail
 
 Here is a list of checks run, and ways to make sure they pass while developing:
 
-* Go backend tests must pass (run `go test ./...` from the `backend` directory)
-* Angular tests must pass (keep `ng test` running in the background)
-* Angular lint checks must pass (run `ng lint` - adding `--fix` will
+- Go backend tests must pass (run `go test ./...` from the `backend` directory)
+- Angular tests must pass (keep `ng test` running in the background)
+- Angular lint checks must pass (run `ng lint` - adding `--fix` will
   automatically fix many problems for you)
-* Go code must be formatted according to [the `gofmt`
+- Non-Go files must be formatted according to [Prettier](https://prettier.io).
+  Either run `npx prettier --write .` from the root of the repo or [set up
+  editor integration](https://prettier.io/docs/en/editors.html).
+- Go code must be formatted according to [the `gofmt`
   command](https://golang.org/cmd/gofmt/) (many editors can be configured to do
   this automatically on save - for example [see
   here](https://code.visualstudio.com/docs/languages/go#_formatting) for Visual

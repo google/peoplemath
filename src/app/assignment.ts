@@ -13,25 +13,26 @@
 // limitations under the License.
 
 export class Assignment {
-    constructor(
-        public personId: string,
-        public commitment: number,
-    ) {}
+  constructor(public personId: string, public commitment: number) {}
 }
 
 export class ImmutableAssignment {
-    private _personId: string;
-    private _commitment: number;
+  private _personId: string;
+  private _commitment: number;
 
-    get personId(): string { return this._personId; }
-    get commitment(): number { return this._commitment; }
+  get personId(): string {
+    return this._personId;
+  }
+  get commitment(): number {
+    return this._commitment;
+  }
 
-    constructor(a: Assignment) {
-        this._personId = a.personId;
-        this._commitment = a.commitment;
-    }
+  constructor(a: Assignment) {
+    this._personId = a.personId;
+    this._commitment = a.commitment;
+  }
 
-    toOriginal(): Assignment {
-        return new Assignment(this.personId, this.commitment);
-    }
+  toOriginal(): Assignment {
+    return new Assignment(this.personId, this.commitment);
+  }
 }

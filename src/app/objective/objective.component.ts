@@ -12,13 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
 import { MatDialog } from '@angular/material/dialog';
-import { PersonAssignmentData, AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
-import { EditObjectiveDialogComponent, EditObjectiveDialogData,
-         makeEditedObjective } from '../edit-objective-dialog/edit-objective-dialog.component';
+import {
+  PersonAssignmentData,
+  AssignmentDialogComponent,
+  AssignmentDialogData,
+} from '../assignment-dialog/assignment-dialog.component';
+import {
+  EditObjectiveDialogComponent,
+  EditObjectiveDialogData,
+  makeEditedObjective,
+} from '../edit-objective-dialog/edit-objective-dialog.component';
 import { ImmutableBucket } from '../bucket';
 
 @Component({
@@ -37,18 +51,23 @@ export class ObjectiveComponent implements OnInit {
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Input() bucketAllocationLimit?: number;
   @Input() resourcesCumulativeSum?: number;
-  @Output() moveBucket = new EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>();
+  @Output() moveBucket = new EventEmitter<
+    [ImmutableObjective, ImmutableObjective, ImmutableBucket]
+  >();
   @Output() delete = new EventEmitter<ImmutableObjective>();
-  @Output() changed = new EventEmitter<[ImmutableObjective, ImmutableObjective]>();
+  @Output() changed = new EventEmitter<
+    [ImmutableObjective, ImmutableObjective]
+  >();
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   hasPeopleAvailable(): boolean {
-    return !!this.objective!.assignments.find(a => a.commitment > 0) ||
-      !!Array.from(this.unallocatedTime!.values()).find(t => t > 0);
+    return (
+      !!this.objective!.assignments.find((a) => a.commitment > 0) ||
+      !!Array.from(this.unallocatedTime!.values()).find((t) => t > 0)
+    );
   }
 
   isFullyAllocated(): boolean {
@@ -57,23 +76,28 @@ export class ObjectiveComponent implements OnInit {
 
   isOverAllocated(): boolean {
     // Use a small increment here to avoid potential floating-point issues
-    return this.totalAssignedResources() > this.objective!.resourceEstimate + 1e-6;
+    return (
+      this.totalAssignedResources() > this.objective!.resourceEstimate + 1e-6
+    );
   }
 
   assignmentSummary(): string {
-    return this.objective!.assignments.filter(a => a.commitment > 0)
-        .map(a => a.personId + ': ' + a.commitment).join(', ');
+    return this.objective!.assignments.filter((a) => a.commitment > 0)
+      .map((a) => a.personId + ': ' + a.commitment)
+      .join(', ');
   }
 
   totalAssignedResources(): number {
-    return this.objective!.assignments.map(a => a.commitment)
-        .reduce((sum, current) => sum + current, 0);
+    return this.objective!.assignments.map((a) => a.commitment).reduce(
+      (sum, current) => sum + current,
+      0
+    );
   }
 
   currentAssignment(personId: string): number {
-    return this.objective!.assignments.filter(a => a.personId === personId)
-        .map(a => a.commitment)
-        .reduce((sum, current) => sum + current, 0);
+    return this.objective!.assignments.filter((a) => a.personId === personId)
+      .map((a) => a.commitment)
+      .reduce((sum, current) => sum + current, 0);
   }
 
   personAssignmentData(): PersonAssignmentData[] {
@@ -99,17 +123,22 @@ export class ObjectiveComponent implements OnInit {
       objective: this.objective!.toOriginal(),
       people: this.personAssignmentData(),
       unit: this.unit!,
-      columns: ['person', 'available', 'assign', 'actions']};
+      columns: ['person', 'available', 'assign', 'actions'],
+    };
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
       width: '700px',
-      data: dialogData});
+      data: dialogData,
+    });
     dialogRef.afterClosed().subscribe((result?: AssignmentDialogData) => {
       if (!result) {
         return;
       }
-      const newAssignments = result.people.filter((pad: PersonAssignmentData) => pad.assign > 0)
-          .map((pad: PersonAssignmentData) => new ImmutableAssignment(
-            new Assignment(pad.username, pad.assign)));
+      const newAssignments = result.people
+        .filter((pad: PersonAssignmentData) => pad.assign > 0)
+        .map(
+          (pad: PersonAssignmentData) =>
+            new ImmutableAssignment(new Assignment(pad.username, pad.assign))
+        );
       const newObjective = this.objective!.withAssignments(newAssignments);
       this.changed.emit([this.objective!, newObjective]);
     });
@@ -129,8 +158,10 @@ export class ObjectiveComponent implements OnInit {
       onMoveBucket: this.moveBucket,
       onDelete: this.delete,
     };
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {data: dialogData});
-    dialogRef.afterClosed().subscribe(newObjective => {
+    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {
+      data: dialogData,
+    });
+    dialogRef.afterClosed().subscribe((newObjective) => {
       if (newObjective) {
         this.changed.emit([this.objective!, newObjective]);
       }
@@ -146,21 +177,24 @@ export class ObjectiveComponent implements OnInit {
   }
 
   enableAssignButton(): boolean {
-    return !!this.isEditingEnabled &&
-        (this.objective!.resourceEstimate > 0 || this.objective!.assignments.length > 0) &&
-        this.hasPeopleAvailable();
+    return (
+      !!this.isEditingEnabled &&
+      (this.objective!.resourceEstimate > 0 ||
+        this.objective!.assignments.length > 0) &&
+      this.hasPeopleAvailable()
+    );
   }
 
   getCumulativeSumClass(): string {
     if (this.resourcesCumulativeSum! < this.bucketAllocationLimit!) {
       return 'resource-csum-ok';
-    }
-    else if (this.resourcesCumulativeSum! - this.objective?.resourceEstimate! <= this.bucketAllocationLimit!) {
+    } else if (
+      this.resourcesCumulativeSum! - this.objective?.resourceEstimate! <=
+      this.bucketAllocationLimit!
+    ) {
       return 'resource-csum-marginal';
-    }
-    else {
+    } else {
       return 'resource-csum-excess';
     }
   }
-
 }

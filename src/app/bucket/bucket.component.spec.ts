@@ -19,32 +19,36 @@ import { FormsModule } from '@angular/forms';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { MaterialModule } from '../material/material.module';
-import {DisplayObjectivesPipe} from './displayobjectives.pipe';
+import { DisplayObjectivesPipe } from './displayobjectives.pipe';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
   let fixture: ComponentFixture<BucketComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        BucketComponent,
-        ObjectiveComponent,
-        DisplayObjectivesPipe
-      ],
-      imports: [ FormsModule, MaterialModule ],
-      providers: [
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          BucketComponent,
+          ObjectiveComponent,
+          DisplayObjectivesPipe,
+        ],
+        imports: [FormsModule, MaterialModule],
+        providers: [],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(BucketComponent);
-    component = fixture.componentInstance;
-    component.bucket = ImmutableBucket.fromBucket(new Bucket('test bucket', 100, []));
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(BucketComponent);
+      component = fixture.componentInstance;
+      component.bucket = ImmutableBucket.fromBucket(
+        new Bucket('test bucket', 100, [])
+      );
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -28,21 +28,23 @@ export interface EditBucketDialogData {
 @Component({
   selector: 'app-edit-bucket-dialog',
   templateUrl: './edit-bucket-dialog.component.html',
-  styleUrls: ['./edit-bucket-dialog.component.css']
+  styleUrls: ['./edit-bucket-dialog.component.css'],
 })
 export class EditBucketDialogComponent implements OnInit {
-
   constructor(
     public dialogRef: MatDialogRef<EditBucketDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData
+  ) {}
 
   showDeleteConfirm = false;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   isDataValid(): boolean {
-    return this.data.bucket.allocationPercentage >= 0 && this.data.bucket.allocationPercentage <= 100;
+    return (
+      this.data.bucket.allocationPercentage >= 0 &&
+      this.data.bucket.allocationPercentage <= 100
+    );
   }
 
   onCancel(): void {

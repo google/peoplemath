@@ -19,7 +19,7 @@ export class Bucket {
   constructor(
     public displayName: string,
     public allocationPercentage: number,
-    public objectives: Objective[],
+    public objectives: Objective[]
   ) {}
 }
 
@@ -31,8 +31,10 @@ export class ImmutableBucket {
   readonly objectives: readonly ImmutableObjective[];
 
   private constructor(
-    displayName: string, allocationPercentage: number,
-    objectives: readonly ImmutableObjective[]) {
+    displayName: string,
+    allocationPercentage: number,
+    objectives: readonly ImmutableObjective[]
+  ) {
     this.displayName = displayName;
     this.allocationPercentage = allocationPercentage;
     this.objectives = objectives;
@@ -40,18 +42,28 @@ export class ImmutableBucket {
 
   static fromBucket(bucket: Bucket): ImmutableBucket {
     return new ImmutableBucket(
-      bucket.displayName, bucket.allocationPercentage,
-      bucket.objectives.map(o => ImmutableObjective.fromObjective(o)));
+      bucket.displayName,
+      bucket.allocationPercentage,
+      bucket.objectives.map((o) => ImmutableObjective.fromObjective(o))
+    );
   }
 
   toOriginal(): Bucket {
     return new Bucket(
-      this.displayName, this.allocationPercentage,
-      this.objectives.map(o => o.toOriginal()));
+      this.displayName,
+      this.allocationPercentage,
+      this.objectives.map((o) => o.toOriginal())
+    );
   }
 
-  withNewObjectives(newObjectives: readonly ImmutableObjective[]): ImmutableBucket {
-    return new ImmutableBucket(this.displayName, this.allocationPercentage, newObjectives);
+  withNewObjectives(
+    newObjectives: readonly ImmutableObjective[]
+  ): ImmutableBucket {
+    return new ImmutableBucket(
+      this.displayName,
+      this.allocationPercentage,
+      newObjectives
+    );
   }
 
   withNewObjective(objective: ImmutableObjective): ImmutableBucket {
@@ -59,7 +71,7 @@ export class ImmutableBucket {
   }
 
   private objectiveIndex(objective: ImmutableObjective): number {
-    return this.objectives.findIndex(o => o === objective);
+    return this.objectives.findIndex((o) => o === objective);
   }
 
   withObjectiveDeleted(objective: ImmutableObjective): ImmutableBucket {
@@ -72,7 +84,10 @@ export class ImmutableBucket {
     return this.withNewObjectives(newObjectives);
   }
 
-  withObjectiveChanged(original: ImmutableObjective, newObjective: ImmutableObjective): ImmutableBucket {
+  withObjectiveChanged(
+    original: ImmutableObjective,
+    newObjective: ImmutableObjective
+  ): ImmutableBucket {
     const index = this.objectiveIndex(original);
     if (index < 0) {
       return this;
@@ -83,17 +98,27 @@ export class ImmutableBucket {
   }
 
   withPersonDeleted(person: ImmutablePerson): ImmutableBucket {
-    const newObjectives = this.objectives.map(o => o.withPersonDeleted(person));
+    const newObjectives = this.objectives.map((o) =>
+      o.withPersonDeleted(person)
+    );
     return this.withNewObjectives(newObjectives);
   }
 
-  withGroupRenamed(groupType: string, oldName: string, newName: string): ImmutableBucket {
-    const newObjectives = this.objectives.map(o => o.withGroupRenamed(groupType, oldName, newName));
+  withGroupRenamed(
+    groupType: string,
+    oldName: string,
+    newName: string
+  ): ImmutableBucket {
+    const newObjectives = this.objectives.map((o) =>
+      o.withGroupRenamed(groupType, oldName, newName)
+    );
     return this.withNewObjectives(newObjectives);
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutableBucket {
-    const newObjectives = this.objectives.map(o => o.withTagRenamed(oldName, newName));
+    const newObjectives = this.objectives.map((o) =>
+      o.withTagRenamed(oldName, newName)
+    );
     return this.withNewObjectives(newObjectives);
   }
 
@@ -102,7 +127,7 @@ export class ImmutableBucket {
    */
   resourcesAllocated(): number {
     return this.objectives
-      .map(o => o.resourcesAllocated())
+      .map((o) => o.resourcesAllocated())
       .reduce((sum, current) => sum + current, 0);
   }
 
@@ -110,8 +135,9 @@ export class ImmutableBucket {
    * Sum of resources allocated to committed resources within the bucket.
    */
   committedResourcesAllocated(): number {
-    return this.objectives.filter(o => o.commitmentType === CommitmentType.Committed)
-        .map(o => o.resourcesAllocated())
-        .reduce((sum, current) => sum + current, 0);
+    return this.objectives
+      .filter((o) => o.commitmentType === CommitmentType.Committed)
+      .map((o) => o.resourcesAllocated())
+      .reduce((sum, current) => sum + current, 0);
   }
 }

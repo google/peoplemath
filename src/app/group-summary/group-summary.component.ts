@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
@@ -32,18 +37,19 @@ export class GroupSummaryComponent implements OnInit {
   showObjectives = false;
   showByBucket = true;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  bucketObjectivesByGroup(bucket: ImmutableBucket): Array<[string, ImmutableObjective[]]> {
+  bucketObjectivesByGroup(
+    bucket: ImmutableBucket
+  ): Array<[string, ImmutableObjective[]]> {
     // We order groups by the order the first item from each appears within the bucket
     const groupOrder: string[] = [];
     const obsByGroup = new Map<string, ImmutableObjective[]>();
     const noGroup: ImmutableObjective[] = [];
-    bucket.objectives.forEach(o => {
-      const gs = o.groups.filter(g => g.groupType === this.groupType);
+    bucket.objectives.forEach((o) => {
+      const gs = o.groups.filter((g) => g.groupType === this.groupType);
       if (gs.length > 0) {
         const groupName = gs[0].groupName;
         if (obsByGroup.has(groupName)) {
@@ -60,7 +66,9 @@ export class GroupSummaryComponent implements OnInit {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    const result: Array<[string, ImmutableObjective[]]> = groupOrder.map(g => [g, obsByGroup.get(g)!]);
+    const result: Array<
+      [string, ImmutableObjective[]]
+    > = groupOrder.map((g) => [g, obsByGroup.get(g)!]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
@@ -70,12 +78,14 @@ export class GroupSummaryComponent implements OnInit {
   allObjectivesByGroup(): Array<[string, ImmutableObjective[]]> {
     const obsByGroup = new Map<string, ImmutableObjective[]>();
     const noGroup: ImmutableObjective[] = [];
-    this.period!.buckets.forEach(b => {
-      b.objectives.forEach(o => {
-        const gs = o.groups.filter(g => g.groupType === this.groupType);
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        const gs = o.groups.filter((g) => g.groupType === this.groupType);
         if (gs.length > 0) {
           const groupName = gs[0].groupName;
-          const obs = obsByGroup.has(groupName) ? obsByGroup.get(groupName)! : [];
+          const obs = obsByGroup.has(groupName)
+            ? obsByGroup.get(groupName)!
+            : [];
           obs.push(o);
           obsByGroup.set(groupName, obs);
         } else {
@@ -90,9 +100,14 @@ export class GroupSummaryComponent implements OnInit {
     }
     noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
-    const result: Array<[string, ImmutableObjective[]]> = Array.from(obsByGroup.entries());
-    result.sort(([g1, obs1], [g2, obs2]) =>
-      (totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1)) || g1.localeCompare(g2));
+    const result: Array<[string, ImmutableObjective[]]> = Array.from(
+      obsByGroup.entries()
+    );
+    result.sort(
+      ([g1, obs1], [g2, obs2]) =>
+        totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1) ||
+        g1.localeCompare(g2)
+    );
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
@@ -100,12 +115,20 @@ export class GroupSummaryComponent implements OnInit {
     return result;
   }
 
-  summaryObjective(groupName: string, objectives: ImmutableObjective[]): ImmutableObjective {
+  summaryObjective(
+    groupName: string,
+    objectives: ImmutableObjective[]
+  ): ImmutableObjective {
     return ImmutableObjective.fromObjective({
       name: groupName,
       commitmentType: undefined,
-      resourceEstimate: objectives.reduce((sum, ob) => sum + ob.resourceEstimate, 0),
-      assignments: [{personId: '', commitment: totalResourcesAllocated(objectives)}],
+      resourceEstimate: objectives.reduce(
+        (sum, ob) => sum + ob.resourceEstimate,
+        0
+      ),
+      assignments: [
+        { personId: '', commitment: totalResourcesAllocated(objectives) },
+      ],
       notes: 'Summary objective for ' + this.groupType + ' ' + groupName,
       groups: [],
       tags: [],

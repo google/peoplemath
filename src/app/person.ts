@@ -13,40 +13,53 @@
 // limitations under the License.
 
 export class Person {
-    constructor(
-        public id: string,
-        public displayName: string,
-        public location: string,
-        public availability: number,
-    ) {}
+  constructor(
+    public id: string,
+    public displayName: string,
+    public location: string,
+    public availability: number
+  ) {}
 }
 
 export class ImmutablePerson {
-    private readonly _id: string;
-    private readonly _displayName: string;
-    private readonly _location: string;
-    private readonly _availability: number;
+  private readonly _id: string;
+  private readonly _displayName: string;
+  private readonly _location: string;
+  private readonly _availability: number;
 
-    get id(): string { return this._id; }
-    get displayName(): string { return this._displayName; }
-    get location(): string { return this._location; }
-    get availability(): number { return this._availability; }
+  get id(): string {
+    return this._id;
+  }
+  get displayName(): string {
+    return this._displayName;
+  }
+  get location(): string {
+    return this._location;
+  }
+  get availability(): number {
+    return this._availability;
+  }
 
-    constructor(person: Person) {
-        this._id = person.id;
-        this._displayName = person.displayName;
-        this._location = person.location;
-        this._availability = person.availability;
+  constructor(person: Person) {
+    this._id = person.id;
+    this._displayName = person.displayName;
+    this._location = person.location;
+    this._availability = person.availability;
+  }
+
+  toOriginal(): Person {
+    return new Person(
+      this.id,
+      this.displayName,
+      this.location,
+      this.availability
+    );
+  }
+
+  displayNameWithUsername(): string {
+    if (this.id === this.displayName || !this.displayName) {
+      return this.id;
     }
-
-    toOriginal(): Person {
-        return new Person(this.id, this.displayName, this.location, this.availability);
-    }
-
-    displayNameWithUsername(): string {
-        if (this.id === this.displayName || !this.displayName) {
-            return this.id;
-        }
-        return this.displayName + ' (' + this.id + ')';
-    }
+    return this.displayName + ' (' + this.id + ')';
+  }
 }

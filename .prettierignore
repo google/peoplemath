@@ -1,0 +1,12 @@
+# Don't format HTML for now
+*.html
+
+# compiled output
+/dist
+/dist-server
+/tmp
+/out-tsc
+/appengine_dist
+
+# dependencies
+/node_modules

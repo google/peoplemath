@@ -1,17 +1,59 @@
-.objective-name { font-weight: normal }
-.resource-estimate { font-style: italic }
-.icons { margin-left: 10px; }
-.notes-icon { vertical-align: middle; font-size: 16px; }
-.assignments { margin-left: 10px; font-weight: bold }
-.unassigned { color: grey }
-.fully-allocated { color: green }
-.assign-button { font-weight: bold; }
-.assign-button-enabled a { color: #674ab7; text-decoration: none; }
-.assign-button-enabled a:hover { text-decoration: underline; }
-.assign-button-disabled { color: grey; }
-.resource-csum { display: flex; justify-content: center;   width: 10%; align-items: center; font-weight: bold;} 
-.objective {float: left; width: 90%;}
-.objective-all {display: flex;}
-.resource-csum-ok { color: grey; }
-.resource-csum-marginal { color: orange;}
-.resource-csum-excess { color: red;}
+.objective-name {
+  font-weight: normal;
+}
+.resource-estimate {
+  font-style: italic;
+}
+.icons {
+  margin-left: 10px;
+}
+.notes-icon {
+  vertical-align: middle;
+  font-size: 16px;
+}
+.assignments {
+  margin-left: 10px;
+  font-weight: bold;
+}
+.unassigned {
+  color: grey;
+}
+.fully-allocated {
+  color: green;
+}
+.assign-button {
+  font-weight: bold;
+}
+.assign-button-enabled a {
+  color: #674ab7;
+  text-decoration: none;
+}
+.assign-button-enabled a:hover {
+  text-decoration: underline;
+}
+.assign-button-disabled {
+  color: grey;
+}
+.resource-csum {
+  display: flex;
+  justify-content: center;
+  width: 10%;
+  align-items: center;
+  font-weight: bold;
+}
+.objective {
+  float: left;
+  width: 90%;
+}
+.objective-all {
+  display: flex;
+}
+.resource-csum-ok {
+  color: grey;
+}
+.resource-csum-marginal {
+  color: orange;
+}
+.resource-csum-excess {
+  color: red;
+}

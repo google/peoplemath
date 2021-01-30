@@ -27,7 +27,7 @@ export interface EditPeriodDialogData {
 @Component({
   selector: 'app-edit-period-dialog',
   templateUrl: './edit-period-dialog.component.html',
-  styleUrls: ['./edit-period-dialog.component.css']
+  styleUrls: ['./edit-period-dialog.component.css'],
 })
 export class EditPeriodDialogComponent implements OnInit {
   periodIdControl: FormControl;
@@ -39,35 +39,42 @@ export class EditPeriodDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<EditPeriodDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPeriodDialogData,
+    @Inject(MAT_DIALOG_DATA) public data: EditPeriodDialogData
   ) {
     this.periodIdControl = new FormControl(data.period.id, Validators.required);
-    this.displayNameControl = new FormControl(data.period.displayName, Validators.required);
+    this.displayNameControl = new FormControl(
+      data.period.displayName,
+      Validators.required
+    );
     this.unitControl = new FormControl(data.period.unit, Validators.required);
-    this.secondaryUnitsControl = new FormControl(data.period.secondaryUnits.map(
-      su => su.name + ':' + su.conversionFactor).join(','));
+    this.secondaryUnitsControl = new FormControl(
+      data.period.secondaryUnits
+        .map((su) => su.name + ':' + su.conversionFactor)
+        .join(',')
+    );
     this.notesUrlControl = new FormControl(data.period.notesURL);
-    this.maxCommitPctControl = new FormControl(data.period.maxCommittedPercentage, [Validators.min(0), Validators.max(100)]);
+    this.maxCommitPctControl = new FormControl(
+      data.period.maxCommittedPercentage,
+      [Validators.min(0), Validators.max(100)]
+    );
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   parseSecondaryUnits(): SecondaryUnit[] {
-    return this.secondaryUnitsControl.value.split(',').filter(
-      (kv: string) => !!kv.trim()
-    ).map(
-      (kv: string) => {
+    return this.secondaryUnitsControl.value
+      .split(',')
+      .filter((kv: string) => !!kv.trim())
+      .map((kv: string) => {
         let result: SecondaryUnit;
-        const parts = kv.split(':').map(s => s.trim());
+        const parts = kv.split(':').map((s) => s.trim());
         if (parts.length > 1) {
-          result = {name: parts[0], conversionFactor: parseFloat(parts[1])};
+          result = { name: parts[0], conversionFactor: parseFloat(parts[1]) };
         } else {
-          result = {name: parts[0], conversionFactor: 1.0};
+          result = { name: parts[0], conversionFactor: 1.0 };
         }
         return result;
-      }
-    );
+      });
   }
 
   onOK(): void {
@@ -88,11 +95,13 @@ export class EditPeriodDialogComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    return this.periodIdControl.valid
-        && this.displayNameControl.valid
-        && this.unitControl.valid
-        && this.secondaryUnitsControl.valid
-        && this.notesUrlControl.valid
-        && this.maxCommitPctControl.valid;
+    return (
+      this.periodIdControl.valid &&
+      this.displayNameControl.valid &&
+      this.unitControl.valid &&
+      this.secondaryUnitsControl.valid &&
+      this.notesUrlControl.valid &&
+      this.maxCommitPctControl.valid
+    );
   }
 }

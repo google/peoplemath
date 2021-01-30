@@ -4,13 +4,13 @@
 
 This is a web application designed to help managers plan how teams will spend their time, particularly in situations where there is an aim to split the team's resources between several independently-prioritised "buckets" of work in a certain ratio.
 
-The fundamental entity in PeopleMath is the *period*, which can be any length of time you want to plan for your team. For each period, planners are expected to enter:
+The fundamental entity in PeopleMath is the _period_, which can be any length of time you want to plan for your team. For each period, planners are expected to enter:
 
-* What *objectives* are you considering working on during this period, in each bucket?
-* How much (in whatever unit of resources you prefer to use) do you think each objective would require to complete?
-* What is the relative priority order of the objectives, within each bucket?
-* How much (of your resource units) do you expect each person on your team to have available during the period?
-* How much of each person's available resources do you intend to allocate to each objective?
+- What _objectives_ are you considering working on during this period, in each bucket?
+- How much (in whatever unit of resources you prefer to use) do you think each objective would require to complete?
+- What is the relative priority order of the objectives, within each bucket?
+- How much (of your resource units) do you expect each person on your team to have available during the period?
+- How much of each person's available resources do you intend to allocate to each objective?
 
 The tool aims to make it easy for users to see how the team is expected to spend its time, the assumptions (e.g. priority stack-ranking) that led to that decision, and what level of confidence they should have in the completion of each objective.
 
@@ -22,8 +22,8 @@ This is not an officially supported Google product.
 
 The tool supports a distinction between "committed" and "aspirational" objectives:
 
-* A *committed* objective is one which your team is making a firm promise to complete within the period; perhaps some other team or a customer is depending on it.
-* An *aspirational* objective is one you would like to achieve if possible, but something you would be willing to sacrifice for a committed objective if necessary.
+- A _committed_ objective is one which your team is making a firm promise to complete within the period; perhaps some other team or a customer is depending on it.
+- An _aspirational_ objective is one you would like to achieve if possible, but something you would be willing to sacrifice for a committed objective if necessary.
 
 It's generally a good idea to keep an eye on the fraction of your team's resources allocated to committed objectives. Too little, and your team is promising too little to its stakeholders; too much, and you are at risk of breaking your promises, as there is nothing you can safely drop if you find yourself behind on a committed objective. PeopleMath allows you to set a target "commit ratio", and tells you how your plan compares to that target.
 
@@ -57,12 +57,12 @@ This feature is not yet quite complete: we do not yet have any functionality in 
 
 The authentication functionality is disabled by default. To turn it on:
 
-* Create a Firebase project in [the Firebase console](https://console.firebase.google.com/) and register your web app in it
-* Add your web application's domain to the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
-* [Download your Firebase config](https://support.google.com/firebase/answer/7015592#web) and copy the configuration object into `src/environments/firebaseConfig.ts`
-* Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
-* [Download your Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"` (do NOT check these into version control)
-* Run the backend with `--authmode firebase`
+- Create a Firebase project in [the Firebase console](https://console.firebase.google.com/) and register your web app in it
+- Add your web application's domain to the OAuth redirect domains list in the Firebase console (to get there: Firebase Console -> Authentication section -> Sign in method tab)
+- [Download your Firebase config](https://support.google.com/firebase/answer/7015592#web) and copy the configuration object into `src/environments/firebaseConfig.ts`
+- Set `requireAuth` to `true` in `src/environments/environment.prod.ts`
+- [Download your Firebase credentials](https://firebase.google.com/docs/admin/setup#initialize-sdk) and export them via `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"` (do NOT check these into version control)
+- Run the backend with `--authmode firebase`
 
 ## Implementation
 
@@ -122,7 +122,7 @@ Running the commands in the `Dockerfile` manually should give a pretty good sens
 
 The primary supported way of running PeopleMath in a staging or production configuration is on [Google App Engine](https://cloud.google.com/appengine/). To deploy the app to App Engine:
 
-* Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go/quickstart)
-* Run `gcloud config set project [YOUR_PROJECT_ID]`
-* Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
-* `cd appengine_dist` and `gcloud app deploy`
+- Create a Google Cloud project as described in [the quickstart guide](https://cloud.google.com/appengine/docs/standard/go/quickstart)
+- Run `gcloud config set project [YOUR_PROJECT_ID]`
+- Run `build_appengine.sh` or equivalent commands to build the front-end and generate the `appengine_dist` directory
+- `cd appengine_dist` and `gcloud app deploy`

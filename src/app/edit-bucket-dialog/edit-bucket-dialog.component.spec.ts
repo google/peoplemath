@@ -14,7 +14,10 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { EditBucketDialogComponent, EditBucketDialogData } from './edit-bucket-dialog.component';
+import {
+  EditBucketDialogComponent,
+  EditBucketDialogData,
+} from './edit-bucket-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -32,27 +35,26 @@ describe('EditBucketDialogComponent', () => {
     title: 'My test dialog',
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EditBucketDialogComponent ],
-      imports: [
-        MaterialModule,
-        FormsModule,
-        BrowserAnimationsModule,
-      ],
-      providers: [
-        {provide: MatDialogRef, useValue: dialogSpy},
-        {provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA},
-      ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EditBucketDialogComponent],
+        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(EditBucketDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(EditBucketDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

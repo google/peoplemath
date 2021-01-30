@@ -1,24 +1,18 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "projects/**/*"
-  ],
+  "ignorePatterns": ["projects/**/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.e2e.json"
-        ],
+        "project": ["tsconfig.json", "e2e/tsconfig.e2e.json"],
         "createDefaultProgram": true
       },
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
         "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "prettier"
       ],
       "rules": {
         "@angular-eslint/component-selector": [
@@ -43,23 +37,33 @@
         "no-underscore-dangle": "off",
         "@typescript-eslint/naming-convention": [
           "error",
-          {"selector": "default", "format": ["camelCase"], "leadingUnderscore": "allow", "trailingUnderscore": "allow"},
-          {"selector": "variable", "format": ["camelCase", "UPPER_CASE"], "leadingUnderscore": "allow", "trailingUnderscore": "allow"},
-          {"selector": "typeLike", "format": ["PascalCase"]},
-          {"selector": "property", "format": ["camelCase", "PascalCase", "snake_case"], "leadingUnderscore": "allow"},
-          {"selector": "enumMember", "format": ["PascalCase"]}
+          {
+            "selector": "default",
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          { "selector": "typeLike", "format": ["PascalCase"] },
+          {
+            "selector": "property",
+            "format": ["camelCase", "PascalCase", "snake_case"],
+            "leadingUnderscore": "allow"
+          },
+          { "selector": "enumMember", "format": ["PascalCase"] }
         ],
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": "error"
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
     }
   ]
