@@ -22,6 +22,12 @@ Here is a list of checks run, and ways to make sure they pass while developing:
   this automatically on save - for example [see
   here](https://code.visualstudio.com/docs/languages/go#_formatting) for Visual
   Studio Code)
+- Any new source files added must have a "Copyright Google LLC" notice in the
+  headers. (This does not affect contributors' rights; [see
+  here](https://opensource.google/docs/releasing/contributions/#copyright) for
+  more information.) These can be added automatically using [the `addlicense`
+  tool](https://github.com/google/addlicense) - no arguments are required other
+  than the names of the new source files.
 
 See the [Dockerfile](Dockerfile) in the root of the project for an authoritative
 up-to-date list of checks performed.

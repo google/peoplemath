@@ -25,5 +25,7 @@ RUN ["npm", "install", "--quiet"]
 RUN ["npx", "ng", "lint"]
 RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
 RUN ["npx", "prettier", "--check", "."]
+RUN ["/bin/bash", "-c", "find . -path ./node_modules -prune -o \\( -name \\*.ts -o -name \\*.go \\) -print | xargs $HOME/go/bin/addlicense -check"]
 RUN ["bash", "build_appengine.sh"]
 RUN ["ls", "-lhR", "appengine_dist"]
+

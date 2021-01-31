@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2020-2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,4 +17,5 @@ RUN ["apt-get", "update"]
 RUN ["apt-get", "install", "-y", "nodejs", "npm", "golang", "findutils", "wget", "xvfb"]
 RUN ["wget", "-q", "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"]
 RUN ["apt", "install", "-y", "./google-chrome-stable_current_amd64.deb"]
+RUN ["go", "get", "-u", "github.com/google/addlicense"]
 
