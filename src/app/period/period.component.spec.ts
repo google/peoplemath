@@ -40,6 +40,7 @@ import { firebaseConfig } from '../../environments/firebaseConfig';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ObjectUpdateResponse } from '../objectupdateresponse';
 import { DisplayObjectivesPipe } from '../bucket/displayobjectives.pipe';
+import { CsumClassPipe } from '../objective/csum-class.pipe';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -73,6 +74,7 @@ describe('PeriodComponent', () => {
           PeopleComponent,
           AssignmentsByPersonComponent,
           DisplayObjectivesPipe,
+          CsumClassPipe,
         ],
         imports: [
           RouterTestingModule,

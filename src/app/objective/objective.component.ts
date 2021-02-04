@@ -184,17 +184,4 @@ export class ObjectiveComponent implements OnInit {
       this.hasPeopleAvailable()
     );
   }
-
-  getCumulativeSumClass(): string {
-    if (this.resourcesCumulativeSum! < this.bucketAllocationLimit!) {
-      return 'resource-csum-ok';
-    } else if (
-      this.resourcesCumulativeSum! - this.objective?.resourceEstimate! <=
-      this.bucketAllocationLimit!
-    ) {
-      return 'resource-csum-marginal';
-    } else {
-      return 'resource-csum-excess';
-    }
-  }
 }
