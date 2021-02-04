@@ -35,18 +35,16 @@
   color: grey;
 }
 .resource-csum {
-  display: flex;
-  justify-content: center;
-  width: 10%;
-  align-items: center;
+  flex-grow: 1;
+  text-align: right;
   font-weight: bold;
 }
 .objective {
-  float: left;
-  width: 90%;
+  flex-grow: 9;
 }
 .objective-all {
   display: flex;
+  justify-content: space-between;
 }
 .resource-csum-ok {
   color: grey;
