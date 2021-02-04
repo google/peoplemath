@@ -60,6 +60,7 @@ import { firebaseConfig } from '../environments/firebaseConfig';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ModalComponent } from './modal/modal.component';
 import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
+import { CsumClassPipe } from './objective/csum-class.pipe';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
     LoginComponent,
     ModalComponent,
     DisplayObjectivesPipe,
+    CsumClassPipe,
   ],
   imports: [
     BrowserModule,

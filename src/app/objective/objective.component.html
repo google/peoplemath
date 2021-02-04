@@ -13,7 +13,7 @@
     [class.assign-button-enabled]="enableAssignButton()"
     [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
 </div>
-<div class="resource-csum">
-<span [ngClass]="getCumulativeSumClass()">{{resourcesCumulativeSum}}</span>
+<div *ngIf="resourcesCumulativeSum !== undefined && bucketAllocationLimit !== undefined && objective?.resourceEstimate !== undefined" class="resource-csum">
+    <span [ngClass]="resourcesCumulativeSum | csumClass: bucketAllocationLimit: objective?.resourceEstimate!">{{resourcesCumulativeSum}}</span>
 </div>
 </div>
