@@ -81,12 +81,6 @@ export class ObjectiveComponent implements OnInit {
     );
   }
 
-  assignmentSummary(): string {
-    return this.objective!.assignments.filter((a) => a.commitment > 0)
-      .map((a) => a.personId + ': ' + a.commitment)
-      .join(', ');
-  }
-
   totalAssignedResources(): number {
     return this.objective!.assignments.map((a) => a.commitment).reduce(
       (sum, current) => sum + current,
