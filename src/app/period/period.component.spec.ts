@@ -41,6 +41,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ObjectUpdateResponse } from '../objectupdateresponse';
 import { DisplayObjectivesPipe } from '../bucket/displayobjectives.pipe';
 import { CsumClassPipe } from '../objective/csum-class.pipe';
+import { AssignSummPartsPipe } from '../objective/assign-summ-parts.pipe';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -75,6 +76,7 @@ describe('PeriodComponent', () => {
           AssignmentsByPersonComponent,
           DisplayObjectivesPipe,
           CsumClassPipe,
+          AssignSummPartsPipe,
         ],
         imports: [
           RouterTestingModule,

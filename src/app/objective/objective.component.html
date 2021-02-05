@@ -8,7 +8,7 @@
 <span (click)="assign()" class="assignments"
     [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
     [class.warning]="!isFullyAllocated()"
-    [class.error]="isOverAllocated()">{{assignmentSummary()}}</span>
+    [class.error]="isOverAllocated()"><span *ngFor="let assignment of objective?.assignments | assignSummParts; last as isLast" style="white-space: nowrap">{{assignment}}<span *ngIf="!isLast">, </span></span></span>
 <span *ngIf="showAssignButton()" class="assign-button"
     [class.assign-button-enabled]="enableAssignButton()"
     [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>

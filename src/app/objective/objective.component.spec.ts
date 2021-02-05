@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MaterialModule } from '../material/material.module';
 import { Assignment } from '../assignment';
+import { AssignSummPartsPipe } from './assign-summ-parts.pipe';
 
 const DEFAULT_ASSIGNMENTS: Assignment[] = [
   { personId: 'alice', commitment: 1 },
@@ -32,7 +33,7 @@ describe('ObjectiveComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ObjectiveComponent],
+        declarations: [ObjectiveComponent, AssignSummPartsPipe],
         imports: [FormsModule, MaterialModule],
       }).compileComponents();
     })

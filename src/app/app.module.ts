@@ -61,6 +61,7 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ModalComponent } from './modal/modal.component';
 import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 import { CsumClassPipe } from './objective/csum-class.pipe';
+import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { CsumClassPipe } from './objective/csum-class.pipe';
     ModalComponent,
     DisplayObjectivesPipe,
     CsumClassPipe,
+    AssignSummPartsPipe,
   ],
   imports: [
     BrowserModule,
