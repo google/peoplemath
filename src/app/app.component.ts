@@ -34,7 +34,7 @@ export class AppComponent {
     private dialog: MatDialog
   ) {
     this.notificationService.notification$.subscribe((message) => {
-      this.snackBar.open(message, 'Dismiss');
+      this.snackBar.open(message, '', { duration: 2000 });
     });
     this.notificationService.error$.subscribe((message) => {
       this.dialog.open(ModalComponent, { data: message });
