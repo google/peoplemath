@@ -25,7 +25,6 @@ import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   EditBucketDialogComponent,
   EditBucketDialogData,
@@ -67,7 +66,6 @@ export class PeriodComponent implements OnInit {
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private changeDet: ChangeDetectorRef,
     private authService: AuthService,
     private notificationService: NotificationService
@@ -300,9 +298,8 @@ export class PeriodComponent implements OnInit {
       .getTeam(teamId)
       .pipe(
         catchError((error) => {
-          this.snackBar.open(
-            'Could not load team "' + teamId + '": ' + error.error,
-            'Dismiss'
+          this.notificationService.error$.next(
+            'Could not load team "' + teamId + '": ' + JSON.stringify(error)
           );
           console.log(error);
           return of(new Team('', ''));
@@ -339,14 +336,13 @@ export class PeriodComponent implements OnInit {
       .getPeriod(teamId, periodId)
       .pipe(
         catchError((error) => {
-          this.snackBar.open(
+          this.notificationService.error$.next(
             'Could not load period "' +
               periodId +
               '" for team "' +
               teamId +
               '": ' +
-              error.error,
-            'Dismiss'
+              JSON.stringify(error)
           );
           console.log(error);
           return of({
@@ -427,7 +423,7 @@ export class PeriodComponent implements OnInit {
       )
       .subscribe((updateResponse) => {
         if (updateResponse) {
-          this.snackBar.open('Saved', '', { duration: 2000 });
+          this.notificationService.notification$.next('Saved');
           this.setPeriod(
             this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID)
           );

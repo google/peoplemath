@@ -22,7 +22,7 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ImmutableTeam } from '../team';
 import { ImmutableBucket } from '../bucket';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-period-summary',
@@ -36,7 +36,7 @@ export class PeriodSummaryComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -87,9 +87,8 @@ export class PeriodSummaryComponent implements OnInit {
       .getTeam(teamId)
       .pipe(
         catchError((err) => {
-          this.snackBar.open(
-            'Could not load team "' + teamId + '": ' + err.error,
-            'Dismiss'
+          this.notificationService.error$.next(
+            'Could not load team "' + teamId + '": ' + JSON.stringify(err)
           );
           console.error(err);
           return of(undefined);
@@ -107,14 +106,13 @@ export class PeriodSummaryComponent implements OnInit {
       .getPeriod(teamId, periodId)
       .pipe(
         catchError((err) => {
-          this.snackBar.open(
+          this.notificationService.error$.next(
             'Could not load period "' +
               periodId +
               '" for team "' +
               teamId +
               '": ' +
-              err.error,
-            'Dismiss'
+              JSON.stringify(err)
           );
           console.error(err);
           return of(undefined);

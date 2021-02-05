@@ -18,7 +18,6 @@ import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   EditPeriodDialogComponent,
   EditPeriodDialogData,
@@ -40,6 +39,7 @@ import { Assignment } from '../assignment';
 import { Objective } from '../objective';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
+import { NotificationService } from '../services/notification.service';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
@@ -57,7 +57,7 @@ export class TeamPeriodsComponent implements OnInit {
     private storage: StorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
     public authService: AuthService
   ) {}
 
@@ -77,9 +77,8 @@ export class TeamPeriodsComponent implements OnInit {
       .getTeam(teamId)
       .pipe(
         catchError((error) => {
-          this.snackBar.open(
-            'Could not load team "' + teamId + '": ' + error.error,
-            'Dismiss'
+          this.notificationService.error$.next(
+            'Could not load team "' + teamId + '": ' + JSON.stringify(error)
           );
           console.log(error);
           return of(new Team('', ''));
@@ -116,9 +115,11 @@ export class TeamPeriodsComponent implements OnInit {
       .getPeriods(teamId)
       .pipe(
         catchError((error) => {
-          this.snackBar.open(
-            'Could not load periods for team "' + teamId + '": ' + error.error,
-            'Dismiss'
+          this.notificationService.error$.next(
+            'Could not load periods for team "' +
+              teamId +
+              '": ' +
+              JSON.stringify(error)
           );
           console.log(error);
           return of([]);
@@ -297,9 +298,8 @@ export class TeamPeriodsComponent implements OnInit {
       .addPeriod(this.team!.id, period)
       .pipe(
         catchError((error) => {
-          this.snackBar.open(
-            'Could not save new period: ' + error.error,
-            'Dismiss'
+          this.notificationService.error$.next(
+            'Could not save new period: ' + JSON.stringify(error)
           );
           console.log(error);
           return of(undefined);
@@ -331,9 +331,8 @@ export class TeamPeriodsComponent implements OnInit {
         .updateTeam(team)
         .pipe(
           catchError((error) => {
-            this.snackBar.open(
-              'Could not save team: ' + error.error,
-              'Dismiss'
+            this.notificationService.error$.next(
+              'Could not save team: ' + JSON.stringify(error)
             );
             console.log(error);
             return of('error');
@@ -341,7 +340,7 @@ export class TeamPeriodsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res !== 'error') {
-            this.snackBar.open('Saved', '', { duration: 2000 });
+            this.notificationService.notification$.next('Saved');
             this.team = new ImmutableTeam(team);
           }
         });
