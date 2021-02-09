@@ -37,6 +37,44 @@ const (
 	defaultAuthTimeout  = 5 * time.Second
 )
 
+func makeStorageService(ctx context.Context, useInMemStore bool, defaultDomain string) (storage.StorageService, error) {
+	if useInMemStore {
+		log.Printf("Using in-memory store per command-line flag")
+		return in_memory_storage.MakeInMemStore(defaultDomain), nil
+	}
+	gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if gcloudProject == "" {
+		return nil, fmt.Errorf("GOOGLE_CLOUD_PROJECT not set")
+	}
+	log.Printf("Using Cloud Datastore storage service; project='%s'", gcloudProject)
+	log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
+	return google_cds_store.MakeGoogleCDSStore(ctx, gcloudProject)
+}
+
+func makeAuth(ctx context.Context, authMode string) (auth.Auth, error) {
+	if authMode == "none" {
+		return auth.NoAuth{}, nil
+	} else if authMode == "firebase" {
+		log.Printf("Using firebase authentication per command-line flag")
+		app, err := firebase.NewApp(ctx, nil)
+		if err != nil {
+			return nil, fmt.Errorf("Could not instantiate Firebase app: %v", err)
+		}
+		firebaseClient, err := app.Auth(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("Could not get Firebase Auth client: %v", err)
+		}
+		firebaseAuth := &auth.FirebaseAuth{
+			FirebaseClient: firebaseClient,
+			AuthTimeout:    defaultAuthTimeout,
+		}
+		return firebaseAuth, nil
+	} else {
+		return nil, fmt.Errorf("%s is not a supported authMode. Supported are 'none' and 'firebase'", authMode)
+	}
+
+}
+
 func main() {
 	var useInMemStore bool
 	var authMode string
@@ -46,51 +84,18 @@ func main() {
 	flag.StringVar(&authMode, "authmode", "none", "Set authentication mode, either 'none' or 'firebase'")
 	flag.Parse()
 
-	var store storage.StorageService
-	if useInMemStore {
-		log.Printf("Using in-memory store per command-line flag")
-		store = in_memory_storage.MakeInMemStore(defaultDomain)
-	} else {
-		gcloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
-		if gcloudProject == "" {
-			log.Fatalf("GOOGLE_CLOUD_PROJECT not set")
-			return
-		}
-		log.Printf("Using Cloud Datastore storage service; project='%s'", gcloudProject)
-		log.Printf("To use the local emulator, see https://cloud.google.com/datastore/docs/tools/datastore-emulator")
-		ctx := context.Background()
-		var err error
-		store, err = google_cds_store.MakeGoogleCDSStore(ctx, gcloudProject)
-		if err != nil {
-			log.Fatalf("Could not instantiate datastore: %s", err)
-			return
-		}
+	ctx := context.Background()
+
+	store, err := makeStorageService(ctx, useInMemStore, defaultDomain)
+	if err != nil {
+		log.Fatalf("Could not instantiate datastore: %s", err)
+		return
 	}
 
-	var authProvider auth.Auth
-
-	if authMode == "none" {
-		authProvider = auth.NoAuth{}
-	} else if authMode == "firebase" {
-		log.Printf("Using firebase authentication per command-line flag")
-		ctx := context.Background()
-		app, err := firebase.NewApp(ctx, nil)
-		if err != nil {
-			log.Fatalf("Could not instantiate Firebase app: %v\n", err)
-			return
-		}
-		firebaseClient, err := app.Auth(ctx)
-		if err != nil {
-			log.Fatalf("Could not get Firebase Auth client: %v\n", err)
-			return
-		}
-		firebaseAuth := &auth.FirebaseAuth{
-			FirebaseClient: firebaseClient,
-			AuthTimeout:    defaultAuthTimeout,
-		}
-		authProvider = firebaseAuth
-	} else {
-		log.Fatalf("%s is not a supported authMode. Supported are 'none' and 'firebase'.", authMode)
+	authProvider, err := makeAuth(ctx, authMode)
+	if err != nil {
+		log.Fatalf("Could not instantiate auth: %s", err)
+		return
 	}
 
 	server := controllers.MakeServer(store, defaultStoreTimeout, authProvider)
@@ -102,6 +107,6 @@ func main() {
 		log.Printf("Defaulting to port %s", port)
 	}
 	log.Printf("Listening on port %s", port)
-	err := http.ListenAndServe(fmt.Sprintf(":%s", port), handler)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), handler)
 	log.Fatalf("ListenAndServe exited: %s", err)
 }
