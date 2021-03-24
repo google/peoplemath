@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/peoplemath-build/base
+FROM us-central1-docker.pkg.dev/peoplemath-build/peoplemath/base
 
 COPY . /build/
 
