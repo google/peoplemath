@@ -16,13 +16,13 @@ import { Component, OnInit } from '@angular/core';
 import { Team, ImmutableTeam, TeamList } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   EditTeamDialogComponent,
   EditTeamDialogData,
 } from '../edit-team-dialog/edit-team-dialog.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-teams',
@@ -36,7 +36,7 @@ export class TeamsComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +48,9 @@ export class TeamsComponent implements OnInit {
       .getTeams()
       .pipe(
         catchError((error) => {
-          this.snackBar.open('Could not load teams: ' + error.error, 'Dismiss');
+          this.notification.error$.next(
+            'Could not load teams: ' + JSON.stringify(error)
+          );
           console.log(error);
           return of(new TeamList([], false));
         })
@@ -86,9 +88,8 @@ export class TeamsComponent implements OnInit {
         .addTeam(team)
         .pipe(
           catchError((error) => {
-            this.snackBar.open(
-              'Could not save new team: ' + error.error,
-              'Dismiss'
+            this.notification.error$.next(
+              'Could not save new team: ' + JSON.stringify(error)
             );
             console.log(error);
             return of('error');
