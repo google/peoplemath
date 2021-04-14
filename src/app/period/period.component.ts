@@ -414,7 +414,7 @@ export class PeriodComponent implements OnInit {
             );
           } else {
             this.notificationService.error$.next(
-              'Failed to save period: ' + error.error
+              'Failed to save period: ' + JSON.stringify(error)
             );
           }
           console.log(error);
