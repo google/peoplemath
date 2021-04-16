@@ -277,7 +277,7 @@ func makeFakePeriod(id string) models.Period {
 			AllocationPercentage: 20,
 			Objectives: []models.Objective{
 				{
-					Name:             "An objective **with some markdown**",
+					Name:             "An objective **with some markdown** and [a link](https://github.com/google/peoplemath)",
 					ResourceEstimate: 5,
 					CommitmentType:   "Aspirational",
 					Assignments: []models.Assignment{
