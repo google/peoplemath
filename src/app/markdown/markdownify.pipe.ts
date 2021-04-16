@@ -36,6 +36,7 @@ export class MarkdownifyPipe implements PipeTransform {
           el.innerHTML = node.innerHTML;
           node.parentNode!.replaceChild(el, node);
         } else {
+          // Make the link open in a new window
           node.setAttribute('target', '_blank');
           node.setAttribute('rel', 'noopener noreferrer');
         }
