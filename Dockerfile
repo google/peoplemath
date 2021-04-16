@@ -21,7 +21,7 @@ RUN ["go", "test", "./..."]
 RUN ["/bin/bash", "-c", "if [[ \"$(gofmt -l . | wc -l)\" -gt 0 ]]; then echo Go formatting violations exist; exit 1; else echo Go formatting check passed ; fi"]
 
 WORKDIR /build
-RUN ["npm", "install", "--quiet"]
+RUN ["npm", "ci"]
 RUN ["npx", "ng", "lint"]
 RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
 RUN ["npx", "prettier", "--check", "."]
