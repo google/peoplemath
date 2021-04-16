@@ -26,25 +26,28 @@ export class MarkdownifyPipe implements PipeTransform {
     if (markdown === undefined) {
       return '';
     }
+    // The use of DOMPurify here is partly as a defence-in-depth against XSS,
+    // and partly to disable unwanted parts of Markdown and achieve desired transformations.
     DOMPurify.addHook('afterSanitizeAttributes', (node: Element) => {
       if (node.nodeName.toLowerCase() === 'a') {
-        node.setAttribute('target', '_blank');
-        node.setAttribute('rel', 'noopener noreferrer');
+        if (mode === 'nolinks') {
+          // Replace the link with some inert underlined text
+          const el = node.ownerDocument.createElement('u');
+          el.innerHTML = node.innerHTML;
+          node.parentNode!.replaceChild(el, node);
+        } else {
+          node.setAttribute('target', '_blank');
+          node.setAttribute('rel', 'noopener noreferrer');
+        }
       }
     });
     /* eslint-disable @typescript-eslint/naming-convention */
-    return DOMPurify.sanitize(snarkdown(markdown), {
-      ALLOWED_TAGS: this.getAllowedTags(mode),
+    const result = DOMPurify.sanitize(snarkdown(markdown), {
+      ALLOWED_TAGS: ['a', 'em', 'strong', 'code', 's', 'u'],
       KEEP_CONTENT: true,
     });
     /* eslint-enable @typescript-eslint/naming-convention */
-  }
-
-  private getAllowedTags(mode?: string): string[] {
-    const allowedTags = ['em', 'strong'];
-    if (mode !== 'nolinks') {
-      allowedTags.push('a');
-    }
-    return allowedTags;
+    DOMPurify.removeHook('afterSanitizeAttributes');
+    return result;
   }
 }

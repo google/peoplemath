@@ -46,10 +46,10 @@ describe('MarkdownifyPipe', () => {
     );
   });
 
-  it('should ignore links in nolinks mode', () => {
+  it('should underline links in nolinks mode', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('[a link](http://thetarget/)', 'nolinks')).toEqual(
-      'a link'
+      '<u>a link</u>'
     );
   });
 });
