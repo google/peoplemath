@@ -62,6 +62,7 @@ import { ModalComponent } from './modal/modal.component';
 import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 import { CsumClassPipe } from './objective/csum-class.pipe';
 import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
+import { MarkdownifyPipe } from './markdown/markdownify.pipe';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
     DisplayObjectivesPipe,
     CsumClassPipe,
     AssignSummPartsPipe,
+    MarkdownifyPipe,
   ],
   imports: [
     BrowserModule,

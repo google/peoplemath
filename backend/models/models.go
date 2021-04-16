@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2020-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -92,6 +92,10 @@ type Bucket struct {
 	Objectives           []Objective `json:"objectives"`
 }
 
+type DisplayOptions struct {
+	EnableMarkdown bool `json:"enableMarkdown"`
+}
+
 // Objective model struct
 type Objective struct {
 	Name             string           `json:"name"`
@@ -101,6 +105,7 @@ type Objective struct {
 	Notes            string           `json:"notes"`
 	Groups           []ObjectiveGroup `json:"groups"`
 	Tags             []ObjectiveTag   `json:"tags"`
+	DisplayOptions   DisplayOptions   `json:"displayOptions"`
 }
 
 // ObjectiveGroup model struct

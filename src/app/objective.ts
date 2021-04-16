@@ -66,6 +66,26 @@ export class ImmutableObjectiveTag {
   }
 }
 
+export interface DisplayOptions {
+  enableMarkdown: boolean;
+}
+
+export class ImmutableDisplayOptions {
+  readonly _enableMarkdown: boolean;
+
+  get enableMarkdown(): boolean {
+    return this._enableMarkdown;
+  }
+
+  constructor(t: DisplayOptions) {
+    this._enableMarkdown = t.enableMarkdown;
+  }
+
+  toOriginal(): DisplayOptions {
+    return { enableMarkdown: this.enableMarkdown };
+  }
+}
+
 export interface Objective {
   name: string;
   resourceEstimate: number;
@@ -74,6 +94,7 @@ export interface Objective {
   groups: ObjectiveGroup[];
   tags: ObjectiveTag[];
   assignments: Assignment[];
+  displayOptions?: DisplayOptions;
 }
 
 // Boilerplate avoidance device
@@ -85,6 +106,7 @@ interface ImmutableObjectiveIF {
   readonly groups: readonly ImmutableObjectiveGroup[];
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
+  readonly displayOptions?: ImmutableDisplayOptions;
 }
 
 export class ImmutableObjective {
@@ -97,6 +119,7 @@ export class ImmutableObjective {
   readonly groups: readonly ImmutableObjectiveGroup[];
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
+  readonly displayOptions?: ImmutableDisplayOptions;
 
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
@@ -106,6 +129,7 @@ export class ImmutableObjective {
     this.groups = o.groups;
     this.tags = o.tags;
     this.assignments = o.assignments;
+    this.displayOptions = o.displayOptions;
   }
 
   static fromObjective(objective: Objective): ImmutableObjective {
@@ -117,6 +141,10 @@ export class ImmutableObjective {
       groups: objective.groups.map((g) => new ImmutableObjectiveGroup(g)),
       tags: objective.tags.map((t) => new ImmutableObjectiveTag(t)),
       assignments: objective.assignments.map((a) => new ImmutableAssignment(a)),
+      displayOptions:
+        objective.displayOptions === undefined
+          ? undefined
+          : new ImmutableDisplayOptions(objective.displayOptions),
     });
   }
 
@@ -129,6 +157,10 @@ export class ImmutableObjective {
       groups: this.groups.map((g) => g.toOriginal()),
       tags: this.tags.map((t) => t.toOriginal()),
       assignments: this.assignments.map((a) => a.toOriginal()),
+      displayOptions:
+        this.displayOptions === undefined
+          ? undefined
+          : this.displayOptions?.toOriginal(),
     };
   }
 

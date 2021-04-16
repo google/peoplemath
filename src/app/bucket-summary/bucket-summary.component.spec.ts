@@ -35,6 +35,7 @@ describe('BucketSummaryComponent', () => {
     tags: [],
     notes: '',
     assignments: [new Assignment('person1', 5)],
+    displayOptions: { enableMarkdown: false },
   };
   const BUCKET: Bucket = new Bucket('my bucket', 50, [
     NO_COMMITMENTTYPE_OBJECTIVE,

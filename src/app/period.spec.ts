@@ -76,6 +76,7 @@ describe('ImmutablePeriod', () => {
           groups: [{ groupType: 'group', groupName: 'things' }],
           tags: [{ name: 'mytag' }],
           assignments: [new Assignment('person1', 3)],
+          displayOptions: { enableMarkdown: false },
         },
       ]),
     ],

@@ -19,6 +19,7 @@ import {
   ObjectiveGroup,
   ObjectiveTag,
   ImmutableObjective,
+  DisplayOptions,
 } from '../objective';
 import { ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
@@ -31,6 +32,7 @@ export interface EditedObjective {
   tags: string;
   notes: string;
   assignments: Assignment[];
+  displayOptions: DisplayOptions;
 }
 
 export interface EditObjectiveDialogData {
@@ -62,6 +64,9 @@ export const makeEditedObjective = (
     tags: tagsStr,
     notes: objective.notes,
     assignments: objective.assignments.map((a) => a.toOriginal()),
+    displayOptions: objective.displayOptions
+      ? objective.displayOptions.toOriginal()
+      : { enableMarkdown: false },
   };
 };
 
@@ -102,6 +107,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     tags: makeTags(edited.tags),
     notes: edited.notes,
     assignments: edited.assignments,
+    displayOptions: edited.displayOptions,
   });
 
 @Component({

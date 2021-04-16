@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -275,7 +275,22 @@ func makeFakePeriod(id string) models.Period {
 		{
 			DisplayName:          "Third bucket",
 			AllocationPercentage: 20,
-			Objectives:           []models.Objective{},
+			Objectives: []models.Objective{
+				{
+					Name:             "An objective **with some markdown**",
+					ResourceEstimate: 5,
+					CommitmentType:   "Aspirational",
+					Assignments: []models.Assignment{
+						{
+							PersonID:   "zoe",
+							Commitment: 5,
+						},
+					},
+					Groups:         []models.ObjectiveGroup{},
+					Tags:           []models.ObjectiveTag{},
+					DisplayOptions: models.DisplayOptions{EnableMarkdown: true},
+				},
+			},
 		},
 	}
 	people := []models.Person{
@@ -294,6 +309,12 @@ func makeFakePeriod(id string) models.Period {
 		{
 			ID:           "charlie",
 			DisplayName:  "Charlie Case",
+			Location:     "SVL",
+			Availability: 8,
+		},
+		{
+			ID:           "zoe",
+			DisplayName:  "Zoe Zimmerman",
 			Location:     "SVL",
 			Availability: 8,
 		},
