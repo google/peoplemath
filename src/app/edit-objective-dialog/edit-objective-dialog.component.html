@@ -1,31 +1,31 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
-<div mat-dialog-content>
-  <p>Objective</p>
-  <mat-form-field>
+<div mat-dialog-content class="dialog-content">
+  <mat-form-field appearance="fill">
+    <mat-label>Objective</mat-label>
     <input matInput [(ngModel)]="data.objective.name">
   </mat-form-field>
-  <p>Resource estimate ({{data.unit}})</p>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Resource estimate ({{data.unit}})</mat-label>
     <input matInput [(ngModel)]="data.objective.resourceEstimate" type="number">
   </mat-form-field>
-  <p>Commitment type</p>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Commitment type</mat-label>
     <mat-select [(ngModel)]="data.objective.commitmentType">
         <mat-option value="Aspirational">Aspirational</mat-option>
         <mat-option value="Committed">Committed</mat-option>
     </mat-select>
   </mat-form-field>
-  <p>Groups (key1:value1,key2:value2,...)</p>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Groups (key1:value1,key2:value2,...)</mat-label>
     <input matInput [(ngModel)]="data.objective.groups">
   </mat-form-field>
-  <p>Tags (comma-separated)</p>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Tags (comma-separated)</mat-label>
     <input matInput [(ngModel)]="data.objective.tags">
   </mat-form-field>
-  <p>Notes</p>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Notes</mat-label>
     <textarea matInput [(ngModel)]="data.objective.notes"></textarea>
   </mat-form-field>
 </div>
