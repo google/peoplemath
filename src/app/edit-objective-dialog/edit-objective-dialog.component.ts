@@ -64,9 +64,9 @@ export const makeEditedObjective = (
     tags: tagsStr,
     notes: objective.notes,
     assignments: objective.assignments.map((a) => a.toOriginal()),
-    displayOptions: objective.displayOptions
-      ? objective.displayOptions.toOriginal()
-      : { enableMarkdown: false },
+    displayOptions: objective.displayOptions?.toOriginal() || {
+      enableMarkdown: false,
+    },
   };
 };
 

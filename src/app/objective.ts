@@ -157,10 +157,7 @@ export class ImmutableObjective {
       groups: this.groups.map((g) => g.toOriginal()),
       tags: this.tags.map((t) => t.toOriginal()),
       assignments: this.assignments.map((a) => a.toOriginal()),
-      displayOptions:
-        this.displayOptions === undefined
-          ? undefined
-          : this.displayOptions?.toOriginal(),
+      displayOptions: this.displayOptions?.toOriginal(),
     };
   }
 
