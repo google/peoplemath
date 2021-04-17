@@ -39,6 +39,11 @@ describe('MarkdownifyPipe', () => {
     expect(pipe.transform('*some italic*')).toEqual('<em>some italic</em>');
   });
 
+  it('should support code', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(pipe.transform('`some code`')).toEqual('<code>some code</code>');
+  });
+
   it('should support links', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('[a link](http://thetarget/)')).toEqual(
