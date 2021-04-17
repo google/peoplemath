@@ -108,6 +108,7 @@ export class BucketComponent implements OnInit {
         groups: '',
         tags: '',
         assignments: [],
+        displayOptions: { enableMarkdown: false },
       },
       original: undefined,
       title: 'Add Objective',

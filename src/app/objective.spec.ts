@@ -22,6 +22,8 @@ import {
   Objective,
   ImmutableObjective,
   CommitmentType,
+  DisplayOptions,
+  ImmutableDisplayOptions,
 } from './objective';
 import { Assignment, ImmutableAssignment } from './assignment';
 
@@ -73,6 +75,7 @@ describe('ImmutableObjective', () => {
     groups: [{ groupType: 'class', groupName: 'myclass' }],
     tags: [{ name: 'tag1' }, { name: 'tag2' }],
     assignments: [new Assignment('alice', 1)],
+    displayOptions: { enableMarkdown: false },
   };
   const obj = ImmutableObjective.fromObjective(_mut);
 
@@ -101,5 +104,23 @@ describe('ImmutableObjective', () => {
   it('should keep tags unique under rename', () => {
     const updated = obj.withTagRenamed('tag1', 'tag2');
     expect(updated.tags.map((t) => t.name)).toEqual(['tag2']);
+  });
+});
+
+describe('ImmutableDisplayOptions', () => {
+  const _mut: DisplayOptions = {
+    enableMarkdown: true,
+  };
+  const obj = new ImmutableDisplayOptions(_mut);
+
+  it('should convert', () => {
+    expect(obj.toOriginal()).toEqual(_mut);
+  });
+
+  it('should be immutable', () => {
+    const shadow: DisplayOptions = obj;
+    expect(() => {
+      shadow.enableMarkdown = false;
+    }).toThrowError(/Cannot set property enableMarkdown/);
   });
 });

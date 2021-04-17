@@ -114,6 +114,7 @@ describe('EditObjectiveDialogComponent', () => {
       tags: 't1,t2',
       notes: '',
       assignments: [],
+      displayOptions: { enableMarkdown: false },
     };
     expect(makeEditedObjective(objective)).toEqual(expected);
   });

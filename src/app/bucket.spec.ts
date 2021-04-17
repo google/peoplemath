@@ -27,6 +27,7 @@ describe('ImmutableBucket', () => {
       groups: [],
       tags: [{ name: 'mytag' }],
       assignments: [],
+      displayOptions: { enableMarkdown: false },
     },
   ]);
   const bucket = ImmutableBucket.fromBucket(_mut);
@@ -38,6 +39,7 @@ describe('ImmutableBucket', () => {
     assignments: [],
     groups: [],
     tags: [],
+    displayOptions: { enableMarkdown: false },
   };
   const nonExistentObjective = ImmutableObjective.fromObjective({
     name: 'nonexistent',
@@ -47,6 +49,7 @@ describe('ImmutableBucket', () => {
     assignments: [],
     tags: [],
     groups: [],
+    displayOptions: { enableMarkdown: false },
   });
 
   it('should convert', () => {
