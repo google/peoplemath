@@ -1,5 +1,30 @@
-.dialog-content {
+app-edit-objective-dialog .dialog-content {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+}
+
+app-edit-objective-dialog mat-form-field {
+  width: 320px;
+}
+
+app-edit-objective-dialog mat-form-field[ng-reflect-hint-label] {
+  margin-bottom: 16px;
+}
+
+app-edit-objective-dialog .mat-checkbox {
+  align-items: center;
+  display: inline-flex;
+  min-height: 40px; /* The ripple is 40px so this needs to be bigger */
+}
+
+app-edit-objective-dialog .mat-checkbox-inner-container {
+  margin-right: 12px; /* Need clearance so ripple doesn't overlap with text */
+}
+
+app-edit-objective-dialog .mat-icon-button .mat-button-wrapper {
+  align-items: center;
+  display: flex;
+  height: 40px;
+  justify-content: center;
 }

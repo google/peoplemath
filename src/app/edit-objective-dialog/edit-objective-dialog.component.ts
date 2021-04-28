@@ -12,7 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   CommitmentType,
@@ -114,6 +120,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   selector: 'app-edit-objective-dialog',
   templateUrl: './edit-objective-dialog.component.html',
   styleUrls: ['./edit-objective-dialog.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditObjectiveDialogComponent implements OnInit {
   constructor(

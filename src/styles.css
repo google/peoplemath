@@ -1,9 +1,25 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.flex {
+  display: flex;
+}
+
 .error {
   color: #dc3545;
 }
+
 .warning {
   color: darkorange;
 }
+
 .overallocated {
   color: darkorange;
 }
@@ -11,6 +27,7 @@
 .grid-container {
   margin: 20px;
 }
+
 .mat-card-header-text {
   width: 100%;
 }
@@ -20,11 +37,6 @@
   text-transform: uppercase;
 }
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+.margin-right-8 {
+  margin-right: 8px;
 }

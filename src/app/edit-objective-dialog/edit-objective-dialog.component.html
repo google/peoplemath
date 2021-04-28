@@ -9,8 +9,8 @@
     Preview:
     <p [innerHTML]="data.objective.name | markdownify"></p>
   </div>
-  <mat-form-field appearance="fill">
-    <mat-label>Resource estimate ({{data.unit}})</mat-label>
+  <mat-form-field hintLabel="({{data.unit}})" appearance="fill">
+    <mat-label>Resource estimate</mat-label>
     <input matInput [(ngModel)]="data.objective.resourceEstimate" type="number">
   </mat-form-field>
   <mat-form-field appearance="fill">
@@ -20,19 +20,30 @@
         <mat-option value="Committed">Committed</mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Groups (key1:value1,key2:value2,...)</mat-label>
+  <mat-form-field hintLabel="(key1:value1,key2:value2,...)" appearance="fill">
+    <mat-label>Groups</mat-label>
     <input matInput [(ngModel)]="data.objective.groups">
   </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Tags (comma-separated)</mat-label>
+  <mat-form-field hintLabel="(Comma-separated)" appearance="fill">
+    <mat-label>Tags</mat-label>
     <input matInput [(ngModel)]="data.objective.tags">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Notes</mat-label>
-    <textarea matInput [(ngModel)]="data.objective.notes"></textarea>
+    <textarea matInput [(ngModel)]="data.objective.notes" rows="3"></textarea>
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="data.objective.displayOptions.enableMarkdown">Enable Markdown <a mat-button href="https://guides.github.com/features/mastering-markdown/#examples" target="_blank" rel="noopener noreferrer"><mat-icon>help_outline</mat-icon></a></mat-checkbox>
+  <div class="flex">
+    <mat-checkbox class="margin-right-8"
+        [(ngModel)]="data.objective.displayOptions.enableMarkdown">
+      Enable Markdown
+    </mat-checkbox>
+    <a mat-icon-button
+        href="https://guides.github.com/features/mastering-markdown/#examples"
+        target="_blank"
+        rel="noopener noreferrer">
+      <mat-icon>help_outline</mat-icon>
+    </a>
+  </div>
 </div>
 
 <div mat-dialog-actions>
