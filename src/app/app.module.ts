@@ -57,7 +57,6 @@ import { LoginComponent } from './login/login.component';
 import { NotificationService } from './services/notification.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { firebaseConfig } from '../environments/firebaseConfig';
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ModalComponent } from './modal/modal.component';
 import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 import { CsumClassPipe } from './objective/csum-class.pipe';
@@ -118,10 +117,6 @@ import { MarkdownifyPipe } from './markdown/markdownify.pipe';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
-    },
-    {
-      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useValue: { duration: 2500 },
     },
   ],
   bootstrap: [AppComponent],

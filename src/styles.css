@@ -8,10 +8,6 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-.flex {
-  display: flex;
-}
-
 .error {
   color: #dc3545;
 }
@@ -35,8 +31,4 @@ body {
 .mat-card-actions .mat-button-base,
 .mat-dialog-actions .mat-button-base {
   text-transform: uppercase;
-}
-
-.margin-right-8 {
-  margin-right: 8px;
 }
