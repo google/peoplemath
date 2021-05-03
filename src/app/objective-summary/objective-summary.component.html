@@ -1,4 +1,4 @@
-<app-pill *ngIf="isCommittedAndFullyAllocated()">C</app-pill>{{objective?.name}}
+<app-pill *ngIf="isCommittedAndFullyAllocated()">C</app-pill><span *ngIf="objective?.displayOptions?.enableMarkdown" [innerHTML]="objective?.name | markdownify"></span><span *ngIf="!objective?.displayOptions?.enableMarkdown">{{objective?.name}}</span>
 <span class="resources" [class.rejected]="isRejected()" [class.partialalloc]="isPartiallyAllocated()">
     <app-resource-quantity
         [quantity]="allocatedResources()"
