@@ -1,9 +1,21 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
 .error {
   color: #dc3545;
 }
+
 .warning {
   color: darkorange;
 }
+
 .overallocated {
   color: darkorange;
 }
@@ -11,6 +23,7 @@
 .grid-container {
   margin: 20px;
 }
+
 .mat-card-header-text {
   width: 100%;
 }
@@ -18,13 +31,4 @@
 .mat-card-actions .mat-button-base,
 .mat-dialog-actions .mat-button-base {
   text-transform: uppercase;
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
