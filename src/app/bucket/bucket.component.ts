@@ -13,12 +13,13 @@
 // limitations under the License.
 
 import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
@@ -40,6 +41,7 @@ import { ObjectiveComponent } from '../objective/objective.component';
   styleUrls: ['./bucket.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class BucketComponent implements OnInit {
   @Input() bucket?: ImmutableBucket;
