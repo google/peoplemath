@@ -16,15 +16,9 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ObjectiveComponent } from './objective.component';
 import { FormsModule } from '@angular/forms';
-import { CommitmentType, ImmutableObjective } from '../objective';
+import { makeObjective } from '../bucket/bucket.component.spec';
 import { MaterialModule } from '../material/material.module';
-import { Assignment } from '../assignment';
 import { AssignSummPartsPipe } from './assign-summ-parts.pipe';
-
-const DEFAULT_ASSIGNMENTS: Assignment[] = [
-  { personId: 'alice', commitment: 1 },
-  { personId: 'bob', commitment: 2 },
-];
 
 describe('ObjectiveComponent', () => {
   let component: ObjectiveComponent;
@@ -39,69 +33,16 @@ describe('ObjectiveComponent', () => {
     })
   );
 
-  const makeComponent = (
-    resourceEstimate: number,
-    assignments: Assignment[]
-  ): ObjectiveComponent => {
-    const result = fixture.componentInstance;
-    result.objective = ImmutableObjective.fromObjective({
-      name: 'test objective',
-      resourceEstimate,
-      commitmentType: CommitmentType.Aspirational,
-      groups: [],
-      tags: [],
-      notes: '',
-      assignments,
-    });
-    result.unit = 'person weeks';
-    const unallocatedTime = new Map();
-    unallocatedTime.set('alice', -1); // Temporary over-allocation for alice
-    unallocatedTime.set('bob', 0);
-    unallocatedTime.set('charlie', 3);
-    unallocatedTime.set('dave', 0);
-    result.unallocatedTime = unallocatedTime;
-    result.isEditingEnabled = true;
-    return result;
-  };
-
   beforeEach(
     waitForAsync(() => {
       fixture = TestBed.createComponent(ObjectiveComponent);
-      component = makeComponent(6, DEFAULT_ASSIGNMENTS);
+      component = fixture.componentInstance;
+      component.objective = makeObjective(6);
       fixture.detectChanges();
     })
   );
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should generate correct assignment data', () => {
-    const assignmentData = component.personAssignmentData();
-    expect(assignmentData.filter((d) => d.username === 'bob')).toEqual([
-      { username: 'bob', available: 2, assign: 2 },
-    ]);
-    expect(assignmentData.filter((d) => d.username === 'charlie')).toEqual([
-      { username: 'charlie', available: 3, assign: 0 },
-    ]);
-    expect(assignmentData.filter((d) => d.username === 'alice')).toEqual([
-      { username: 'alice', available: 0, assign: 1 },
-    ]);
-    expect(assignmentData.filter((d) => d.username === 'dave')).toEqual([]);
-  });
-
-  it('should enable assign button if there are assignments but estimate = 0', () => {
-    component = makeComponent(0, DEFAULT_ASSIGNMENTS);
-    expect(component.enableAssignButton()).toEqual(true);
-  });
-
-  it('should enable assign button if there is an estimate but no assignments', () => {
-    component = makeComponent(6, []);
-    expect(component.enableAssignButton()).toEqual(true);
-  });
-
-  it('should not enable assign button if estimate = 0 and there are no assignments', () => {
-    component = makeComponent(0, []);
-    expect(component.enableAssignButton()).toEqual(false);
   });
 });

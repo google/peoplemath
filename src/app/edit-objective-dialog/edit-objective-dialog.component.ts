@@ -48,10 +48,12 @@ export interface EditObjectiveDialogData {
   okAction: string;
   unit: string;
   otherBuckets: readonly ImmutableBucket[];
-  onMoveBucket?: EventEmitter<
-    [ImmutableObjective, ImmutableObjective, ImmutableBucket]
-  >;
-  onDelete?: EventEmitter<ImmutableObjective>;
+  onMoveBucket?: (
+    original: ImmutableObjective,
+    newObjective: ImmutableObjective,
+    newBucket: ImmutableBucket
+  ) => void;
+  onDelete?: (objective: ImmutableObjective) => void;
 }
 
 export const makeEditedObjective = (
@@ -147,12 +149,16 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onMove(newBucket: ImmutableBucket): void {
+    if (!this.data.original) {
+      throw new Error('Original objective not found');
+    }
+
+    if (!this.data.onMoveBucket) {
+      throw new Error('Expected onMoveBucket callback');
+    }
+
     const newObjective = makeObjective(this.data.objective);
-    this.data.onMoveBucket!.emit([
-      this.data.original!,
-      newObjective,
-      newBucket,
-    ]);
+    this.data.onMoveBucket(this.data.original, newObjective, newBucket);
     this.dialogRef.close();
   }
 
@@ -161,7 +167,15 @@ export class EditObjectiveDialogComponent implements OnInit {
   }
 
   onConfirmDelete(): void {
-    this.data.onDelete!.emit(this.data.original);
+    if (!this.data.original) {
+      throw new Error('Original objective not found');
+    }
+
+    if (!this.data.onDelete) {
+      throw new Error('Expected onDelete callback');
+    }
+
+    this.data.onDelete(this.data.original);
     this.dialogRef.close();
   }
 

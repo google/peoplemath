@@ -1,3 +1,7 @@
+app-bucket {
+  --color: rgba(0, 0, 0, 0.04);
+}
+
 app-bucket .header-button {
   float: right;
 }
@@ -10,7 +14,12 @@ app-bucket .mat-icon-button {
   width: 30px;
 }
 
-app-bucket .cdk-drop-list-dragging mat-list-item {
+app-bucket .interactive:hover {
+  background-color: var(--color);
+  cursor: pointer;
+}
+
+app-bucket .cdk-drop-list-dragging .interactive {
   background-color: #fff;
   cursor: move;
 }
@@ -20,7 +29,7 @@ app-bucket .mat-list-item-content {
 }
 
 app-bucket .cdk-drag-placeholder {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--color);
   cursor: move;
   min-height: 40px;
   transition: var(--transition); /* From <body> */

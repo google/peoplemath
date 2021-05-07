@@ -1,19 +1,44 @@
 <div class="objective-all">
 <div class="objective">
-<span (click)="edit()" [class.unassigned]="!objective?.assignments?.length">
-    <app-pill *ngIf="isCommitted()">C</app-pill><span *ngIf="objective?.displayOptions?.enableMarkdown" [innerHTML]="objective?.name | markdownify: (isEditingEnabled ? 'nolinks' : '')"></span><span *ngIf="!objective?.displayOptions?.enableMarkdown">{{objective?.name}}</span>
-    <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>
+<span [class.unassigned]="!objective?.assignments?.length">
+  <app-pill *ngIf="isCommitted()">C</app-pill>
+  <span *ngIf="objective?.displayOptions?.enableMarkdown"
+      [innerHTML]="objective?.name | markdownify: (isEditingEnabled ? 'nolinks' : '')">
+  </span>
+  <span *ngIf="!objective?.displayOptions?.enableMarkdown">
+    {{objective?.name}}
+  </span>
+  <span class="resource-estimate">({{objective?.resourceEstimate}} {{unit}})</span>
 </span>
-<span *ngIf="objective?.notes" class="icons"><i (click)="edit()" matTooltip="{{objective?.notes}}" matTooltipShowDelay="200" matTooltipHideDelay="2000" class="material-icons notes-icon">note</i></span>
-<span (click)="assign()" class="assignments"
-    [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
-    [class.warning]="!isFullyAllocated()"
-    [class.error]="isOverAllocated()"><span *ngFor="let assignment of objective?.assignments | assignSummParts; last as isLast" style="white-space: nowrap">{{assignment}}<span *ngIf="!isLast">, </span></span></span>
-<span *ngIf="showAssignButton()" class="assign-button"
-    [class.assign-button-enabled]="enableAssignButton()"
-    [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
+<span *ngIf="objective?.notes" class="icons">
+  <i class="material-icons notes-icon"
+      matTooltip="{{objective?.notes}}"
+      matTooltipShowDelay="200"
+      matTooltipHideDelay="2000">
+    note
+  </i>
+</span>
+<span class="{{assignActionClass}}">
+  <span class="assignments"
+      [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
+      [class.warning]="!isFullyAllocated()"
+      [class.error]="isOverAllocated()">
+    <span class="assignments-text">
+      {{(objective?.assignments | assignSummParts).join(', ')}}
+    </span>
+  </span>
+  <span *ngIf="showAssignButton()"
+      class="assign-button"
+      [class.assign-button-enabled]="isAssignButtonEnabled"
+      [class.assign-button-disabled]="!isAssignButtonEnabled">
+    <a>Assign</a>
+  </span>
+</span>
 </div>
-<div *ngIf="resourcesCumulativeSum !== undefined && bucketAllocationLimit !== undefined && objective?.resourceEstimate !== undefined" class="resource-csum">
-    <span [ngClass]="resourcesCumulativeSum | csumClass: bucketAllocationLimit: objective?.resourceEstimate!">{{resourcesCumulativeSum}}</span>
+<div *ngIf="resourcesCumulativeSum !== undefined && bucketAllocationLimit !== undefined && objective?.resourceEstimate !== undefined"
+    class="resource-csum">
+  <span [ngClass]="resourcesCumulativeSum | csumClass: bucketAllocationLimit: objective?.resourceEstimate!">
+    {{resourcesCumulativeSum}}
+  </span>
 </div>
 </div>

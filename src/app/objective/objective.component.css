@@ -15,6 +15,12 @@
   margin-left: 10px;
   font-weight: bold;
 }
+.assignments-text {
+  white-space: nowrap;
+}
+.assignments-text:hover {
+  text-decoration: underline;
+}
 .unassigned {
   color: grey;
 }
