@@ -19,6 +19,16 @@ app-bucket .mat-list-item-content {
   display: flex;
 }
 
+.app-mat-list-item {
+  height: auto !important;
+  padding-bottom: 15px !important;
+}
+
+.reorder-icon {
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
 app-bucket .cdk-drag-placeholder {
   background-color: rgba(0, 0, 0, 0.04);
   cursor: move;

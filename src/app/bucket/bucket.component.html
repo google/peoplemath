@@ -21,7 +21,7 @@
 </mat-card-header>
 <mat-card-content>
 <mat-list dense *ngIf="!showOrderButtons">
-  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives">
+  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives" class="app-mat-list-item">
     <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
     </ng-container>
   </mat-list-item>
@@ -29,9 +29,9 @@
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
   <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives"
       cdkDrag
-      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']">
+      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']" class="app-mat-list-item">
     <div *cdkDragPlaceholder></div>
-    <i class="material-icons" cdkDragHandle>reorder</i>
+    <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
     <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
     </ng-container>
   </mat-list-item>
