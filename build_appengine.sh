@@ -23,7 +23,7 @@ fi
 
 mkdir appengine_dist
 
-npx ng build --prod
+npx ng build --configuration production
 pushd backend
 find . \( -name \*.go -o -name \*.mod -o -name \*.sum -o -name \*.yaml \) -exec cp --parents {} ../appengine_dist \;
 popd
