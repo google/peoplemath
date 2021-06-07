@@ -249,6 +249,18 @@ func makeFakePeriod(id string) models.Period {
 					Tags: []models.ObjectiveTag{},
 				},
 				{
+					Name: "A really long objective name to show what happens when these things get really " +
+						"very long indeed. Look, this objective really is quite long, and it's good to know " +
+						"what happens in the UI in that case. If I just keep going and going and going, does " +
+						"the text start to overlap with other objectives? Let's add even more text to make this " +
+						"really really really really clear",
+					ResourceEstimate: 5,
+					CommitmentType:   "Committed",
+					Assignments:      []models.Assignment{},
+					Groups:           []models.ObjectiveGroup{},
+					Tags:             []models.ObjectiveTag{},
+				},
+				{
 					Name:             "Fourth objective",
 					ResourceEstimate: 8,
 					CommitmentType:   "Aspirational",
