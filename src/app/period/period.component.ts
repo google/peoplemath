@@ -246,24 +246,22 @@ export class PeriodComponent implements OnInit {
     return this.period!.buckets.filter((b) => b !== bucket);
   }
 
-  groupTypesWithAssignments(): string[] {
+  allGroupTypes(): string[] {
     const result = new Set<string>();
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
-        if (o.assignments.length > 0) {
-          o.groups.forEach((g) => {
-            result.add(g.groupType);
-          });
-        }
+        o.groups.forEach((g) => {
+          result.add(g.groupType);
+        });
       });
     });
     return Array.from(result);
   }
 
-  hasTagsWithAssignments(): boolean {
+  hasTags(): boolean {
     for (const bucket of this.period!.buckets) {
       for (const objective of bucket.objectives) {
-        if (objective.assignments.length > 0 && objective.tags.length > 0) {
+        if (objective.tags.length > 0) {
           return true;
         }
       }
