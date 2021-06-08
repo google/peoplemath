@@ -42,6 +42,8 @@ import { ObjectUpdateResponse } from '../objectupdateresponse';
 import { DisplayObjectivesPipe } from '../bucket/displayobjectives.pipe';
 import { CsumClassPipe } from '../objective/csum-class.pipe';
 import { AssignSummPartsPipe } from '../objective/assign-summ-parts.pipe';
+import { AssignmentsClassifyComponent } from '../assignments-classify/assignments-classify.component';
+import { AssignmentComponent } from '../assignment/assignment.component';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -74,6 +76,8 @@ describe('PeriodComponent', () => {
           ObjectiveComponent,
           PeopleComponent,
           AssignmentsByPersonComponent,
+          AssignmentsClassifyComponent,
+          AssignmentComponent,
           DisplayObjectivesPipe,
           CsumClassPipe,
           AssignSummPartsPipe,
