@@ -198,7 +198,7 @@ export class TeamPeriodsComponent implements OnInit {
           displayName: data.period.displayName,
           unit: data.copyUnit ? copiedPeriod.unit : data.period.unit,
           secondaryUnits: data.copyUnit
-            ? copiedPeriod.secondaryUnits
+            ? copiedPeriod.secondaryUnits.map((su) => su.toOriginal())
             : data.period.secondaryUnits,
           notesURL: data.period.notesURL,
           maxCommittedPercentage: data.copyUnit
