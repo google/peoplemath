@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
 
 @Component({
@@ -29,15 +24,13 @@ import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceQuantityComponent implements OnInit {
+export class ResourceQuantityComponent {
   @Input() quantity?: number;
   @Input() ofQuantity?: number;
   @Input() primaryUnit?: string;
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   quantityIn(quantity: number, unit: SecondaryUnit): number {
     return quantity * unit.conversionFactor;

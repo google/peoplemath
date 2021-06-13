@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Objective } from '../objective';
 
@@ -34,13 +34,11 @@ export interface AssignmentDialogData {
   templateUrl: './assignment-dialog.component.html',
   styleUrls: ['./assignment-dialog.component.css'],
 })
-export class AssignmentDialogComponent implements OnInit {
+export class AssignmentDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<AssignmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AssignmentDialogData
   ) {}
-
-  ngOnInit(): void {}
 
   onCancel(): void {
     this.dialogRef.close();

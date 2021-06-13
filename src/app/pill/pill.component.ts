@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-pill',
   template: '<span class="pill pill-primary"><ng-content></ng-content></span>',
   styleUrls: ['./pill.component.css'],
 })
-export class PillComponent implements OnInit {
+export class PillComponent {
   constructor() {}
-
-  ngOnInit(): void {}
 }

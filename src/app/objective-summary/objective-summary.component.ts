@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { ImmutableSecondaryUnit } from '../period';
 
@@ -30,14 +25,12 @@ import { ImmutableSecondaryUnit } from '../period';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ObjectiveSummaryComponent implements OnInit {
+export class ObjectiveSummaryComponent {
   @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   allocatedResources(): number {
     return this.objective!.resourcesAllocated();

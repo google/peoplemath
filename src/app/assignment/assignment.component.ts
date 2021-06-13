@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 
 @Component({
@@ -29,14 +24,12 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssignmentComponent implements OnInit {
+export class AssignmentComponent {
   @Input() objective?: ImmutableObjective;
   @Input() assignedResources?: number;
   @Input() unit?: string;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   isCommitted(): boolean {
     return this.objective?.commitmentType === CommitmentType.Committed;

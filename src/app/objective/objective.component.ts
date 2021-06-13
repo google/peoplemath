@@ -14,7 +14,6 @@
 
 import {
   Component,
-  OnInit,
   Input,
   EventEmitter,
   Output,
@@ -42,7 +41,7 @@ import { ImmutableBucket } from '../bucket';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ObjectiveComponent implements OnInit {
+export class ObjectiveComponent {
   @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
@@ -60,8 +59,6 @@ export class ObjectiveComponent implements OnInit {
   >();
 
   constructor(public dialog: MatDialog) {}
-
-  ngOnInit(): void {}
 
   hasPeopleAvailable(): boolean {
     return (

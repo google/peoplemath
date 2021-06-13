@@ -14,7 +14,6 @@
 
 import {
   Component,
-  OnInit,
   Input,
   Inject,
   EventEmitter,
@@ -58,7 +57,7 @@ class PersonData {
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PeopleComponent implements OnInit {
+export class PeopleComponent {
   @Input() people?: readonly ImmutablePerson[];
   @Input() peopleAllocations?: ReadonlyMap<string, number>;
   @Input() peopleCommittedAllocations?: ReadonlyMap<string, number>;
@@ -75,8 +74,6 @@ export class PeopleComponent implements OnInit {
   @ViewChild(MatSort) sort?: MatSort;
 
   constructor(public dialog: MatDialog) {}
-
-  ngOnInit(): void {}
 
   displayedColumns(): string[] {
     const columnLabels = ['personDesc'];

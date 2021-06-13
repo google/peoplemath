@@ -16,7 +16,6 @@ import {
   Component,
   EventEmitter,
   Inject,
-  OnInit,
   ViewEncapsulation,
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -122,15 +121,13 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   styleUrls: ['./edit-objective-dialog.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EditObjectiveDialogComponent implements OnInit {
+export class EditObjectiveDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<EditObjectiveDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData
   ) {}
 
   showDeleteConfirm = false;
-
-  ngOnInit(): void {}
 
   isDataValid(): boolean {
     return (
