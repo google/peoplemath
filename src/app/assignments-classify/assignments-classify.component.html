@@ -23,6 +23,19 @@
                     </li>
                 </ul>
             </div>
+            <div *ngIf="hasUngroupedObjectives()">
+                <h3>No {{groupType}}</h3>
+                <ul>
+                    <li *ngFor="let objective of ungroupedObjectives()">
+                        <app-assignment
+                            [objective]="objective"
+                            [assignedResources]="assignedResources(objective)"
+                            [unit]="period?.unit"
+                            [class.no-resources-assigned]="assignedResources(objective) <= 0">
+                        </app-assignment>
+                    </li>
+                </ul>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>
