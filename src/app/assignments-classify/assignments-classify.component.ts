@@ -78,6 +78,36 @@ export class AssignmentsClassifyComponent {
     return result;
   }
 
+  hasUngroupedObjectives(): boolean {
+    if (this.aggregateBy !== AggregateBy.Group) {
+      return false;
+    }
+    for (const bucket of this.period!.buckets) {
+      for (const objective of bucket.objectives) {
+        const mgs = objective.groups.filter(
+          (g) => g.groupType === this.groupType
+        );
+        if (mgs.length === 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  ungroupedObjectives(): ImmutableObjective[] {
+    const result: ImmutableObjective[] = [];
+    this.period!.buckets.forEach((b) => {
+      b.objectives.forEach((o) => {
+        const mgs = o.groups.filter((g) => g.groupType === this.groupType);
+        if (mgs.length === 0) {
+          result.push(o);
+        }
+      });
+    });
+    return result;
+  }
+
   objectivesByTag(): Array<[string, ImmutableObjective[]]> {
     const obsByTag = new Map<string, ImmutableObjective[]>();
     this.period!.buckets.forEach((b) => {
