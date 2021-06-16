@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
@@ -30,12 +25,10 @@ import { ImmutablePerson } from '../person';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssignmentsByPersonComponent implements OnInit {
+export class AssignmentsByPersonComponent {
   @Input() period?: ImmutablePeriod;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   hasAssignments(person: ImmutablePerson): boolean {
     for (const bucket of this.period!.buckets) {

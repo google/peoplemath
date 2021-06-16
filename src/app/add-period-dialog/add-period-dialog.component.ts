@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Period, ImmutablePeriod } from '../period';
 
@@ -38,7 +38,7 @@ export interface AddPeriodDialogData {
   templateUrl: './add-period-dialog.component.html',
   styleUrls: ['./add-period-dialog.component.css'],
 })
-export class AddPeriodDialogComponent implements OnInit {
+export class AddPeriodDialogComponent {
   // I'd like to switch this to use reactive forms so you can use validations,
   // but then you lose the ability to disable controls via data-driven methods,
   // which seems like a net usability loss. :-(
@@ -47,8 +47,6 @@ export class AddPeriodDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<AddPeriodDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
   ) {}
-
-  ngOnInit(): void {}
 
   onCancel(): void {
     this.dialogRef.close();

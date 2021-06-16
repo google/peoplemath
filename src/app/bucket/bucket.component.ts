@@ -17,7 +17,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -43,7 +42,7 @@ import { ObjectiveComponent } from '../objective/objective.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class BucketComponent implements OnInit {
+export class BucketComponent {
   @Input() bucket?: ImmutableBucket;
   @Input() unit?: string;
   @Input() totalAllocationPercentage?: number;
@@ -62,8 +61,6 @@ export class BucketComponent implements OnInit {
   @Output() delete = new EventEmitter<ImmutableBucket>();
 
   constructor(public dialog: MatDialog) {}
-
-  ngOnInit(): void {}
 
   /**
    * Limit of resources expected to be allocated to the given bucket in this period,

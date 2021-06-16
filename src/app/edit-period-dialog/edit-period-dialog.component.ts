@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Period, SecondaryUnit } from '../period';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
@@ -29,7 +29,7 @@ export interface EditPeriodDialogData {
   templateUrl: './edit-period-dialog.component.html',
   styleUrls: ['./edit-period-dialog.component.css'],
 })
-export class EditPeriodDialogComponent implements OnInit {
+export class EditPeriodDialogComponent {
   periodIdControl: FormControl;
   displayNameControl: FormControl;
   unitControl: FormControl;
@@ -58,8 +58,6 @@ export class EditPeriodDialogComponent implements OnInit {
       [Validators.min(0), Validators.max(100)]
     );
   }
-
-  ngOnInit(): void {}
 
   parseSecondaryUnits(): SecondaryUnit[] {
     return this.secondaryUnitsControl.value

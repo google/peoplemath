@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
 
@@ -30,13 +25,11 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TagSummaryComponent implements OnInit {
+export class TagSummaryComponent {
   @Input() period?: ImmutablePeriod;
   @Input() tag?: string;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   taggedObjectives(): ImmutableObjective[] {
     const result: ImmutableObjective[] = [];

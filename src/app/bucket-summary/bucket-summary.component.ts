@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 
@@ -30,14 +25,12 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BucketSummaryComponent implements OnInit {
+export class BucketSummaryComponent {
   @Input() bucket?: ImmutableBucket;
   @Input() bucketAllocationFraction?: number;
   @Input() unit?: string;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   hasCommittedObjectives(): boolean {
     return this.committedObjectives().length > 0;

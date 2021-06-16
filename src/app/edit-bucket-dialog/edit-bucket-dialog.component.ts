@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import { Component, Inject, EventEmitter } from '@angular/core';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -30,15 +30,13 @@ export interface EditBucketDialogData {
   templateUrl: './edit-bucket-dialog.component.html',
   styleUrls: ['./edit-bucket-dialog.component.css'],
 })
-export class EditBucketDialogComponent implements OnInit {
+export class EditBucketDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<EditBucketDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData
   ) {}
 
   showDeleteConfirm = false;
-
-  ngOnInit(): void {}
 
   isDataValid(): boolean {
     return (

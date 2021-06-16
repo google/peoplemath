@@ -16,7 +16,6 @@
 
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
@@ -42,7 +41,7 @@ export enum AggregateBy {
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssignmentsClassifyComponent implements OnInit {
+export class AssignmentsClassifyComponent {
   @Input() period?: ImmutablePeriod;
   @Input() aggregateBy?: AggregateBy;
   @Input() groupType?: string;
@@ -51,8 +50,6 @@ export class AssignmentsClassifyComponent implements OnInit {
   @Output() rename = new EventEmitter<[string, string]>();
 
   constructor(private dialog: MatDialog) {}
-
-  ngOnInit(): void {}
 
   objectivesByGroup(): Array<[string, ImmutableObjective[]]> {
     const obsByGroup = new Map<string, ImmutableObjective[]>();

@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
@@ -31,15 +26,13 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupSummaryComponent implements OnInit {
+export class GroupSummaryComponent {
   @Input() period?: ImmutablePeriod;
   @Input() groupType?: string;
   showObjectives = false;
   showByBucket = true;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   bucketObjectivesByGroup(
     bucket: ImmutableBucket
