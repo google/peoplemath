@@ -62,10 +62,12 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 import { CsumClassPipe } from './objective/csum-class.pipe';
 import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
 import { MarkdownifyPipe } from './markdown/markdownify.pipe';
+import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ProgressSpinnerComponent,
     TeamsComponent,
     TeamPeriodsComponent,
     PeriodComponent,
