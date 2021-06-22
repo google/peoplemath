@@ -18,14 +18,13 @@ import { ThemePalette } from '@angular/material/core';
 @Component({
   selector: 'app-progress-spinner',
   templateUrl: './progress-spinner.component.html',
-  styleUrls: ['./progress-spinner.component.css']
+  styleUrls: ['./progress-spinner.component.css'],
 })
 export class ProgressSpinnerComponent {
   @Input() color: ThemePalette = undefined;
   @Input() position: Position = undefined;
 
-  constructor() { }
-
+  constructor() {}
 }
 
-export type Position = "centered" | undefined
+export type Position = 'centered' | undefined;
