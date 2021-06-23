@@ -20,11 +20,13 @@ import { ThemePalette } from '@angular/material/core';
   templateUrl: './progress-spinner.component.html',
   styleUrls: ['./progress-spinner.component.css']
 })
-export class ProgressSpinnerComponent {
+export class ProgressSpinnerComponent implements OnInit {
   @Input() color: ThemePalette = undefined;
   @Input() position: Position = undefined;
 
   constructor() { }
+
+  ngOnInit(): void { }
 
 }
 
