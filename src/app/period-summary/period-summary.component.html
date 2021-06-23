@@ -1,4 +1,4 @@
-<mat-spinner *ngIf="!isLoaded()"></mat-spinner>
+<mat-spinner class="centered" *ngIf="!isLoaded()"></mat-spinner>
 <div *ngIf="isLoaded()" class="grid-container">
     <h1 mat-h1>{{team?.displayName}} {{period?.displayName}} (<a routerLink="/team/{{team!.id}}/period/{{period!.id}}">Full report</a>)</h1>
 
@@ -8,7 +8,7 @@
 
         <app-tag-summary *ngFor="let tag of allTags()"
             [period]="period" [tag]="tag"></app-tag-summary>
-            
+
         <app-bucket-summary *ngFor="let bucket of period!.buckets"
             [bucket]="bucket"
             [bucketAllocationFraction]="bucketAllocationFraction(bucket)"
