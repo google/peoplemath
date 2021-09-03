@@ -17,8 +17,8 @@ import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from './storage.service';
 import { MaterialModule } from './material/material.module';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { firebaseConfig } from '../environments/firebaseConfig';
 import { AuthService } from './services/auth.service';
 describe('AppComponent', () => {

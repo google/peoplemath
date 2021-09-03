@@ -17,7 +17,7 @@
     "@angular/common": "~12.2.4",
     "@angular/compiler": "~12.2.4",
     "@angular/core": "~12.2.4",
-    "@angular/fire": "^6.1.3",
+    "@angular/fire": "^7.0.3",
     "@angular/flex-layout": "^12.0.0-beta.34",
     "@angular/forms": "~12.2.4",
     "@angular/material": "~12.2.4",
@@ -25,11 +25,12 @@
     "@angular/platform-browser-dynamic": "~12.2.4",
     "@angular/router": "~12.2.4",
     "dompurify": "^2.2.7",
-    "firebase": "^9.0.1",
+    "firebase": "^9.0.0",
     "rxjs": "~6.6.7",
     "snarkdown": "^2.0.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "rxfire": "^6.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.4",
@@ -63,6 +64,13 @@
     "prettier": "2.2.1",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
-    "typescript": "~4.2.4"
+    "typescript": "~4.2.4",
+    "@angular-devkit/architect": "^0.1200.0",
+    "firebase-tools": "^9.0.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "open": "^7.0.3",
+    "jsonc-parser": "^3.0.0"
   }
 }
