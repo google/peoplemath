@@ -10,3 +10,8 @@
 
 # dependencies
 /node_modules
+
+# Automatically-maintained files
+package.json
+package-lock.json
+
