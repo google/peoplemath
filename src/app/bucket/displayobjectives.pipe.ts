@@ -18,6 +18,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DisplayObjective } from './bucket.component';
 import { ImmutableObjective } from '../objective';
 
+/*
+ * Pipe to compute cumulative sums of effort estimates.
+ */
 @Pipe({
   name: 'displayObjectives',
 })
@@ -25,7 +28,7 @@ export class DisplayObjectivesPipe implements PipeTransform {
   transform(
     objectives: readonly ImmutableObjective[],
     ...args: unknown[]
-  ): Array<DisplayObjective> {
+  ): DisplayObjective[] {
     const displayObjectives: Array<DisplayObjective> = [];
     let cumulativeSum = 0;
     for (const objective of objectives) {

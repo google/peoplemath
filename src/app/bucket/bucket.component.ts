@@ -33,6 +33,8 @@ import {
 } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ObjectiveComponent } from '../objective/objective.component';
+import { DisplayObjectivesPipe } from './displayobjectives.pipe';
+import { GroupblocksPipe } from './groupblocks.pipe';
 
 @Component({
   selector: 'app-bucket',
@@ -154,9 +156,18 @@ export class BucketComponent {
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
-    const newObjectives = [...this.bucket!.objectives];
-    moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
+    let displayObjectives = new DisplayObjectivesPipe().transform(
+      this.bucket!.objectives
+    );
+    let objectiveBlocks = new GroupblocksPipe().transform(displayObjectives);
+    moveItemInArray(objectiveBlocks, event.previousIndex, event.currentIndex);
     if (event.previousIndex !== event.currentIndex) {
+      const newObjectives: ImmutableObjective[] = [];
+      for (let objectiveBlock of objectiveBlocks) {
+        for (let displayObjective of objectiveBlock) {
+          newObjectives.push(displayObjective.objective);
+        }
+      }
       this.changed.emit([
         this.bucket!,
         this.bucket!.withNewObjectives(newObjectives),

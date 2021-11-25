@@ -27,13 +27,13 @@
   </mat-list-item>
 </mat-list>
 <mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
-  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives"
-      cdkDrag
-      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']" class="app-mat-list-item">
-    <div *cdkDragPlaceholder></div>
-    <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
-    <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
-    </ng-container>
+  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders"
+    cdkDrag
+    [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']" class="app-mat-list-item">
+      <div *cdkDragPlaceholder></div>
+      <i class="material-icons reorder-icon" cdkDragHandle>reorder</i>
+      <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
+      </ng-container>
   </mat-list-item>
 </mat-list>
 </mat-card-content>
@@ -45,8 +45,7 @@
       [objective]="displayObjective.objective"
       [unit]="unit"
       [unallocatedTime]="unallocatedTime"
-      [isEditingEnabled]="isEditingEnabled"
-      [isReorderingEnabled]="showOrderButtons"
+      [isEditingEnabled]="isEditingEnabled && !showOrderButtons"
       [otherBuckets]="otherBuckets"
       [resourcesCumulativeSum]="displayObjective.cumulativeSum"
       [bucketAllocationLimit]="bucketAllocationLimit()"

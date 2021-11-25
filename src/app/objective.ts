@@ -95,6 +95,7 @@ export interface Objective {
   tags: ObjectiveTag[];
   assignments: Assignment[];
   displayOptions?: DisplayOptions;
+  blockID?: string;
 }
 
 // Boilerplate avoidance device
@@ -107,6 +108,7 @@ interface ImmutableObjectiveIF {
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
+  readonly blockID?: string;
 }
 
 export class ImmutableObjective {
@@ -120,6 +122,7 @@ export class ImmutableObjective {
   readonly tags: readonly ImmutableObjectiveTag[];
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
+  readonly blockID?: string;
 
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
@@ -130,6 +133,7 @@ export class ImmutableObjective {
     this.tags = o.tags;
     this.assignments = o.assignments;
     this.displayOptions = o.displayOptions;
+    this.blockID = o.blockID;
   }
 
   static fromObjective(objective: Objective): ImmutableObjective {
@@ -145,11 +149,12 @@ export class ImmutableObjective {
         objective.displayOptions === undefined
           ? undefined
           : new ImmutableDisplayOptions(objective.displayOptions),
+      blockID: objective.blockID,
     });
   }
 
   toOriginal(): Objective {
-    return {
+    let result: Objective = {
       name: this.name,
       resourceEstimate: this.resourceEstimate,
       commitmentType: this.commitmentType,
@@ -159,6 +164,10 @@ export class ImmutableObjective {
       assignments: this.assignments.map((a) => a.toOriginal()),
       displayOptions: this.displayOptions?.toOriginal(),
     };
+    if (this.blockID) {
+      result.blockID = this.blockID;
+    }
+    return result;
   }
 
   withAssignments(

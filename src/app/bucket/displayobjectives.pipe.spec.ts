@@ -15,38 +15,46 @@
  */
 
 import { DisplayObjectivesPipe } from './displayobjectives.pipe';
-import { Objective } from '../objective';
-import { Bucket, ImmutableBucket } from '../bucket';
+import { ImmutableObjective } from '../objective';
+import { DisplayObjective } from './bucket.component';
 
-const DEFAULT_OBJECTIVES: Objective[] = [
-  {
-    name: 'max',
-    resourceEstimate: 10,
+function objt(
+  name: string,
+  resourceEstimate: number,
+  blockID?: string
+): ImmutableObjective {
+  return ImmutableObjective.fromObjective({
+    name: name,
+    resourceEstimate: resourceEstimate,
+    blockID: blockID,
     notes: '',
     groups: [],
     tags: [],
     assignments: [],
-  },
-  {
-    name: 'john',
-    resourceEstimate: 20,
-    notes: '',
-    groups: [],
-    tags: [],
-    assignments: [],
-  },
-];
+  });
+}
 
-const bucket = ImmutableBucket.fromBucket(
-  new Bucket('test bucket', 100, DEFAULT_OBJECTIVES)
-);
+function dobjt(
+  name: string,
+  resourceEstimate: number,
+  csum: number,
+  blockID?: string
+): DisplayObjective {
+  return {
+    objective: objt(name, resourceEstimate, blockID),
+    cumulativeSum: csum,
+  };
+}
 
 describe('DisplayobjectivesPipe', () => {
   it('should calculate the cumulative sum', () => {
     const pipe = new DisplayObjectivesPipe();
-    const displayObjectives = pipe.transform(bucket.objectives);
+    const objectives = [objt('max', 10), objt('john', 20)];
+    const displayObjectiveBlocks = pipe.transform(objectives);
 
-    expect(displayObjectives[0].cumulativeSum).toBe(10);
-    expect(displayObjectives[1].cumulativeSum).toBe(30);
+    expect(displayObjectiveBlocks).toEqual([
+      dobjt('max', 10, 10),
+      dobjt('john', 20, 30),
+    ]);
   });
 });

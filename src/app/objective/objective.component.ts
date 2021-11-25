@@ -46,7 +46,6 @@ export class ObjectiveComponent {
   @Input() unit?: string;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() isEditingEnabled?: boolean;
-  @Input() isReorderingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Input() bucketAllocationLimit?: number;
   @Input() resourcesCumulativeSum?: number;

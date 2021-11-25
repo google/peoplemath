@@ -36,3 +36,21 @@ export class ImmutableAssignment {
     return new Assignment(this.personId, this.commitment);
   }
 }
+
+export function sumAssignments(
+  assignments: (readonly ImmutableAssignment[])[]
+): Assignment[] {
+  let byPerson = new Map();
+  for (const as of assignments) {
+    for (const a of as) {
+      if (byPerson.has(a.personId)) {
+        byPerson.set(a.personId, byPerson.get(a.personId) + a.commitment);
+      } else {
+        byPerson.set(a.personId, a.commitment);
+      }
+    }
+  }
+  let result: Assignment[] = [];
+  byPerson.forEach((c, p) => result.push({ personId: p, commitment: c }));
+  return result;
+}
