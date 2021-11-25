@@ -16,9 +16,8 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/compat/app';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
 import { NotificationService } from './notification.service';
