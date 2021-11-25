@@ -22,9 +22,9 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { of } from 'rxjs';
 import { Person } from '../person';
-import { AngularFireModule } from '@angular/fire';
+import { AngularFireModule } from '@angular/fire/compat';
 import { firebaseConfig } from '../../environments/firebaseConfig';
-import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
 import {
