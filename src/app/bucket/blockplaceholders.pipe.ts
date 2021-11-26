@@ -39,7 +39,8 @@ export class BlockplaceholdersPipe implements PipeTransform {
       const first = objectiveBlock[0].objective;
       result.push({
         objective: ImmutableObjective.fromObjective({
-          name: first.name + ' (and ' + (objectiveBlock.length - 1) + ' more)',
+          name:
+            first.name + ' **(and ' + (objectiveBlock.length - 1) + ' more)**',
           resourceEstimate: objectiveBlock
             .map((o) => o.objective.resourceEstimate)
             .reduce((a, b) => a + b, 0),
@@ -50,6 +51,7 @@ export class BlockplaceholdersPipe implements PipeTransform {
             objectiveBlock.map((o) => o.objective.assignments)
           ),
           blockID: first.blockID,
+          displayOptions: first.displayOptions,
         }),
         cumulativeSum: objectiveBlock[objectiveBlock.length - 1].cumulativeSum,
       });

@@ -71,7 +71,7 @@ describe('BlockplaceholdersPipe', () => {
     ];
     expect(pipe.transform(objectiveBlocks)).toEqual([
       dobjt('O1', 1, 1),
-      dobjt('O2 (and 1 more)', 2, 3, assignSum, 'block1'),
+      dobjt('O2 **(and 1 more)**', 2, 3, assignSum, 'block1'),
       dobjt('O4', 1, 4, [{ personId: 'a', commitment: 5 }]),
     ]);
   });

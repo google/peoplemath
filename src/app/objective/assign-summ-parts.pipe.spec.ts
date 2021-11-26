@@ -40,6 +40,9 @@ describe('AssignSummPartsPipe', () => {
       new ImmutableAssignment({ personId: 'charlotte', commitment: 2 }),
       new ImmutableAssignment({ personId: 'nobody', commitment: 0 }),
     ];
-    expect(pipe.transform(assignments)).toEqual(['bob: 1', 'charlotte: 2']);
+    expect(pipe.transform(assignments)).toEqual([
+      ['bob', 1],
+      ['charlotte', 2],
+    ]);
   });
 });
