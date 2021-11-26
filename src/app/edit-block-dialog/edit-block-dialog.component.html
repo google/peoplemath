@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Edit Objective Block</h2>
+<mat-dialog-content>
+    <p>You can group the selected objectives <b>{{data.blockPlaceholder.name}}</b> with others below,
+        to reorder them as a block.</p>
+    <mat-selection-list #below [multiple]="false" [(ngModel)]="selected" style="max-height: 50vh;">
+        <mat-list-option *ngFor="let block of data.blocksBelow; index as idx" [value]="idx" [class.selected-range]="idx <= below.selectedOptions.selected[0]?.value">
+            {{block.name}}
+        </mat-list-option>
+    </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button color="primary" (click)="createBlock()">Create block</button>
+    <button mat-button *ngIf="data.blockPlaceholder.blockID" (click)="splitBlock()" color="warn">Split existing group</button>
+    <button mat-button (click)="cancel()">Cancel</button>
+</mat-dialog-actions>

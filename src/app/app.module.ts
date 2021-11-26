@@ -64,6 +64,7 @@ import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
 import { MarkdownifyPipe } from './markdown/markdownify.pipe';
 import { GroupblocksPipe } from './bucket/groupblocks.pipe';
 import { BlockplaceholdersPipe } from './bucket/blockplaceholders.pipe';
+import { EditBlockDialogComponent } from './edit-block-dialog/edit-block-dialog.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { BlockplaceholdersPipe } from './bucket/blockplaceholders.pipe';
     MarkdownifyPipe,
     GroupblocksPipe,
     BlockplaceholdersPipe,
+    EditBlockDialogComponent,
   ],
   imports: [
     BrowserModule,

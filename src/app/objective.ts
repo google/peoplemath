@@ -216,6 +216,10 @@ export class ImmutableObjective {
     return new ImmutableObjective({ ...this, tags: newTags });
   }
 
+  withBlockID(blockID?: string): ImmutableObjective {
+    return new ImmutableObjective({ ...this, blockID: blockID });
+  }
+
   /**
    * Sum of resources allocated to the given objective.
    */
