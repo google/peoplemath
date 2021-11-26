@@ -38,7 +38,7 @@ export interface EditBlockInstruction {
   templateUrl: './edit-block-dialog.component.html',
   styleUrls: ['./edit-block-dialog.component.css'],
 })
-export class EditBlockDialogComponent implements OnInit {
+export class EditBlockDialogComponent {
   selected: string[] = [];
 
   constructor(
@@ -48,8 +48,6 @@ export class EditBlockDialogComponent implements OnInit {
     >,
     @Inject(MAT_DIALOG_DATA) public data: EditBlockDialogData
   ) {}
-
-  ngOnInit(): void {}
 
   createBlock(): void {
     this.dialogRef.close({
