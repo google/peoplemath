@@ -50,6 +50,9 @@ export class EditBlockDialogComponent {
   ) {}
 
   createBlock(): void {
+    if (this.selected.length === 0) {
+      return;
+    }
     this.dialogRef.close({
       action: BlockAction.Create,
       downToIdx: parseInt(this.selected[0]),
