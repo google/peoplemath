@@ -24,9 +24,13 @@ app-bucket .mat-list-item-content {
   padding-bottom: 15px !important;
 }
 
-.reorder-icon {
+.side-icon {
   vertical-align: middle;
   padding-right: 10px;
+}
+
+.disabled-side-icon {
+  color: gray;
 }
 
 app-bucket .cdk-drag-placeholder {

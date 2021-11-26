@@ -15,6 +15,7 @@
 <div fxLayout="column" fxFlex="calc(30%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
 <div class="editor-options">
     <span *ngIf="isEditingEnabled">
+        <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()"><mat-icon>group_work</mat-icon></button>
         <button mat-fab (click)="toggleReordering()" [color]="reorderButtonColour()"><mat-icon>reorder</mat-icon></button>
         <button mat-fab (click)="disableEditing()" color="primary"><mat-icon>done</mat-icon></button>
     </span>
@@ -35,6 +36,7 @@
     [unallocatedTime]="unallocatedTime()"
     [showOrderButtons]="showOrderButtons && isEditingEnabled"
     [isEditingEnabled]="isEditingEnabled"
+    [isBlockEditingEnabled]="isBlockEditingEnabled"
     [otherBuckets]="otherBuckets(bucket)"
     (moveBucketUp)="moveBucketUpOne($event)"
     (moveBucketDown)="moveBucketDownOne($event)"

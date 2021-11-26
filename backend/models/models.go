@@ -106,6 +106,7 @@ type Objective struct {
 	Groups           []ObjectiveGroup `json:"groups"`
 	Tags             []ObjectiveTag   `json:"tags"`
 	DisplayOptions   DisplayOptions   `json:"displayOptions"`
+	BlockID          string           `json:"blockID"`
 }
 
 // ObjectiveGroup model struct

@@ -62,6 +62,9 @@ import { DisplayObjectivesPipe } from './bucket/displayobjectives.pipe';
 import { CsumClassPipe } from './objective/csum-class.pipe';
 import { AssignSummPartsPipe } from './objective/assign-summ-parts.pipe';
 import { MarkdownifyPipe } from './markdown/markdownify.pipe';
+import { GroupblocksPipe } from './bucket/groupblocks.pipe';
+import { BlockplaceholdersPipe } from './bucket/blockplaceholders.pipe';
+import { EditBlockDialogComponent } from './edit-block-dialog/edit-block-dialog.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +99,9 @@ import { MarkdownifyPipe } from './markdown/markdownify.pipe';
     CsumClassPipe,
     AssignSummPartsPipe,
     MarkdownifyPipe,
+    GroupblocksPipe,
+    BlockplaceholdersPipe,
+    EditBlockDialogComponent,
   ],
   imports: [
     BrowserModule,

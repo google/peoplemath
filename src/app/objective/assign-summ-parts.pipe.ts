@@ -21,11 +21,11 @@ import { ImmutableAssignment } from '../assignment';
   name: 'assignSummParts',
 })
 export class AssignSummPartsPipe implements PipeTransform {
-  transform(assignments?: readonly ImmutableAssignment[]): string[] {
+  transform(assignments?: readonly ImmutableAssignment[]): [string, number][] {
     return assignments === undefined
       ? []
       : assignments
           .filter((a) => a.commitment > 0)
-          .map((a) => a.personId + ': ' + a.commitment);
+          .map((a) => [a.personId, a.commitment]);
   }
 }

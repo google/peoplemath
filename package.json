@@ -26,11 +26,12 @@
     "@angular/router": "~12.2.11",
     "dompurify": "^2.2.7",
     "firebase": "^9.4.0",
+    "rxfire": "^6.0.0",
     "rxjs": "~6.6.7",
     "snarkdown": "^2.0.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.4",
-    "rxfire": "^6.0.0"
+    "uuid": "^8.3.2",
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.11",
@@ -46,6 +47,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "4.23.0",
     "@typescript-eslint/parser": "4.23.0",
     "codelyzer": "^6.0.0",

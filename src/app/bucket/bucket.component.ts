@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import { Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   EditObjectiveDialogComponent,
   EditObjectiveDialogData,
@@ -33,6 +33,16 @@ import {
 } from '../edit-bucket-dialog/edit-bucket-dialog.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ObjectiveComponent } from '../objective/objective.component';
+import { DisplayObjectivesPipe } from './displayobjectives.pipe';
+import { GroupblocksPipe } from './groupblocks.pipe';
+import {
+  BlockAction,
+  EditBlockDialogComponent,
+  EditBlockDialogData,
+  EditBlockInstruction,
+} from '../edit-block-dialog/edit-block-dialog.component';
+import { BlockplaceholdersPipe } from './blockplaceholders.pipe';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-bucket',
@@ -51,6 +61,7 @@ export class BucketComponent {
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() showOrderButtons?: boolean;
   @Input() isEditingEnabled?: boolean;
+  @Input() isBlockEditingEnabled?: boolean;
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Output() moveBucketUp = new EventEmitter<ImmutableBucket>();
   @Output() moveBucketDown = new EventEmitter<ImmutableBucket>();
@@ -92,6 +103,97 @@ export class BucketComponent {
         this.changed.emit([this.bucket!, ImmutableBucket.fromBucket(bucket)]);
       }
     });
+  }
+
+  editBlock(blockIdx: number): void {
+    if (!this.isEditingEnabled || !this.isBlockEditingEnabled) {
+      return;
+    }
+    const displayObjectives = new DisplayObjectivesPipe().transform(
+      this.bucket!.objectives
+    );
+    const blocks = new GroupblocksPipe().transform(displayObjectives);
+    // If we're talking about the bottom block and it's not part of an existing block,
+    // there's nothing useful that an edit can do
+    if (
+      blockIdx === blocks.length - 1 &&
+      !blocks[blockIdx][0].objective.blockID
+    ) {
+      return;
+    }
+    const placeholders = new BlockplaceholdersPipe().transform(blocks);
+    const topPlaceholder = placeholders[blockIdx].objective;
+    const data: EditBlockDialogData = {
+      blockPlaceholder: topPlaceholder,
+      blocksBelow: placeholders
+        .slice(blockIdx + 1, placeholders.length)
+        .map((o) => o.objective),
+    };
+    const dialogRef: MatDialogRef<
+      EditBlockDialogComponent,
+      EditBlockInstruction
+    > = this.dialog.open(EditBlockDialogComponent, { data: data });
+    dialogRef.afterClosed().subscribe((instruction?: EditBlockInstruction) => {
+      if (!instruction) {
+        return;
+      }
+      if (instruction.action == BlockAction.Split) {
+        this.splitBlock(
+          blocks.map((a) => a.map((o) => o.objective)),
+          blockIdx
+        );
+      } else if (
+        instruction.action == BlockAction.Create &&
+        instruction.downToIdx !== undefined
+      ) {
+        this.createBlock(
+          blocks.map((a) => a.map((o) => o.objective)),
+          blockIdx,
+          instruction.downToIdx + blockIdx + 1
+        );
+      } else {
+        console.error('Unsupported block instruction:', instruction);
+      }
+    });
+  }
+
+  splitBlock(oldBlocks: ImmutableObjective[][], splitIdx: number): void {
+    let newObjectives: ImmutableObjective[] = [];
+    for (let idx = 0; idx < oldBlocks.length; idx++) {
+      for (let objective of oldBlocks[idx]) {
+        if (idx == splitIdx) {
+          newObjectives.push(objective.withBlockID());
+        } else {
+          newObjectives.push(objective);
+        }
+      }
+    }
+    this.changed.emit([
+      this.bucket!,
+      this.bucket!.withNewObjectives(newObjectives),
+    ]);
+  }
+
+  createBlock(
+    oldBlocks: ImmutableObjective[][],
+    fromIdx: number,
+    toIdx: number
+  ): void {
+    const blockID = uuidv4();
+    let newObjectives: ImmutableObjective[] = [];
+    for (let blockIdx = 0; blockIdx < oldBlocks.length; blockIdx++) {
+      for (let objective of oldBlocks[blockIdx]) {
+        if (blockIdx >= fromIdx && blockIdx <= toIdx) {
+          newObjectives.push(objective.withBlockID(blockID));
+        } else {
+          newObjectives.push(objective);
+        }
+      }
+    }
+    this.changed.emit([
+      this.bucket!,
+      this.bucket!.withNewObjectives(newObjectives),
+    ]);
   }
 
   addObjective(): void {
@@ -154,9 +256,18 @@ export class BucketComponent {
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
-    const newObjectives = [...this.bucket!.objectives];
-    moveItemInArray(newObjectives, event.previousIndex, event.currentIndex);
+    let displayObjectives = new DisplayObjectivesPipe().transform(
+      this.bucket!.objectives
+    );
+    let objectiveBlocks = new GroupblocksPipe().transform(displayObjectives);
+    moveItemInArray(objectiveBlocks, event.previousIndex, event.currentIndex);
     if (event.previousIndex !== event.currentIndex) {
+      const newObjectives: ImmutableObjective[] = [];
+      for (let objectiveBlock of objectiveBlocks) {
+        for (let displayObjective of objectiveBlock) {
+          newObjectives.push(displayObjective.objective);
+        }
+      }
       this.changed.emit([
         this.bucket!,
         this.bucket!.withNewObjectives(newObjectives),

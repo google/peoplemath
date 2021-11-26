@@ -15,26 +15,33 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { DisplayObjective } from './bucket.component';
 import { ImmutableObjective } from '../objective';
+import { DisplayObjective } from './bucket.component';
 
-/*
- * Pipe to compute cumulative sums of effort estimates.
- */
 @Pipe({
-  name: 'displayObjectives',
+  name: 'groupBlocks',
 })
-export class DisplayObjectivesPipe implements PipeTransform {
+export class GroupblocksPipe implements PipeTransform {
   transform(
-    objectives: readonly ImmutableObjective[],
+    objectives: readonly DisplayObjective[],
     ...args: unknown[]
-  ): DisplayObjective[] {
-    const displayObjectives: Array<DisplayObjective> = [];
-    let cumulativeSum = 0;
-    for (const objective of objectives) {
-      cumulativeSum += objective.resourceEstimate;
-      displayObjectives.push({ objective, cumulativeSum });
+  ): DisplayObjective[][] {
+    let blocks: DisplayObjective[][] = [];
+    let currentBlock: DisplayObjective[] = [];
+    let currentBlockID = undefined;
+    for (const o of objectives) {
+      if (!o.objective.blockID || o.objective.blockID != currentBlockID) {
+        if (currentBlock.length > 0) {
+          blocks.push(currentBlock);
+          currentBlock = [];
+        }
+      }
+      currentBlockID = o.objective.blockID;
+      currentBlock.push(o);
     }
-    return displayObjectives;
+    if (currentBlock.length > 0) {
+      blocks.push(currentBlock);
+    }
+    return blocks;
   }
 }

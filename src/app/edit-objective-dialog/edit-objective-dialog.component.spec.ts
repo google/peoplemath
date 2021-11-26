@@ -43,6 +43,7 @@ describe('EditObjectiveDialogComponent', () => {
     tags: [{ name: 't1' }, { name: 't2' }],
     notes: '',
     assignments: [],
+    blockID: 'myblock',
   });
   const DIALOG_DATA: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
@@ -115,6 +116,7 @@ describe('EditObjectiveDialogComponent', () => {
       notes: '',
       assignments: [],
       displayOptions: { enableMarkdown: false },
+      blockID: 'myblock',
     };
     expect(makeEditedObjective(objective)).toEqual(expected);
   });

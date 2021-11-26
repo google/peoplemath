@@ -56,6 +56,7 @@ export class PeriodComponent implements OnInit {
   team?: ImmutableTeam;
   period?: ImmutablePeriod;
   isEditingEnabled = false;
+  isBlockEditingEnabled = false;
   showOrderButtons = false;
   userHasEditPermissions = true;
   readonly eventsRequiringSave = new Subject<unknown>();
@@ -87,6 +88,7 @@ export class PeriodComponent implements OnInit {
   enableEditing(): void {
     this.isEditingEnabled = true;
     this.showOrderButtons = false;
+    this.isBlockEditingEnabled = false;
     // Shouldn't be strictly necessary, as these events should always come from the DOM,
     // but to prevent future bugs...
     this.changeDet.detectChanges();
@@ -95,6 +97,7 @@ export class PeriodComponent implements OnInit {
   disableEditing(): void {
     this.isEditingEnabled = false;
     this.showOrderButtons = false;
+    this.isBlockEditingEnabled = false;
     // Shouldn't be strictly necessary, as these events should always come from the DOM,
     // but to prevent future bugs...
     this.changeDet.detectChanges();
@@ -102,13 +105,27 @@ export class PeriodComponent implements OnInit {
 
   toggleReordering(): void {
     this.showOrderButtons = !this.showOrderButtons;
+    this.isBlockEditingEnabled = false;
     // Shouldn't be strictly necessary, as these events should always come from the DOM,
     // but to prevent future bugs...
     this.changeDet.detectChanges();
   }
 
+  toggleBlockEditing(): void {
+    if (this.isBlockEditingEnabled) {
+      this.isBlockEditingEnabled = false;
+    } else {
+      this.isBlockEditingEnabled = true;
+      this.showOrderButtons = true;
+    }
+  }
+
   reorderButtonColour(): ThemePalette {
     return this.showOrderButtons ? 'accent' : undefined;
+  }
+
+  blockEditButtonColour(): ThemePalette {
+    return this.isBlockEditingEnabled ? 'accent' : undefined;
   }
 
   /**

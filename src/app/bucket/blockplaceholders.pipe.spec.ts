@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { DisplayObjectivesPipe } from './displayobjectives.pipe';
+import { Assignment } from '../assignment';
 import { ImmutableObjective } from '../objective';
+import { BlockplaceholdersPipe } from './blockplaceholders.pipe';
 import { DisplayObjective } from './bucket.component';
 
 function objt(
   name: string,
   resourceEstimate: number,
+  assignments?: Assignment[],
   blockID?: string
 ): ImmutableObjective {
   return ImmutableObjective.fromObjective({
@@ -30,7 +32,7 @@ function objt(
     notes: '',
     groups: [],
     tags: [],
-    assignments: [],
+    assignments: assignments || [],
   });
 }
 
@@ -38,23 +40,39 @@ function dobjt(
   name: string,
   resourceEstimate: number,
   csum: number,
+  assignments?: Assignment[],
   blockID?: string
 ): DisplayObjective {
   return {
-    objective: objt(name, resourceEstimate, blockID),
+    objective: objt(name, resourceEstimate, assignments, blockID),
     cumulativeSum: csum,
   };
 }
 
-describe('DisplayobjectivesPipe', () => {
-  it('should calculate the cumulative sum', () => {
-    const pipe = new DisplayObjectivesPipe();
-    const objectives = [objt('max', 10), objt('john', 20)];
-    const displayObjectiveBlocks = pipe.transform(objectives);
-
-    expect(displayObjectiveBlocks).toEqual([
-      dobjt('max', 10, 10),
-      dobjt('john', 20, 30),
+describe('BlockplaceholdersPipe', () => {
+  it('should replace blocks with placeholders', () => {
+    const pipe = new BlockplaceholdersPipe();
+    const assignments1 = [
+      { personId: 'a', commitment: 1 },
+      { personId: 'b', commitment: 2 },
+    ];
+    const assignments2 = [{ personId: 'a', commitment: 2 }];
+    const objectiveBlocks = [
+      [dobjt('O1', 1, 1)],
+      [
+        dobjt('O2', 1, 2, assignments1, 'block1'),
+        dobjt('O3', 1, 3, assignments2, 'block1'),
+      ],
+      [dobjt('O4', 1, 4, [{ personId: 'a', commitment: 5 }])],
+    ];
+    const assignSum = [
+      { personId: 'a', commitment: 3 },
+      { personId: 'b', commitment: 2 },
+    ];
+    expect(pipe.transform(objectiveBlocks)).toEqual([
+      dobjt('O1', 1, 1),
+      dobjt('O2 **(and 1 more)**', 2, 3, assignSum, 'block1'),
+      dobjt('O4', 1, 4, [{ personId: 'a', commitment: 5 }]),
     ]);
   });
 });

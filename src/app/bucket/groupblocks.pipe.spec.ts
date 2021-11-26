@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { DisplayObjectivesPipe } from './displayobjectives.pipe';
 import { ImmutableObjective } from '../objective';
 import { DisplayObjective } from './bucket.component';
+import { GroupblocksPipe } from './groupblocks.pipe';
 
 function objt(
   name: string,
@@ -46,15 +46,25 @@ function dobjt(
   };
 }
 
-describe('DisplayobjectivesPipe', () => {
-  it('should calculate the cumulative sum', () => {
-    const pipe = new DisplayObjectivesPipe();
-    const objectives = [objt('max', 10), objt('john', 20)];
-    const displayObjectiveBlocks = pipe.transform(objectives);
-
-    expect(displayObjectiveBlocks).toEqual([
-      dobjt('max', 10, 10),
-      dobjt('john', 20, 30),
+describe('GroupblocksPipe', () => {
+  it('should group items into blocks', () => {
+    const pipe = new GroupblocksPipe();
+    const objectives = [
+      dobjt('O1', 1, 1),
+      dobjt('O2', 1, 2),
+      dobjt('O3', 1, 3, 'block1'),
+      dobjt('O4', 1, 4, 'block1'),
+      dobjt('O5', 1, 5, 'block2'),
+      dobjt('O6', 1, 6, 'block2'),
+      dobjt('O7', 1, 7),
+    ];
+    const objectiveBlocks = pipe.transform(objectives);
+    expect(objectiveBlocks).toEqual([
+      [dobjt('O1', 1, 1)],
+      [dobjt('O2', 1, 2)],
+      [dobjt('O3', 1, 3, 'block1'), dobjt('O4', 1, 4, 'block1')],
+      [dobjt('O5', 1, 5, 'block2'), dobjt('O6', 1, 6, 'block2')],
+      [dobjt('O7', 1, 7)],
     ]);
   });
 });
