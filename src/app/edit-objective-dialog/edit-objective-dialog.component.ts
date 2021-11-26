@@ -38,6 +38,7 @@ export interface EditedObjective {
   notes: string;
   assignments: Assignment[];
   displayOptions: DisplayOptions;
+  blockID?: string;
 }
 
 export interface EditObjectiveDialogData {
@@ -72,6 +73,7 @@ export const makeEditedObjective = (
     displayOptions: objective.displayOptions?.toOriginal() || {
       enableMarkdown: false,
     },
+    blockID: objective.blockID,
   };
 };
 
@@ -113,6 +115,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     notes: edited.notes,
     assignments: edited.assignments,
     displayOptions: edited.displayOptions,
+    blockID: edited.blockID,
   });
 
 @Component({
