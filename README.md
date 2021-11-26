@@ -45,13 +45,13 @@ Groups are a mutually-exclusive concept: for a single grouping key, each objecti
 
 ### Reordering and objective blocks
 
-Peoplemath allows you to easily drag objectives up and down to change the priority stack ranking within a bucket. To do this, click on the [reordering icon](https://fonts.google.com/icons?selected=Material%20Icons%3Areorder%3A) which appears in the bottom right when you enter edit mode.
+PeopleMath allows you to easily drag objectives up and down to change the priority stack ranking within a bucket. To do this, click on the [reordering icon](https://fonts.google.com/icons?selected=Material%20Icons%3Areorder%3A) which appears in the bottom right when you enter edit mode.
 
 That same icon will then appear to the left of each objective. You can click and drag these icons to reorder objectives.
 
 You can also reorder buckets in this mode, by clicking the up and down arrows which appear in the bucket header.
 
-Sometimes there is a set of adjacent objectives which you always want to move together when reordering. Having to manually move each one individually can be very laborious. To help with this, Peoplemath supports the concept of a _block_ of objectives, which are adjacent in the stack rank and always moved together.
+Sometimes there is a set of adjacent objectives which you always want to move together when reordering. Having to manually move each one individually can be very laborious. To help with this, PeopleMath supports the concept of a _block_ of objectives, which are adjacent in the stack rank and always moved together.
 
 Click the [grouping icon](https://fonts.google.com/icons?selected=Material%20Icons%3Agroup_work%3A) in edit mode, and again, the same icon will appear to the left of each objective. Click the icon on the top item in your desired block, and a dialog will pop up allowing you to select how many of the items below you want in the block.
 
