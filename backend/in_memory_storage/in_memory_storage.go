@@ -25,9 +25,10 @@ import (
 
 // In-memory implementation of StorageService, for local testing
 type InMemStore struct {
-	teams    map[string]models.Team
-	periods  map[string]map[string]models.Period
-	settings models.Settings
+	teams         map[string]models.Team
+	periods       map[string]map[string]models.Period
+	periodBackups map[string]map[string]models.PeriodBackups
+	settings      models.Settings
 }
 
 // The defaultDomain can be specified as a flag when running the application
@@ -64,12 +65,13 @@ func MakeInMemStore(defaultDomain string) *InMemStore {
 			"2019q1": makeFakePeriod("2019q1"),
 		},
 	}
+	periodBackups := make(map[string]map[string]models.PeriodBackups)
 	settings := models.Settings{
 		ImproveURL:         "https://github.com/google/peoplemath",
 		GeneralPermissions: generalPermissions,
 	}
 
-	return &InMemStore{teams: teams, periods: periods, settings: settings}
+	return &InMemStore{teams: teams, periods: periods, periodBackups: periodBackups, settings: settings}
 }
 
 // AddAuthTestUsersAndTeam adds some test users plus a team, for unit tests
@@ -164,6 +166,26 @@ func (s *InMemStore) UpdatePeriod(ctx context.Context, teamID string, period mod
 		periodsByName[period.ID] = period
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
+	return nil
+}
+
+func (s *InMemStore) GetPeriodBackups(ctx context.Context, teamID, periodID string) (models.PeriodBackups, bool, error) {
+	if backupsByName, ok := s.periodBackups[teamID]; ok {
+		if backups, ok := backupsByName[periodID]; ok {
+			return backups, true, nil
+		}
+	}
+	return models.PeriodBackups{}, false, nil
+}
+
+func (s *InMemStore) UpsertPeriodBackups(ctx context.Context, teamID, periodID string, backups models.PeriodBackups) error {
+	var backupsByName map[string]models.PeriodBackups
+	var ok bool
+	if backupsByName, ok = s.periodBackups[teamID]; !ok {
+		backupsByName = map[string]models.PeriodBackups{}
+		s.periodBackups[teamID] = backupsByName
+	}
+	backupsByName[periodID] = backups
 	return nil
 }
 
