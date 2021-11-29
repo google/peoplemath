@@ -165,7 +165,7 @@ func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period
 		if err := tx.Get(periodKey, &empty); err != datastore.ErrNoSuchEntity {
 			return fmt.Errorf("Expected no period '%s' for team '%s': %s", period.ID, teamID, err)
 		}
-		_, err := tx.Put(periodKey, &period)
+		_, err := tx.Put(periodKey, period)
 		return err
 	})
 	return err
@@ -179,7 +179,7 @@ func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period
 		if err := tx.Get(periodKey, &ignored); err != nil {
 			return fmt.Errorf("Could not retrieve period '%s' for team '%s': %s", period.ID, teamID, err)
 		}
-		_, err := tx.Put(periodKey, &period)
+		_, err := tx.Put(periodKey, period)
 		return err
 	})
 	return err
