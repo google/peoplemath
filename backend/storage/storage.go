@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2020-21 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ type StorageService interface {
 	GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error)
 	CreatePeriod(ctx context.Context, teamID string, period models.Period) error
 	UpdatePeriod(ctx context.Context, teamID string, period models.Period) error
+	GetPeriodBackups(ctx context.Context, teamID, periodID string) (models.PeriodBackups, bool, error)
+	UpsertPeriodBackups(ctx context.Context, teamID, periodID string, backups models.PeriodBackups) error
 	GetSettings(ctx context.Context) (models.Settings, error)
 	Close() error
 }

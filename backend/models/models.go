@@ -16,6 +16,7 @@ package models
 
 import (
 	"strings"
+	"time"
 )
 
 type GeneralPermissions struct {
@@ -160,4 +161,13 @@ type Settings struct {
 type User struct {
 	Email  string
 	Domain string
+}
+
+type PeriodBackup struct {
+	Timestamp time.Time `json:"timestamp"`
+	Period    Period    `json:"period"`
+}
+
+type PeriodBackups struct {
+	Backups []PeriodBackup `json:"backups"`
 }

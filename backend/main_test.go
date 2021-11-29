@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -108,6 +108,16 @@ func attemptWritePeriod(handler http.Handler, teamID, periodID, periodJSON, http
 func addPeriod(handler http.Handler, teamID, periodID, periodJSON string, t *testing.T) {
 	resp := attemptWritePeriod(handler, teamID, periodID, periodJSON, http.MethodPost, t)
 	checkGoodJSONResponse(resp, t)
+}
+
+func getLastUpdateUUID(respBody io.Reader, t *testing.T) string {
+	respContent := models.ObjectUpdateResponse{}
+	dec := json.NewDecoder(respBody)
+	err := dec.Decode(&respContent)
+	if err != nil {
+		t.Fatalf("Could not unmarshal JSON: %s", err)
+	}
+	return respContent.LastUpdateUUID
 }
 
 func getPeriod(handler http.Handler, teamID, periodID string, t *testing.T) *models.Period {
@@ -344,12 +354,7 @@ func TestPutPeriod(t *testing.T) {
 	resp := attemptWritePeriod(handler, teamID, periodID, newPeriodJSON, http.MethodPut, t)
 	checkGoodJSONResponse(resp, t)
 
-	respContent := models.ObjectUpdateResponse{}
-	dec := json.NewDecoder(resp.Body)
-	err := dec.Decode(&respContent)
-	if err != nil {
-		t.Fatalf("Could not decode put response: %v", err)
-	}
+	lastUpdateUUID := getLastUpdateUUID(resp.Body, t)
 
 	period = getPeriod(handler, teamID, "2019q1", t)
 	if period.DisplayName != "2019 quarter 1" {
@@ -358,8 +363,8 @@ func TestPutPeriod(t *testing.T) {
 	if period.LastUpdateUUID == prevUUID {
 		t.Fatalf("Expected UUID change, found %v before and after", prevUUID)
 	}
-	if period.LastUpdateUUID != respContent.LastUpdateUUID {
-		t.Fatalf("Expected UUID to match put response %v, found %v", respContent.LastUpdateUUID, period.LastUpdateUUID)
+	if period.LastUpdateUUID != lastUpdateUUID {
+		t.Fatalf("Expected UUID to match put response %v, found %v", lastUpdateUUID, period.LastUpdateUUID)
 	}
 }
 
@@ -440,6 +445,89 @@ func TestMissingCommitmentType(t *testing.T) {
 	readCommitType := p.Buckets[0].Objectives[0].CommitmentType
 	if readCommitType != "" {
 		t.Fatalf("Expected read objective to have empty commitment type, found %q", readCommitType)
+	}
+}
+
+func getBackups(ctx context.Context, store storage.StorageService, teamID, periodID string, t *testing.T) models.PeriodBackups {
+	backups, ok, err := store.GetPeriodBackups(ctx, teamID, periodID)
+	if err != nil {
+		t.Fatalf("Error loading backups: %s", err)
+	}
+	if !ok {
+		t.Fatalf("Backups unexpectedly not found")
+	}
+	return backups
+}
+
+func TestPeriodBackups(t *testing.T) {
+	store := in_memory_storage.MakeInMemStore("google.com")
+	server := makeServer(store, auth.NoAuth{})
+	handler := server.MakeHandler()
+
+	teamID := "myteam"
+	periodID := "2021q4"
+	addTeam(handler, teamID, t)
+	period := models.Period{
+		ID:                     periodID,
+		DisplayName:            "test period",
+		Unit:                   "thingies",
+		NotesURL:               "",
+		MaxCommittedPercentage: 50,
+		Buckets:                []models.Bucket{},
+		People:                 []models.Person{},
+		SecondaryUnits:         []models.SecondaryUnit{},
+		LastUpdateUUID:         "",
+	}
+	resp := attemptWritePeriod(handler, teamID, periodID, periodToJSON(&period), http.MethodPost, t)
+	checkGoodJSONResponse(resp, t)
+	period.LastUpdateUUID = getLastUpdateUUID(resp.Body, t)
+
+	ctx := context.Background()
+
+	// No backups yet
+	backups, ok, err := store.GetPeriodBackups(ctx, teamID, periodID)
+	if err != nil {
+		t.Fatalf("Error loading backups: %s", err)
+	}
+	if ok {
+		t.Fatalf("Don't expect any backups after the initial POST, found: %v", backups)
+	}
+
+	for i := 0; i < 10; i++ {
+		period.MaxCommittedPercentage += 1
+		resp := attemptWritePeriod(handler, teamID, periodID, periodToJSON(&period), http.MethodPut, t)
+		checkGoodJSONResponse(resp, t)
+
+		backups := getBackups(ctx, store, teamID, periodID, t)
+		if len(backups.Backups) != i+1 {
+			t.Fatalf("Expected %d backups, found %d: %v", i+1, len(backups.Backups), backups)
+		}
+		expectedMCP := 50.0
+		for i, backup := range backups.Backups {
+			if backup.Period.MaxCommittedPercentage != expectedMCP {
+				t.Fatalf("Expected period backup %d to have MCP %f, found %f", i, expectedMCP, backup.Period.MaxCommittedPercentage)
+			}
+			expectedMCP += 1
+		}
+
+		period.LastUpdateUUID = getLastUpdateUUID(resp.Body, t)
+	}
+
+	period.MaxCommittedPercentage += 1
+	resp = attemptWritePeriod(handler, teamID, periodID, periodToJSON(&period), http.MethodPut, t)
+	checkGoodJSONResponse(resp, t)
+
+	backups = getBackups(ctx, store, teamID, periodID, t)
+
+	if len(backups.Backups) != 10 {
+		t.Fatalf("Expected 10 backups, found %d: %v", len(backups.Backups), backups)
+	}
+	expectedMCP := 51.0
+	for i, backup := range backups.Backups {
+		if backup.Period.MaxCommittedPercentage != expectedMCP {
+			t.Fatalf("Expected period backup %d to have MCP %f, found %f", i, expectedMCP, backup.Period.MaxCommittedPercentage)
+		}
+		expectedMCP += 1
 	}
 }
 

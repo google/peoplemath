@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2020-21 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"peoplemath/auth"
 	"peoplemath/models"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -198,9 +199,41 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Could not update period '%s' for team '%s' (see server log)", periodID, teamID), http.StatusInternalServerError)
 			return
 		}
+		err = s.backupPeriod(ctx, teamID, periodID, savedPeriod)
+		if err != nil {
+			log.Printf("WARNING: Could not back up period '%s' for team '%s': %s", periodID, teamID, err)
+		}
 		s.writePeriodUpdateResponse(w, r, period)
 	} else {
 		http.Error(w, "You are not authorized to edit this team's periods.", http.StatusForbidden)
+	}
+}
+
+func (s *Server) backupPeriod(ctx context.Context, teamID, periodID string, period models.Period) error {
+	backups, ok, err := s.store.GetPeriodBackups(ctx, teamID, periodID)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		backups = models.PeriodBackups{}
+	}
+	backup := models.PeriodBackup{
+		Timestamp: time.Now(),
+		Period:    period,
+	}
+	backups.Backups = append(backups.Backups, backup)
+	purgeOldBackups(&backups)
+	log.Printf("Backup %s %s: %d backups, oldest %s, newest %s", teamID, periodID, len(backups.Backups), backups.Backups[0].Timestamp.Format(time.RFC3339), backups.Backups[len(backups.Backups)-1].Timestamp.Format(time.RFC3339))
+	return s.store.UpsertPeriodBackups(ctx, teamID, periodID, backups)
+}
+
+const backupsToKeep = 10
+
+func purgeOldBackups(backups *models.PeriodBackups) {
+	// Just keep the last N
+	if len(backups.Backups) > backupsToKeep {
+		toRemove := len(backups.Backups) - backupsToKeep
+		backups.Backups = backups.Backups[toRemove:]
 	}
 }
 

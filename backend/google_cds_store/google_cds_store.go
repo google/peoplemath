@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ const (
 	TeamKind = "Team"
 	// PeriodKind - Datastore kind name for periods
 	PeriodKind = "Period"
+	// PeriodBackupsKind - Datastore kind name for period backups
+	PeriodBackupsKind = "PeriodBackups"
 	// SettingsKind - Datastore kind name for settings
 	SettingsKind = "Settings"
 	// SettingsEntity - entity name for settings
@@ -55,6 +57,10 @@ func getTeamKey(teamID string) *datastore.Key {
 
 func getPeriodKey(teamKey *datastore.Key, periodID string) *datastore.Key {
 	return datastore.NameKey(PeriodKind, periodID, teamKey)
+}
+
+func getPeriodBackupsKey(teamKey *datastore.Key, periodID string) *datastore.Key {
+	return datastore.NameKey(PeriodBackupsKind, periodID, teamKey)
 }
 
 func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]models.Team, error) {
@@ -176,6 +182,24 @@ func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period
 		_, err := tx.Put(periodKey, &period)
 		return err
 	})
+	return err
+}
+
+func (s *googleCDSStore) GetPeriodBackups(ctx context.Context, teamID, periodID string) (models.PeriodBackups, bool, error) {
+	teamKey := getTeamKey(teamID)
+	backupsKey := getPeriodBackupsKey(teamKey, periodID)
+	var backups models.PeriodBackups
+	err := s.client.Get(ctx, backupsKey, &backups)
+	if err == datastore.ErrNoSuchEntity {
+		return backups, false, nil
+	}
+	return backups, true, err
+}
+
+func (s *googleCDSStore) UpsertPeriodBackups(ctx context.Context, teamID, periodID string, backups models.PeriodBackups) error {
+	teamKey := getTeamKey(teamID)
+	backupsKey := getPeriodBackupsKey(teamKey, periodID)
+	_, err := s.client.Put(ctx, backupsKey, &backups)
 	return err
 }
 
