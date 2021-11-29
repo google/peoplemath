@@ -28,7 +28,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (models.Period, bool) {
+func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, teamID, periodID string, expected bool) (*models.Period, bool) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.storeTimeout)
 	defer cancel()
 	period, exists, err := s.store.GetPeriod(ctx, teamID, periodID)
@@ -48,7 +48,7 @@ func (s *Server) ensurePeriodExistence(w http.ResponseWriter, r *http.Request, t
 	return period, true
 }
 
-func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, period, savedPeriod models.Period) bool {
+func (s *Server) ensureNoConcurrentMod(w http.ResponseWriter, r *http.Request, period, savedPeriod *models.Period) bool {
 	if savedPeriod.LastUpdateUUID != period.LastUpdateUUID {
 		msg := fmt.Sprintf("Concurrent modification: last saved UUID=%s, your last loaded UUID=%s",
 			savedPeriod.LastUpdateUUID, period.LastUpdateUUID)
@@ -132,7 +132,7 @@ func (s *Server) handleGetPeriod(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period models.Period) {
+func (s *Server) writePeriodUpdateResponse(w http.ResponseWriter, r *http.Request, period *models.Period) {
 	response := models.ObjectUpdateResponse{LastUpdateUUID: period.LastUpdateUUID}
 	enc := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
@@ -209,7 +209,7 @@ func (s *Server) handlePutPeriod(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) backupPeriod(ctx context.Context, teamID, periodID string, period models.Period) error {
+func (s *Server) backupPeriod(ctx context.Context, teamID, periodID string, period *models.Period) error {
 	backups, ok, err := s.store.GetPeriodBackups(ctx, teamID, periodID)
 	if err != nil {
 		return err
@@ -219,7 +219,7 @@ func (s *Server) backupPeriod(ctx context.Context, teamID, periodID string, peri
 	}
 	backup := models.PeriodBackup{
 		Timestamp: time.Now(),
-		Period:    period,
+		Period:    *period,
 	}
 	backups.Backups = append(backups.Backups, backup)
 	purgeOldBackups(&backups)
@@ -237,23 +237,23 @@ func purgeOldBackups(backups *models.PeriodBackups) {
 	}
 }
 
-func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (models.Period, bool) {
+func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (*models.Period, bool) {
 	dec := json.NewDecoder(r.Body)
 	period := models.Period{}
 	err := dec.Decode(&period)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Could not decode body: %v", err), http.StatusBadRequest)
-		return period, false
+		return &period, false
 	}
 	for _, bucket := range period.Buckets {
 		for _, objective := range bucket.Objectives {
 			if objective.CommitmentType != "" {
 				if objective.CommitmentType != models.CommitmentTypeCommitted && objective.CommitmentType != models.CommitmentTypeAspirational {
 					http.Error(w, fmt.Sprintf("Illegal commitment type '%s'", objective.CommitmentType), http.StatusBadRequest)
-					return period, false
+					return &period, false
 				}
 			}
 		}
 	}
-	return period, true
+	return &period, true
 }

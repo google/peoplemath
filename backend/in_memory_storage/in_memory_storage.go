@@ -144,26 +144,26 @@ func (s *InMemStore) GetAllPeriods(ctx context.Context, teamID string) ([]models
 	return []models.Period{}, false, nil
 }
 
-func (s *InMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
+func (s *InMemStore) GetPeriod(ctx context.Context, teamID, periodID string) (*models.Period, bool, error) {
 	if periodsByName, ok := s.periods[teamID]; ok {
 		if period, ok := periodsByName[periodID]; ok {
-			return period, true, nil
+			return &period, true, nil
 		}
 	}
-	return models.Period{}, false, nil
+	return &models.Period{}, false, nil
 }
 
-func (s *InMemStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) CreatePeriod(ctx context.Context, teamID string, period *models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
-		periodsByName[period.ID] = period
+		periodsByName[period.ID] = *period
 		log.Printf("Added period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
 	return nil
 }
 
-func (s *InMemStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *InMemStore) UpdatePeriod(ctx context.Context, teamID string, period *models.Period) error {
 	if periodsByName, ok := s.periods[teamID]; ok {
-		periodsByName[period.ID] = period
+		periodsByName[period.ID] = *period
 		log.Printf("Updated period '%s' for team '%s': %v", period.ID, teamID, period)
 	}
 	return nil
