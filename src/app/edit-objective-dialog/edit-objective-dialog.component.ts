@@ -147,7 +147,7 @@ export class EditObjectiveDialogComponent {
   }
 
   onMove(newBucket: ImmutableBucket): void {
-    let oldObjective = {...this.data.objective};
+    let oldObjective = { ...this.data.objective };
     // Block ID is no longer meaningful in the new bucket
     oldObjective.blockID = undefined;
     const newObjective = makeObjective(oldObjective);
