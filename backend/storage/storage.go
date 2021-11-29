@@ -26,9 +26,9 @@ type StorageService interface {
 	CreateTeam(ctx context.Context, team models.Team) error
 	UpdateTeam(ctx context.Context, team models.Team) error
 	GetAllPeriods(ctx context.Context, teamID string) ([]models.Period, bool, error)
-	GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error)
-	CreatePeriod(ctx context.Context, teamID string, period models.Period) error
-	UpdatePeriod(ctx context.Context, teamID string, period models.Period) error
+	GetPeriod(ctx context.Context, teamID, periodID string) (*models.Period, bool, error)
+	CreatePeriod(ctx context.Context, teamID string, period *models.Period) error
+	UpdatePeriod(ctx context.Context, teamID string, period *models.Period) error
 	GetPeriodBackups(ctx context.Context, teamID, periodID string) (models.PeriodBackups, bool, error)
 	UpsertPeriodBackups(ctx context.Context, teamID, periodID string, backups models.PeriodBackups) error
 	GetSettings(ctx context.Context) (models.Settings, error)

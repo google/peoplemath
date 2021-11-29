@@ -145,19 +145,19 @@ func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]mo
 	return result, true, nil
 }
 
-func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string) (models.Period, bool, error) {
+func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string) (*models.Period, bool, error) {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, periodID)
 	var period models.Period
 	err := s.client.Get(ctx, periodKey, &period)
 	if err == datastore.ErrNoSuchEntity {
-		return period, false, nil
+		return &period, false, nil
 	}
 	scrubLoadedPeriod(&period)
-	return period, true, err
+	return &period, true, err
 }
 
-func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period *models.Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
@@ -171,7 +171,7 @@ func (s *googleCDSStore) CreatePeriod(ctx context.Context, teamID string, period
 	return err
 }
 
-func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period models.Period) error {
+func (s *googleCDSStore) UpdatePeriod(ctx context.Context, teamID string, period *models.Period) error {
 	teamKey := getTeamKey(teamID)
 	periodKey := getPeriodKey(teamKey, period.ID)
 	_, err := s.client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
