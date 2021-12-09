@@ -22,7 +22,7 @@ RUN ["/bin/bash", "-c", "if [[ \"$(gofmt -l . | wc -l)\" -gt 0 ]]; then echo Go 
 
 WORKDIR /build
 RUN ["/bin/bash", "-c", "npm ci |& tee /tmp/ci.log"]
-RUN ["/usr/bin/perl", "-lne", "next unless /deprecated (.*@[^:]*):/; print \"Import path of deprecated $1:\"; system(\"npm list $1 --depth=20\") == 0 or die \"$!\"' /tmp/ci.log"]
+RUN ["/usr/bin/perl", "-lne", "next unless /deprecated (.*@[^:]*):/; print \"Import path of deprecated $1:\"; system(\"npm list $1 --depth=20\") == 0 or die \"$!\"", "/tmp/ci.log"]
 RUN ["npx", "ng", "lint"]
 RUN ["npx", "ng", "test", "--watch=false", "--browsers", "ChromeHeadlessNoSandbox"]
 RUN ["npx", "prettier", "--check", "."]
