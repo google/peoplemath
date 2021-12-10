@@ -388,7 +388,7 @@ export class PeriodComponent implements OnInit {
 
   save(): void {
     // Running through a Subject allows debouncing
-    this.eventsRequiringSave.next();
+    this.eventsRequiringSave.next(undefined);
   }
 
   onNewPerson(person: ImmutablePerson): void {
