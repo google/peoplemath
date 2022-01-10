@@ -1,4 +1,4 @@
-// Copyright 2019, 2021 Google LLC
+// Copyright 2019, 2021-22 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ import { NotificationService } from './services/notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalComponent } from './modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { PageTitleService } from './services/pagetitle.service';
 
 @Component({
   selector: 'app-root',
@@ -25,13 +27,13 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'PeopleMath';
-
   constructor(
     public auth: AuthService,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private titleService: Title,
+    private pageTitleService: PageTitleService
   ) {
     this.notificationService.notification$.subscribe((message) => {
       this.snackBar.open(message, '', { duration: 2000 });
@@ -39,5 +41,8 @@ export class AppComponent {
     this.notificationService.error$.subscribe((message) => {
       this.dialog.open(ModalComponent, { data: message });
     });
+    this.pageTitleService.title$.subscribe((title) =>
+      this.titleService.setTitle(title)
+    );
   }
 }

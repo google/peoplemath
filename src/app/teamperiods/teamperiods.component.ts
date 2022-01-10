@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import { Objective } from '../objective';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
+import { PageTitleService } from '../services/pagetitle.service';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
@@ -58,7 +59,8 @@ export class TeamPeriodsComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    public authService: AuthService
+    public authService: AuthService,
+    private pageTitle: PageTitleService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,7 @@ export class TeamPeriodsComponent implements OnInit {
       .subscribe((team?: Team) => {
         if (team) {
           this.team = new ImmutableTeam(team);
+          this.pageTitle.setPageTitle(team.displayName);
           // TODO(#83) Replace this logic with something determined by the server, like CanAddTeam
           if (environment.requireAuth && team.teamPermissions !== undefined) {
             const user = this.authService.user$.getValue();

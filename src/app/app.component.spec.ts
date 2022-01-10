@@ -1,4 +1,4 @@
-// Copyright 2019, 2021 Google LLC
+// Copyright 2019, 2021-22 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,15 +46,6 @@ describe('AppComponent', () => {
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.debugElement.componentInstance;
       expect(app).toBeTruthy();
-    })
-  );
-
-  it(
-    `should have as title 'PeopleMath'`,
-    waitForAsync(() => {
-      const fixture = TestBed.createComponent(AppComponent);
-      const app = fixture.debugElement.componentInstance;
-      expect(app.title).toEqual('PeopleMath');
     })
   );
 

@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import {
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
+import { PageTitleService } from '../services/pagetitle.service';
 
 @Component({
   selector: 'app-teams',
@@ -36,11 +37,13 @@ export class TeamsComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private dialog: MatDialog,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private pageTitle: PageTitleService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
+    this.pageTitle.setPageTitle('Teams');
   }
 
   loadData(): void {

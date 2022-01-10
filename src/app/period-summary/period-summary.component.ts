@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2021 Google LLC
+ * Copyright 2019-2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,11 @@ import { StorageService } from '../storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { ImmutablePeriod } from '../period';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { ImmutableTeam } from '../team';
 import { ImmutableBucket } from '../bucket';
 import { NotificationService } from '../services/notification.service';
+import { PageTitleService } from '../services/pagetitle.service';
 
 @Component({
   selector: 'app-period-summary',
@@ -36,7 +37,8 @@ export class PeriodSummaryComponent implements OnInit {
   constructor(
     private storage: StorageService,
     private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private pageTitle: PageTitleService
   ) {}
 
   ngOnInit(): void {
@@ -83,8 +85,8 @@ export class PeriodSummaryComponent implements OnInit {
   loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;
-    this.storage
-      .getTeam(teamId)
+    let teamObs = this.storage.getTeam(teamId);
+    teamObs
       .pipe(
         catchError((err) => {
           this.notificationService.error$.next(
@@ -102,8 +104,8 @@ export class PeriodSummaryComponent implements OnInit {
         }
       });
 
-    this.storage
-      .getPeriod(teamId, periodId)
+    let periodObs = this.storage.getPeriod(teamId, periodId);
+    periodObs
       .pipe(
         catchError((err) => {
           this.notificationService.error$.next(
@@ -125,6 +127,14 @@ export class PeriodSummaryComponent implements OnInit {
           this.period = undefined;
         }
       });
+
+    combineLatest([teamObs, periodObs]).subscribe(([t, p]) => {
+      if (t && p) {
+        this.pageTitle.setPageTitle(
+          t.displayName + ': ' + p.displayName + ' summary'
+        );
+      }
+    });
   }
 
   isLoaded(): boolean {
