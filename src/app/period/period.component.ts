@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import {
   EditPeriodDialogData,
 } from '../edit-period-dialog/edit-period-dialog.component';
 import { catchError, debounceTime } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
+import { combineLatest, of, Subject } from 'rxjs';
 import { ImmutablePerson } from '../person';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
@@ -43,6 +43,7 @@ import { ThemePalette } from '@angular/material/core';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
+import { PageTitleService } from '../services/pagetitle.service';
 
 @Component({
   selector: 'app-period',
@@ -69,7 +70,8 @@ export class PeriodComponent implements OnInit {
     private dialog: MatDialog,
     private changeDet: ChangeDetectorRef,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private pageTitle: PageTitleService
   ) {}
 
   ngOnInit(): void {
@@ -309,8 +311,8 @@ export class PeriodComponent implements OnInit {
   loadDataFor(teamId: string, periodId: string): void {
     this.setTeam(undefined);
     this.setPeriod(undefined);
-    this.storage
-      .getTeam(teamId)
+    let teamObs = this.storage.getTeam(teamId);
+    teamObs
       .pipe(
         catchError((error) => {
           this.notificationService.error$.next(
@@ -347,8 +349,9 @@ export class PeriodComponent implements OnInit {
         }
       });
 
-    this.storage
-      .getPeriod(teamId, periodId)
+    let periodObs = this.storage.getPeriod(teamId, periodId);
+
+    periodObs
       .pipe(
         catchError((error) => {
           this.notificationService.error$.next(
@@ -380,6 +383,12 @@ export class PeriodComponent implements OnInit {
           this.setPeriod(undefined);
         }
       });
+
+    combineLatest([teamObs, periodObs]).subscribe(([t, p]) => {
+      if (t && p) {
+        this.pageTitle.setPageTitle(t.displayName + ': ' + p.displayName);
+      }
+    });
   }
 
   isLoaded(): boolean {
