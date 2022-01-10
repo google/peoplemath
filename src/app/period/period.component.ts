@@ -350,7 +350,6 @@ export class PeriodComponent implements OnInit {
       });
 
     let periodObs = this.storage.getPeriod(teamId, periodId);
-
     periodObs
       .pipe(
         catchError((error) => {
