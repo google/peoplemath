@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav-content>
         <mat-toolbar color="primary">
-            <h1 class="mat-h1"><a routerLink="/teams">PeopleMath</a></h1>
+            <h1><a routerLink="/teams">PeopleMath</a></h1>
             <div class="flex-spacer"></div>
             <button id="logout-button" mat-raised-button *ngIf="auth.user$ | async" (click)="auth.signOut()">Logout</button>
             <a mat-raised-button href="/improve" target="_blank" rel="noopener noreferrer" color="accent">Improve</a>
