@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import {
   ImmutableObjective,
   DisplayOptions,
 } from '../objective';
-import { ImmutableBucket } from '../bucket';
+import { AddLocation, ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
 
 export interface EditedObjective {
@@ -41,11 +41,16 @@ export interface EditedObjective {
   blockID?: string;
 }
 
+export enum SaveAction {
+  New = 'new',
+  Edit = 'edit',
+}
+
 export interface EditObjectiveDialogData {
   objective: EditedObjective;
   original?: ImmutableObjective;
   title: string;
-  okAction: string;
+  saveAction: SaveAction;
   unit: string;
   otherBuckets: readonly ImmutableBucket[];
   onMoveBucket?: EventEmitter<
@@ -126,7 +131,10 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
 })
 export class EditObjectiveDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<EditObjectiveDialogComponent>,
+    public dialogRef: MatDialogRef<
+      EditObjectiveDialogComponent,
+      [ImmutableObjective, AddLocation | null]
+    >,
     @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData
   ) {}
 
@@ -138,8 +146,19 @@ export class EditObjectiveDialogComponent {
     );
   }
 
-  onSave(): void {
-    this.dialogRef.close(makeObjective(this.data.objective));
+  onAddToTop(): void {
+    this.dialogRef.close([makeObjective(this.data.objective), AddLocation.Top]);
+  }
+
+  onAddToBottom(): void {
+    this.dialogRef.close([
+      makeObjective(this.data.objective),
+      AddLocation.Bottom,
+    ]);
+  }
+
+  onSaveExisting(): void {
+    this.dialogRef.close([makeObjective(this.data.objective), null]);
   }
 
   onCancel(): void {

@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   PersonAssignmentData,
   AssignmentDialogComponent,
@@ -31,8 +31,9 @@ import {
   EditObjectiveDialogComponent,
   EditObjectiveDialogData,
   makeEditedObjective,
+  SaveAction,
 } from '../edit-objective-dialog/edit-objective-dialog.component';
-import { ImmutableBucket } from '../bucket';
+import { AddLocation, ImmutableBucket } from '../bucket';
 
 @Component({
   selector: 'app-objective',
@@ -142,16 +143,23 @@ export class ObjectiveComponent {
       objective: makeEditedObjective(this.objective!),
       original: this.objective!,
       title: 'Edit Objective',
-      okAction: 'OK',
+      saveAction: SaveAction.Edit,
       unit: this.unit!,
       otherBuckets: this.otherBuckets!,
       onMoveBucket: this.moveBucket,
       onDelete: this.delete,
     };
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {
+    const dialogRef: MatDialogRef<
+      EditObjectiveDialogComponent,
+      [ImmutableObjective, AddLocation | null]
+    > = this.dialog.open(EditObjectiveDialogComponent, {
       data: dialogData,
     });
-    dialogRef.afterClosed().subscribe((newObjective) => {
+    dialogRef.afterClosed().subscribe((closeData) => {
+      if (!closeData) {
+        return;
+      }
+      const [newObjective, _] = closeData;
       if (newObjective) {
         this.changed.emit([this.objective!, newObjective]);
       }

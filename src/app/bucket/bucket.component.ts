@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AddLocation, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   EditObjectiveDialogComponent,
   EditObjectiveDialogData,
+  SaveAction,
 } from '../edit-objective-dialog/edit-objective-dialog.component';
 import {
   EditBucketDialogComponent,
@@ -213,22 +214,30 @@ export class BucketComponent {
       },
       original: undefined,
       title: 'Add Objective',
-      okAction: 'Add',
+      saveAction: SaveAction.New,
       unit: this.unit!,
       otherBuckets: [],
       onMoveBucket: undefined,
       onDelete: undefined,
     };
-    const dialogRef = this.dialog.open(EditObjectiveDialogComponent, {
+    const dialogRef: MatDialogRef<
+      EditObjectiveDialogComponent,
+      [ImmutableObjective, AddLocation | null]
+    > = this.dialog.open(EditObjectiveDialogComponent, {
       data: dialogData,
     });
-    dialogRef.afterClosed().subscribe((objective) => {
-      if (!objective) {
+    dialogRef.afterClosed().subscribe((closeData) => {
+      if (!closeData) {
+        return;
+      }
+      const [objective, addLocation] = closeData;
+      if (!addLocation) {
+        console.error('No addLocation supplied');
         return;
       }
       this.changed.emit([
         this.bucket!,
-        this.bucket!.withNewObjective(objective),
+        this.bucket!.withNewObjective(objective, addLocation),
       ]);
     });
   }

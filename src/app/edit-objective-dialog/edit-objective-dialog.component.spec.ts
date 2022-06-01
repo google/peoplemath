@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {
   makeTags,
   makeGroups,
   EditedObjective,
+  SaveAction,
 } from './edit-objective-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +50,7 @@ describe('EditObjectiveDialogComponent', () => {
     objective: makeEditedObjective(objective),
     original: objective,
     title: 'My test dialog',
-    okAction: 'OK',
+    saveAction: SaveAction.Edit,
     unit: 'person weeks',
     otherBuckets: [],
     onMoveBucket: undefined,
