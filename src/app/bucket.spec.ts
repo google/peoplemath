@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Bucket, ImmutableBucket } from './bucket';
+import { AddLocation, Bucket, ImmutableBucket } from './bucket';
 import { CommitmentType, Objective, ImmutableObjective } from './objective';
 
 describe('ImmutableBucket', () => {
@@ -62,14 +62,28 @@ describe('ImmutableBucket', () => {
     // const shadow: Bucket = bucket;
   });
 
-  it('should support new objective', () => {
+  it('should support new objective at bottom', () => {
     const newBucket = bucket.withNewObjective(
-      ImmutableObjective.fromObjective(obj2)
+      ImmutableObjective.fromObjective(obj2),
+      AddLocation.Bottom
     );
     const expected: Bucket = new Bucket(
       _mut.displayName,
       _mut.allocationPercentage,
       [_mut.objectives[0], obj2]
+    );
+    expect(newBucket.toOriginal()).toEqual(expected);
+  });
+
+  it('should support new objective at top', () => {
+    const newBucket = bucket.withNewObjective(
+      ImmutableObjective.fromObjective(obj2),
+      AddLocation.Top
+    );
+    const expected: Bucket = new Bucket(
+      _mut.displayName,
+      _mut.allocationPercentage,
+      [obj2, _mut.objectives[0]]
     );
     expect(newBucket.toOriginal()).toEqual(expected);
   });

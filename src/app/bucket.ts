@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@ export class Bucket {
     public allocationPercentage: number,
     public objectives: Objective[]
   ) {}
+}
+
+export enum AddLocation {
+  Top = 'top',
+  Bottom = 'bottom',
 }
 
 export class ImmutableBucket {
@@ -66,8 +71,15 @@ export class ImmutableBucket {
     );
   }
 
-  withNewObjective(objective: ImmutableObjective): ImmutableBucket {
-    return this.withNewObjectives(this.objectives.concat([objective]));
+  withNewObjective(
+    objective: ImmutableObjective,
+    addLocation: AddLocation
+  ): ImmutableBucket {
+    const newObjectives: readonly ImmutableObjective[] =
+      addLocation === AddLocation.Top
+        ? [objective].concat(this.objectives)
+        : this.objectives.concat([objective]);
+    return this.withNewObjectives(newObjectives);
   }
 
   private objectiveIndex(objective: ImmutableObjective): number {
