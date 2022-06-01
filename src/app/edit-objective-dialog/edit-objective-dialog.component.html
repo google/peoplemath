@@ -57,8 +57,8 @@
     <button mat-raised-button (click)="onAddToBottom()" [disabled]="!isDataValid()" color="primary">Add To Bottom</button>
   </div>
   <div *ngIf="data.saveAction === 'edit'">
-    <button mat-raised-button *ngIf="data.saveAction === 'edit'" (click)="onSaveExisting()" [disabled]="!isDataValid()" color="primary">Save</button>
-    <button *ngIf="data.saveAction === 'edit' && data.otherBuckets && data.otherBuckets.length" mat-button [matMenuTriggerFor]="moveBucketMenu">Move</button>
+    <button mat-raised-button (click)="onSaveExisting()" [disabled]="!isDataValid()" color="primary">Save</button>
+    <button *ngIf="data.otherBuckets && data.otherBuckets.length" mat-button [matMenuTriggerFor]="moveBucketMenu">Move</button>
     <mat-menu #moveBucketMenu="matMenu">
       <button mat-menu-item *ngFor="let bucket of data.otherBuckets" (click)="onMove(bucket)">
         {{bucket.displayName}}
