@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,17 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { ImmutablePeriod } from '../period';
-import { ImmutableObjective, totalResourcesAllocated } from '../objective';
+import {
+  editObjective,
+  ImmutableObjective,
+  totalResourcesAllocated,
+} from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import {
   RenameClassDialogComponent,
   RenameClassDialogData,
 } from '../rename-class-dialog/rename-class-dialog.component';
+import { ImmutableBucket } from '../bucket';
 
 export enum AggregateBy {
   Group = 'group',
@@ -48,6 +53,9 @@ export class AssignmentsClassifyComponent {
   @Input() title?: string;
   @Input() isEditingEnabled?: boolean;
   @Output() rename = new EventEmitter<[string, string]>();
+  @Output() bucketChanged = new EventEmitter<
+    [ImmutableBucket, ImmutableBucket]
+  >();
 
   constructor(private dialog: MatDialog) {}
 
@@ -95,13 +103,13 @@ export class AssignmentsClassifyComponent {
     return false;
   }
 
-  ungroupedObjectives(): ImmutableObjective[] {
-    const result: ImmutableObjective[] = [];
+  ungroupedObjectives(): [ImmutableObjective, ImmutableBucket][] {
+    const result: [ImmutableObjective, ImmutableBucket][] = [];
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
         const mgs = o.groups.filter((g) => g.groupType === this.groupType);
         if (mgs.length === 0) {
-          result.push(o);
+          result.push([o, b]);
         }
       });
     });
@@ -166,5 +174,33 @@ export class AssignmentsClassifyComponent {
         this.rename.emit([cname, newName]);
       }
     });
+  }
+
+  editObjective(obj: ImmutableObjective, bucket: ImmutableBucket): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
+    const changeEmitter = new EventEmitter<
+      [ImmutableObjective, ImmutableObjective]
+    >();
+    changeEmitter.subscribe(([before, after]) =>
+      this.bucketChanged!.emit([
+        bucket,
+        bucket.withObjectiveChanged(before, after),
+      ])
+    );
+    const deleteEmitter = new EventEmitter<ImmutableObjective>();
+    deleteEmitter.subscribe((o) =>
+      this.bucketChanged!.emit([bucket, bucket.withObjectiveDeleted(o)])
+    );
+    editObjective(
+      obj,
+      this.period?.unit!,
+      [], // Don't allow moving between buckets via this path - it's not really important
+      undefined,
+      deleteEmitter,
+      changeEmitter,
+      this.dialog
+    );
   }
 }

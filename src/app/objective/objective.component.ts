@@ -19,21 +19,19 @@ import {
   Output,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommitmentType, ImmutableObjective } from '../objective';
+import {
+  CommitmentType,
+  editObjective,
+  ImmutableObjective,
+} from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   PersonAssignmentData,
   AssignmentDialogComponent,
   AssignmentDialogData,
 } from '../assignment-dialog/assignment-dialog.component';
-import {
-  EditObjectiveDialogComponent,
-  EditObjectiveDialogData,
-  makeEditedObjective,
-  SaveAction,
-} from '../edit-objective-dialog/edit-objective-dialog.component';
-import { AddLocation, ImmutableBucket } from '../bucket';
+import { ImmutableBucket } from '../bucket';
 
 @Component({
   selector: 'app-objective',
@@ -139,31 +137,15 @@ export class ObjectiveComponent {
     if (!this.isEditingEnabled) {
       return;
     }
-    const dialogData: EditObjectiveDialogData = {
-      objective: makeEditedObjective(this.objective!),
-      original: this.objective!,
-      title: 'Edit Objective',
-      saveAction: SaveAction.Edit,
-      unit: this.unit!,
-      otherBuckets: this.otherBuckets!,
-      onMoveBucket: this.moveBucket,
-      onDelete: this.delete,
-    };
-    const dialogRef: MatDialogRef<
-      EditObjectiveDialogComponent,
-      [ImmutableObjective, AddLocation | null]
-    > = this.dialog.open(EditObjectiveDialogComponent, {
-      data: dialogData,
-    });
-    dialogRef.afterClosed().subscribe((closeData) => {
-      if (!closeData) {
-        return;
-      }
-      const [newObjective, _] = closeData;
-      if (newObjective) {
-        this.changed.emit([this.objective!, newObjective]);
-      }
-    });
+    editObjective(
+      this.objective!,
+      this.unit!,
+      this.otherBuckets!,
+      this.moveBucket,
+      this.delete,
+      this.changed,
+      this.dialog
+    );
   }
 
   isCommitted(): boolean {

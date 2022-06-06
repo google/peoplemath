@@ -68,11 +68,13 @@
     [period]="period" [aggregateBy]="AggregateBy.Group" [groupType]="groupType"
     [isEditingEnabled]="isEditingEnabled"
     (rename)="renameGroup(groupType, $event[0], $event[1])"
+    (bucketChanged)="onBucketChanged($event[0], $event[1])"
     title="Assignments by {{groupType}}"></app-assignments-classify>
 <app-assignments-classify *ngIf="hasTags()"
     [period]="period" [aggregateBy]="AggregateBy.Tag"
     [isEditingEnabled]="isEditingEnabled"
     (rename)="renameTag($event[0], $event[1])"
+    (bucketChanged)="onBucketChanged($event[0], $event[1])"
     title="Assignments by tag"></app-assignments-classify>
 </span>
 
