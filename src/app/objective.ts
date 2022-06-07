@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { EventEmitter } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Assignment, ImmutableAssignment } from './assignment';
+import { AddLocation, ImmutableBucket } from './bucket';
+import {
+  EditObjectiveDialogComponent,
+  EditObjectiveDialogData,
+  makeEditedObjective,
+  SaveAction,
+} from './edit-objective-dialog/edit-objective-dialog.component';
 import { ImmutablePerson } from './person';
 
 export enum CommitmentType {
@@ -236,3 +245,41 @@ export class ImmutableObjective {
 export const totalResourcesAllocated = (
   objectives: readonly ImmutableObjective[]
 ): number => objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);
+
+export function editObjective(
+  objective: ImmutableObjective,
+  unit: string,
+  otherBuckets: readonly ImmutableBucket[],
+  onMoveBucket:
+    | EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>
+    | undefined,
+  onDelete: EventEmitter<ImmutableObjective>,
+  onChanged: EventEmitter<[ImmutableObjective, ImmutableObjective]>,
+  dialog: MatDialog
+): void {
+  const dialogData: EditObjectiveDialogData = {
+    objective: makeEditedObjective(objective),
+    original: objective,
+    title: 'Edit Objective',
+    saveAction: SaveAction.Edit,
+    unit: unit,
+    otherBuckets: otherBuckets,
+    onMoveBucket: onMoveBucket,
+    onDelete: onDelete,
+  };
+  const dialogRef: MatDialogRef<
+    EditObjectiveDialogComponent,
+    [ImmutableObjective, AddLocation | null]
+  > = dialog.open(EditObjectiveDialogComponent, {
+    data: dialogData,
+  });
+  dialogRef.afterClosed().subscribe((closeData) => {
+    if (!closeData) {
+      return;
+    }
+    const [newObjective, _] = closeData;
+    if (newObjective) {
+      onChanged.emit([objective, newObjective]);
+    }
+  });
+}

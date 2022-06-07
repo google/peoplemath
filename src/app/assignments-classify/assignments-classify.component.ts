@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,17 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { ImmutablePeriod } from '../period';
-import { ImmutableObjective, totalResourcesAllocated } from '../objective';
+import {
+  editObjective,
+  ImmutableObjective,
+  totalResourcesAllocated,
+} from '../objective';
 import { MatDialog } from '@angular/material/dialog';
 import {
   RenameClassDialogComponent,
   RenameClassDialogData,
 } from '../rename-class-dialog/rename-class-dialog.component';
+import { ImmutableBucket } from '../bucket';
 
 export enum AggregateBy {
   Group = 'group',
@@ -48,26 +53,36 @@ export class AssignmentsClassifyComponent {
   @Input() title?: string;
   @Input() isEditingEnabled?: boolean;
   @Output() rename = new EventEmitter<[string, string]>();
+  @Output() bucketChanged = new EventEmitter<
+    [ImmutableBucket, ImmutableBucket]
+  >();
 
   constructor(private dialog: MatDialog) {}
 
-  objectivesByGroup(): Array<[string, ImmutableObjective[]]> {
-    const obsByGroup = new Map<string, ImmutableObjective[]>();
+  objectivesByGroup(): Array<
+    [string, [ImmutableObjective, ImmutableBucket][]]
+  > {
+    const obsByGroup = new Map<
+      string,
+      [ImmutableObjective, ImmutableBucket][]
+    >();
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
         const mgs = o.groups.filter((g) => g.groupType === this.groupType);
         if (mgs.length > 0) {
           const groupName = mgs[0].groupName;
           if (obsByGroup.has(groupName)) {
-            obsByGroup.get(groupName)!.push(o);
+            obsByGroup.get(groupName)!.push([o, b]);
           } else {
-            obsByGroup.set(groupName, [o]);
+            obsByGroup.set(groupName, [[o, b]]);
           }
         }
       });
     });
-    for (const [_g, obs] of obsByGroup) {
-      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
+    for (const [_g, obsBuckets] of obsByGroup) {
+      obsBuckets.sort(
+        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated()
+      );
     }
     const result = Array.from(obsByGroup.entries());
     result.sort(([g1, obs1], [g2, obs2]) => {
@@ -95,41 +110,45 @@ export class AssignmentsClassifyComponent {
     return false;
   }
 
-  ungroupedObjectives(): ImmutableObjective[] {
-    const result: ImmutableObjective[] = [];
+  ungroupedObjectives(): [ImmutableObjective, ImmutableBucket][] {
+    const result: [ImmutableObjective, ImmutableBucket][] = [];
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
         const mgs = o.groups.filter((g) => g.groupType === this.groupType);
         if (mgs.length === 0) {
-          result.push(o);
+          result.push([o, b]);
         }
       });
     });
     return result;
   }
 
-  objectivesByTag(): Array<[string, ImmutableObjective[]]> {
-    const obsByTag = new Map<string, ImmutableObjective[]>();
+  objectivesByTag(): Array<[string, [ImmutableObjective, ImmutableBucket][]]> {
+    const obsByTag = new Map<string, [ImmutableObjective, ImmutableBucket][]>();
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
         o.tags.forEach((t) => {
           if (obsByTag.has(t.name)) {
-            obsByTag.get(t.name)!.push(o);
+            obsByTag.get(t.name)!.push([o, b]);
           } else {
-            obsByTag.set(t.name, [o]);
+            obsByTag.set(t.name, [[o, b]]);
           }
         });
       });
     });
-    for (const [_g, obs] of obsByTag) {
-      obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
+    for (const [_g, obsBuckets] of obsByTag) {
+      obsBuckets.sort(
+        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated()
+      );
     }
     const result = Array.from(obsByTag.entries());
     result.sort(([g1, _obs1], [g2, _obs2]) => g1.localeCompare(g2));
     return result;
   }
 
-  objectivesByClass(): Array<[string, ImmutableObjective[]]> {
+  objectivesByClass(): Array<
+    [string, [ImmutableObjective, ImmutableBucket][]]
+  > {
     switch (this.aggregateBy) {
       case AggregateBy.Group:
         return this.objectivesByGroup();
@@ -142,17 +161,19 @@ export class AssignmentsClassifyComponent {
 
   classTrackBy(
     _index: number,
-    classobj: [string, ImmutableObjective[]]
+    classObjBuckets: [string, [ImmutableObjective, ImmutableBucket][]]
   ): string {
-    return classobj[0];
+    return classObjBuckets[0];
   }
 
   assignedResources(objective: ImmutableObjective): number {
     return objective.resourcesAllocated();
   }
 
-  totalAssignedResources(objectives: readonly ImmutableObjective[]): number {
-    return totalResourcesAllocated(objectives);
+  totalAssignedResources(
+    objBuckets: readonly [ImmutableObjective, ImmutableBucket][]
+  ): number {
+    return totalResourcesAllocated(objBuckets.map((ob) => ob[0]));
   }
 
   renameClass(cname: string): void {
@@ -166,5 +187,33 @@ export class AssignmentsClassifyComponent {
         this.rename.emit([cname, newName]);
       }
     });
+  }
+
+  editObjective(obj: ImmutableObjective, bucket: ImmutableBucket): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
+    const changeEmitter = new EventEmitter<
+      [ImmutableObjective, ImmutableObjective]
+    >();
+    changeEmitter.subscribe(([before, after]) =>
+      this.bucketChanged!.emit([
+        bucket,
+        bucket.withObjectiveChanged(before, after),
+      ])
+    );
+    const deleteEmitter = new EventEmitter<ImmutableObjective>();
+    deleteEmitter.subscribe((o) =>
+      this.bucketChanged!.emit([bucket, bucket.withObjectiveDeleted(o)])
+    );
+    editObjective(
+      obj,
+      this.period?.unit!,
+      [], // Don't allow moving between buckets via this path - it's not really important
+      undefined,
+      deleteEmitter,
+      changeEmitter,
+      this.dialog
+    );
   }
 }
