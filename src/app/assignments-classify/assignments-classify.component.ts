@@ -20,6 +20,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import {
@@ -33,6 +34,7 @@ import {
   RenameClassDialogData,
 } from '../rename-class-dialog/rename-class-dialog.component';
 import { ImmutableBucket } from '../bucket';
+import { Subscription } from 'rxjs';
 
 export enum AggregateBy {
   Group = 'group',
@@ -46,7 +48,7 @@ export enum AggregateBy {
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssignmentsClassifyComponent {
+export class AssignmentsClassifyComponent implements OnDestroy {
   @Input() period?: ImmutablePeriod;
   @Input() aggregateBy?: AggregateBy;
   @Input() groupType?: string;
@@ -56,8 +58,13 @@ export class AssignmentsClassifyComponent {
   @Output() bucketChanged = new EventEmitter<
     [ImmutableBucket, ImmutableBucket]
   >();
+  subscriptions: Subscription[] = [];
 
   constructor(private dialog: MatDialog) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
 
   objectivesByGroup(): Array<
     [string, [ImmutableObjective, ImmutableBucket][]]
@@ -196,15 +203,19 @@ export class AssignmentsClassifyComponent {
     const changeEmitter = new EventEmitter<
       [ImmutableObjective, ImmutableObjective]
     >();
-    changeEmitter.subscribe(([before, after]) =>
-      this.bucketChanged!.emit([
-        bucket,
-        bucket.withObjectiveChanged(before, after),
-      ])
+    this.subscriptions.push(
+      changeEmitter.subscribe(([before, after]) =>
+        this.bucketChanged!.emit([
+          bucket,
+          bucket.withObjectiveChanged(before, after),
+        ])
+      )
     );
     const deleteEmitter = new EventEmitter<ImmutableObjective>();
-    deleteEmitter.subscribe((o) =>
-      this.bucketChanged!.emit([bucket, bucket.withObjectiveDeleted(o)])
+    this.subscriptions.push(
+      deleteEmitter.subscribe((o) =>
+        this.bucketChanged!.emit([bucket, bucket.withObjectiveDeleted(o)])
+      )
     );
     editObjective(
       obj,
