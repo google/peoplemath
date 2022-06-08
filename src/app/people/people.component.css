@@ -5,6 +5,6 @@ tr.mat-footer-row {
   font-weight: bold;
 }
 .table-container {
-  max-height: 70vh;
+  max-height: 50vh;
   overflow: auto;
 }
