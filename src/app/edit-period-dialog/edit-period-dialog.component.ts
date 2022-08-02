@@ -15,7 +15,7 @@
 import { Component, Inject } from '@angular/core';
 import { Period, SecondaryUnit } from '../period';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
 export interface EditPeriodDialogData {
   period: Period;
@@ -30,30 +30,30 @@ export interface EditPeriodDialogData {
   styleUrls: ['./edit-period-dialog.component.css'],
 })
 export class EditPeriodDialogComponent {
-  periodIdControl: FormControl;
-  displayNameControl: FormControl;
-  unitControl: FormControl;
-  secondaryUnitsControl: FormControl;
-  notesUrlControl: FormControl;
-  maxCommitPctControl: FormControl;
+  periodIdControl: UntypedFormControl;
+  displayNameControl: UntypedFormControl;
+  unitControl: UntypedFormControl;
+  secondaryUnitsControl: UntypedFormControl;
+  notesUrlControl: UntypedFormControl;
+  maxCommitPctControl: UntypedFormControl;
 
   constructor(
     public dialogRef: MatDialogRef<EditPeriodDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditPeriodDialogData
   ) {
-    this.periodIdControl = new FormControl(data.period.id, Validators.required);
-    this.displayNameControl = new FormControl(
+    this.periodIdControl = new UntypedFormControl(data.period.id, Validators.required);
+    this.displayNameControl = new UntypedFormControl(
       data.period.displayName,
       Validators.required
     );
-    this.unitControl = new FormControl(data.period.unit, Validators.required);
-    this.secondaryUnitsControl = new FormControl(
+    this.unitControl = new UntypedFormControl(data.period.unit, Validators.required);
+    this.secondaryUnitsControl = new UntypedFormControl(
       data.period.secondaryUnits
         .map((su) => su.name + ':' + su.conversionFactor)
         .join(',')
     );
-    this.notesUrlControl = new FormControl(data.period.notesURL);
-    this.maxCommitPctControl = new FormControl(
+    this.notesUrlControl = new UntypedFormControl(data.period.notesURL);
+    this.maxCommitPctControl = new UntypedFormControl(
       data.period.maxCommittedPercentage,
       [Validators.min(0), Validators.max(100)]
     );
