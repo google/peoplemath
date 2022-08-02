@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "^14.1.0",
     "@angular/router": "^14.1.0",
     "dompurify": "^2.2.7",
-    "firebase": "^9.4.0",
+    "firebase": "^9.9.1",
     "rxfire": "^6.0.0",
     "rxjs": "~7.4.0",
     "snarkdown": "^2.0.0",
