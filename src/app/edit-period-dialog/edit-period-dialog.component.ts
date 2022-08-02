@@ -41,12 +41,18 @@ export class EditPeriodDialogComponent {
     public dialogRef: MatDialogRef<EditPeriodDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditPeriodDialogData
   ) {
-    this.periodIdControl = new UntypedFormControl(data.period.id, Validators.required);
+    this.periodIdControl = new UntypedFormControl(
+      data.period.id,
+      Validators.required
+    );
     this.displayNameControl = new UntypedFormControl(
       data.period.displayName,
       Validators.required
     );
-    this.unitControl = new UntypedFormControl(data.period.unit, Validators.required);
+    this.unitControl = new UntypedFormControl(
+      data.period.unit,
+      Validators.required
+    );
     this.secondaryUnitsControl = new UntypedFormControl(
       data.period.secondaryUnits
         .map((su) => su.name + ':' + su.conversionFactor)
