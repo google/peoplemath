@@ -3,7 +3,7 @@
     <p>You can group the selected objectives <b>{{data.blockPlaceholder.name}}</b> with others below,
         to reorder them as a block.</p>
     <mat-selection-list #below [multiple]="false" [(ngModel)]="selected" style="max-height: 50vh;">
-        <mat-list-option *ngFor="let block of data.blocksBelow; index as idx" [value]="idx" [class.selected-range]="below.selectedOptions.selected.length > 0 && idx <= below.selectedOptions.selected[0]?.value">
+        <mat-list-option *ngFor="let block of data.blocksBelow; index as idx" [value]="idx" [class.selected-range]="below.selectedOptions.selected.length > 0 && idx <= below.selectedOptions.selected[0].value">
             {{block.name}}
         </mat-list-option>
     </mat-selection-list>

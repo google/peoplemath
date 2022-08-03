@@ -60,6 +60,20 @@
           {
             "selector": "enumMember",
             "format": ["PascalCase"]
+          },
+          {
+            "selector": [
+              "classProperty",
+              "objectLiteralProperty",
+              "typeProperty",
+              "classMethod",
+              "objectLiteralMethod",
+              "typeMethod",
+              "accessor",
+              "enumMember"
+            ],
+            "format": null,
+            "modifiers": ["requiresQuotes"]
           }
         ],
         "no-shadow": "off",

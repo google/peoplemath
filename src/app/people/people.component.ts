@@ -30,7 +30,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-  FormControl,
+  UntypedFormControl,
   ValidatorFn,
   AbstractControl,
   Validators,
@@ -250,22 +250,22 @@ export interface EditPersonDialogData {
   templateUrl: 'edit-person-dialog.html',
 })
 export class EditPersonDialogComponent {
-  userIdControl: FormControl;
-  locationControl: FormControl;
-  displayNameControl: FormControl;
-  availabilityControl: FormControl;
+  userIdControl: UntypedFormControl;
+  locationControl: UntypedFormControl;
+  displayNameControl: UntypedFormControl;
+  availabilityControl: UntypedFormControl;
 
   constructor(
     public dialogRef: MatDialogRef<EditPersonDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData
   ) {
-    this.userIdControl = new FormControl(data.person.id, [
+    this.userIdControl = new UntypedFormControl(data.person.id, [
       this.validateUserId,
       Validators.required,
     ]);
-    this.locationControl = new FormControl(data.person.location);
-    this.displayNameControl = new FormControl(data.person.displayName);
-    this.availabilityControl = new FormControl(data.person.availability);
+    this.locationControl = new UntypedFormControl(data.person.location);
+    this.displayNameControl = new UntypedFormControl(data.person.displayName);
+    this.availabilityControl = new UntypedFormControl(data.person.availability);
   }
 
   get validateUserId(): ValidatorFn {

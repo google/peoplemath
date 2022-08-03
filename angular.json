@@ -33,7 +33,8 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "allowedCommonJsDependencies": ["dompurify"]
           },
           "configurations": {
             "production": {
@@ -120,7 +121,6 @@
       }
     }
   },
-  "defaultProject": "peoplemath",
   "cli": {
     "analytics": "c6a34dbb-19aa-4ffa-84db-4cd7dcc2e90b"
   }
