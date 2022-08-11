@@ -6,5 +6,3 @@ set -e
 
 patch -u node_modules/dompurify/package.json -i dompurify.patch
 
-npx ng build --configuration production | grep dompurify
-
