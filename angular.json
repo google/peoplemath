@@ -33,8 +33,7 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true,
-            "allowedCommonJsDependencies": ["dompurify"]
+            "namedChunks": true
           },
           "configurations": {
             "production": {

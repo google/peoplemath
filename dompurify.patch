@@ -1,0 +1,11 @@
+--- node_modules/dompurify/package.json.old	2022-08-11 10:15:37.122839016 +0100
++++ node_modules/dompurify/package.json	2022-08-11 10:15:53.130662100 +0100
+@@ -17,7 +17,7 @@
+     "test:ci": "cross-env NODE_ENV=test BABEL_ENV=rollup npm run test:jsdom && npm run test:karma -- --log-level error --reporters dots --single-run --shouldTestOnBrowserStack=\"${TEST_BROWSERSTACK}\" --shouldProbeOnly=\"${TEST_PROBE_ONLY}\"",
+     "test": "cross-env NODE_ENV=test BABEL_ENV=rollup npm run lint &&  npm run test:jsdom && npm run test:karma -- --browsers Chrome"
+   },
+-  "main": "dist/purify.cjs.js",
++  "main": "dist/purify.es.js",
+   "module": "dist/purify.es.js",
+   "browser": "dist/purify.js",
+   "files": [
