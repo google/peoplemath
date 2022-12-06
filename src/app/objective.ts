@@ -105,6 +105,7 @@ export interface Objective {
   assignments: Assignment[];
   displayOptions?: DisplayOptions;
   blockID?: string;
+  requestLink?: string;
 }
 
 // Boilerplate avoidance device
@@ -118,6 +119,7 @@ interface ImmutableObjectiveIF {
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
   readonly blockID?: string;
+  readonly requestLink?: string;
 }
 
 export class ImmutableObjective {
@@ -132,6 +134,7 @@ export class ImmutableObjective {
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
   readonly blockID?: string;
+  readonly requestLink?: string;
 
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
@@ -143,6 +146,7 @@ export class ImmutableObjective {
     this.assignments = o.assignments;
     this.displayOptions = o.displayOptions;
     this.blockID = o.blockID;
+    this.requestLink = o.requestLink;
   }
 
   static fromObjective(objective: Objective): ImmutableObjective {
@@ -159,6 +163,7 @@ export class ImmutableObjective {
           ? undefined
           : new ImmutableDisplayOptions(objective.displayOptions),
       blockID: objective.blockID,
+      requestLink: objective.requestLink,
     });
   }
 
@@ -175,6 +180,9 @@ export class ImmutableObjective {
     };
     if (this.blockID) {
       result.blockID = this.blockID;
+    }
+    if (this.requestLink) {
+      result.requestLink = this.requestLink;
     }
     return result;
   }

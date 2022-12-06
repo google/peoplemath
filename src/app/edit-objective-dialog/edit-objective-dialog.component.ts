@@ -39,6 +39,7 @@ export interface EditedObjective {
   assignments: Assignment[];
   displayOptions: DisplayOptions;
   blockID?: string;
+  requestLink?: string;
 }
 
 export enum SaveAction {
@@ -79,6 +80,7 @@ export const makeEditedObjective = (
       enableMarkdown: false,
     },
     blockID: objective.blockID,
+    requestLink: objective.requestLink,
   };
 };
 
@@ -121,6 +123,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     assignments: edited.assignments,
     displayOptions: edited.displayOptions,
     blockID: edited.blockID,
+    requestLink: edited.requestLink,
   });
 
 @Component({
