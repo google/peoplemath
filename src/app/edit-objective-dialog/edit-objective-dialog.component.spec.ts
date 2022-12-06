@@ -119,7 +119,7 @@ describe('EditObjectiveDialogComponent', () => {
       assignments: [],
       displayOptions: { enableMarkdown: false },
       blockID: 'myblock',
-      requestLink: 'wibble',
+      requestURL: 'wibble',
     };
     expect(makeEditedObjective(objective)).toEqual(expected);
   });

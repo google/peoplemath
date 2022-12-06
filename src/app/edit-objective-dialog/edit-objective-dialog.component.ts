@@ -39,7 +39,7 @@ export interface EditedObjective {
   assignments: Assignment[];
   displayOptions: DisplayOptions;
   blockID?: string;
-  requestLink?: string;
+  requestURL?: string;
 }
 
 export enum SaveAction {
@@ -81,7 +81,7 @@ export const makeEditedObjective = (
     },
     blockID: objective.blockID,
     // TODO: Support multiple request URLs in the dialog UI
-    requestLink:
+    requestURL:
       !!objective.requestURLs && objective.requestURLs.length > 0
         ? objective.requestURLs[0].url
         : '',
@@ -128,8 +128,8 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     displayOptions: edited.displayOptions,
     blockID: edited.blockID,
     // TODO: Support multiple request URLs in the dialog UI
-    requestURLs: edited.requestLink
-      ? [{ name: 'Request', url: edited.requestLink }]
+    requestURLs: edited.requestURL
+      ? [{ name: 'Request', url: edited.requestURL }]
       : [],
   });
 
