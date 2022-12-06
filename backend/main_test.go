@@ -288,7 +288,7 @@ func TestPostPeriod(t *testing.T) {
 	teamID := "myteam"
 	periodID := "2019q1"
 	addTeam(handler, teamID, t)
-	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
+	periodJSON := `{"id":"` + periodID + `","displayName":"2019Q1","unit":"person weeks","notesURL":"http://test","buckets":[{"displayName":"Bucket one","allocationPercentage":80,"objectives":[{"name":"Objective 1","resourceEstimate":0,"commitmentType":"Committed","notes":"some notes","assignments":[], "requestURLs": [{"name":"Request", "url":"wibble"}]}]}],"people":[{"id": "alice", "displayName": "Alice Atkins", "location": "LON", "availability": 5}]}`
 	addPeriod(handler, teamID, periodID, periodJSON, t)
 
 	p := getPeriod(handler, teamID, periodID, t)
@@ -299,6 +299,10 @@ func TestPostPeriod(t *testing.T) {
 	readNotes := p.Buckets[0].Objectives[0].Notes
 	if readNotes != "some notes" {
 		t.Fatalf("Expected notes to persist, found %q", readNotes)
+	}
+	requestURLs := p.Buckets[0].Objectives[0].RequestURLs
+	if len(requestURLs) != 1 || requestURLs[0].Name != "Request" || requestURLs[0].URL != "wibble" {
+		t.Fatalf("Expected request URL to persist, found %q", requestURLs)
 	}
 
 	if p.People[0].Location != "LON" {
