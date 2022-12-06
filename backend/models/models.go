@@ -108,7 +108,7 @@ type Objective struct {
 	Tags             []ObjectiveTag   `json:"tags"`
 	DisplayOptions   DisplayOptions   `json:"displayOptions"`
 	BlockID          string           `json:"blockID"`
-	RequestLink      string           `json:"requestLink"`
+	RequestURLs      []RequestURL     `json:"requestURLs"`
 }
 
 // ObjectiveGroup model struct
@@ -120,6 +120,12 @@ type ObjectiveGroup struct {
 // ObjectiveTag model struct
 type ObjectiveTag struct {
 	Name string `json:"name"`
+}
+
+// RequestURL model struct
+type RequestURL struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 // SecondaryUnit model struct

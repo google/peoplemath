@@ -80,7 +80,11 @@ export const makeEditedObjective = (
       enableMarkdown: false,
     },
     blockID: objective.blockID,
-    requestLink: objective.requestLink,
+    // TODO: Support multiple request URLs in the dialog UI
+    requestLink:
+      !!objective.requestURLs && objective.requestURLs.length > 0
+        ? objective.requestURLs[0].url
+        : '',
   };
 };
 
@@ -123,7 +127,10 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     assignments: edited.assignments,
     displayOptions: edited.displayOptions,
     blockID: edited.blockID,
-    requestLink: edited.requestLink,
+    // TODO: Support multiple request URLs in the dialog UI
+    requestURLs: edited.requestLink
+      ? [{ name: 'Request', url: edited.requestLink }]
+      : [],
   });
 
 @Component({

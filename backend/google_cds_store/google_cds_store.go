@@ -249,6 +249,9 @@ func scrubLoadedPeriod(period *models.Period) {
 			if period.Buckets[i].Objectives[j].Tags == nil {
 				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
 			}
+			if period.Buckets[i].Objectives[j].RequestURLs == nil {
+				period.Buckets[i].Objectives[j].RequestURLs = []models.RequestURL{}
+			}
 		}
 	}
 }

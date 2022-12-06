@@ -24,6 +24,8 @@ import {
   CommitmentType,
   DisplayOptions,
   ImmutableDisplayOptions,
+  RequestURL,
+  ImmutableRequestURL,
 } from './objective';
 import { Assignment, ImmutableAssignment } from './assignment';
 
@@ -122,5 +124,17 @@ describe('ImmutableDisplayOptions', () => {
     expect(() => {
       shadow.enableMarkdown = false;
     }).toThrowError(/Cannot set property enableMarkdown/);
+  });
+});
+
+describe('ImmutableRequestURL', () => {
+  const _mut: RequestURL = { name: 'myname', url: 'myurl' };
+  const requrl = new ImmutableRequestURL(_mut);
+
+  it('should be immutable', () => {
+    const shadow: RequestURL = requrl;
+    expect(() => {
+      shadow.url = 'foo';
+    }).toThrowError(/Cannot set property url/);
   });
 });

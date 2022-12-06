@@ -45,7 +45,7 @@ describe('EditObjectiveDialogComponent', () => {
     notes: '',
     assignments: [],
     blockID: 'myblock',
-    requestLink: 'wibble',
+    requestURLs: [{ name: 'Request', url: 'wibble' }],
   });
   const DIALOG_DATA: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
