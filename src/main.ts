@@ -14,9 +14,9 @@
 
 import { enableProdMode /*, ApplicationRef*/ } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { environment } from './environments/environment';
 
 import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
 // import { enableDebugTools } from '@angular/platform-browser';
 
 if (environment.production) {
