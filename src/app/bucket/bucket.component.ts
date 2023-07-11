@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,6 +94,8 @@ export class BucketComponent {
       okAction: 'OK',
       allowCancel: false,
       title: 'Edit bucket "' + this.bucket!.displayName + '"',
+      otherBucketsTotalAllocPct:
+        this.totalAllocationPercentage! - this.bucket!.allocationPercentage,
       onDelete: this.delete,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
@@ -306,8 +308,8 @@ export class BucketComponent {
     return this.bucket!.resourcesAllocated();
   }
 
-  isOverAllocated(): boolean {
-    return this.totalAllocationPercentage! > 100;
+  isOverOrUnderAllocated(): boolean {
+    return Math.abs(this.totalAllocationPercentage! - 100) > 1e-6;
   }
 
   committedResourcesAllocated(): number {

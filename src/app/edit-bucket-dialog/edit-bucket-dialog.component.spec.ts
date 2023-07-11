@@ -1,4 +1,4 @@
-// Copyright 2019, 2021 Google LLC
+// Copyright 2019, 2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ describe('EditBucketDialogComponent', () => {
     okAction: 'OK',
     allowCancel: true,
     title: 'My test dialog',
+    otherBucketsTotalAllocPct: 80,
   };
 
   beforeEach(
@@ -58,5 +59,12 @@ describe('EditBucketDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should balance allocations', () => {
+    expect(component.isAllocationUnbalanced()).toBeTrue();
+    component.balanceAllocation();
+    expect(component.isAllocationUnbalanced()).toBeFalse();
+    expect(component.data.bucket.allocationPercentage).toEqual(20);
   });
 });

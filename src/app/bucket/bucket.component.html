@@ -6,7 +6,7 @@
         <button (click)="onMoveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
     </span>
     <span (click)="edit()">{{bucket?.displayName}}
-    <span [class.error]="isOverAllocated()"> ({{bucket?.allocationPercentage}}%)</span>
+    <span [class.error]="isOverOrUnderAllocated()"> ({{bucket?.allocationPercentage}}%)</span>
     </span>
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>

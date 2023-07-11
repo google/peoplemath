@@ -1,4 +1,4 @@
-// Copyright 2019, 2021 Google LLC
+// Copyright 2019, 2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ export interface EditBucketDialogData {
   okAction: string;
   allowCancel: boolean;
   title: string;
+  otherBucketsTotalAllocPct: number;
   onDelete?: EventEmitter<ImmutableBucket>;
 }
 
@@ -60,5 +61,22 @@ export class EditBucketDialogComponent {
 
   onCancelDelete(): void {
     this.showDeleteConfirm = false;
+  }
+
+  isAllocationUnbalanced(): boolean {
+    return (
+      Math.abs(
+        this.data.bucket.allocationPercentage +
+          this.data.otherBucketsTotalAllocPct -
+          100
+      ) > 1e-6
+    );
+  }
+
+  balanceAllocation(): void {
+    this.data.bucket.allocationPercentage = Math.max(
+      0,
+      100 - this.data.otherBucketsTotalAllocPct
+    );
   }
 }
