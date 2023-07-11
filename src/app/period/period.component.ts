@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -479,11 +479,13 @@ export class PeriodComponent implements OnInit {
     if (!this.isEditingEnabled) {
       return;
     }
+    const totalExistingPct = this.totalAllocationPercentage();
     const dialogData: EditBucketDialogData = {
-      bucket: new Bucket('', 0, []),
+      bucket: new Bucket('', Math.max(0, 100 - totalExistingPct), []),
       okAction: 'Add',
       allowCancel: true,
       title: 'Add bucket',
+      otherBucketsTotalAllocPct: totalExistingPct,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
       data: dialogData,
