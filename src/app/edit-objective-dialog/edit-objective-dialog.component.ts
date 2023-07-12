@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import {
   ImmutableObjective,
   DisplayOptions,
 } from '../objective';
-import { AddLocation, ImmutableBucket } from '../bucket';
+import { ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
 
 export interface EditedObjective {
@@ -52,11 +52,11 @@ export interface EditObjectiveDialogData {
   title: string;
   saveAction: SaveAction;
   unit: string;
+  currentBucket: ImmutableBucket;
   otherBuckets: readonly ImmutableBucket[];
   onMoveBucket?: EventEmitter<
     [ImmutableObjective, ImmutableObjective, ImmutableBucket]
   >;
-  onDelete?: EventEmitter<ImmutableObjective>;
 }
 
 export const makeEditedObjective = (
@@ -133,7 +133,7 @@ export class EditObjectiveDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<
       EditObjectiveDialogComponent,
-      [ImmutableObjective, AddLocation | null]
+      ImmutableBucket
     >,
     @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData
   ) {}
@@ -147,18 +147,28 @@ export class EditObjectiveDialogComponent {
   }
 
   onAddToTop(): void {
-    this.dialogRef.close([makeObjective(this.data.objective), AddLocation.Top]);
+    this.dialogRef.close(
+      this.data.currentBucket.withNewObjectiveAtTop(
+        makeObjective(this.data.objective)
+      )
+    );
   }
 
   onAddToBottom(): void {
-    this.dialogRef.close([
-      makeObjective(this.data.objective),
-      AddLocation.Bottom,
-    ]);
+    this.dialogRef.close(
+      this.data.currentBucket.withNewObjectiveAtBottom(
+        makeObjective(this.data.objective)
+      )
+    );
   }
 
   onSaveExisting(): void {
-    this.dialogRef.close([makeObjective(this.data.objective), null]);
+    this.dialogRef.close(
+      this.data.currentBucket.withObjectiveChanged(
+        this.data.original!,
+        makeObjective(this.data.objective)
+      )
+    );
   }
 
   onCancel(): void {
@@ -178,13 +188,30 @@ export class EditObjectiveDialogComponent {
     this.dialogRef.close();
   }
 
+  moveToTopOfCurrentBucket(): void {
+    const obj = makeObjective(this.data.objective);
+    const newBucket = this.data.currentBucket
+      .withObjectiveDeleted(this.data.original!)
+      .withNewObjectiveAtTop(obj);
+    this.dialogRef.close(newBucket);
+  }
+
+  moveToBottomOfCurrentBucket(): void {
+    const obj = makeObjective(this.data.objective);
+    const newBucket = this.data.currentBucket
+      .withObjectiveDeleted(this.data.original!)
+      .withNewObjectiveAtBottom(obj);
+    this.dialogRef.close(newBucket);
+  }
+
   onDelete(): void {
     this.showDeleteConfirm = true;
   }
 
   onConfirmDelete(): void {
-    this.data.onDelete!.emit(this.data.original);
-    this.dialogRef.close();
+    this.dialogRef.close(
+      this.data.currentBucket.withObjectiveDeleted(this.data.original!)
+    );
   }
 
   onCancelDelete(): void {

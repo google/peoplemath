@@ -47,11 +47,12 @@
       [unit]="unit"
       [unallocatedTime]="unallocatedTime"
       [isEditingEnabled]="isEditingEnabled && !showOrderButtons"
+      [currentBucket]="bucket"
       [otherBuckets]="otherBuckets"
       [resourcesCumulativeSum]="displayObjective.cumulativeSum"
       [bucketAllocationLimit]="bucketAllocationLimit()"
       (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
-      (delete)="deleteObjective($event)"
-      (changed)="onObjectiveChanged($event[0], $event[1])">
+      (changed)="onObjectiveChanged($event[0], $event[1])"
+      (bucketChanged)="onBucketChanged($event[0], $event[1])">
   </app-objective>
 </ng-template>

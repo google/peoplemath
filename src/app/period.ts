@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AddLocation, Bucket, ImmutableBucket } from './bucket';
+import { Bucket, ImmutableBucket } from './bucket';
 import { Person, ImmutablePerson } from './person';
 import { ImmutableObjective } from './objective';
 
@@ -206,10 +206,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     if (toIdx < 0) {
       throw Error('Could not find new bucket');
     }
-    newBuckets[toIdx] = newBuckets[toIdx].withNewObjective(
-      newObj,
-      AddLocation.Bottom
-    );
+    newBuckets[toIdx] = newBuckets[toIdx].withNewObjectiveAtBottom(newObj);
     return this.withNewBuckets(newBuckets);
   }
 
