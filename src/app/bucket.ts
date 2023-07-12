@@ -15,12 +15,10 @@
 import { Objective, CommitmentType, ImmutableObjective } from './objective';
 import { ImmutablePerson } from './person';
 
-export class Bucket {
-  constructor(
-    public displayName: string,
-    public allocationPercentage: number,
-    public objectives: Objective[]
-  ) {}
+export interface Bucket {
+  displayName: string;
+  allocationPercentage: number;
+  objectives: Objective[];
 }
 
 export class ImmutableBucket {
@@ -49,11 +47,11 @@ export class ImmutableBucket {
   }
 
   toOriginal(): Bucket {
-    return new Bucket(
-      this.displayName,
-      this.allocationPercentage,
-      this.objectives.map((o) => o.toOriginal())
-    );
+    return {
+      displayName: this.displayName,
+      allocationPercentage: this.allocationPercentage,
+      objectives: this.objectives.map((o) => o.toOriginal()),
+    };
   }
 
   withNewObjectives(

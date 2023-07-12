@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2021 Google LLC
+ * Copyright 2019-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,13 @@ const NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
   notes: '',
   assignments: [new Assignment('person1', 5)],
 };
-const BUCKETS = [new Bucket('Bucket 1', 100, [NO_COMMITMENTTYPE_OBJECTIVE])];
+const BUCKETS: Bucket[] = [
+  {
+    displayName: 'Bucket 1',
+    allocationPercentage: 100,
+    objectives: [NO_COMMITMENTTYPE_OBJECTIVE],
+  },
+];
 const TEST_PERIOD: Period = {
   id: 'periodid',
   displayName: 'Period Name',

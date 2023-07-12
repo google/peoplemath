@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,11 @@ describe('BucketSummaryComponent', () => {
     assignments: [new Assignment('person1', 5)],
     displayOptions: { enableMarkdown: false },
   };
-  const BUCKET: Bucket = new Bucket('my bucket', 50, [
-    NO_COMMITMENTTYPE_OBJECTIVE,
-  ]);
+  const BUCKET: Bucket = {
+    displayName: 'my bucket',
+    allocationPercentage: 50,
+    objectives: [NO_COMMITMENTTYPE_OBJECTIVE],
+  };
 
   beforeEach(
     waitForAsync(() => {

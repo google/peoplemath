@@ -481,7 +481,11 @@ export class PeriodComponent implements OnInit {
     }
     const totalExistingPct = this.totalAllocationPercentage();
     const dialogData: EditBucketDialogData = {
-      bucket: new Bucket('', Math.max(0, 100 - totalExistingPct), []),
+      bucket: {
+        displayName: '',
+        allocationPercentage: Math.max(0, 100 - totalExistingPct),
+        objectives: [],
+      },
       okAction: 'Add',
       allowCancel: true,
       title: 'Add bucket',

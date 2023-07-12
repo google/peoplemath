@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -240,7 +240,7 @@ export class TeamPeriodsComponent implements OnInit {
     copyObjectives: boolean,
     copyAssignments: boolean
   ): Bucket[] {
-    const result = [];
+    const result: Bucket[] = [];
     for (const b of orig) {
       const objectives: Objective[] = [];
       if (copyObjectives) {
@@ -262,9 +262,11 @@ export class TeamPeriodsComponent implements OnInit {
           });
         }
       }
-      result.push(
-        new Bucket(b.displayName, b.allocationPercentage, objectives)
-      );
+      result.push({
+        displayName: b.displayName,
+        allocationPercentage: b.allocationPercentage,
+        objectives: objectives,
+      });
     }
     return result;
   }

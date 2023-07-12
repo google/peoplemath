@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,19 +66,23 @@ describe('ImmutablePeriod', () => {
     secondaryUnits: [],
     notesURL: 'noexist',
     buckets: [
-      new Bucket('Bucket 1', 40, []),
-      new Bucket('Bucket 2', 60, [
-        {
-          name: 'An objective',
-          resourceEstimate: 6,
-          commitmentType: CommitmentType.Aspirational,
-          notes: '',
-          groups: [{ groupType: 'group', groupName: 'things' }],
-          tags: [{ name: 'mytag' }],
-          assignments: [new Assignment('person1', 3)],
-          displayOptions: { enableMarkdown: false },
-        },
-      ]),
+      { displayName: 'Bucket 1', allocationPercentage: 40, objectives: [] },
+      {
+        displayName: 'Bucket 2',
+        allocationPercentage: 60,
+        objectives: [
+          {
+            name: 'An objective',
+            resourceEstimate: 6,
+            commitmentType: CommitmentType.Aspirational,
+            notes: '',
+            groups: [{ groupType: 'group', groupName: 'things' }],
+            tags: [{ name: 'mytag' }],
+            assignments: [new Assignment('person1', 3)],
+            displayOptions: { enableMarkdown: false },
+          },
+        ],
+      },
     ],
     people: [
       new Person('person1', 'Person 1', 'LOC', 6),
@@ -100,7 +104,11 @@ describe('ImmutablePeriod', () => {
   });
 
   it('should facilitate new buckets', () => {
-    const newBucket: Bucket = new Bucket('New bucket', 50, []);
+    const newBucket: Bucket = {
+      displayName: 'New bucket',
+      allocationPercentage: 50,
+      objectives: [],
+    };
     const updated = period.withNewBucket(ImmutableBucket.fromBucket(newBucket));
     const expected: Period = { ..._mut, buckets: [..._mut.buckets, newBucket] };
     expect(updated.toOriginal()).toEqual(expected);
@@ -125,7 +133,11 @@ describe('ImmutablePeriod', () => {
   });
 
   it('should facilitate bucket change', () => {
-    const newBucket = new Bucket('New bucket', 77, []);
+    const newBucket: Bucket = {
+      displayName: 'New bucket',
+      allocationPercentage: 77,
+      objectives: [],
+    };
     const expected: Period = { ..._mut, buckets: [_mut.buckets[0], newBucket] };
     const updated = period.withBucketChanged(
       period.buckets[1],
@@ -135,12 +147,18 @@ describe('ImmutablePeriod', () => {
   });
 
   it('should be unaffected by changing nonexistent bucket', () => {
-    const nonExistent = ImmutableBucket.fromBucket(
-      new Bucket('Nonexistent', 666, [])
-    );
+    const nonExistent = ImmutableBucket.fromBucket({
+      displayName: 'Nonexistent',
+      allocationPercentage: 666,
+      objectives: [],
+    });
     const updated = period.withBucketChanged(
       nonExistent,
-      ImmutableBucket.fromBucket(new Bucket('none', 0, []))
+      ImmutableBucket.fromBucket({
+        displayName: 'none',
+        allocationPercentage: 0,
+        objectives: [],
+      })
     );
     expect(updated).toEqual(period);
   });
