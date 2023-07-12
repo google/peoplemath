@@ -1,3 +1,13 @@
 .selector-series {
   margin: 0 10px;
 }
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}

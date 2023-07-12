@@ -200,6 +200,9 @@ export class TeamPeriodsComponent implements OnInit {
           id: data.period.id,
           displayName: data.period.displayName,
           unit: data.copyUnit ? copiedPeriod.unit : data.period.unit,
+          unitAbbrev: data.copyUnit
+            ? copiedPeriod.unitAbbrev
+            : data.period.unitAbbrev,
           secondaryUnits: data.copyUnit
             ? copiedPeriod.secondaryUnits.map((su) => su.toOriginal())
             : data.period.secondaryUnits,
@@ -265,6 +268,8 @@ export class TeamPeriodsComponent implements OnInit {
       result.push({
         displayName: b.displayName,
         allocationPercentage: b.allocationPercentage,
+        allocationAbsolute: b.allocationAbsolute,
+        allocationType: b.allocationType,
         objectives: objectives,
       });
     }

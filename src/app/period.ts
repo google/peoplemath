@@ -46,6 +46,7 @@ export interface Period {
   id: string;
   displayName: string;
   unit: string;
+  unitAbbrev?: string;
   notesURL: string;
   maxCommittedPercentage: number;
   buckets: Bucket[];
@@ -59,6 +60,7 @@ interface ImmutablePeriodIF {
   readonly id: string;
   readonly displayName: string;
   readonly unit: string;
+  readonly unitAbbrev: string;
   readonly notesURL: string;
   readonly maxCommittedPercentage: number;
   readonly buckets: readonly ImmutableBucket[];
@@ -72,6 +74,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   readonly id: string;
   readonly displayName: string;
   readonly unit: string;
+  readonly unitAbbrev: string;
   readonly notesURL: string;
   readonly maxCommittedPercentage: number;
   readonly buckets: readonly ImmutableBucket[];
@@ -83,6 +86,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     this.id = from.id;
     this.displayName = from.displayName;
     this.unit = from.unit;
+    this.unitAbbrev = from.unitAbbrev;
     this.notesURL = from.notesURL;
     this.maxCommittedPercentage = from.maxCommittedPercentage;
     this.buckets = from.buckets;
@@ -96,6 +100,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       id: period.id,
       displayName: period.displayName,
       unit: period.unit,
+      unitAbbrev: period.unitAbbrev || '',
       notesURL: period.notesURL,
       maxCommittedPercentage: period.maxCommittedPercentage,
       buckets: period.buckets.map((b) => ImmutableBucket.fromBucket(b)),
@@ -112,6 +117,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       id: this.id,
       displayName: this.displayName,
       unit: this.unit,
+      unitAbbrev: this.unitAbbrev,
       notesURL: this.notesURL,
       maxCommittedPercentage: this.maxCommittedPercentage,
       buckets: this.buckets.map((b) => b.toOriginal()),

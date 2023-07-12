@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
@@ -155,8 +155,9 @@ export class PeriodComponent implements OnInit {
    * Sum of bucket allocation percentages. Should generally be 100 (and never more).
    */
   totalAllocationPercentage(): number {
-    return this.period!.buckets.map(
-      (bucket) => bucket.allocationPercentage
+    const ta = this.totalAvailable();
+    return this.period!.buckets.map((bucket) =>
+      bucket.getAllocationPercentage(ta)
     ).reduce((sum, current) => sum + current, 0);
   }
 
@@ -480,16 +481,21 @@ export class PeriodComponent implements OnInit {
       return;
     }
     const totalExistingPct = this.totalAllocationPercentage();
+    const balancePct = Math.max(0, 100 - totalExistingPct);
+    const balanceAbs = this.totalAvailable() * (1 - totalExistingPct / 100);
     const dialogData: EditBucketDialogData = {
       bucket: {
         displayName: '',
-        allocationPercentage: Math.max(0, 100 - totalExistingPct),
+        allocationPercentage: balancePct,
+        allocationType: AllocationType.Percentage,
+        allocationAbsolute: balanceAbs,
         objectives: [],
       },
       okAction: 'Add',
-      allowCancel: true,
       title: 'Add bucket',
-      otherBucketsTotalAllocPct: totalExistingPct,
+      unit: this.period!.unit,
+      balancePct: balancePct,
+      balanceAbs: balanceAbs,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
       data: dialogData,

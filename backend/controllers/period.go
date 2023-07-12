@@ -1,4 +1,4 @@
-// Copyright 2020-21 Google LLC
+// Copyright 2020-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -246,6 +246,12 @@ func readPeriodFromBody(w http.ResponseWriter, r *http.Request) (*models.Period,
 		return &period, false
 	}
 	for _, bucket := range period.Buckets {
+		if bucket.AllocationType != "" {
+			if bucket.AllocationType != models.AllocationTypePercentage && bucket.AllocationType != models.AllocationTypeAbsolute {
+				http.Error(w, fmt.Sprintf("Illegal allocation type '%s'", bucket.AllocationType), http.StatusBadRequest)
+				return &period, false
+			}
+		}
 		for _, objective := range bucket.Objectives {
 			if objective.CommitmentType != "" {
 				if objective.CommitmentType != models.CommitmentTypeCommitted && objective.CommitmentType != models.CommitmentTypeAspirational {

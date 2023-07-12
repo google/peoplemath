@@ -21,7 +21,7 @@ import {
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Bucket } from '../bucket';
+import { AllocationType, Bucket } from '../bucket';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditBucketDialogComponent', () => {
@@ -32,12 +32,15 @@ describe('EditBucketDialogComponent', () => {
     bucket: {
       displayName: 'My test bucket',
       allocationPercentage: 76,
+      allocationType: AllocationType.Percentage,
+      allocationAbsolute: 0,
       objectives: [],
     },
     okAction: 'OK',
-    allowCancel: true,
     title: 'My test dialog',
-    otherBucketsTotalAllocPct: 80,
+    unit: 'person weeks',
+    balancePct: 20,
+    balanceAbs: 5,
   };
 
   beforeEach(

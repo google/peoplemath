@@ -13,16 +13,17 @@
 // limitations under the License.
 
 import { Component, Inject, EventEmitter } from '@angular/core';
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface EditBucketDialogData {
   bucket: Bucket;
   original?: ImmutableBucket;
   okAction: string;
-  allowCancel: boolean;
   title: string;
-  otherBucketsTotalAllocPct: number;
+  unit: string;
+  balancePct: number;
+  balanceAbs: number;
   onDelete?: EventEmitter<ImmutableBucket>;
 }
 
@@ -64,19 +65,34 @@ export class EditBucketDialogComponent {
   }
 
   isAllocationUnbalanced(): boolean {
-    return (
-      Math.abs(
-        this.data.bucket.allocationPercentage +
-          this.data.otherBucketsTotalAllocPct -
-          100
-      ) > 1e-6
-    );
+    switch (this.data.bucket.allocationType || AllocationType.Percentage) {
+      case AllocationType.Percentage:
+        return (
+          Math.abs(
+            this.data.bucket.allocationPercentage - this.data.balancePct
+          ) > 1e-6
+        );
+      case AllocationType.Absolute:
+        return (
+          this.data.bucket.allocationAbsolute !== undefined &&
+          Math.abs(this.data.bucket.allocationAbsolute - this.data.balanceAbs) >
+            1e-6
+        );
+    }
   }
 
   balanceAllocation(): void {
-    this.data.bucket.allocationPercentage = Math.max(
-      0,
-      100 - this.data.otherBucketsTotalAllocPct
-    );
+    switch (this.data.bucket.allocationType || AllocationType.Percentage) {
+      case AllocationType.Percentage:
+        this.data.bucket.allocationPercentage = this.data.balancePct;
+        break;
+      case AllocationType.Absolute:
+        this.data.bucket.allocationAbsolute = this.data.balanceAbs;
+        break;
+      default:
+        throw new Error(
+          'Unsupported allocation type ' + this.data.bucket.allocationType
+        );
+    }
   }
 }

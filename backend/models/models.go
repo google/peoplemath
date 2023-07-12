@@ -1,4 +1,4 @@
-// Copyright 2020-2021 Google LLC
+// Copyright 2020-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -77,6 +77,7 @@ type Period struct {
 	ID                     string          `json:"id"`
 	DisplayName            string          `json:"displayName"`
 	Unit                   string          `json:"unit"`
+	UnitAbbrev             string          `json:"unitAbbrev"`
 	NotesURL               string          `json:"notesURL"`
 	MaxCommittedPercentage float64         `json:"maxCommittedPercentage"`
 	Buckets                []Bucket        `json:"buckets"`
@@ -86,11 +87,18 @@ type Period struct {
 	LastUpdateUUID string `json:"lastUpdateUUID"`
 }
 
+const (
+	AllocationTypePercentage = "percentage"
+	AllocationTypeAbsolute   = "absolute"
+)
+
 // Bucket model struct
 type Bucket struct {
 	DisplayName          string      `json:"displayName"`
 	AllocationPercentage float64     `json:"allocationPercentage"`
+	AllocationAbsolute   float64     `json:"allocationAbsolute"`
 	Objectives           []Objective `json:"objectives"`
+	AllocationType       string      `json:"allocationType"`
 }
 
 type DisplayOptions struct {

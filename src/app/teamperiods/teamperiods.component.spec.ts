@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -122,6 +122,7 @@ describe('TeamPeriodsComponent', () => {
         id: sourcePeriodID,
         displayName: 'Source period',
         unit: 'things',
+        unitAbbrev: 't',
         secondaryUnits: [
           new ImmutableSecondaryUnit({
             name: 'semithings',
@@ -139,6 +140,7 @@ describe('TeamPeriodsComponent', () => {
       id: 'new',
       displayName: 'My copied period',
       unit: '',
+      unitAbbrev: '',
       secondaryUnits: [],
       maxCommittedPercentage: -1,
       notesURL: '',
@@ -165,6 +167,7 @@ describe('TeamPeriodsComponent', () => {
     const expectedPeriod: Period = {
       ...newPeriod,
       unit: 'things',
+      unitAbbrev: 't',
       maxCommittedPercentage: 50,
       secondaryUnits: [{ name: 'semithings', conversionFactor: 2 }],
       lastUpdateUUID: 'foo', // By the time we do the comparison, this will have been set

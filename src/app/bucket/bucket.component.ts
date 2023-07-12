@@ -56,6 +56,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class BucketComponent {
   @Input() bucket?: ImmutableBucket;
   @Input() unit?: string;
+  @Input() unitAbbrev?: string;
   @Input() totalAllocationPercentage?: number;
   @Input() globalResourcesAvailable?: number;
   @Input() maxCommittedPercentage?: number;
@@ -76,26 +77,31 @@ export class BucketComponent {
 
   /**
    * Limit of resources expected to be allocated to the given bucket in this period,
-   * based on total available and the percentage the user has set for this bucket.
+   * based on total available and the limit the user has set for this bucket.
    */
   bucketAllocationLimit(): number {
-    return (
-      (this.globalResourcesAvailable! * this.bucket!.allocationPercentage) / 100
-    );
+    return this.bucket!.getAllocationAbsolute(this.globalResourcesAvailable!);
+  }
+
+  getAllocationPercentage(): number {
+    return this.bucket!.getAllocationPercentage(this.globalResourcesAvailable!);
   }
 
   edit(): void {
     if (!this.isEditingEnabled) {
       return;
     }
+    const balancePct =
+      100 - (this.totalAllocationPercentage! - this.getAllocationPercentage());
+    const balanceAbs = (this.globalResourcesAvailable! * balancePct) / 100;
     const dialogData: EditBucketDialogData = {
       bucket: this.bucket!.toOriginal(),
       original: this.bucket!,
       okAction: 'OK',
-      allowCancel: false,
       title: 'Edit bucket "' + this.bucket!.displayName + '"',
-      otherBucketsTotalAllocPct:
-        this.totalAllocationPercentage! - this.bucket!.allocationPercentage,
+      unit: this.unit!,
+      balancePct: balancePct,
+      balanceAbs: balanceAbs,
       onDelete: this.delete,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {

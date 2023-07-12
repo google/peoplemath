@@ -15,9 +15,16 @@
 import { Objective, CommitmentType, ImmutableObjective } from './objective';
 import { ImmutablePerson } from './person';
 
+export enum AllocationType {
+  Percentage = 'percentage',
+  Absolute = 'absolute',
+}
+
 export interface Bucket {
   displayName: string;
+  allocationType?: AllocationType;
   allocationPercentage: number;
+  allocationAbsolute?: number;
   objectives: Objective[];
 }
 
@@ -26,22 +33,30 @@ export class ImmutableBucket {
   // so we can save typing on getters here.
   readonly displayName: string;
   readonly allocationPercentage: number;
+  readonly allocationAbsolute: number;
   readonly objectives: readonly ImmutableObjective[];
+  readonly allocationType: AllocationType;
 
   private constructor(
     displayName: string,
+    allocationType: AllocationType,
     allocationPercentage: number,
+    allocationAbsolute: number,
     objectives: readonly ImmutableObjective[]
   ) {
     this.displayName = displayName;
     this.allocationPercentage = allocationPercentage;
+    this.allocationAbsolute = allocationAbsolute;
     this.objectives = objectives;
+    this.allocationType = allocationType;
   }
 
   static fromBucket(bucket: Bucket): ImmutableBucket {
     return new ImmutableBucket(
       bucket.displayName,
+      bucket.allocationType || AllocationType.Percentage,
       bucket.allocationPercentage,
+      bucket.allocationAbsolute || 0,
       bucket.objectives.map((o) => ImmutableObjective.fromObjective(o))
     );
   }
@@ -49,7 +64,9 @@ export class ImmutableBucket {
   toOriginal(): Bucket {
     return {
       displayName: this.displayName,
+      allocationType: this.allocationType,
       allocationPercentage: this.allocationPercentage,
+      allocationAbsolute: this.allocationAbsolute,
       objectives: this.objectives.map((o) => o.toOriginal()),
     };
   }
@@ -59,7 +76,9 @@ export class ImmutableBucket {
   ): ImmutableBucket {
     return new ImmutableBucket(
       this.displayName,
+      this.allocationType,
       this.allocationPercentage,
+      this.allocationAbsolute,
       newObjectives
     );
   }
@@ -141,5 +160,23 @@ export class ImmutableBucket {
       .filter((o) => o.commitmentType === CommitmentType.Committed)
       .map((o) => o.resourcesAllocated())
       .reduce((sum, current) => sum + current, 0);
+  }
+
+  getAllocationPercentage(totalAbsAllocations: number): number {
+    switch (this.allocationType) {
+      case AllocationType.Percentage:
+        return this.allocationPercentage;
+      case AllocationType.Absolute:
+        return (100 * this.allocationAbsolute) / totalAbsAllocations;
+    }
+  }
+
+  getAllocationAbsolute(totalAbsAllocations: number): number {
+    switch (this.allocationType) {
+      case AllocationType.Percentage:
+        return (totalAbsAllocations * this.allocationPercentage) / 100;
+      case AllocationType.Absolute:
+        return this.allocationAbsolute;
+    }
   }
 }

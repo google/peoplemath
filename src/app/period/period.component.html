@@ -29,7 +29,9 @@
 <div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
 
 <div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
-<app-bucket *ngFor="let bucket of period!.buckets" [bucket]="bucket" [unit]="period?.unit"
+<app-bucket *ngFor="let bucket of period!.buckets" [bucket]="bucket"
+    [unit]="period?.unit"
+    [unitAbbrev]="period?.unitAbbrev || period?.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
     [maxCommittedPercentage]="period?.maxCommittedPercentage"

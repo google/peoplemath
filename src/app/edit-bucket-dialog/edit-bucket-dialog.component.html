@@ -1,20 +1,32 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
-<div mat-dialog-content>
-  <p>Bucket name</p>
+<div mat-dialog-content class="fields">
   <mat-form-field>
+    <mat-label>Bucket name</mat-label>
     <input matInput [(ngModel)]="data.bucket.displayName">
   </mat-form-field>
-  <p>Allocation (%)</p>
   <mat-form-field>
+    <mat-label>Allocation type</mat-label>
+    <mat-select [(ngModel)]="data.bucket.allocationType">
+      <mat-option value="percentage">Percentage</mat-option>
+      <mat-option value="absolute">Absolute</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="data.bucket.allocationType === 'percentage'">
+    <mat-label>Allocation (%)</mat-label>
     <input matInput [(ngModel)]="data.bucket.allocationPercentage" type="number">
+  </mat-form-field>
+  <mat-form-field *ngIf="data.bucket.allocationType === 'absolute'">
+    <mat-label>Allocation ({{data.unit}})</mat-label>
+    <input matInput [(ngModel)]="data.bucket.allocationAbsolute" type="number">
   </mat-form-field>
 </div>
 
 <div mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="data.bucket" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
   <button mat-raised-button *ngIf="isAllocationUnbalanced()" (click)="balanceAllocation()">Balance</button>
-  <button *ngIf="data.allowCancel" mat-button (click)="onCancel()" color="warn">Cancel</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
   <button *ngIf="data.onDelete && !showDeleteConfirm" mat-button (click)="onDelete()" color="warn">Delete</button>
   <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onCancelDelete()">Cancel Delete</button>
   <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onConfirmDelete()" color="warn">Confirm Delete</button>

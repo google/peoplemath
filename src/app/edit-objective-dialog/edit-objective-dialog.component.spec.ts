@@ -28,7 +28,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ImmutableBucket } from '../bucket';
+import { AllocationType, ImmutableBucket } from '../bucket';
 
 describe('EditObjectiveDialogComponent', () => {
   let component: EditObjectiveDialogComponent;
@@ -55,7 +55,9 @@ describe('EditObjectiveDialogComponent', () => {
     unit: 'person weeks',
     currentBucket: ImmutableBucket.fromBucket({
       displayName: 'My bucket',
+      allocationType: AllocationType.Percentage,
       allocationPercentage: 100,
+      allocationAbsolute: 0,
       objectives: [],
     }),
     otherBuckets: [],

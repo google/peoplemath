@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import { CsumClassPipe } from '../objective/csum-class.pipe';
 import { AssignSummPartsPipe } from '../objective/assign-summ-parts.pipe';
 import { AssignmentsClassifyComponent } from '../assignments-classify/assignments-classify.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
+import { AllocationType } from '../bucket';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -131,7 +132,9 @@ describe('PeriodComponent', () => {
       ...TEST_PERIOD,
       buckets: [
         {
+          allocationType: AllocationType.Percentage,
           allocationPercentage: 100,
+          allocationAbsolute: 0,
           displayName: 'Sole bucket',
           objectives: [
             {

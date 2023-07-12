@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ export class EditPeriodDialogComponent {
   periodIdControl: UntypedFormControl;
   displayNameControl: UntypedFormControl;
   unitControl: UntypedFormControl;
+  unitAbbrevControl: UntypedFormControl;
   secondaryUnitsControl: UntypedFormControl;
   notesUrlControl: UntypedFormControl;
   maxCommitPctControl: UntypedFormControl;
@@ -53,6 +54,7 @@ export class EditPeriodDialogComponent {
       data.period.unit,
       Validators.required
     );
+    this.unitAbbrevControl = new UntypedFormControl(data.period.unitAbbrev);
     this.secondaryUnitsControl = new UntypedFormControl(
       data.period.secondaryUnits
         .map((su) => su.name + ':' + su.conversionFactor)
@@ -87,6 +89,7 @@ export class EditPeriodDialogComponent {
     }
     this.data.period.displayName = this.displayNameControl.value;
     this.data.period.unit = this.unitControl.value;
+    this.data.period.unitAbbrev = this.unitAbbrevControl.value;
     const secondaryUnits: SecondaryUnit[] = this.parseSecondaryUnits();
     this.data.period.secondaryUnits = secondaryUnits;
     this.data.period.notesURL = this.notesUrlControl.value;
