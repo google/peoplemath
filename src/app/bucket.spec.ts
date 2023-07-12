@@ -18,18 +18,22 @@ import { Bucket, ImmutableBucket } from './bucket';
 import { CommitmentType, Objective, ImmutableObjective } from './objective';
 
 describe('ImmutableBucket', () => {
-  const _mut = new Bucket('My test bucket', 50, [
-    {
-      name: 'My test objective',
-      resourceEstimate: 1,
-      notes: '',
-      commitmentType: CommitmentType.Committed,
-      groups: [],
-      tags: [{ name: 'mytag' }],
-      assignments: [],
-      displayOptions: { enableMarkdown: false },
-    },
-  ]);
+  const _mut: Bucket = {
+    displayName: 'My test bucket',
+    allocationPercentage: 50,
+    objectives: [
+      {
+        name: 'My test objective',
+        resourceEstimate: 1,
+        notes: '',
+        commitmentType: CommitmentType.Committed,
+        groups: [],
+        tags: [{ name: 'mytag' }],
+        assignments: [],
+        displayOptions: { enableMarkdown: false },
+      },
+    ],
+  };
   const bucket = ImmutableBucket.fromBucket(_mut);
   const obj2: Objective = {
     name: 'Second Objective',
@@ -66,11 +70,11 @@ describe('ImmutableBucket', () => {
     const newBucket = bucket.withNewObjectiveAtBottom(
       ImmutableObjective.fromObjective(obj2)
     );
-    const expected: Bucket = new Bucket(
-      _mut.displayName,
-      _mut.allocationPercentage,
-      [_mut.objectives[0], obj2]
-    );
+    const expected: Bucket = {
+      displayName: _mut.displayName,
+      allocationPercentage: _mut.allocationPercentage,
+      objectives: [_mut.objectives[0], obj2],
+    };
     expect(newBucket.toOriginal()).toEqual(expected);
   });
 
@@ -78,21 +82,21 @@ describe('ImmutableBucket', () => {
     const newBucket = bucket.withNewObjectiveAtTop(
       ImmutableObjective.fromObjective(obj2)
     );
-    const expected: Bucket = new Bucket(
-      _mut.displayName,
-      _mut.allocationPercentage,
-      [obj2, _mut.objectives[0]]
-    );
+    const expected: Bucket = {
+      displayName: _mut.displayName,
+      allocationPercentage: _mut.allocationPercentage,
+      objectives: [obj2, _mut.objectives[0]],
+    };
     expect(newBucket.toOriginal()).toEqual(expected);
   });
 
   it('should support deleting an objective', () => {
     const newBucket = bucket.withObjectiveDeleted(bucket.objectives[0]);
-    const expected: Bucket = new Bucket(
-      _mut.displayName,
-      _mut.allocationPercentage,
-      []
-    );
+    const expected: Bucket = {
+      displayName: _mut.displayName,
+      allocationPercentage: _mut.allocationPercentage,
+      objectives: [],
+    };
     expect(newBucket.toOriginal()).toEqual(expected);
   });
 
@@ -106,11 +110,11 @@ describe('ImmutableBucket', () => {
       bucket.objectives[0],
       ImmutableObjective.fromObjective(obj2)
     );
-    const expected: Bucket = new Bucket(
-      _mut.displayName,
-      _mut.allocationPercentage,
-      [obj2]
-    );
+    const expected: Bucket = {
+      displayName: _mut.displayName,
+      allocationPercentage: _mut.allocationPercentage,
+      objectives: [obj2],
+    };
     expect(newBucket.toOriginal()).toEqual(expected);
   });
 

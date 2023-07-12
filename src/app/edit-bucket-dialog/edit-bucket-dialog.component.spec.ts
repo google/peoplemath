@@ -29,7 +29,11 @@ describe('EditBucketDialogComponent', () => {
   let fixture: ComponentFixture<EditBucketDialogComponent>;
   const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
   const DIALOG_DATA: EditBucketDialogData = {
-    bucket: new Bucket('My test bucket', 76, []),
+    bucket: {
+      displayName: 'My test bucket',
+      allocationPercentage: 76,
+      objectives: [],
+    },
     okAction: 'OK',
     allowCancel: true,
     title: 'My test dialog',
