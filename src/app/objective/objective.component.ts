@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,15 +45,18 @@ export class ObjectiveComponent {
   @Input() unit?: string;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() isEditingEnabled?: boolean;
+  @Input() currentBucket?: ImmutableBucket;
   @Input() otherBuckets?: readonly ImmutableBucket[];
   @Input() bucketAllocationLimit?: number;
   @Input() resourcesCumulativeSum?: number;
   @Output() moveBucket = new EventEmitter<
     [ImmutableObjective, ImmutableObjective, ImmutableBucket]
   >();
-  @Output() delete = new EventEmitter<ImmutableObjective>();
   @Output() changed = new EventEmitter<
     [ImmutableObjective, ImmutableObjective]
+  >();
+  @Output() bucketChanged = new EventEmitter<
+    [ImmutableBucket, ImmutableBucket]
   >();
 
   constructor(public dialog: MatDialog) {}
@@ -140,10 +143,10 @@ export class ObjectiveComponent {
     editObjective(
       this.objective!,
       this.unit!,
+      this.currentBucket!,
       this.otherBuckets!,
       this.moveBucket,
-      this.delete,
-      this.changed,
+      this.bucketChanged,
       this.dialog
     );
   }

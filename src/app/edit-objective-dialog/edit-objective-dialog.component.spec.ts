@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ImmutableBucket } from '../bucket';
 
 describe('EditObjectiveDialogComponent', () => {
   let component: EditObjectiveDialogComponent;
@@ -52,9 +53,13 @@ describe('EditObjectiveDialogComponent', () => {
     title: 'My test dialog',
     saveAction: SaveAction.Edit,
     unit: 'person weeks',
+    currentBucket: ImmutableBucket.fromBucket({
+      displayName: 'My bucket',
+      allocationPercentage: 100,
+      objectives: [],
+    }),
     otherBuckets: [],
     onMoveBucket: undefined,
-    onDelete: undefined,
   };
 
   beforeEach(

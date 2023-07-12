@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2022 Google LLC
+ * Copyright 2020-2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -200,30 +200,13 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     if (!this.isEditingEnabled) {
       return;
     }
-    const changeEmitter = new EventEmitter<
-      [ImmutableObjective, ImmutableObjective]
-    >();
-    this.subscriptions.push(
-      changeEmitter.subscribe(([before, after]) =>
-        this.bucketChanged!.emit([
-          bucket,
-          bucket.withObjectiveChanged(before, after),
-        ])
-      )
-    );
-    const deleteEmitter = new EventEmitter<ImmutableObjective>();
-    this.subscriptions.push(
-      deleteEmitter.subscribe((o) =>
-        this.bucketChanged!.emit([bucket, bucket.withObjectiveDeleted(o)])
-      )
-    );
     editObjective(
       obj,
       this.period?.unit!,
+      bucket,
       [], // Don't allow moving between buckets via this path - it's not really important
       undefined,
-      deleteEmitter,
-      changeEmitter,
+      this.bucketChanged!,
       this.dialog
     );
   }

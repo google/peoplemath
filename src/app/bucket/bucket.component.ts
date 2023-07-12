@@ -20,7 +20,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { AddLocation, Bucket, ImmutableBucket } from '../bucket';
+import { Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -218,29 +218,21 @@ export class BucketComponent {
       title: 'Add Objective',
       saveAction: SaveAction.New,
       unit: this.unit!,
+      currentBucket: this.bucket!,
       otherBuckets: [],
       onMoveBucket: undefined,
-      onDelete: undefined,
     };
     const dialogRef: MatDialogRef<
       EditObjectiveDialogComponent,
-      [ImmutableObjective, AddLocation | null]
+      ImmutableBucket
     > = this.dialog.open(EditObjectiveDialogComponent, {
       data: dialogData,
     });
-    dialogRef.afterClosed().subscribe((closeData) => {
-      if (!closeData) {
+    dialogRef.afterClosed().subscribe((newBucket) => {
+      if (!newBucket) {
         return;
       }
-      const [objective, addLocation] = closeData;
-      if (!addLocation) {
-        console.error('No addLocation supplied');
-        return;
-      }
-      this.changed.emit([
-        this.bucket!,
-        this.bucket!.withNewObjective(objective, addLocation),
-      ]);
+      this.changed.emit([this.bucket!, newBucket]);
     });
   }
 
@@ -256,13 +248,6 @@ export class BucketComponent {
       this.bucket!,
       newObjective,
       newBucket,
-    ]);
-  }
-
-  deleteObjective(objective: ImmutableObjective): void {
-    this.changed.emit([
-      this.bucket!,
-      this.bucket!.withObjectiveDeleted(objective),
     ]);
   }
 
@@ -284,6 +269,14 @@ export class BucketComponent {
         this.bucket!.withNewObjectives(newObjectives),
       ]);
     }
+  }
+
+  /**
+   * Annoyingly we seem to need this wrapper function and can't pass the emitter
+   * directly to the child component :(
+   */
+  onBucketChanged(event: any): void {
+    this.changed.emit(event);
   }
 
   onObjectiveChanged(
