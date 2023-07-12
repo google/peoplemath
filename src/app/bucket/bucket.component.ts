@@ -275,8 +275,8 @@ export class BucketComponent {
    * Annoyingly we seem to need this wrapper function and can't pass the emitter
    * directly to the child component :(
    */
-  onBucketChanged(event: any): void {
-    this.changed.emit(event);
+  onBucketChanged(before: ImmutableBucket, after: ImmutableBucket): void {
+    this.changed.emit([before, after]);
   }
 
   onObjectiveChanged(

@@ -53,6 +53,6 @@
       [bucketAllocationLimit]="bucketAllocationLimit()"
       (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
       (changed)="onObjectiveChanged($event[0], $event[1])"
-      (bucketChanged)="onBucketChanged($event)">
+      (bucketChanged)="onBucketChanged($event[0], $event[1])">
   </app-objective>
 </ng-template>
