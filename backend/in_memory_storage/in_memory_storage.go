@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -260,6 +260,9 @@ func makeFakePeriod(id string) models.Period {
 					Groups:           []models.ObjectiveGroup{},
 					Tags:             []models.ObjectiveTag{},
 					BlockID:          "block1",
+					RequestURLs: []models.RequestURL{
+						models.RequestURL{Name: "Request", URL: "https://github.com/google/peoplemath"},
+					},
 				},
 				{
 					Name:             "Block objective 2",

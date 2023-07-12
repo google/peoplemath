@@ -95,6 +95,33 @@ export class ImmutableDisplayOptions {
   }
 }
 
+export interface RequestURL {
+  name: string;
+  url: string;
+}
+
+export class ImmutableRequestURL {
+  readonly _name: string;
+  readonly _url: string;
+
+  constructor(req: RequestURL) {
+    this._name = req.name;
+    this._url = req.url;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get url(): string {
+    return this._url;
+  }
+
+  toOriginal(): RequestURL {
+    return { name: this.name, url: this.url };
+  }
+}
+
 export interface Objective {
   name: string;
   resourceEstimate: number;
@@ -105,6 +132,7 @@ export interface Objective {
   assignments: Assignment[];
   displayOptions?: DisplayOptions;
   blockID?: string;
+  requestURLs?: RequestURL[];
 }
 
 // Boilerplate avoidance device
@@ -118,6 +146,7 @@ interface ImmutableObjectiveIF {
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
   readonly blockID?: string;
+  readonly requestURLs?: readonly ImmutableRequestURL[];
 }
 
 export class ImmutableObjective {
@@ -132,6 +161,7 @@ export class ImmutableObjective {
   readonly assignments: readonly ImmutableAssignment[];
   readonly displayOptions?: ImmutableDisplayOptions;
   readonly blockID?: string;
+  readonly requestURLs?: readonly ImmutableRequestURL[];
 
   private constructor(o: ImmutableObjectiveIF) {
     this.name = o.name;
@@ -143,6 +173,7 @@ export class ImmutableObjective {
     this.assignments = o.assignments;
     this.displayOptions = o.displayOptions;
     this.blockID = o.blockID;
+    this.requestURLs = o.requestURLs;
   }
 
   static fromObjective(objective: Objective): ImmutableObjective {
@@ -159,6 +190,9 @@ export class ImmutableObjective {
           ? undefined
           : new ImmutableDisplayOptions(objective.displayOptions),
       blockID: objective.blockID,
+      requestURLs: objective.requestURLs?.map(
+        (u) => new ImmutableRequestURL(u)
+      ),
     });
   }
 
@@ -175,6 +209,9 @@ export class ImmutableObjective {
     };
     if (this.blockID) {
       result.blockID = this.blockID;
+    }
+    if (this.requestURLs) {
+      result.requestURLs = this.requestURLs.map((u) => u.toOriginal());
     }
     return result;
   }

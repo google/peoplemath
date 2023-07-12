@@ -1,4 +1,4 @@
-// Copyright 2020-2021 Google LLC
+// Copyright 2020-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -108,6 +108,7 @@ type Objective struct {
 	Tags             []ObjectiveTag   `json:"tags"`
 	DisplayOptions   DisplayOptions   `json:"displayOptions"`
 	BlockID          string           `json:"blockID"`
+	RequestURLs      []RequestURL     `json:"requestURLs"`
 }
 
 // ObjectiveGroup model struct
@@ -119,6 +120,12 @@ type ObjectiveGroup struct {
 // ObjectiveTag model struct
 type ObjectiveTag struct {
 	Name string `json:"name"`
+}
+
+// RequestURL model struct
+type RequestURL struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 // SecondaryUnit model struct

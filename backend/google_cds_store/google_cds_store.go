@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -248,6 +248,9 @@ func scrubLoadedPeriod(period *models.Period) {
 			}
 			if period.Buckets[i].Objectives[j].Tags == nil {
 				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
+			}
+			if period.Buckets[i].Objectives[j].RequestURLs == nil {
+				period.Buckets[i].Objectives[j].RequestURLs = []models.RequestURL{}
 			}
 		}
 	}

@@ -46,6 +46,7 @@ describe('EditObjectiveDialogComponent', () => {
     notes: '',
     assignments: [],
     blockID: 'myblock',
+    requestURLs: [{ name: 'Request', url: 'wibble' }],
   });
   const DIALOG_DATA: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
@@ -123,6 +124,7 @@ describe('EditObjectiveDialogComponent', () => {
       assignments: [],
       displayOptions: { enableMarkdown: false },
       blockID: 'myblock',
+      requestURL: 'wibble',
     };
     expect(makeEditedObjective(objective)).toEqual(expected);
   });
