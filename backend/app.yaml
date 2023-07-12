@@ -13,6 +13,8 @@
 # limitations under the License.
 
 runtime: go120
+# Seems to be required by Firebase Auth: go mod why -m google.golang.org/appengine/v2
+app_engine_apis: true
 handlers:
   # Backend API
   - url: /api/.*
