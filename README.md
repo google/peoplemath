@@ -102,7 +102,7 @@ The easiest way to work on the front end is to use the [Angular CLI](https://cli
 
 In development mode, the CLI will [proxy](https://angular.io/guide/build#proxying-to-a-backend-server) API requests to a backend running on `localhost:8080`.
 
-To run the backend server locally, install the [Go toolchain](https://golang.org/dl/) (1.14 or later), and run `go run . --inmemstore` in the `backend` directory. The `--inmemstore` argument will make the backend use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
+To run the backend server locally, install the [Go toolchain](https://golang.org/dl/), and run `go run . --inmemstore` in the `backend` directory. The `--inmemstore` argument will make the backend use a simple in-memory implementation of the API. This has no external dependencies, but data written will not survive a restart of the API server.
 
 To persist the API data and exercise the Cloud Datastore persistence layer, the [Cloud Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator) can be used: install and start the emulator, then set the environment variables according to the instructions, set the `GOOGLE_CLOUD_PROJECT` environment variable, and start the backend server by running `go run .` with no arguments.
 
