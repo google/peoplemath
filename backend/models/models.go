@@ -95,10 +95,10 @@ const (
 // Bucket model struct
 type Bucket struct {
 	DisplayName          string      `json:"displayName"`
+	AllocationType       string      `json:"allocationType"`
 	AllocationPercentage float64     `json:"allocationPercentage"`
 	AllocationAbsolute   float64     `json:"allocationAbsolute"`
 	Objectives           []Objective `json:"objectives"`
-	AllocationType       string      `json:"allocationType"`
 }
 
 type DisplayOptions struct {
