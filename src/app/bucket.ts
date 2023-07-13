@@ -175,8 +175,7 @@ export class ImmutableBucket {
     switch (this.allocationType) {
       case AllocationType.Percentage:
         return (
-          (100 *
-            ((totalResourcesForPercent * this.allocationPercentage) / 100)) /
+          (this.allocationPercentage * totalResourcesForPercent) /
           totalResources
         );
       case AllocationType.Absolute:
