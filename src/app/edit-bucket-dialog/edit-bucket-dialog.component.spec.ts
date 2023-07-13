@@ -40,7 +40,6 @@ describe('EditBucketDialogComponent', () => {
     title: 'My test dialog',
     unit: 'person weeks',
     balancePct: 20,
-    balanceAbs: 5,
   };
 
   beforeEach(

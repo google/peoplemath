@@ -23,7 +23,6 @@ export interface EditBucketDialogData {
   title: string;
   unit: string;
   balancePct: number;
-  balanceAbs: number;
   onDelete?: EventEmitter<ImmutableBucket>;
 }
 
@@ -65,34 +64,22 @@ export class EditBucketDialogComponent {
   }
 
   isAllocationUnbalanced(): boolean {
-    switch (this.data.bucket.allocationType || AllocationType.Percentage) {
-      case AllocationType.Percentage:
-        return (
-          Math.abs(
-            this.data.bucket.allocationPercentage - this.data.balancePct
-          ) > 1e-6
-        );
-      case AllocationType.Absolute:
-        return (
-          this.data.bucket.allocationAbsolute !== undefined &&
-          Math.abs(this.data.bucket.allocationAbsolute - this.data.balanceAbs) >
-            1e-6
-        );
+    const allocType = this.data.bucket.allocationType;
+    if (allocType && allocType !== AllocationType.Percentage) {
+      return false;
     }
+
+    return (
+      Math.abs(this.data.bucket.allocationPercentage - this.data.balancePct) >
+      1e-6
+    );
   }
 
   balanceAllocation(): void {
-    switch (this.data.bucket.allocationType || AllocationType.Percentage) {
-      case AllocationType.Percentage:
-        this.data.bucket.allocationPercentage = this.data.balancePct;
-        break;
-      case AllocationType.Absolute:
-        this.data.bucket.allocationAbsolute = this.data.balanceAbs;
-        break;
-      default:
-        throw new Error(
-          'Unsupported allocation type ' + this.data.bucket.allocationType
-        );
+    const allocType = this.data.bucket.allocationType;
+    if (allocType && allocType !== AllocationType.Percentage) {
+      return;
     }
+    this.data.bucket.allocationPercentage = this.data.balancePct;
   }
 }

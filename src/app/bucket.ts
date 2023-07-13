@@ -162,19 +162,37 @@ export class ImmutableBucket {
       .reduce((sum, current) => sum + current, 0);
   }
 
-  getAllocationPercentage(totalAbsAllocations: number): number {
+  /**
+   * Calculate allocation limit as a percentage of the team's total resources.
+   * @param totalResourcesForPercent Team's total resources in the period,
+   *  for percentage allocation (e.g. excluding any absolute allocations).
+   * @param totalResources Team's total resources in the period.
+   */
+  allocationPercentageOfTotal(
+    totalResourcesForPercent: number,
+    totalResources: number
+  ): number {
     switch (this.allocationType) {
       case AllocationType.Percentage:
-        return this.allocationPercentage;
+        return (
+          (100 *
+            ((totalResourcesForPercent * this.allocationPercentage) / 100)) /
+          totalResources
+        );
       case AllocationType.Absolute:
-        return (100 * this.allocationAbsolute) / totalAbsAllocations;
+        return (100 * this.allocationAbsolute) / totalResources;
     }
   }
 
-  getAllocationAbsolute(totalAbsAllocations: number): number {
+  /**
+   * Calculate allocation limit in absolute resource units.
+   * @param totalResourcesForPercent Team's total resources in the period,
+   *  for percentage allocation (excluding any absolute allocations).
+   */
+  getAllocationAbsolute(totalResourcesForPercent: number): number {
     switch (this.allocationType) {
       case AllocationType.Percentage:
-        return (totalAbsAllocations * this.allocationPercentage) / 100;
+        return (totalResourcesForPercent * this.allocationPercentage) / 100;
       case AllocationType.Absolute:
         return this.allocationAbsolute;
     }

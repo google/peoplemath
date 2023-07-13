@@ -57,6 +57,7 @@ func MakeInMemStore(defaultDomain string) *InMemStore {
 			"2018q4": makeFakePeriod("2018q4"),
 			"2019q1": makeFakePeriod("2019q1"),
 			"2020q3": makeLargePeriod("2020q3", 30, 3, 50),
+			"2023q3": makeFakePeriodWithFixedBuckets("2023q3"),
 		},
 		"team2": {
 			"2018q4": makeFakePeriod("2018q4"),
@@ -387,6 +388,7 @@ func makeFakePeriod(id string) models.Period {
 		ID:          id,
 		DisplayName: strings.ToUpper(id),
 		Unit:        "person weeks",
+		UnitAbbrev:  "pw",
 		SecondaryUnits: []models.SecondaryUnit{
 			{
 				Name:             "person years",
@@ -398,6 +400,28 @@ func makeFakePeriod(id string) models.Period {
 		Buckets:                buckets,
 		People:                 people,
 	}
+}
+
+func makeFakePeriodWithFixedBuckets(id string) models.Period {
+	period := makeFakePeriod(id)
+	period.DisplayName += " (with fixed bucket)"
+	period.Buckets = append(period.Buckets, models.Bucket{
+		DisplayName:        "A bucket with fixed allocation",
+		AllocationType:     models.AllocationTypeAbsolute,
+		AllocationAbsolute: 6,
+		Objectives: []models.Objective{
+			{
+				Name:             "Finish some of the stuff in the fixed bucket",
+				ResourceEstimate: 2,
+			},
+			{
+				Name:             "Finish the rest of the stuff in the fixed bucket",
+				ResourceEstimate: 4,
+				Notes:            "Because it's really important",
+			},
+		},
+	})
+	return period
 }
 
 type randomObjectiveFactory struct {
@@ -457,7 +481,6 @@ func (f *randomObjectiveFactory) makeRandomObjective() models.Objective {
 		if f.peopleTimeRemaining[personID] == 0 {
 			delete(f.peopleTimeRemaining, personID)
 		}
-		break
 	}
 
 	tags := make([]models.ObjectiveTag, 0, 1)

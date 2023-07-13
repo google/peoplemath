@@ -34,6 +34,7 @@
     [unitAbbrev]="period?.unitAbbrev || period?.unit"
     [totalAllocationPercentage]="totalAllocationPercentage()"
     [globalResourcesAvailable]="totalAvailable()"
+    [globalResourcesAvailableForPct]="totalAvailableForPercentAlloc()"
     [maxCommittedPercentage]="period?.maxCommittedPercentage"
     [unallocatedTime]="unallocatedTime()"
     [showOrderButtons]="showOrderButtons && isEditingEnabled"

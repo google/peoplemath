@@ -16,10 +16,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
-import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { MaterialModule } from '../material/material.module';
 import { DisplayObjectivesPipe } from './displayobjectives.pipe';
+import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
 
 describe('BucketComponent', () => {
   let component: BucketComponent;
@@ -31,6 +32,7 @@ describe('BucketComponent', () => {
         declarations: [
           BucketComponent,
           ObjectiveComponent,
+          BucketAllocLimitComponent,
           DisplayObjectivesPipe,
         ],
         imports: [FormsModule, MaterialModule],

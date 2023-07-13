@@ -20,7 +20,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -59,6 +59,7 @@ export class BucketComponent {
   @Input() unitAbbrev?: string;
   @Input() totalAllocationPercentage?: number;
   @Input() globalResourcesAvailable?: number;
+  @Input() globalResourcesAvailableForPct?: number;
   @Input() maxCommittedPercentage?: number;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
   @Input() showOrderButtons?: boolean;
@@ -80,11 +81,16 @@ export class BucketComponent {
    * based on total available and the limit the user has set for this bucket.
    */
   bucketAllocationLimit(): number {
-    return this.bucket!.getAllocationAbsolute(this.globalResourcesAvailable!);
+    return this.bucket!.getAllocationAbsolute(
+      this.globalResourcesAvailableForPct!
+    );
   }
 
-  getAllocationPercentage(): number {
-    return this.bucket!.getAllocationPercentage(this.globalResourcesAvailable!);
+  getAllocationPctOfTotal(): number {
+    return this.bucket!.allocationPercentageOfTotal(
+      this.globalResourcesAvailableForPct!,
+      this.globalResourcesAvailable!
+    );
   }
 
   edit(): void {
@@ -92,8 +98,8 @@ export class BucketComponent {
       return;
     }
     const balancePct =
-      100 - (this.totalAllocationPercentage! - this.getAllocationPercentage());
-    const balanceAbs = (this.globalResourcesAvailable! * balancePct) / 100;
+      100 -
+      (this.totalAllocationPercentage! - this.bucket!.allocationPercentage);
     const dialogData: EditBucketDialogData = {
       bucket: this.bucket!.toOriginal(),
       original: this.bucket!,
@@ -101,7 +107,6 @@ export class BucketComponent {
       title: 'Edit bucket "' + this.bucket!.displayName + '"',
       unit: this.unit!,
       balancePct: balancePct,
-      balanceAbs: balanceAbs,
       onDelete: this.delete,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
@@ -308,7 +313,10 @@ export class BucketComponent {
   }
 
   isOverOrUnderAllocated(): boolean {
-    return Math.abs(this.totalAllocationPercentage! - 100) > 1e-6;
+    return (
+      this.bucket?.allocationType === AllocationType.Percentage &&
+      Math.abs(this.totalAllocationPercentage! - 100) > 1e-6
+    );
   }
 
   committedResourcesAllocated(): number {

@@ -144,7 +144,8 @@ describe('ImmutableBucket', () => {
       allocationAbsolute: -1,
       objectives: [],
     });
-    expect(b.getAllocationPercentage(1234)).toEqual(23);
+    expect(b.allocationPercentageOfTotal(1234, 1234)).toBeCloseTo(23);
+    expect(b.allocationPercentageOfTotal(1234, 2468)).toBeCloseTo(11.5);
     expect(b.getAllocationAbsolute(200)).toEqual(46);
   });
 
@@ -156,7 +157,8 @@ describe('ImmutableBucket', () => {
       allocationPercentage: -1,
       objectives: [],
     });
-    expect(b.getAllocationPercentage(60)).toBeCloseTo(25);
+    expect(b.allocationPercentageOfTotal(60, 60)).toBeCloseTo(25);
+    expect(b.allocationPercentageOfTotal(60, 120)).toBeCloseTo(12.5);
     expect(b.getAllocationAbsolute(12345)).toEqual(15);
   });
 });

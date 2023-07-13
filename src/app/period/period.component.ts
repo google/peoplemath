@@ -140,6 +140,20 @@ export class PeriodComponent implements OnInit {
     );
   }
 
+  /**
+   * Total resources available for percentage allocations
+   */
+  totalAvailableForPercentAlloc(): number {
+    return (
+      this.totalAvailable() -
+      this.period!.buckets.filter(
+        (b) => b.allocationType === AllocationType.Absolute
+      )
+        .map((b) => b.allocationAbsolute)
+        .reduce((sum, current) => sum + current, 0)
+    );
+  }
+
   totalAllocated(): number {
     return this.period!.resourcesAllocated();
   }
@@ -153,12 +167,15 @@ export class PeriodComponent implements OnInit {
 
   /**
    * Sum of bucket allocation percentages. Should generally be 100 (and never more).
+   * Buckets with fixed absolute allocations are ignored.
    */
   totalAllocationPercentage(): number {
     const ta = this.totalAvailable();
-    return this.period!.buckets.map((bucket) =>
-      bucket.getAllocationPercentage(ta)
-    ).reduce((sum, current) => sum + current, 0);
+    return this.period!.buckets.filter(
+      (b) => b.allocationType === AllocationType.Percentage
+    )
+      .map((bucket) => bucket.allocationPercentage)
+      .reduce((sum, current) => sum + current, 0);
   }
 
   totalAssignmentCount(): number {
@@ -482,20 +499,18 @@ export class PeriodComponent implements OnInit {
     }
     const totalExistingPct = this.totalAllocationPercentage();
     const balancePct = Math.max(0, 100 - totalExistingPct);
-    const balanceAbs = this.totalAvailable() * (1 - totalExistingPct / 100);
     const dialogData: EditBucketDialogData = {
       bucket: {
         displayName: '',
         allocationPercentage: balancePct,
         allocationType: AllocationType.Percentage,
-        allocationAbsolute: balanceAbs,
+        allocationAbsolute: 0,
         objectives: [],
       },
       okAction: 'Add',
       title: 'Add bucket',
       unit: this.period!.unit,
       balancePct: balancePct,
-      balanceAbs: balanceAbs,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
       data: dialogData,

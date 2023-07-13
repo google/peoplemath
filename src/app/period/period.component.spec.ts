@@ -45,6 +45,7 @@ import { AssignSummPartsPipe } from '../objective/assign-summ-parts.pipe';
 import { AssignmentsClassifyComponent } from '../assignments-classify/assignments-classify.component';
 import { AssignmentComponent } from '../assignment/assignment.component';
 import { AllocationType } from '../bucket';
+import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
 
 describe('PeriodComponent', () => {
   let component: PeriodComponent;
@@ -74,6 +75,7 @@ describe('PeriodComponent', () => {
         declarations: [
           PeriodComponent,
           BucketComponent,
+          BucketAllocLimitComponent,
           ObjectiveComponent,
           PeopleComponent,
           AssignmentsByPersonComponent,
