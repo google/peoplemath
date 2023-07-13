@@ -457,7 +457,6 @@ func (f *randomObjectiveFactory) makeRandomObjective() models.Objective {
 		if f.peopleTimeRemaining[personID] == 0 {
 			delete(f.peopleTimeRemaining, personID)
 		}
-		break
 	}
 
 	tags := make([]models.ObjectiveTag, 0, 1)
