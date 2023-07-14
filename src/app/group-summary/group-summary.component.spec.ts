@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import { Period, ImmutablePeriod } from '../period';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
+import { AllocationType } from '../bucket';
 
 describe('GroupSummaryComponent', () => {
   let component: GroupSummaryComponent;
@@ -34,7 +35,9 @@ describe('GroupSummaryComponent', () => {
     buckets: [
       {
         displayName: 'B1',
+        allocationType: AllocationType.Percentage,
         allocationPercentage: 100,
+        allocationAbsolute: 0,
         objectives: [],
       },
     ],

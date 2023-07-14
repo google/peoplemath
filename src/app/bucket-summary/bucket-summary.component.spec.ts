@@ -18,8 +18,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BucketSummaryComponent } from './bucket-summary.component';
 import { MaterialModule } from '../material/material.module';
-import { Bucket, ImmutableBucket } from '../bucket';
-import { Objective, ImmutableObjective } from '../objective';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
+import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
@@ -39,7 +39,9 @@ describe('BucketSummaryComponent', () => {
   };
   const BUCKET: Bucket = {
     displayName: 'my bucket',
+    allocationType: AllocationType.Percentage,
     allocationPercentage: 50,
+    allocationAbsolute: 0,
     objectives: [NO_COMMITMENTTYPE_OBJECTIVE],
   };
 

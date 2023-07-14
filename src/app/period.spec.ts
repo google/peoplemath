@@ -20,7 +20,7 @@ import {
   SecondaryUnit,
   ImmutableSecondaryUnit,
 } from './period';
-import { Bucket, ImmutableBucket } from './bucket';
+import { AllocationType, Bucket, ImmutableBucket } from './bucket';
 import { Person, ImmutablePerson } from './person';
 import { Assignment } from './assignment';
 import {
@@ -63,13 +63,22 @@ describe('ImmutablePeriod', () => {
     displayName: 'My test period',
     maxCommittedPercentage: 50,
     unit: 'things',
+    unitAbbrev: 't',
     secondaryUnits: [],
     notesURL: 'noexist',
     buckets: [
-      { displayName: 'Bucket 1', allocationPercentage: 40, objectives: [] },
+      {
+        displayName: 'Bucket 1',
+        allocationType: AllocationType.Percentage,
+        allocationPercentage: 40,
+        allocationAbsolute: 0,
+        objectives: [],
+      },
       {
         displayName: 'Bucket 2',
+        allocationType: AllocationType.Percentage,
         allocationPercentage: 60,
+        allocationAbsolute: 0,
         objectives: [
           {
             name: 'An objective',
@@ -106,7 +115,9 @@ describe('ImmutablePeriod', () => {
   it('should facilitate new buckets', () => {
     const newBucket: Bucket = {
       displayName: 'New bucket',
+      allocationType: AllocationType.Percentage,
       allocationPercentage: 50,
+      allocationAbsolute: 0,
       objectives: [],
     };
     const updated = period.withNewBucket(ImmutableBucket.fromBucket(newBucket));
@@ -135,7 +146,9 @@ describe('ImmutablePeriod', () => {
   it('should facilitate bucket change', () => {
     const newBucket: Bucket = {
       displayName: 'New bucket',
+      allocationType: AllocationType.Percentage,
       allocationPercentage: 77,
+      allocationAbsolute: 0,
       objectives: [],
     };
     const expected: Period = { ..._mut, buckets: [_mut.buckets[0], newBucket] };
@@ -149,14 +162,18 @@ describe('ImmutablePeriod', () => {
   it('should be unaffected by changing nonexistent bucket', () => {
     const nonExistent = ImmutableBucket.fromBucket({
       displayName: 'Nonexistent',
+      allocationType: AllocationType.Percentage,
       allocationPercentage: 666,
+      allocationAbsolute: 0,
       objectives: [],
     });
     const updated = period.withBucketChanged(
       nonExistent,
       ImmutableBucket.fromBucket({
         displayName: 'none',
+        allocationType: AllocationType.Percentage,
         allocationPercentage: 0,
+        allocationAbsolute: 0,
         objectives: [],
       })
     );
@@ -268,7 +285,9 @@ describe('ImmutablePeriod', () => {
   it('should be unaffected by deleting nonexistent bucket', () => {
     const nonExistent = ImmutableBucket.fromBucket({
       displayName: 'nonexist',
+      allocationType: AllocationType.Percentage,
       allocationPercentage: 17,
+      allocationAbsolute: 0,
       objectives: [],
     });
     const updated = period.withBucketDeleted(nonExistent);

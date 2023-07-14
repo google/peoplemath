@@ -25,7 +25,7 @@ import { Period } from '../period';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { Bucket } from '../bucket';
+import { AllocationType, Bucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
 import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.component';
@@ -44,7 +44,9 @@ const NO_COMMITMENTTYPE_OBJECTIVE: Objective = {
 const BUCKETS: Bucket[] = [
   {
     displayName: 'Bucket 1',
+    allocationType: AllocationType.Percentage,
     allocationPercentage: 100,
+    allocationAbsolute: 0,
     objectives: [NO_COMMITMENTTYPE_OBJECTIVE],
   },
 ];

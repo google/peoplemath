@@ -151,9 +151,15 @@ export class ImmutableObjective {
       resourceEstimate: objective.resourceEstimate,
       commitmentType: objective.commitmentType,
       notes: objective.notes,
-      groups: objective.groups.map((g) => new ImmutableObjectiveGroup(g)),
-      tags: objective.tags.map((t) => new ImmutableObjectiveTag(t)),
-      assignments: objective.assignments.map((a) => new ImmutableAssignment(a)),
+      groups: objective.groups
+        ? objective.groups.map((g) => new ImmutableObjectiveGroup(g))
+        : [],
+      tags: objective.tags
+        ? objective.tags.map((t) => new ImmutableObjectiveTag(t))
+        : [],
+      assignments: objective.assignments
+        ? objective.assignments.map((a) => new ImmutableAssignment(a))
+        : [],
       displayOptions:
         objective.displayOptions === undefined
           ? undefined

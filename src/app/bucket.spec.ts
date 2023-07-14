@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { Bucket, ImmutableBucket } from './bucket';
+import { AllocationType, Bucket, ImmutableBucket } from './bucket';
 import { CommitmentType, Objective, ImmutableObjective } from './objective';
 
 describe('ImmutableBucket', () => {
   const _mut: Bucket = {
     displayName: 'My test bucket',
+    allocationType: AllocationType.Percentage,
     allocationPercentage: 50,
+    allocationAbsolute: 0,
     objectives: [
       {
         name: 'My test objective',
@@ -72,7 +74,9 @@ describe('ImmutableBucket', () => {
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
+      allocationType: _mut.allocationType,
       allocationPercentage: _mut.allocationPercentage,
+      allocationAbsolute: _mut.allocationAbsolute,
       objectives: [_mut.objectives[0], obj2],
     };
     expect(newBucket.toOriginal()).toEqual(expected);
@@ -84,7 +88,9 @@ describe('ImmutableBucket', () => {
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
+      allocationType: _mut.allocationType,
       allocationPercentage: _mut.allocationPercentage,
+      allocationAbsolute: _mut.allocationAbsolute,
       objectives: [obj2, _mut.objectives[0]],
     };
     expect(newBucket.toOriginal()).toEqual(expected);
@@ -94,7 +100,9 @@ describe('ImmutableBucket', () => {
     const newBucket = bucket.withObjectiveDeleted(bucket.objectives[0]);
     const expected: Bucket = {
       displayName: _mut.displayName,
+      allocationType: _mut.allocationType,
       allocationPercentage: _mut.allocationPercentage,
+      allocationAbsolute: _mut.allocationAbsolute,
       objectives: [],
     };
     expect(newBucket.toOriginal()).toEqual(expected);
@@ -112,7 +120,9 @@ describe('ImmutableBucket', () => {
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
+      allocationType: _mut.allocationType,
       allocationPercentage: _mut.allocationPercentage,
+      allocationAbsolute: _mut.allocationAbsolute,
       objectives: [obj2],
     };
     expect(newBucket.toOriginal()).toEqual(expected);
@@ -124,5 +134,31 @@ describe('ImmutableBucket', () => {
       ImmutableObjective.fromObjective(obj2)
     );
     expect(newBucket).toEqual(bucket);
+  });
+
+  it('should calculate abs/pct allocations if allocationType is percentage', () => {
+    const b = ImmutableBucket.fromBucket({
+      displayName: 'TestPCT',
+      allocationType: AllocationType.Percentage,
+      allocationPercentage: 23,
+      allocationAbsolute: -1,
+      objectives: [],
+    });
+    expect(b.allocationPercentageOfTotal(1234, 1234)).toBeCloseTo(23);
+    expect(b.allocationPercentageOfTotal(1234, 2468)).toBeCloseTo(11.5);
+    expect(b.getAllocationAbsolute(200)).toEqual(46);
+  });
+
+  it('should calculate abs/pct allocations if allocationType is absolute', () => {
+    const b = ImmutableBucket.fromBucket({
+      displayName: 'TestABS',
+      allocationType: AllocationType.Absolute,
+      allocationAbsolute: 15,
+      allocationPercentage: -1,
+      objectives: [],
+    });
+    expect(b.allocationPercentageOfTotal(60, 60)).toBeCloseTo(25);
+    expect(b.allocationPercentageOfTotal(60, 120)).toBeCloseTo(12.5);
+    expect(b.getAllocationAbsolute(12345)).toEqual(15);
   });
 });

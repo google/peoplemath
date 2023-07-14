@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
@@ -140,6 +140,20 @@ export class PeriodComponent implements OnInit {
     );
   }
 
+  /**
+   * Total resources available for percentage allocations
+   */
+  totalAvailableForPercentAlloc(): number {
+    return (
+      this.totalAvailable() -
+      this.period!.buckets.filter(
+        (b) => b.allocationType === AllocationType.Absolute
+      )
+        .map((b) => b.allocationAbsolute)
+        .reduce((sum, current) => sum + current, 0)
+    );
+  }
+
   totalAllocated(): number {
     return this.period!.resourcesAllocated();
   }
@@ -153,11 +167,15 @@ export class PeriodComponent implements OnInit {
 
   /**
    * Sum of bucket allocation percentages. Should generally be 100 (and never more).
+   * Buckets with fixed absolute allocations are ignored.
    */
   totalAllocationPercentage(): number {
-    return this.period!.buckets.map(
-      (bucket) => bucket.allocationPercentage
-    ).reduce((sum, current) => sum + current, 0);
+    const ta = this.totalAvailable();
+    return this.period!.buckets.filter(
+      (b) => b.allocationType === AllocationType.Percentage
+    )
+      .map((bucket) => bucket.allocationPercentage)
+      .reduce((sum, current) => sum + current, 0);
   }
 
   totalAssignmentCount(): number {
@@ -480,16 +498,19 @@ export class PeriodComponent implements OnInit {
       return;
     }
     const totalExistingPct = this.totalAllocationPercentage();
+    const balancePct = Math.max(0, 100 - totalExistingPct);
     const dialogData: EditBucketDialogData = {
       bucket: {
         displayName: '',
-        allocationPercentage: Math.max(0, 100 - totalExistingPct),
+        allocationPercentage: balancePct,
+        allocationType: AllocationType.Percentage,
+        allocationAbsolute: 0,
         objectives: [],
       },
       okAction: 'Add',
-      allowCancel: true,
       title: 'Add bucket',
-      otherBucketsTotalAllocPct: totalExistingPct,
+      unit: this.period!.unit,
+      balancePct: balancePct,
     };
     const dialogRef = this.dialog.open(EditBucketDialogComponent, {
       data: dialogData,

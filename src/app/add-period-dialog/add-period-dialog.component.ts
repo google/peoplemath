@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -68,7 +68,10 @@ export class AddPeriodDialogComponent {
     if (!this.data.period.id || !this.data.period.displayName) {
       return false;
     }
-    if (this.isUnitRequired() && !this.data.period.unit) {
+    if (
+      this.isUnitRequired() &&
+      (!this.data.period.unit || !this.data.period.unitAbbrev)
+    ) {
       return false;
     }
     if (this.isMaxCommittedPercentageRequired()) {

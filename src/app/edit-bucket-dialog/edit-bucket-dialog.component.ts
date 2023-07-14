@@ -13,16 +13,16 @@
 // limitations under the License.
 
 import { Component, Inject, EventEmitter } from '@angular/core';
-import { Bucket, ImmutableBucket } from '../bucket';
+import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface EditBucketDialogData {
   bucket: Bucket;
   original?: ImmutableBucket;
   okAction: string;
-  allowCancel: boolean;
   title: string;
-  otherBucketsTotalAllocPct: number;
+  unit: string;
+  balancePct: number;
   onDelete?: EventEmitter<ImmutableBucket>;
 }
 
@@ -64,19 +64,22 @@ export class EditBucketDialogComponent {
   }
 
   isAllocationUnbalanced(): boolean {
+    const allocType = this.data.bucket.allocationType;
+    if (allocType && allocType !== AllocationType.Percentage) {
+      return false;
+    }
+
     return (
-      Math.abs(
-        this.data.bucket.allocationPercentage +
-          this.data.otherBucketsTotalAllocPct -
-          100
-      ) > 1e-6
+      Math.abs(this.data.bucket.allocationPercentage - this.data.balancePct) >
+      1e-6
     );
   }
 
   balanceAllocation(): void {
-    this.data.bucket.allocationPercentage = Math.max(
-      0,
-      100 - this.data.otherBucketsTotalAllocPct
-    );
+    const allocType = this.data.bucket.allocationType;
+    if (allocType && allocType !== AllocationType.Percentage) {
+      return;
+    }
+    this.data.bucket.allocationPercentage = this.data.balancePct;
   }
 }

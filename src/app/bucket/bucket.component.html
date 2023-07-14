@@ -5,9 +5,11 @@
         <button (click)="onMoveBucketUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
         <button (click)="onMoveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
     </span>
-    <span (click)="edit()">{{bucket?.displayName}}
-    <span [class.error]="isOverOrUnderAllocated()"> ({{bucket?.allocationPercentage}}%)</span>
-    </span>
+    <span (click)="edit()">{{bucket?.displayName}} (<app-bucket-alloc-limit
+      [hasError]="isOverOrUnderAllocated()"
+      [bucket]="bucket"
+      [percentOfTotal]="getAllocationPctOfTotal()"
+      [unit]="unitAbbrev"></app-bucket-alloc-limit>)</span>
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
 </mat-card-title>
 <mat-card-subtitle>
