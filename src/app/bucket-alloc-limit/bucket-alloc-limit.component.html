@@ -1,7 +1,8 @@
 <span [class.error]="hasError"><span
-    *ngIf="bucket?.allocationType === 'absolute'">{{bucket?.allocationAbsolute | number:"1.0-1"}}{{unit}} = {{percentOfTotal | number:'1.0-1'}}%</span><span
+    *ngIf="bucket?.allocationType === 'absolute'">{{bucket?.allocationAbsolute | number:"1.0-1"}}{{unit}} = <span
+        [class.error]="isPercentOfTotalBad()">{{percentOfTotal | number:'1.0-1'}}%</span></span><span
     *ngIf="bucket?.allocationType !== 'absolute'">{{bucket?.allocationPercentage | number:"1.0-1"}}%<span
         *ngIf="differentPercentOfTotal()"
         matTooltip="{{bucket?.allocationPercentage | number:'1.0-1'}}% of resources excluding fixed buckets is {{percentOfTotal | number:'1.0-1'}}% of total"
-        > &rarr; {{percentOfTotal | number:'1.0-1'}}%</span></span
+        > &rarr; <span [class.error]="isPercentOfTotalBad()">{{percentOfTotal | number:'1.0-1'}}%</span></span></span
 ></span>

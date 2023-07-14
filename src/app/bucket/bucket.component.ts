@@ -97,9 +97,12 @@ export class BucketComponent {
     if (!this.isEditingEnabled) {
       return;
     }
+    const currentAllocPct =
+      this.bucket?.allocationType === AllocationType.Percentage
+        ? this.bucket!.allocationPercentage
+        : 0;
     const balancePct =
-      100 -
-      (this.totalAllocationPercentage! - this.bucket!.allocationPercentage);
+      100 - (this.totalAllocationPercentage! - currentAllocPct);
     const dialogData: EditBucketDialogData = {
       bucket: this.bucket!.toOriginal(),
       original: this.bucket!,
@@ -315,7 +318,9 @@ export class BucketComponent {
   isOverOrUnderAllocated(): boolean {
     return (
       this.bucket?.allocationType === AllocationType.Percentage &&
-      Math.abs(this.totalAllocationPercentage! - 100) > 1e-6
+      (Math.abs(this.totalAllocationPercentage! - 100) > 1e-6 ||
+        this.bucket.allocationPercentage < 0 ||
+        this.bucket.allocationPercentage > 100)
     );
   }
 

@@ -82,4 +82,22 @@ export class EditBucketDialogComponent {
     }
     this.data.bucket.allocationPercentage = this.data.balancePct;
   }
+
+  fixToSumOfEstimates(): void {
+    this.data.bucket.allocationType = AllocationType.Absolute;
+    this.data.bucket.allocationAbsolute = this.data.bucket.objectives
+      .map((o) => o.resourceEstimate)
+      .reduce((sum, current) => sum + current, 0);
+  }
+
+  fixToSumOfAssignments(): void {
+    this.data.bucket.allocationType = AllocationType.Absolute;
+    this.data.bucket.allocationAbsolute = this.data.bucket.objectives
+      .map((o) =>
+        o.assignments
+          .map((a) => a.commitment)
+          .reduce((sum, current) => sum + current, 0)
+      )
+      .reduce((sum, current) => sum + current, 0);
+  }
 }
