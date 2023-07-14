@@ -45,10 +45,10 @@ export class ImmutableBucket {
     objectives: readonly ImmutableObjective[]
   ) {
     this.displayName = displayName;
+    this.allocationType = allocationType;
     this.allocationPercentage = allocationPercentage;
     this.allocationAbsolute = allocationAbsolute;
     this.objectives = objectives;
-    this.allocationType = allocationType;
   }
 
   static fromBucket(bucket: Bucket): ImmutableBucket {
