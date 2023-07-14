@@ -25,7 +25,7 @@
 
 <div mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="data.bucket" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
-  <button mat-raised-button *ngIf="isAllocationUnbalanced()" (click)="balanceAllocation()">Balance</button>
+  <button mat-raised-button [disabled]="!isAllocationUnbalanced()" (click)="balanceAllocation()">Balance</button>
   <button mat-button (click)="onCancel()">Cancel</button>
   <button *ngIf="data.onDelete && !showDeleteConfirm" mat-button (click)="onDelete()" color="warn">Delete</button>
   <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onCancelDelete()">Cancel Delete</button>
