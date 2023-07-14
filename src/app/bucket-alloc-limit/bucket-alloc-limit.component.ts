@@ -35,4 +35,8 @@ export class BucketAllocLimitComponent {
       Math.abs(this.bucket!.allocationPercentage - this.percentOfTotal!) > 1e-6
     );
   }
+
+  isPercentOfTotalBad(): boolean {
+    return this.percentOfTotal! < 0 || this.percentOfTotal! > 100;
+  }
 }
