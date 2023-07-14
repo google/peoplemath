@@ -23,7 +23,7 @@
       <input matInput [(ngModel)]="data.bucket.allocationAbsolute" type="number">
     </mat-form-field>
     <button mat-button [disabled]="!isAllocationUnbalanced()" (click)="balanceAllocation()">Balance</button>
-    <button mat-button [disabled]="!hasObjectives()" [matMenuTriggerFor]="fixMenu">Fix</button>
+    <button mat-button [disabled]="data.bucket.objectives.length === 0" [matMenuTriggerFor]="fixMenu">Fix</button>
     <mat-menu #fixMenu="matMenu">
       <button mat-menu-item (click)="fixToSumOfEstimates()">Sum of resource estimates</button>
       <button mat-menu-item (click)="fixToSumOfAssignments()">Sum of assignments</button>

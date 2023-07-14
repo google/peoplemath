@@ -83,10 +83,6 @@ export class EditBucketDialogComponent {
     this.data.bucket.allocationPercentage = this.data.balancePct;
   }
 
-  hasObjectives(): boolean {
-    return this.data.bucket.objectives.length > 0;
-  }
-
   fixToSumOfEstimates(): void {
     this.data.bucket.allocationType = AllocationType.Absolute;
     this.data.bucket.allocationAbsolute = this.data.bucket.objectives
