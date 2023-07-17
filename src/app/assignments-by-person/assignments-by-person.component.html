@@ -10,7 +10,8 @@
         <app-assignment
           [objective]="oa.objective"
           [assignedResources]="oa.assignment.commitment"
-          [unit]="period?.unit"></app-assignment>
+          [unit]="period?.unit"
+          (click)="editObjective(oa.objective, oa.bucket)"></app-assignment>
       </li>
     </ul>
     <p *ngIf="!hasAssignments(person)" class="noassignments">No assignments</p>
