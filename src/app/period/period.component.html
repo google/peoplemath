@@ -66,7 +66,10 @@
     (changed)="onChangedPerson($event[0], $event[1])"
     (delete)="deletePerson($event)">
 </app-people>
-<app-assignments-by-person [period]="period"></app-assignments-by-person>
+<app-assignments-by-person
+    [period]="period"
+    [isEditingEnabled]="isEditingEnabled"
+    (bucketChanged)="onBucketChanged($event[0], $event[1])"></app-assignments-by-person>
 <app-assignments-classify *ngFor="let groupType of allGroupTypes()"
     [period]="period" [aggregateBy]="AggregateBy.Group" [groupType]="groupType"
     [isEditingEnabled]="isEditingEnabled"

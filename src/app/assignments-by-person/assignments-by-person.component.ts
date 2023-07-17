@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
-import { ImmutableObjective } from '../objective';
+import { ImmutableObjective, editObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
 import { ImmutablePerson } from '../person';
+import { ImmutableBucket } from '../bucket';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-assignments-by-person',
@@ -27,8 +35,12 @@ import { ImmutablePerson } from '../person';
 })
 export class AssignmentsByPersonComponent {
   @Input() period?: ImmutablePeriod;
+  @Input() isEditingEnabled?: boolean;
+  @Output() bucketChanged = new EventEmitter<
+    [ImmutableBucket, ImmutableBucket]
+  >();
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   hasAssignments(person: ImmutablePerson): boolean {
     for (const bucket of this.period!.buckets) {
@@ -50,7 +62,7 @@ export class AssignmentsByPersonComponent {
         objective.assignments
           .filter((assignment) => assignment.personId === person.id)
           .forEach((assignment) => {
-            result.push({ objective, assignment });
+            result.push({ objective, assignment, bucket });
           });
       });
     });
@@ -70,9 +82,25 @@ export class AssignmentsByPersonComponent {
   assignmentsTrackBy(_index: number, oa: ObjectiveAssignment): string {
     return oa.objective.name;
   }
+
+  editObjective(obj: ImmutableObjective, bucket: ImmutableBucket): void {
+    if (!this.isEditingEnabled) {
+      return;
+    }
+    editObjective(
+      obj,
+      this.period?.unit!,
+      bucket,
+      [], // Don't allow moving between buckets via this path - it's not really important
+      undefined,
+      this.bucketChanged!,
+      this.dialog
+    );
+  }
 }
 
 interface ObjectiveAssignment {
   objective: ImmutableObjective;
   assignment: ImmutableAssignment;
+  bucket: ImmutableBucket;
 }
