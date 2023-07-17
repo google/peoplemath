@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ export class CsumClassPipe implements PipeTransform {
     bucketLimit: number,
     resourceEstimate: number
   ): string {
-    if (cumulativeSum < bucketLimit) {
+    if (cumulativeSum <= bucketLimit) {
       return 'resource-csum-ok';
     } else if (cumulativeSum - resourceEstimate <= bucketLimit) {
       return 'resource-csum-marginal';
