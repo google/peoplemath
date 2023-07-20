@@ -44,7 +44,18 @@ export class TagSummaryComponent {
     return result;
   }
 
+  /**
+   * Total resources allocated to tagged objectives
+   */
   totalAllocationsForTag(): number {
     return totalResourcesAllocated(this.taggedObjectives());
+  }
+
+  /**
+   * Resources allocated to tagged objectives, as a fraction of total allocated
+   * resources for the period.
+   */
+  allocationsFractionForTag(): number {
+    return this.totalAllocationsForTag() / this.period!.resourcesAllocated();
   }
 }

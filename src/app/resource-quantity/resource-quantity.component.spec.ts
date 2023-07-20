@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,4 +122,26 @@ describe('ResourceQuantityComponent', () => {
       );
     })
   );
+
+  it('should render percentages', () => {
+    component.fraction = 0.15;
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.textContent).toEqual('500 things → 15%');
+  });
+
+  it('should render percentages with secondary units', () => {
+    component.fraction = 0.15;
+    component.secondaryUnits = [
+      new ImmutableSecondaryUnit({
+        name: 'millithings',
+        conversionFactor: 1000,
+      }),
+    ];
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.textContent).toEqual(
+      '500 things (500,000 millithings) → 15%'
+    );
+  });
 });
