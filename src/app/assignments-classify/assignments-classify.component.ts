@@ -28,7 +28,7 @@ import {
   ImmutableObjective,
   totalResourcesAllocated,
 } from '../objective';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   RenameClassDialogComponent,
   RenameClassDialogData,

@@ -41,23 +41,6 @@ app-edit-objective-dialog .markdown {
   padding-bottom: 1.34375em; /* Same as .mat-form-field-wrapper */
 }
 
-app-edit-objective-dialog .mat-checkbox {
-  align-items: center;
-  display: inline-flex;
-  min-height: 40px; /* The ripple is 40px so this needs to be bigger */
-}
-
-app-edit-objective-dialog .mat-checkbox-inner-container {
-  margin-right: 12px; /* Need clearance so ripple doesn't overlap with text */
-}
-
-app-edit-objective-dialog .mat-icon-button .mat-button-wrapper {
-  align-items: center;
-  display: flex;
-  height: 40px;
-  justify-content: center;
-}
-
 @media (max-width: 958px) {
   app-edit-objective-dialog fieldset:nth-of-type(2) {
     /* Split the 2nd fieldset into two columns only */
@@ -66,7 +49,7 @@ app-edit-objective-dialog .mat-icon-button .mat-button-wrapper {
 }
 
 @media (max-width: 602px) {
-  app-edit-objective-dialog .mat-dialog-content fieldset {
+  app-edit-objective-dialog .mat-mdc-dialog-content fieldset {
     /* Put everything into one column */
     grid-template-columns: 1fr;
     padding: 0;

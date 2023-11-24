@@ -13,14 +13,14 @@
 </div>
 
 <div class="editor-options">
-    <span *ngIf="isEditingEnabled">
+    <ng-container *ngIf="isEditingEnabled">
         <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()"><mat-icon>group_work</mat-icon></button>
         <button mat-fab (click)="toggleReordering()" [color]="reorderButtonColour()"><mat-icon>reorder</mat-icon></button>
         <button mat-fab (click)="disableEditing()" color="primary"><mat-icon>done</mat-icon></button>
-    </span>
-    <span *ngIf="!isEditingEnabled">
+    </ng-container>
+    <ng-container *ngIf="!isEditingEnabled">
         <button mat-fab [disabled]="!userHasEditPermissions" (click)="enableEditing()" color="primary"><mat-icon>edit</mat-icon></button>
-    </span>
+    </ng-container>
 </div>
 
 <div class="grid">

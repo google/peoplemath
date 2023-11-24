@@ -24,7 +24,7 @@ import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   EditBucketDialogComponent,
   EditBucketDialogData,
@@ -123,11 +123,11 @@ export class PeriodComponent implements OnInit {
   }
 
   reorderButtonColour(): ThemePalette {
-    return this.showOrderButtons ? 'accent' : undefined;
+    return this.showOrderButtons ? 'warn' : 'accent';
   }
 
   blockEditButtonColour(): ThemePalette {
-    return this.isBlockEditingEnabled ? 'accent' : undefined;
+    return this.isBlockEditingEnabled ? 'warn' : 'accent';
   }
 
   /**

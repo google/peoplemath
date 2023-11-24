@@ -18,7 +18,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ModalComponent } from './modal.component';
 import { MaterialModule } from '../material/material.module';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ModalComponent', () => {
   let component: ModalComponent;

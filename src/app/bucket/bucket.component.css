@@ -1,39 +1,35 @@
-app-bucket .header-button {
+.objective-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  margin-top: 0.5em;
+}
+.objective-list-item {
+  min-height: 2em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.3em;
+}
+.objective-button {
+  min-width: 24px;
+}
+
+.header-button {
   float: right;
 }
 
-app-bucket .order-buttons {
-  margin-right: 10px;
-}
-
-app-bucket .mat-icon-button {
-  width: 30px;
-}
-
-app-bucket .cdk-drop-list-dragging mat-list-item {
+.cdk-drop-list-dragging .objective-list-item {
   background-color: #fff;
   cursor: move;
-}
-
-app-bucket .mat-list-item-content {
-  display: flex;
-}
-
-.app-mat-list-item {
-  height: auto !important;
-  padding-bottom: 15px !important;
-}
-
-.side-icon {
-  vertical-align: middle;
-  padding-right: 10px;
 }
 
 .disabled-side-icon {
   color: gray;
 }
 
-app-bucket .cdk-drag-placeholder {
+.cdk-drag-placeholder {
   background-color: rgba(0, 0, 0, 0.04);
   cursor: move;
   min-height: 40px;
@@ -44,7 +40,6 @@ app-bucket .cdk-drag-handle,
 .cdk-drag-preview-app-bucket .cdk-drag-handle {
   color: #616161;
   cursor: move;
-  padding-right: 8px;
 }
 
 app-bucket app-objective,
@@ -52,16 +47,6 @@ app-bucket app-objective,
   width: 100%;
 }
 
-/* These elements exist in the global scope and not within <app-bucket> */
 .cdk-drag-preview-app-bucket {
   background-color: #fff;
-  display: flex;
-  font-size: 12px;
-}
-
-.cdk-drag-preview-app-bucket .mat-list-item-content {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  padding: 0 16px;
 }

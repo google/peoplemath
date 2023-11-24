@@ -19,10 +19,7 @@ import {
   AssignmentDialogData,
 } from './assignment-dialog.component';
 import { MaterialModule } from '../material/material.module';
-import {
-  MatLegacyDialogRef as MatDialogRef,
-  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-} from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType } from '../objective';
 
 describe('AssignmentDialogComponent', () => {

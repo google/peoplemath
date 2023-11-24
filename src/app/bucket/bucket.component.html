@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card appearance="outlined">
 <mat-card-header>
 <mat-card-title>
     <span *ngIf="showOrderButtons" class="order-buttons">
@@ -22,23 +22,24 @@
 </mat-card-subtitle>
 </mat-card-header>
 <mat-card-content>
-<mat-list dense *ngIf="!showOrderButtons">
-  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives" class="app-mat-list-item">
+<div *ngIf="!showOrderButtons" class="objective-list">
+  <div *ngFor="let displayObjective of bucket!.objectives | displayObjectives" class="objective-list-item">
     <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
     </ng-container>
-  </mat-list-item>
-</mat-list>
-<mat-list dense *ngIf="showOrderButtons" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
-  <mat-list-item *ngFor="let displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; last as isLast; index as idx"
+  </div>
+</div>
+<div *ngIf="showOrderButtons" class="objective-list" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
+  <div *ngFor="let displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; last as isLast; index as idx"
+      class="objective-list-item"
       cdkDrag
-      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']" class="app-mat-list-item">
+      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']">
     <div *cdkDragPlaceholder></div>
-    <mat-icon class="side-icon" cdkDragHandle>reorder</mat-icon>
-    <mat-icon *ngIf="isBlockEditingEnabled" (click)="editBlock(idx)" class="side-icon" [class.disabled-side-icon]="isLast && !displayObjective.objective.blockID">group_work</mat-icon>
+    <mat-icon class="objective-button" cdkDragHandle>reorder</mat-icon>
+    <mat-icon *ngIf="isBlockEditingEnabled" (click)="editBlock(idx)" class="objective-button" [class.disabled-side-icon]="isLast && !displayObjective.objective.blockID">group_work</mat-icon>
     <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
     </ng-container>
-  </mat-list-item>
-</mat-list>
+  </div>
+</div>
 </mat-card-content>
 </mat-card>
 

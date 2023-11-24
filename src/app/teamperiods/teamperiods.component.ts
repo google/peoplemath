@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   EditPeriodDialogComponent,
   EditPeriodDialogData,

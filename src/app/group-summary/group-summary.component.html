@@ -1,14 +1,14 @@
-<mat-card>
+<mat-card appearance="outlined">
     <mat-card-header>
         <mat-card-title>Summary by {{groupType}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <div class="viewoptions titlealign">
+        <div class="viewoptions">
             <mat-slide-toggle [(ngModel)]="showByBucket">Stack rank by bucket</mat-slide-toggle>
             <mat-slide-toggle [(ngModel)]="showObjectives">Show objectives</mat-slide-toggle>
         </div>
         <div *ngIf="showByBucket">
-            <div *ngFor="let bucket of period!.buckets" class="titlealign">
+            <div *ngFor="let bucket of period!.buckets">
                 <h3>{{bucket.displayName}}</h3>
                 <ul>
                     <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)">
