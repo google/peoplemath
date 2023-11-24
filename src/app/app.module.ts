@@ -1,4 +1,4 @@
-// Copyright 2019-2022 Google LLC
+// Copyright 2019-2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LayoutModule } from '@angular/cdk/layout';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -113,7 +112,6 @@ import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-lim
     BrowserAnimationsModule,
     LayoutModule,
     MaterialModule,
-    FlexLayoutModule,
     HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig.firebase),
     AngularFireAuthModule,
