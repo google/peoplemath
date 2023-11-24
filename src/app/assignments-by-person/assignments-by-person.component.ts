@@ -24,7 +24,7 @@ import { ImmutableObjective, editObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
 import { ImmutablePerson } from '../person';
 import { ImmutableBucket } from '../bucket';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'app-assignments-by-person',

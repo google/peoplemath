@@ -1,4 +1,4 @@
-// Copyright 2019, 2021-22 Google LLC
+// Copyright 2019, 2021-23 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { NotificationService } from './services/notification.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ModalComponent } from './modal/modal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
 

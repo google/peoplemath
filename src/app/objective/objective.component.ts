@@ -25,7 +25,7 @@ import {
   ImmutableObjective,
 } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
   PersonAssignmentData,
   AssignmentDialogComponent,
