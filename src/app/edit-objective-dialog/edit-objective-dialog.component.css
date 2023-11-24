@@ -11,7 +11,7 @@
   justify-content: space-between;
 }
 .objective-field {
-  flex: 4
+  flex: 4;
 }
 .is-markdown-field {
   flex: 1;
@@ -35,7 +35,7 @@
   }
 }
 .props-field {
-  flex: 1
+  flex: 1;
 }
 
 .notes-row {
