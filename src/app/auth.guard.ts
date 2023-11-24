@@ -33,8 +33,8 @@ export class AuthGuard {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    _next: ActivatedRouteSnapshot,
+    _state: RouterStateSnapshot
   ): Observable<boolean> | boolean {
     if (environment.requireAuth) {
       return this.auth.angularFireAuth.authState.pipe(

@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ export class ImmutableAssignment {
 export function sumAssignments(
   assignments: (readonly ImmutableAssignment[])[]
 ): Assignment[] {
-  let byPerson = new Map();
+  const byPerson = new Map();
   for (const as of assignments) {
     for (const a of as) {
       if (byPerson.has(a.personId)) {
@@ -50,7 +50,7 @@ export function sumAssignments(
       }
     }
   }
-  let result: Assignment[] = [];
+  const result: Assignment[] = [];
   byPerson.forEach((c, p) => result.push({ personId: p, commitment: c }));
   return result;
 }

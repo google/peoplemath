@@ -31,8 +31,6 @@ export class ResourceQuantityComponent {
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
   @Input() fraction?: number;
 
-  constructor() {}
-
   quantityIn(quantity: number, unit: SecondaryUnit): number {
     return quantity * unit.conversionFactor;
   }

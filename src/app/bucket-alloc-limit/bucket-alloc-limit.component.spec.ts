@@ -22,7 +22,7 @@ import { AllocationType, ImmutableBucket } from '../bucket';
 describe('BucketAllocLimitComponent', () => {
   let component: BucketAllocLimitComponent;
   let fixture: ComponentFixture<BucketAllocLimitComponent>;
-  let BUCKET = ImmutableBucket.fromBucket({
+  const BUCKET = ImmutableBucket.fromBucket({
     displayName: 'My test bucket',
     allocationType: AllocationType.Percentage,
     allocationPercentage: 60,

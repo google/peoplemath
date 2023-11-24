@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import { ImmutableObjective } from '../objective';
 export class DisplayObjectivesPipe implements PipeTransform {
   transform(
     objectives: readonly ImmutableObjective[],
-    ...args: unknown[]
+    ..._args: unknown[]
   ): DisplayObjective[] {
     const displayObjectives: Array<DisplayObjective> = [];
     let cumulativeSum = 0;

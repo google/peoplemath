@@ -1,4 +1,4 @@
-// Copyright 2019, 2021 Google LLC
+// Copyright 2019, 2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import { Injectable } from '@angular/core';
 import { Team, TeamList } from './team';
 import { Period } from './period';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ObjectUpdateResponse } from './objectupdateresponse';
 

@@ -172,7 +172,7 @@ export class ImmutableObjective {
   }
 
   toOriginal(): Objective {
-    let result: Objective = {
+    const result: Objective = {
       name: this.name,
       resourceEstimate: this.resourceEstimate,
       commitmentType: this.commitmentType,

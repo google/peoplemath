@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2022 Google LLC
+ * Copyright 2019-2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ export class PeriodSummaryComponent implements OnInit {
   loadDataFor(teamId: string, periodId: string): void {
     this.team = undefined;
     this.period = undefined;
-    let teamObs = this.storage.getTeam(teamId);
+    const teamObs = this.storage.getTeam(teamId);
     teamObs
       .pipe(
         catchError((err) => {
@@ -104,7 +104,7 @@ export class PeriodSummaryComponent implements OnInit {
         }
       });
 
-    let periodObs = this.storage.getPeriod(teamId, periodId);
+    const periodObs = this.storage.getPeriod(teamId, periodId);
     periodObs
       .pipe(
         catchError((err) => {

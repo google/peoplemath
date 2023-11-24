@@ -89,7 +89,7 @@ export class AssignmentsByPersonComponent {
     }
     editObjective(
       obj,
-      this.period?.unit!,
+      this.period?.unit || '',
       bucket,
       [], // Don't allow moving between buckets via this path - it's not really important
       undefined,

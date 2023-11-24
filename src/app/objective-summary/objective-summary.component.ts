@@ -31,8 +31,6 @@ export class ObjectiveSummaryComponent {
   @Input() secondaryUnits?: readonly ImmutableSecondaryUnit[];
   @Input() fraction?: number;
 
-  constructor() {}
-
   allocatedResources(): number {
     return this.objective!.resourcesAllocated();
   }

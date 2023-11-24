@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ImmutableObjective } from '../objective';
 import { DisplayObjective } from './bucket.component';
 
 @Pipe({
@@ -24,9 +23,9 @@ import { DisplayObjective } from './bucket.component';
 export class GroupblocksPipe implements PipeTransform {
   transform(
     objectives: readonly DisplayObjective[],
-    ...args: unknown[]
+    ..._args: unknown[]
   ): DisplayObjective[][] {
-    let blocks: DisplayObjective[][] = [];
+    const blocks: DisplayObjective[][] = [];
     let currentBlock: DisplayObjective[] = [];
     let currentBlockID = undefined;
     for (const o of objectives) {
