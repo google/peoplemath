@@ -1,4 +1,4 @@
-name: Frontend build
+name: Check file headers
 
 on:
   push:
