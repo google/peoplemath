@@ -1,57 +1,47 @@
-app-edit-objective-dialog fieldset {
-  --gap: 32px;
-  --normal: 320px;
-  --wide: 640px;
-  border: 0;
-  column-gap: var(--gap);
-  display: grid;
-  margin: 0;
-  padding-left: 0;
-  padding-right: 0;
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.objective-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  width: 100%;
+  justify-content: space-between;
+}
+.objective-field {
+  flex: 4
+}
+.is-markdown-field {
+  flex: 1;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  height: 56px; /* Matches the form field */
+}
+.markdown-preview {
+  color: black;
 }
 
-app-edit-objective-dialog fieldset:first-of-type {
-  grid-template-columns: minmax(min-content, var(--wide)) 1fr;
+.props-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
 }
-
-app-edit-objective-dialog fieldset:nth-of-type(2) {
-  --resource: 109px; /* The smallest possible width for 'Resource estimate' */
-  /*
-   * Dynamically calculate the width of 'Commitment type' so that it's the right
-   * size so that the 'Objective' field and 'Groups' field line up perfectly
-   */
-  --commitment: calc(
-    var(--wide) - var(--normal) - var(--resource) - 2 * var(--gap)
-  );
-  grid-template-columns: minmax(136px, var(--commitment)) var(--resource) repeat(
-      2,
-      minmax(min-content, var(--normal))
-    );
-}
-
-app-edit-objective-dialog mat-form-field[ng-reflect-hint-label] {
-  margin-bottom: 16px;
-}
-
-app-edit-objective-dialog .markdown {
-  align-content: center;
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(2, min-content);
-  padding-bottom: 1.34375em; /* Same as .mat-form-field-wrapper */
-}
-
-@media (max-width: 958px) {
-  app-edit-objective-dialog fieldset:nth-of-type(2) {
-    /* Split the 2nd fieldset into two columns only */
-    grid-template-columns: repeat(2, minmax(min-content, 1fr));
+@media (max-width: 1024px) {
+  .props-row {
+    flex-direction: column;
   }
 }
+.props-field {
+  flex: 1
+}
 
-@media (max-width: 602px) {
-  app-edit-objective-dialog .mat-mdc-dialog-content fieldset {
-    /* Put everything into one column */
-    grid-template-columns: 1fr;
-    padding: 0;
-  }
+.notes-row {
+  display: flex;
+  flex-direction: row;
+}
+.notes-field {
+  width: 100%;
 }

@@ -1,54 +1,56 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
 <div mat-dialog-content>
-  <fieldset>
-    <mat-form-field appearance="fill">
-      <mat-label>Objective</mat-label>
-      <input matInput [(ngModel)]="data.objective.name">
-    </mat-form-field>
-    <div class="markdown">
-      <mat-checkbox [(ngModel)]="data.objective.displayOptions.enableMarkdown">
-        Enable Markdown
-      </mat-checkbox>
-      <a mat-icon-button
-          href="https://guides.github.com/features/mastering-markdown/#examples"
-          target="_blank"
-          rel="noopener noreferrer">
-        <mat-icon>help_outline</mat-icon>
-      </a>
+  <div class="rows">
+    <div class="objective-row">
+      <mat-form-field appearance="fill" class="objective-field">
+        <mat-label>Objective</mat-label>
+        <input matInput [(ngModel)]="data.objective.name">
+      </mat-form-field>
+      <div class="is-markdown-field">
+        <mat-checkbox [(ngModel)]="data.objective.displayOptions.enableMarkdown">
+          Enable Markdown
+        </mat-checkbox>
+        <a mat-icon-button
+            href="https://guides.github.com/features/mastering-markdown/#examples"
+            target="_blank"
+            rel="noopener noreferrer">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </div>
     </div>
-  </fieldset>
-  <div *ngIf="data.objective.displayOptions.enableMarkdown" class="mat-form-field-wrapper">
-    Preview:
-    <p [innerHTML]="data.objective.name | markdownify"></p>
+    <div *ngIf="data.objective.displayOptions.enableMarkdown" class="markdown-preview">
+      Preview:
+      <p [innerHTML]="data.objective.name | markdownify"></p>
+    </div>
+    <div class="props-row">
+      <mat-form-field appearance="fill" class="props-field">
+        <mat-label>Commitment type</mat-label>
+        <mat-select [(ngModel)]="data.objective.commitmentType">
+            <mat-option value="Aspirational">Aspirational</mat-option>
+            <mat-option value="Committed">Committed</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field hintLabel="({{data.unit}})" appearance="fill" class="props-field">
+        <mat-label>Resource estimate</mat-label>
+        <input matInput [(ngModel)]="data.objective.resourceEstimate" type="number">
+      </mat-form-field>
+      <mat-form-field hintLabel="(key1:value1,key2:value2,...)" appearance="fill" class="props-field">
+        <mat-label>Groups</mat-label>
+        <input matInput [(ngModel)]="data.objective.groups">
+      </mat-form-field>
+      <mat-form-field hintLabel="(Comma-separated)" appearance="fill" class="props-field">
+        <mat-label>Tags</mat-label>
+        <input matInput [(ngModel)]="data.objective.tags">
+      </mat-form-field>
+    </div>
+    <div class="notes-row">
+      <mat-form-field appearance="fill" class="notes-field">
+        <mat-label>Notes</mat-label>
+        <textarea matInput [(ngModel)]="data.objective.notes" rows="4"></textarea>
+      </mat-form-field>
+    </div>
   </div>
-  <fieldset>
-    <mat-form-field appearance="fill">
-      <mat-label>Commitment type</mat-label>
-      <mat-select [(ngModel)]="data.objective.commitmentType">
-          <mat-option value="Aspirational">Aspirational</mat-option>
-          <mat-option value="Committed">Committed</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field hintLabel="({{data.unit}})" appearance="fill">
-      <mat-label>Resource estimate</mat-label>
-      <input matInput [(ngModel)]="data.objective.resourceEstimate" type="number">
-    </mat-form-field>
-    <mat-form-field hintLabel="(key1:value1,key2:value2,...)" appearance="fill">
-      <mat-label>Groups</mat-label>
-      <input matInput [(ngModel)]="data.objective.groups">
-    </mat-form-field>
-    <mat-form-field hintLabel="(Comma-separated)" appearance="fill">
-      <mat-label>Tags</mat-label>
-      <input matInput [(ngModel)]="data.objective.tags">
-    </mat-form-field>
-  </fieldset>
-  <fieldset>
-    <mat-form-field appearance="fill">
-      <mat-label>Notes</mat-label>
-      <textarea matInput [(ngModel)]="data.objective.notes" rows="4"></textarea>
-    </mat-form-field>
-  </fieldset>
 </div>
 
 <div mat-dialog-actions>
