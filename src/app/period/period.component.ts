@@ -24,7 +24,7 @@ import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
   EditBucketDialogComponent,
   EditBucketDialogData,

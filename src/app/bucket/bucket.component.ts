@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import {
   EditObjectiveDialogComponent,
   EditObjectiveDialogData,

@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import {
 } from './edit-period-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditPeriodDialogComponent', () => {
