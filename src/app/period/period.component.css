@@ -1,3 +1,41 @@
+.header {
+  display: block;
+}
+
+.grid {
+  display: flex;
+}
+@media (max-width: 1024px) {
+  .grid {
+    display: block;
+  }
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: flex-start;
+}
+.buckets-col {
+  flex: 1;
+  margin-right: 10px;
+}
+@media (max-width: 1024px) {
+  .buckets-col {
+    margin-right: 0;
+  }
+}
+.resources-col {
+  flex: 1;
+  margin-left: 10px;
+}
+@media (max-width: 1024px) {
+  .resources-col {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+}
+
 .editor-options {
   position: fixed;
   bottom: 30px;
