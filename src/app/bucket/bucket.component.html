@@ -1,16 +1,16 @@
 <mat-card appearance="outlined">
 <mat-card-header>
 <mat-card-title>
-    <span *ngIf="showOrderButtons" class="order-buttons">
-        <button (click)="onMoveBucketUp()" mat-icon-button color="primary"><mat-icon>arrow_upward</mat-icon></button>
-        <button (click)="onMoveBucketDown()" mat-icon-button color="primary"><mat-icon>arrow_downward</mat-icon></button>
-    </span>
-    <span (click)="edit()">{{bucket?.displayName}} (<app-bucket-alloc-limit
-      [hasError]="isOverOrUnderAllocated()"
-      [bucket]="bucket"
-      [percentOfTotal]="getAllocationPctOfTotal()"
-      [unit]="unitAbbrev"></app-bucket-alloc-limit>)</span>
+  <span (click)="edit()">{{bucket?.displayName}} (<app-bucket-alloc-limit
+    [hasError]="isOverOrUnderAllocated()"
+    [bucket]="bucket"
+    [percentOfTotal]="getAllocationPctOfTotal()"
+    [unit]="unitAbbrev"></app-bucket-alloc-limit>)</span>
+  <div class="title-buttons">
+    <button *ngIf="showOrderButtons" (click)="onMoveBucketUp()" mat-stroked-button color="primary">&uarr;</button>
+    <button *ngIf="showOrderButtons" (click)="onMoveBucketDown()" mat-stroked-button color="primary">&darr;</button>
     <button (click)="addObjective()" mat-button [disabled]="!isEditingEnabled" color="primary" class="header-button">Add Objective</button>
+  </div>
 </mat-card-title>
 <mat-card-subtitle>
   <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
