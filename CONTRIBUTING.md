@@ -29,8 +29,8 @@ Here is a list of checks run, and ways to make sure they pass while developing:
   tool](https://github.com/google/addlicense) - no arguments are required other
   than the names of the new source files.
 
-See the [Dockerfile](Dockerfile) in the root of the project for an authoritative
-up-to-date list of checks performed.
+See the GitHub Actions in the `.github` folder for an authoritative up-to-date
+list of checks performed.
 
 ## Contributor License Agreement
 
