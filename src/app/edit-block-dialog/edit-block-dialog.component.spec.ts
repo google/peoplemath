@@ -32,8 +32,8 @@ describe('EditBlockDialogComponent', () => {
   let component: EditBlockDialogComponent;
   let fixture: ComponentFixture<EditBlockDialogComponent>;
 
-  let dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
-  let dialogData: EditBlockDialogData = {
+  const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['open']);
+  const dialogData: EditBlockDialogData = {
     blockPlaceholder: ImmutableObjective.fromObjective({
       name: 'O',
       resourceEstimate: 1,

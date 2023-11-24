@@ -185,7 +185,7 @@ describe('StorageService', () => {
     const message = '404 message';
 
     service.getPeriod('testteam', 'testperiod').subscribe(
-      (data) => fail('should have failed with the 404 error'),
+      (_data) => fail('should have failed with the 404 error'),
       (error: HttpErrorResponse) => {
         expect(error.status).toEqual(404, 'status');
         expect(error.error).toEqual(message, 'message');

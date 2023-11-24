@@ -178,9 +178,9 @@ export class BucketComponent {
   }
 
   splitBlock(oldBlocks: ImmutableObjective[][], splitIdx: number): void {
-    let newObjectives: ImmutableObjective[] = [];
+    const newObjectives: ImmutableObjective[] = [];
     for (let idx = 0; idx < oldBlocks.length; idx++) {
-      for (let objective of oldBlocks[idx]) {
+      for (const objective of oldBlocks[idx]) {
         if (idx == splitIdx) {
           newObjectives.push(objective.withBlockID());
         } else {
@@ -200,9 +200,9 @@ export class BucketComponent {
     toIdx: number
   ): void {
     const blockID = uuidv4();
-    let newObjectives: ImmutableObjective[] = [];
+    const newObjectives: ImmutableObjective[] = [];
     for (let blockIdx = 0; blockIdx < oldBlocks.length; blockIdx++) {
-      for (let objective of oldBlocks[blockIdx]) {
+      for (const objective of oldBlocks[blockIdx]) {
         if (blockIdx >= fromIdx && blockIdx <= toIdx) {
           newObjectives.push(objective.withBlockID(blockID));
         } else {
@@ -269,15 +269,15 @@ export class BucketComponent {
   }
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
-    let displayObjectives = new DisplayObjectivesPipe().transform(
+    const displayObjectives = new DisplayObjectivesPipe().transform(
       this.bucket!.objectives
     );
-    let objectiveBlocks = new GroupblocksPipe().transform(displayObjectives);
+    const objectiveBlocks = new GroupblocksPipe().transform(displayObjectives);
     moveItemInArray(objectiveBlocks, event.previousIndex, event.currentIndex);
     if (event.previousIndex !== event.currentIndex) {
       const newObjectives: ImmutableObjective[] = [];
-      for (let objectiveBlock of objectiveBlocks) {
-        for (let displayObjective of objectiveBlock) {
+      for (const objectiveBlock of objectiveBlocks) {
+        for (const displayObjective of objectiveBlock) {
           newObjectives.push(displayObjective.objective);
         }
       }

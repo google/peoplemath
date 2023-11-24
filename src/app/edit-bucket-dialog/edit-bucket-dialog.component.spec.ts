@@ -24,7 +24,7 @@ import {
   MatLegacyDialogRef as MatDialogRef,
   MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
 } from '@angular/material/legacy-dialog';
-import { AllocationType, Bucket } from '../bucket';
+import { AllocationType } from '../bucket';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditBucketDialogComponent', () => {

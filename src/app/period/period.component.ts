@@ -170,7 +170,6 @@ export class PeriodComponent implements OnInit {
    * Buckets with fixed absolute allocations are ignored.
    */
   totalAllocationPercentage(): number {
-    const ta = this.totalAvailable();
     return this.period!.buckets.filter(
       (b) => b.allocationType === AllocationType.Percentage
     )
@@ -209,7 +208,7 @@ export class PeriodComponent implements OnInit {
 
   peopleAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
-      (o) => true,
+      (_o) => true,
       (a: Assignment) => a.commitment
     );
   }
@@ -223,8 +222,8 @@ export class PeriodComponent implements OnInit {
 
   peopleAssignmentCounts(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
-      (o) => true,
-      (a) => 1
+      (_o) => true,
+      (_a) => 1
     );
   }
 
@@ -329,7 +328,7 @@ export class PeriodComponent implements OnInit {
   loadDataFor(teamId: string, periodId: string): void {
     this.setTeam(undefined);
     this.setPeriod(undefined);
-    let teamObs = this.storage.getTeam(teamId);
+    const teamObs = this.storage.getTeam(teamId);
     teamObs
       .pipe(
         catchError((error) => {
@@ -367,7 +366,7 @@ export class PeriodComponent implements OnInit {
         }
       });
 
-    let periodObs = this.storage.getPeriod(teamId, periodId);
+    const periodObs = this.storage.getPeriod(teamId, periodId);
     periodObs
       .pipe(
         catchError((error) => {

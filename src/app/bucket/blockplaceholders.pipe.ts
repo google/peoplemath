@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import { DisplayObjective } from './bucket.component';
 export class BlockplaceholdersPipe implements PipeTransform {
   transform(
     objectiveBlocks: DisplayObjective[][],
-    ...args: unknown[]
+    ..._args: unknown[]
   ): DisplayObjective[] {
-    let result: DisplayObjective[] = [];
+    const result: DisplayObjective[] = [];
     for (const objectiveBlock of objectiveBlocks) {
       if (objectiveBlock.length === 1) {
         result.push(objectiveBlock[0]);

@@ -15,7 +15,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { AllocationType, ImmutableBucket } from '../bucket';
+import { ImmutableBucket } from '../bucket';
 
 @Component({
   selector: 'app-bucket-alloc-limit',
@@ -27,8 +27,6 @@ export class BucketAllocLimitComponent {
   @Input() bucket?: ImmutableBucket;
   @Input() percentOfTotal?: number;
   @Input() unit?: string;
-
-  constructor() {}
 
   differentPercentOfTotal(): boolean {
     return (

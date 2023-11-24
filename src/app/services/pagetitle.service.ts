@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2022-23 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import { Subject } from 'rxjs';
 })
 export class PageTitleService {
   public title$: Subject<string> = new Subject();
-  constructor() {}
 
   public setPageTitle(newTitle: string): void {
     this.title$.next('PeopleMath: ' + newTitle);

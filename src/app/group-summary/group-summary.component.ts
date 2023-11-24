@@ -32,8 +32,6 @@ export class GroupSummaryComponent {
   showObjectives = false;
   showByBucket = true;
 
-  constructor() {}
-
   bucketObjectivesByGroup(
     bucket: ImmutableBucket
   ): Array<[string, ImmutableObjective[]]> {
@@ -88,7 +86,7 @@ export class GroupSummaryComponent {
     });
 
     // Sort objectives in each group by descending allocation
-    for (const [_, obs] of obsByGroup) {
+    for (const [_g, obs] of obsByGroup) {
       obs.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
     }
     noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
