@@ -1,8 +1,7 @@
 <mat-spinner class="centered" *ngIf="!isLoaded()"></mat-spinner>
 <div *ngIf="isLoaded()" class="grid-container">
 
-<div fxLayout="row" fxLayoutGap="20px" width="100%">
-<div fxLayout="column" fxFlex="calc(70%-20px)" fxFlex.lt-md="100%">
+<div class="header">
     <h2 class="mat-h2 period-title">
         <a routerLink="/team/{{team!.id}}">{{team!.displayName}}</a> : <span (click)="edit()">{{period?.displayName}}</span>
         <span class="title-buttons">
@@ -12,7 +11,7 @@
     </h2>
     <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.0-1'}} of {{totalAllocated() | number:'1.0-1'}} {{period?.unit}})</h4>
 </div>
-<div fxLayout="column" fxFlex="calc(30%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
+
 <div class="editor-options">
     <span *ngIf="isEditingEnabled">
         <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()"><mat-icon>group_work</mat-icon></button>
@@ -23,66 +22,64 @@
         <button mat-fab [disabled]="!userHasEditPermissions" (click)="enableEditing()" color="primary"><mat-icon>edit</mat-icon></button>
     </span>
 </div>
-</div>
-</div>
 
-<div fxLayout="row wrap" fxLayoutGap="20px" width="100%">
+<div class="grid">
 
-<div fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
-<app-bucket *ngFor="let bucket of period!.buckets" [bucket]="bucket"
-    [unit]="period?.unit"
-    [unitAbbrev]="period?.unitAbbrev || period?.unit"
-    [totalAllocationPercentage]="totalAllocationPercentage()"
-    [globalResourcesAvailable]="totalAvailable()"
-    [globalResourcesAvailableForPct]="totalAvailableForPercentAlloc()"
-    [maxCommittedPercentage]="period?.maxCommittedPercentage"
-    [unallocatedTime]="unallocatedTime()"
-    [showOrderButtons]="showOrderButtons && isEditingEnabled"
-    [isEditingEnabled]="isEditingEnabled"
-    [isBlockEditingEnabled]="isBlockEditingEnabled"
-    [otherBuckets]="otherBuckets(bucket)"
-    (moveBucketUp)="moveBucketUpOne($event)"
-    (moveBucketDown)="moveBucketDownOne($event)"
-    (moveObjectiveBucket)="moveObjectiveToBucket($event[0], $event[1], $event[2], $event[3])"
-    (delete)="deleteBucket($event)"
-    (changed)="onBucketChanged($event[0], $event[1])"></app-bucket>
+<div class="col buckets-col">
+    <app-bucket *ngFor="let bucket of period!.buckets" [bucket]="bucket"
+        [unit]="period?.unit"
+        [unitAbbrev]="period?.unitAbbrev || period?.unit"
+        [totalAllocationPercentage]="totalAllocationPercentage()"
+        [globalResourcesAvailable]="totalAvailable()"
+        [globalResourcesAvailableForPct]="totalAvailableForPercentAlloc()"
+        [maxCommittedPercentage]="period?.maxCommittedPercentage"
+        [unallocatedTime]="unallocatedTime()"
+        [showOrderButtons]="showOrderButtons && isEditingEnabled"
+        [isEditingEnabled]="isEditingEnabled"
+        [isBlockEditingEnabled]="isBlockEditingEnabled"
+        [otherBuckets]="otherBuckets(bucket)"
+        (moveBucketUp)="moveBucketUpOne($event)"
+        (moveBucketDown)="moveBucketDownOne($event)"
+        (moveObjectiveBucket)="moveObjectiveToBucket($event[0], $event[1], $event[2], $event[3])"
+        (delete)="deleteBucket($event)"
+        (changed)="onBucketChanged($event[0], $event[1])"></app-bucket>
 
-<div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
-
+    <div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
 </div>
 
-<span fxLayout="column" fxFlex="calc(50%-20px)" fxFlex.lt-md="100%" fxLayoutGap="20px">
-<app-people [people]="period?.people"
-    [peopleAllocations]="peopleAllocations()"
-    [peopleCommittedAllocations]="peopleCommittedAllocations()"
-    [peopleAssignmentCounts]="peopleAssignmentCounts()"
-    [totalAvailable]="totalAvailable()"
-    [totalAllocated]="totalAllocated()"
-    [totalUnallocated]="totalUnallocated()"
-    [totalAssignmentCount]="totalAssignmentCount()"
-    [unit]="period?.unit"
-    [isEditingEnabled]="isEditingEnabled"
-    (newPerson)="onNewPerson($event)"
-    (changed)="onChangedPerson($event[0], $event[1])"
-    (delete)="deletePerson($event)">
-</app-people>
-<app-assignments-by-person
-    [period]="period"
-    [isEditingEnabled]="isEditingEnabled"
-    (bucketChanged)="onBucketChanged($event[0], $event[1])"></app-assignments-by-person>
-<app-assignments-classify *ngFor="let groupType of allGroupTypes()"
-    [period]="period" [aggregateBy]="AggregateBy.Group" [groupType]="groupType"
-    [isEditingEnabled]="isEditingEnabled"
-    (rename)="renameGroup(groupType, $event[0], $event[1])"
-    (bucketChanged)="onBucketChanged($event[0], $event[1])"
-    title="Assignments by {{groupType}}"></app-assignments-classify>
-<app-assignments-classify *ngIf="hasTags()"
-    [period]="period" [aggregateBy]="AggregateBy.Tag"
-    [isEditingEnabled]="isEditingEnabled"
-    (rename)="renameTag($event[0], $event[1])"
-    (bucketChanged)="onBucketChanged($event[0], $event[1])"
-    title="Assignments by tag"></app-assignments-classify>
-</span>
+<div class="col resources-col">
+    <app-people [people]="period?.people"
+        [peopleAllocations]="peopleAllocations()"
+        [peopleCommittedAllocations]="peopleCommittedAllocations()"
+        [peopleAssignmentCounts]="peopleAssignmentCounts()"
+        [totalAvailable]="totalAvailable()"
+        [totalAllocated]="totalAllocated()"
+        [totalUnallocated]="totalUnallocated()"
+        [totalAssignmentCount]="totalAssignmentCount()"
+        [unit]="period?.unit"
+        [isEditingEnabled]="isEditingEnabled"
+        (newPerson)="onNewPerson($event)"
+        (changed)="onChangedPerson($event[0], $event[1])"
+        (delete)="deletePerson($event)">
+    </app-people>
+    <app-assignments-by-person
+        [period]="period"
+        [isEditingEnabled]="isEditingEnabled"
+        (bucketChanged)="onBucketChanged($event[0], $event[1])"></app-assignments-by-person>
+    <app-assignments-classify *ngFor="let groupType of allGroupTypes()"
+        [period]="period" [aggregateBy]="AggregateBy.Group" [groupType]="groupType"
+        [isEditingEnabled]="isEditingEnabled"
+        (rename)="renameGroup(groupType, $event[0], $event[1])"
+        (bucketChanged)="onBucketChanged($event[0], $event[1])"
+        title="Assignments by {{groupType}}"></app-assignments-classify>
+    <app-assignments-classify *ngIf="hasTags()"
+        [period]="period" [aggregateBy]="AggregateBy.Tag"
+        [isEditingEnabled]="isEditingEnabled"
+        (rename)="renameTag($event[0], $event[1])"
+        (bucketChanged)="onBucketChanged($event[0], $event[1])"
+        title="Assignments by tag"></app-assignments-classify>
+</div>
 
 </div>
+
 </div>
