@@ -50,12 +50,12 @@ describe('AppComponent', () => {
   );
 
   it(
-    'should render title in a h1 tag',
+    'should render title',
     waitForAsync(() => {
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
       const compiled = fixture.debugElement.nativeElement;
-      expect(compiled.querySelector('h1').textContent).toContain('PeopleMath');
+      expect(compiled.querySelector('.headername').textContent).toContain('PeopleMath');
     })
   );
 
