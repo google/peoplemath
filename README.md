@@ -124,20 +124,13 @@ To stop the project, run `docker-compose down`.
 
 ### Continuous build
 
-The project has a continuous build that uses [Google Cloud Build](https://cloud.google.com/cloud-build/). Pull requests will not be accepted until this continuous build passes.
+The project has a continuous build that uses [GitHub
+Actions](https://docs.github.com/en/actions). Pull requests will not be accepted
+until this continuous build passes.
 
-The build uses the `Dockerfile` in the root of the project. It uses a base image which was constructed using the `Dockerfile` in the `build` directory.
-
-To reproduce the behaviour of the continuous build, first construct the base image using `docker build -t peoplemath-build-base -f build/Dockerfile build`. Then replace the `FROM` clause of the root `Dockerfile` with `FROM peoplemath-build-base`, and run `docker build -t peoplemath-build .` from the root of the project.
-
-If you wish to run the build on Google Cloud Build using your own resources, follow [these instructions](https://cloud.google.com/cloud-build/docs/quickstart-build?hl=en#build_using_dockerfile) using one of your own projects:
-
-- If you have not already done so, enable Artifact Repository for your project, and create a Docker repository ([instructions](https://cloud.google.com/artifact-registry/docs/manage-repos)).
-- Take a note of the Artifact Repository path, as you will need it for the commands below. It will be of the form `<REGION>-docker.pkg.dev/<PROJECT>/<REPO>`.
-- Run `gcloud builds submit --tag <REPO_PATH>/base` from inside the `build` folder to generate the base image.
-- Substitute that tag into the `FROM` clause in the root `Dockerfile`, and run `gcloud builds submit --tag <REPO_PATH>/peoplemath` from the root of the project to run the build.
-
-Running the commands in the `Dockerfile` manually should give a pretty good sense of whether the build is likely to pass or not.
+Running the commands in these Actions manually (see the `.github/workflows`
+directory) should give a pretty good sense of whether the build is likely to
+pass or not.
 
 ## Deployment to App Engine
 
