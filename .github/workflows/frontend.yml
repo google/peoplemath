@@ -1,0 +1,43 @@
+name: Frontend build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: npm ci
+      id: npmci
+      run: npm ci | tee $GITHUB_OUTPUT
+    - name: Check for deprecated packages
+      run: echo $CI_OUTPUT | /usr/bin/perl -lne 'next unless /deprecated (.*@[^:]*):/; print \"Import path of deprecated $1:\"; system(\"npm list $1 --depth=20\") == 0 or die \"$!\"'
+      env:
+        CI_OUTPUT: ${{steps.npmci.outputs}}
+    - name: ng lint
+      run: npx ng lint
+    - name: ng test
+      run: npx ng test --watch=false --browsers ChromeHeadless
+    - name: Prettier check
+      run: npx prettier --check .
+    - name: Prod build
+      run: bash build_appengine.sh
+    - name: List appengine_dist
+      run: ls -lhR appengine_dist
+      
