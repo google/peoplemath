@@ -19,4 +19,4 @@ jobs:
       - name: Install addlicense
         run: go install github.com/google/addlicense@latest
       - name: Check copyright headers
-        run: find . name \*.ts -o -name \*.go -print0 | xargs -0 addlicense -check
+        run: find . -type f \( -name \*.ts -o -name \*.go \) -print0 | xargs -0 addlicense -check
