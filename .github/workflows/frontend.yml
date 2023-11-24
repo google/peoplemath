@@ -24,7 +24,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: npm ci
-      run: npm ci | /usr/bin/perl -lpe 'push(@ds, $1) if /deprecated (.*@[^:]*):/; END { for $d (@ds) { print \"Import path of deprecated $d:\"; system(\"npm list $d --depth=20\") == 0 or die \"$!\" } }'
+      run: npm ci | /usr/bin/perl -lpe 'push(@ds, $1) if /deprecated (.*@[^:]*):/; END { for $d (@ds) { print "Import path of deprecated $d:"; system("npm list $d --depth=20") == 0 or die "$!" } }'
     - name: ng lint
       run: npx ng lint
     - name: ng test
