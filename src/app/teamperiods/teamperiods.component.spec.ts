@@ -25,7 +25,10 @@ import { Person } from '../person';
 import { AngularFireModule } from '@angular/fire/compat';
 import { firebaseConfig } from '../../environments/firebaseConfig';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
+import {
+  MatLegacyDialog as MatDialog,
+  MatLegacyDialogConfig as MatDialogConfig,
+} from '@angular/material/legacy-dialog';
 import { ComponentType } from '@angular/cdk/portal';
 import {
   AddPeriodDialogComponent,
