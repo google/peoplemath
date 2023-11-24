@@ -2,13 +2,12 @@ name: Frontend build
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,21 +16,21 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: npm ci
-      run: npm ci 2>&1 | /usr/bin/perl -lpe 'push(@ds, $1) if /deprecated (.*@[^:]*):/; END { for $d (@ds) { print "Import path of deprecated $d:"; system("npm list $d --depth=20") == 0 or die "$!" } }'
-    - name: ng lint
-      run: npx ng lint
-    - name: ng test
-      run: npx ng test --watch=false --browsers ChromeHeadless
-    - name: Prettier check
-      run: npx prettier --check .
-    - name: Prod build
-      run: bash build_appengine.sh
-    - name: List appengine_dist
-      run: ls -lhR appengine_dist
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: npm ci
+        run: npm ci 2>&1 | /usr/bin/perl -lpe 'push(@ds, $1) if /deprecated (.*@[^:]*):/; END { for $d (@ds) { print "Import path of deprecated $d:"; system("npm list $d --depth=20") == 0 or die "$!" } }'
+      - name: ng lint
+        run: npx ng lint
+      - name: ng test
+        run: npx ng test --watch=false --browsers ChromeHeadless
+      - name: Prettier check
+        run: npx prettier --check .
+      - name: Prod build
+        run: bash build_appengine.sh
+      - name: List appengine_dist
+        run: ls -lhR appengine_dist
