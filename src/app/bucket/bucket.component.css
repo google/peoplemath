@@ -1,11 +1,10 @@
 .objective-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 1em;
   margin-top: 0.5em;
 }
 .objective-list-item {
-  min-height: 2em;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -54,6 +53,7 @@ app-bucket app-objective,
 
 .cdk-drag-preview-app-bucket {
   background-color: #fff;
+  min-height: 2em;
 }
 
 mat-card-actions {
