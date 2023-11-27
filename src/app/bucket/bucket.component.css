@@ -1,7 +1,7 @@
 .objective-list {
   display: flex;
   flex-direction: column;
-  gap: 0.1em;
+  gap: 0.5em;
   margin-top: 0.5em;
 }
 .objective-list-item {
@@ -10,7 +10,7 @@
   flex-direction: row;
   align-items: center;
   gap: 0.8em;
-  padding: 0.3em;
+  padding: 0;
 }
 .objective-button {
   min-width: 24px;
