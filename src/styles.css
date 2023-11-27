@@ -28,12 +28,8 @@ body {
   margin: 20px;
 }
 
-.mat-mdc-card-header-text {
-  width: 100%;
-}
-
-.mat-card-actions .mat-mdc-button-base,
-.mat-dialog-actions .mat-button-base {
+.mat-mdc-card-actions .mat-mdc-button-base,
+.mat-mdc-dialog-actions .mat-mdc-button-base {
   text-transform: uppercase;
 }
 
