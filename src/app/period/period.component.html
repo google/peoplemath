@@ -5,8 +5,8 @@
     <h2 class="mat-h2 period-title">
         <a routerLink="/team/{{team!.id}}">{{team!.displayName}}</a> : <span (click)="edit()">{{period?.displayName}}</span>
         <span class="title-buttons">
-            <a mat-raised-button routerLink="/team/{{team!.id}}/periodsummary/{{period!.id}}" target="_blank" rel="noopener noreferrer" color="primary">View Summary</a>
-            <a mat-raised-button *ngIf="period?.notesURL" href="{{period!.notesURL}}" target="_blank" rel="noopener noreferrer" color="primary">View Notes</a>
+            <a mat-stroked-button routerLink="/team/{{team!.id}}/periodsummary/{{period!.id}}" target="_blank" rel="noopener noreferrer" color="primary">View Summary</a>
+            <a mat-stroked-button *ngIf="period?.notesURL" href="{{period!.notesURL}}" target="_blank" rel="noopener noreferrer" color="primary">View Notes</a>
         </span>
     </h2>
     <h4 class="mat-h4" [class.warning]="committedAllocationsTooHigh()">{{committedAllocationRatio() | percent}} committed ({{committedAllocations() | number:'1.0-1'}} of {{totalAllocated() | number:'1.0-1'}} {{period?.unit}})</h4>

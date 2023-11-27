@@ -16,8 +16,10 @@
   min-width: 24px;
 }
 
-.title-buttons {
-  float: right;
+.top-buttons {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   display: flex;
   flex-direction: row;
   gap: 0.5em;
@@ -52,4 +54,8 @@ app-bucket app-objective,
 
 .cdk-drag-preview-app-bucket {
   background-color: #fff;
+}
+
+mat-card-actions {
+  gap: 0.5em;
 }

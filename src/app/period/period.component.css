@@ -5,7 +5,7 @@
 .grid {
   display: flex;
 }
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .grid {
     display: block;
   }
@@ -20,7 +20,7 @@
   flex: 1;
   margin-right: 10px;
 }
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .buckets-col {
     margin-right: 0;
   }
@@ -29,7 +29,7 @@
   flex: 1;
   margin-left: 10px;
 }
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .resources-col {
     margin-top: 20px;
     margin-left: 0;
