@@ -29,7 +29,8 @@ export class NotificationService {
   }
 
   notifyError(message: string, error?: unknown): void {
-    console.error(message, error);
+    console.error(message);
+    console.error(error);
     if (error === undefined) {
       this.error$.next(message);
     } else {
