@@ -51,11 +51,8 @@ export class TeamsComponent implements OnInit {
       .getTeams()
       .pipe(
         catchError((error) => {
-          this.notification.error$.next(
-            'Could not load teams: ' + JSON.stringify(error)
-          );
-          console.log(error);
-          return of(new TeamList([], false));
+          this.notification.notifyError('Could not load teams', error);
+          return of(undefined);
         })
       )
       .subscribe((teamList?: TeamList) => {
@@ -91,10 +88,7 @@ export class TeamsComponent implements OnInit {
         .addTeam(team)
         .pipe(
           catchError((error) => {
-            this.notification.error$.next(
-              'Could not save new team: ' + JSON.stringify(error)
-            );
-            console.log(error);
+            this.notification.notifyError('Could not save new team', error);
             return of('error');
           })
         )
