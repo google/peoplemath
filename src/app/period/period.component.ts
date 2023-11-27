@@ -332,10 +332,7 @@ export class PeriodComponent implements OnInit {
     teamObs
       .pipe(
         catchError((error) => {
-          this.notificationService.notifyError(
-            'Could not load team "' + teamId + '": ',
-            error
-          );
+          this.notificationService.notifyError('Could not load team', error);
           return of(undefined);
         })
       )
