@@ -1,10 +1,10 @@
-.personassignment {
-  padding: 0 16px;
-}
 .personassignment h3 {
   font-weight: normal;
 }
 .noassignments {
   color: grey;
   font-style: italic;
+}
+mat-card-content {
+  margin-top: 0.5em;
 }

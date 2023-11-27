@@ -15,9 +15,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { NotificationService } from './services/notification.service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalComponent } from './modal/modal.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
 

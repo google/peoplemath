@@ -45,6 +45,7 @@
 .objective-all {
   display: flex;
   justify-content: space-between;
+  gap: 0.2em;
 }
 .resource-csum-ok {
   color: darkgrey;

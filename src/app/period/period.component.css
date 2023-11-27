@@ -5,7 +5,7 @@
 .grid {
   display: flex;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .grid {
     display: block;
   }
@@ -20,7 +20,7 @@
   flex: 1;
   margin-right: 10px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .buckets-col {
     margin-right: 0;
   }
@@ -29,7 +29,7 @@
   flex: 1;
   margin-left: 10px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .resources-col {
     margin-top: 20px;
     margin-left: 0;
@@ -41,15 +41,15 @@
   bottom: 30px;
   right: 50px;
   z-index: 999;
-}
-.editor-options button {
-  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 .title-buttons {
-  margin-left: 20px;
-}
-.title-buttons a {
-  margin-right: 10px;
+  float: right;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 .period-title {
   margin-bottom: 0;

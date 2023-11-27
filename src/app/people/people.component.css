@@ -1,10 +1,14 @@
 table {
   width: 100%;
 }
-tr.mat-footer-row {
+tr.mat-mdc-footer-row {
   font-weight: bold;
 }
 .table-container {
   max-height: 50vh;
   overflow: auto;
+}
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0.1em;
 }
