@@ -79,11 +79,11 @@ export class TeamPeriodsComponent implements OnInit {
       .getTeam(teamId)
       .pipe(
         catchError((error) => {
-          this.notificationService.error$.next(
-            'Could not load team "' + teamId + '": ' + JSON.stringify(error)
+          this.notificationService.notifyError(
+            'Could not load team "' + teamId + '": ',
+            error
           );
-          console.log(error);
-          return of(new Team('', ''));
+          return of(undefined);
         })
       )
       .subscribe((team?: Team) => {
@@ -118,14 +118,8 @@ export class TeamPeriodsComponent implements OnInit {
       .getPeriods(teamId)
       .pipe(
         catchError((error) => {
-          this.notificationService.error$.next(
-            'Could not load periods for team "' +
-              teamId +
-              '": ' +
-              JSON.stringify(error)
-          );
-          console.log(error);
-          return of([]);
+          this.notificationService.notifyError('Could not load periods', error);
+          return of(undefined);
         })
       )
       .subscribe((periods?: Period[]) => {
@@ -191,7 +185,7 @@ export class TeamPeriodsComponent implements OnInit {
           (p) => p.id === data.copyFromPeriodID
         );
         if (!copiedPeriod) {
-          console.error(
+          this.notificationService.notifyError(
             'Cannot find period with ID "' + data.copyFromPeriodID + '"'
           );
           return;
@@ -223,7 +217,9 @@ export class TeamPeriodsComponent implements OnInit {
           lastUpdateUUID: '',
         };
       } else {
-        console.error('Unexpected createMethod "' + data.createMethod + '"');
+        this.notificationService.notifyError(
+          'Unexpected createMethod "' + data.createMethod + '"'
+        );
         return;
       }
       this.storeNewPeriod(newPeriod);
@@ -308,10 +304,10 @@ export class TeamPeriodsComponent implements OnInit {
       .addPeriod(this.team!.id, period)
       .pipe(
         catchError((error) => {
-          this.notificationService.error$.next(
-            'Could not save new period: ' + JSON.stringify(error)
+          this.notificationService.notifyError(
+            'Could not save new period',
+            error
           );
-          console.log(error);
           return of(undefined);
         })
       )
@@ -341,16 +337,13 @@ export class TeamPeriodsComponent implements OnInit {
         .updateTeam(team)
         .pipe(
           catchError((error) => {
-            this.notificationService.error$.next(
-              'Could not save team: ' + JSON.stringify(error)
-            );
-            console.log(error);
+            this.notificationService.notifyError('Could not save team', error);
             return of('error');
           })
         )
         .subscribe((res) => {
           if (res !== 'error') {
-            this.notificationService.notification$.next('Saved');
+            this.notificationService.notifyInfo('Saved');
             this.team = new ImmutableTeam(team);
           }
         });

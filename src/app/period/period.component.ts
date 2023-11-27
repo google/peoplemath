@@ -332,11 +332,11 @@ export class PeriodComponent implements OnInit {
     teamObs
       .pipe(
         catchError((error) => {
-          this.notificationService.error$.next(
-            'Could not load team "' + teamId + '": ' + JSON.stringify(error)
+          this.notificationService.notifyError(
+            'Could not load team "' + teamId + '": ',
+            error
           );
-          console.log(error);
-          return of(new Team('', ''));
+          return of(undefined);
         })
       )
       .subscribe((team?: Team) => {
@@ -370,26 +370,8 @@ export class PeriodComponent implements OnInit {
     periodObs
       .pipe(
         catchError((error) => {
-          this.notificationService.error$.next(
-            'Could not load period "' +
-              periodId +
-              '" for team "' +
-              teamId +
-              '": ' +
-              JSON.stringify(error)
-          );
-          console.log(error);
-          return of({
-            id: '',
-            displayName: '',
-            unit: '',
-            secondaryUnits: [],
-            notesURL: '',
-            maxCommittedPercentage: 0,
-            people: [],
-            buckets: [],
-            lastUpdateUUID: '',
-          });
+          this.notificationService.notifyError('Could not load period', error);
+          return of(undefined);
         })
       )
       .subscribe((period?: Period) => {
@@ -436,7 +418,7 @@ export class PeriodComponent implements OnInit {
 
   performSave(): void {
     if (!(this.team && this.period)) {
-      console.error(
+      this.notificationService.notifyError(
         'performSave() called with team=' +
           this.team +
           ', period=' +
@@ -449,21 +431,21 @@ export class PeriodComponent implements OnInit {
       .pipe(
         catchError((error) => {
           if (error.status === 409) {
-            this.notificationService.error$.next(
+            this.notificationService.notifyError(
               'This period was modified in another session. Try reloading the page and reapplying your edit.'
             );
           } else {
-            this.notificationService.error$.next(
-              'Failed to save period: ' + JSON.stringify(error)
+            this.notificationService.notifyError(
+              'Failed to save period',
+              error
             );
           }
-          console.log(error);
           return of(undefined);
         })
       )
       .subscribe((updateResponse) => {
         if (updateResponse) {
-          this.notificationService.notification$.next('Saved');
+          this.notificationService.notifyInfo('Saved');
           this.setPeriod(
             this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID)
           );

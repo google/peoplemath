@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,12 +50,14 @@ export class AuthInterceptor implements HttpInterceptor {
             });
             return next.handle(cloned).pipe(
               catchError((err) => {
-                console.log(err);
                 if (err instanceof HttpErrorResponse) {
                   if (err.status === 401) {
                     this.router.navigate(['unauthenticated']);
                   } else if (cloned.method === 'GET' && err.status === 403) {
-                    this.notificationService.error$.next(err.error);
+                    this.notificationService.notifyError(
+                      'Unauthorised',
+                      err.error
+                    );
                   }
                 }
                 return of(err);

@@ -23,4 +23,17 @@ import { Subject } from 'rxjs';
 export class NotificationService {
   public notification$: Subject<string> = new Subject<string>();
   public error$: Subject<string> = new Subject<string>();
+
+  notifyInfo(message: string): void {
+    this.notification$.next(message);
+  }
+
+  notifyError(message: string, error?: unknown): void {
+    console.error(message, error);
+    if (error === undefined) {
+      this.error$.next(message);
+    } else {
+      this.error$.next(message + ': ' + JSON.stringify(error));
+    }
+  }
 }

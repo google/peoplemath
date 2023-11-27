@@ -42,7 +42,6 @@ export class AuthGuard {
         map((user) => !!user),
         tap((loggedIn) => {
           if (!loggedIn) {
-            console.log('not logged in, access denied');
             this.router.navigate(['unauthenticated']);
           }
         })

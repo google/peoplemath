@@ -89,10 +89,7 @@ export class PeriodSummaryComponent implements OnInit {
     teamObs
       .pipe(
         catchError((err) => {
-          this.notificationService.error$.next(
-            'Could not load team "' + teamId + '": ' + JSON.stringify(err)
-          );
-          console.error(err);
+          this.notificationService.notifyError('Could not load team', err);
           return of(undefined);
         })
       )
@@ -108,15 +105,7 @@ export class PeriodSummaryComponent implements OnInit {
     periodObs
       .pipe(
         catchError((err) => {
-          this.notificationService.error$.next(
-            'Could not load period "' +
-              periodId +
-              '" for team "' +
-              teamId +
-              '": ' +
-              JSON.stringify(err)
-          );
-          console.error(err);
+          this.notificationService.notifyError('Could not load period', err);
           return of(undefined);
         })
       )

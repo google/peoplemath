@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ export class AuthService {
       .signInWithPopup(provider)
       .then((result: firebase.auth.UserCredential) => {
         const user = result.user;
-        this.notificationService.notification$.next(
+        this.notificationService.notifyInfo(
           'Signed in as ' + user?.displayName
         );
         this.router.navigate(['/']);
         return this.updateUserData(user);
       })
       .catch((error) => {
-        this.notificationService.error$.next(error);
+        this.notificationService.notifyError('Google sign-in failed', error);
         return error;
       });
   }
@@ -93,7 +93,7 @@ export class AuthService {
         this.router.navigate(['/login']);
       })
       .catch((error) => {
-        this.notificationService.error$.next(error);
+        this.notificationService.notifyError('Error signing out', error);
       });
   }
 }
