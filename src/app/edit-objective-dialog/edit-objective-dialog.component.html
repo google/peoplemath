@@ -54,11 +54,11 @@
 </div>
 
 <div mat-dialog-actions>
-  <div *ngIf="data.saveAction === 'new'">
+  <ng-container *ngIf="data.saveAction === 'new'">
     <button mat-raised-button (click)="onAddToTop()" [disabled]="!isDataValid()" color="primary">Add To Top</button>
     <button mat-raised-button (click)="onAddToBottom()" [disabled]="!isDataValid()" color="primary">Add To Bottom</button>
-  </div>
-  <div *ngIf="data.saveAction === 'edit'">
+  </ng-container>
+  <ng-container *ngIf="data.saveAction === 'edit'">
     <button mat-raised-button (click)="onSaveExisting()" [disabled]="!isDataValid()" color="primary">Save</button>
     <button mat-button [matMenuTriggerFor]="moveBucketMenu">Move</button>
     <mat-menu #moveBucketMenu="matMenu">
@@ -68,7 +68,7 @@
         {{bucket.displayName}}
       </button>
     </mat-menu>
-  </div>
+  </ng-container>
   <button mat-button (click)="onCancel()" color="warn">Cancel</button>
   <button *ngIf="data.saveAction === 'edit' && !showDeleteConfirm" mat-button (click)="onDelete()" color="warn">Delete</button>
   <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onCancelDelete()">Cancel Delete</button>
