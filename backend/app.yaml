@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: go120
+runtime: go121
 # Seems to be required by Firebase Auth: go mod why -m google.golang.org/appengine/v2
 app_engine_apis: true
 handlers:
