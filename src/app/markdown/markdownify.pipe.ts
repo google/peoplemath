@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2021, 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import * as DOMPurify from 'dompurify';
+import * as domPurify from 'dompurify';
 import snarkdown from 'snarkdown';
 
 @Pipe({
@@ -28,7 +28,7 @@ export class MarkdownifyPipe implements PipeTransform {
     }
     // The use of DOMPurify here is partly as a defence-in-depth against XSS,
     // and partly to disable unwanted parts of Markdown and achieve desired transformations.
-    DOMPurify.addHook('afterSanitizeAttributes', (node: Element) => {
+    domPurify.addHook('afterSanitizeAttributes', (node: Element) => {
       if (node.nodeName.toLowerCase() === 'a') {
         if (mode === 'nolinks') {
           // Replace the link with some inert underlined text
@@ -43,12 +43,12 @@ export class MarkdownifyPipe implements PipeTransform {
       }
     });
     /* eslint-disable @typescript-eslint/naming-convention */
-    const result = DOMPurify.sanitize(snarkdown(markdown), {
+    const result = domPurify.sanitize(snarkdown(markdown), {
       ALLOWED_TAGS: ['a', 'em', 'strong', 'code', 's', 'u'],
       KEEP_CONTENT: true,
     });
     /* eslint-enable @typescript-eslint/naming-convention */
-    DOMPurify.removeHook('afterSanitizeAttributes');
+    domPurify.removeHook('afterSanitizeAttributes');
     return result;
   }
 }
