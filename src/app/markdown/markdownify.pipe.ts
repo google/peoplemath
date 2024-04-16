@@ -33,7 +33,7 @@ export class MarkdownifyPipe implements PipeTransform {
         if (mode === 'nolinks') {
           // Replace the link with some inert underlined text
           const el = node.ownerDocument.createElement('u');
-          el.innerHTML = node.innerHTML;
+          el.innerText = node.innerText;
           node.parentNode!.replaceChild(el, node);
         } else {
           // Make the link open in a new window
