@@ -57,4 +57,37 @@ describe('MarkdownifyPipe', () => {
       '<u>a link</u>'
     );
   });
+
+  it('should support formatting inside links', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(pipe.transform('[a **formatted** link](http://thetarget/)')).toEqual(
+      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a <strong>formatted</strong> link</a>'
+    );
+  });
+
+  it('should support formatting inside links in nolinks mode', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(
+      pipe.transform('[a **formatted** link](http://thetarget/)', 'nolinks')
+    ).toEqual('<u>a <strong>formatted</strong> link</u>');
+  });
+
+  it('should handle unsupported tags inside links', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(
+      pipe.transform('[an <blink>unsupported</blink> tag](http://target/)')
+    ).toEqual(
+      '<a href="http://target/" target="_blank" rel="noopener noreferrer">an unsupported tag</a>'
+    );
+  });
+
+  it('should handle unsupported tags inside links in nolinks mode', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(
+      pipe.transform(
+        '[an <blink>unsupported</blink> tag](http://target/)',
+        'nolinks'
+      )
+    ).toEqual('<u>an unsupported tag</u>');
+  });
 });
