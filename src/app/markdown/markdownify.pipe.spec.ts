@@ -57,4 +57,18 @@ describe('MarkdownifyPipe', () => {
       '<u>a link</u>'
     );
   });
+
+  it('should support formatting inside links', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(pipe.transform('[a **formatted** link](http://thetarget/)')).toEqual(
+      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a <strong>formatted</strong> link</a>'
+    );
+  });
+
+  it('should support formatting inside links in nolinks mode', () => {
+    const pipe = new MarkdownifyPipe();
+    expect(
+      pipe.transform('[a **formatted** link](http://thetarget/)', 'nolinks')
+    ).toEqual('<u>a <strong>formatted</strong> link</u>');
+  });
 });
