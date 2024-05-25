@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.13
+FROM golang:1.19
 
 WORKDIR /usr/app/
 ENV GO111MODULE=on
