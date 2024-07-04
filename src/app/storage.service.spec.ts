@@ -16,13 +16,17 @@ import { TestBed } from '@angular/core/testing';
 
 import { StorageService } from './storage.service';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { Team, TeamList } from './team';
 import { Period } from './period';
 import { ObjectUpdateResponse } from './objectupdateresponse';
-import { HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('StorageService', () => {
   let httpTestingController: HttpTestingController;
@@ -42,8 +46,12 @@ describe('StorageService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [StorageService],
-      imports: [HttpClientTestingModule],
+      imports: [],
+      providers: [
+        StorageService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
 
     httpTestingController = TestBed.inject(HttpTestingController);

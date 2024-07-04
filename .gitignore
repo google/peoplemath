@@ -35,6 +35,7 @@ yarn-error.log
 testem.log
 /typings
 /src/environments/firebaseConfig.ts
+.nx/cache
 
 # e2e
 /e2e/*.js

@@ -18,7 +18,11 @@ import { TeamsComponent } from './teams.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from '../storage.service';
 import { MaterialModule } from '../material/material.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('TeamsComponent', () => {
   let component: TeamsComponent;
@@ -28,8 +32,12 @@ describe('TeamsComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [TeamsComponent],
-        imports: [RouterTestingModule, MaterialModule, HttpClientTestingModule],
-        providers: [StorageService],
+        imports: [RouterTestingModule, MaterialModule],
+        providers: [
+          StorageService,
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+        ],
       }).compileComponents();
     })
   );

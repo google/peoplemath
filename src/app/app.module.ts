@@ -40,7 +40,11 @@ import { EditObjectiveDialogComponent } from './edit-objective-dialog/edit-objec
 import { EditBucketDialogComponent } from './edit-bucket-dialog/edit-bucket-dialog.component';
 import { EditPeriodDialogComponent } from './edit-period-dialog/edit-period-dialog.component';
 import { EditTeamDialogComponent } from './edit-team-dialog/edit-team-dialog.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { AddPeriodDialogComponent } from './add-period-dialog/add-period-dialog.component';
 import { PeriodSummaryComponent } from './period-summary/period-summary.component';
 import { ObjectiveSummaryComponent } from './objective-summary/objective-summary.component';
@@ -104,6 +108,7 @@ import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-lim
     EditBlockDialogComponent,
     BucketAllocLimitComponent,
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -112,7 +117,6 @@ import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-lim
     BrowserAnimationsModule,
     LayoutModule,
     MaterialModule,
-    HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig.firebase),
     AngularFireAuthModule,
   ],
@@ -125,7 +129,7 @@ import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-lim
       multi: true,
     },
     Title,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
