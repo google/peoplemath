@@ -28,4 +28,4 @@ pushd backend
 find . \( -name \*.go -o -name \*.mod -o -name \*.sum -o -name \*.yaml \) -exec cp --parents {} ../appengine_dist \;
 popd
 mkdir appengine_dist/static
-cp dist/peoplemath/* appengine_dist/static
+cp dist/peoplemath/browser/* appengine_dist/static
