@@ -21,9 +21,7 @@
               "base": "dist/peoplemath"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
@@ -35,9 +33,7 @@
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "allowedCommonJsDependencies": [
-              "dompurify"
-            ],
+            "allowedCommonJsDependencies": ["dompurify"],
             "browser": "src/main.ts"
           },
           "configurations": {
