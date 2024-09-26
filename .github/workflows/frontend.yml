@@ -27,7 +27,7 @@ jobs:
       - name: ng lint
         run: npx ng lint
       - name: ng test
-        run: npx ng test --watch=false --browsers ChromeHeadless
+        run: npx ng test --no-watch --no-progress --browsers ChromeHeadless
       - name: Prettier check
         run: npx prettier --check .
       - name: Prod build
