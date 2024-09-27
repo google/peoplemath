@@ -1,11 +1,18 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
       "parserOptions": {
-        "project": ["tsconfig.json", "e2e/tsconfig.e2e.json"],
+        "project": [
+          "tsconfig.json",
+          "e2e/tsconfig.e2e.json"
+        ],
         "createDefaultProgram": true
       },
       "extends": [
@@ -40,28 +47,41 @@
           "error",
           {
             "selector": "default",
-            "format": ["camelCase"],
+            "format": [
+              "camelCase"
+            ],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
           {
             "selector": "variable",
-            "format": ["camelCase", "UPPER_CASE"],
+            "format": [
+              "camelCase",
+              "UPPER_CASE"
+            ],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
           {
             "selector": "typeLike",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           },
           {
             "selector": "property",
-            "format": ["camelCase", "PascalCase", "snake_case"],
+            "format": [
+              "camelCase",
+              "PascalCase",
+              "snake_case"
+            ],
             "leadingUnderscore": "allow"
           },
           {
             "selector": "enumMember",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           },
           {
             "selector": [
@@ -75,26 +95,31 @@
               "enumMember"
             ],
             "format": null,
-            "modifiers": ["requiresQuotes"]
+            "modifiers": [
+              "requiresQuotes"
+            ]
           }
         ],
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/no-unused-vars": [
           "error",
-          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
         ]
       }
     },
     {
-      "files": ["*.html"],
+      "files": [
+        "*.html"
+      ],
       "extends": [
         "plugin:@angular-eslint/template/recommended",
         "plugin:@angular-eslint/template/accessibility"
       ],
-      "rules": {
-        
-      }
+      "rules": {}
     }
   ]
 }
