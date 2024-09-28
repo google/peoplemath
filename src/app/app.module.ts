@@ -71,7 +71,6 @@ import { EditBlockDialogComponent } from './edit-block-dialog/edit-block-dialog.
 import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-limit.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
 @NgModule({
   declarations: [
     AppComponent,
