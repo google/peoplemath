@@ -4,6 +4,7 @@ require (
 	cloud.google.com/go/datastore v1.15.0
 	cloud.google.com/go/storage v1.35.1 // indirect
 	firebase.google.com/go/v4 v4.13.0
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.4.0
 	github.com/gorilla/mux v1.8.1
 	golang.org/x/oauth2 v0.15.0 // indirect
