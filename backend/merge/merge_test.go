@@ -54,6 +54,7 @@ func TestStringMerge(t *testing.T) {
 		// Conflicting rename
 		{latest: &conflictingChange, incoming: &renamed, expectSuccess: false},
 	} {
+		expectedID := tc.incoming.ID
 		merged := merger.MergePeriods(&base, tc.latest, tc.incoming)
 		if merger.MergeSuccessful() != tc.expectSuccess {
 			t.Errorf("Case %d: expected MergeSuccessful=%v, found=%v (errors: %v)",
@@ -61,6 +62,9 @@ func TestStringMerge(t *testing.T) {
 		}
 		if !tc.expectSuccess {
 			continue
+		}
+		if merged.ID != expectedID {
+			t.Errorf("Case %d: expected ID=%s, found %s", i, expectedID, merged.ID)
 		}
 		if merged.DisplayName != tc.expectedDN {
 			t.Errorf("Case %d: expected DisplayName=%s, found %s", i, tc.expectedDN, merged.DisplayName)

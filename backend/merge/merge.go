@@ -19,8 +19,6 @@ import (
 	"peoplemath/models"
 	"reflect"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
 // PeriodMerger is a type responsible for performing a three-way merge of periods.
@@ -108,12 +106,13 @@ func (m *PeriodMerger) mergePeople(base, latest, incoming []models.Person) []mod
 	return incoming
 }
 
+// MergePeriods performs a three-way merge on periods.
+// It is expected that the incoming period will have a Version set to a new unique value.
 func (m *PeriodMerger) MergePeriods(base, latest, incoming *models.Period2) *models.Period2 {
 	// Simplify the common case where there has been no concurrent update
 	if base.Version == latest.Version {
 		m.requireIdenticalStrings("ID", base.ID, latest.ID, incoming.ID)
 		result := *incoming
-		result.Version = uuid.NewString()
 		result.ParentVersions = []string{latest.Version}
 		return &result
 	}
@@ -128,7 +127,7 @@ func (m *PeriodMerger) MergePeriods(base, latest, incoming *models.Period2) *mod
 		MaxCommittedPercentage: m.mergeFloat64s("MaxCommittedPercentage", base.MaxCommittedPercentage, latest.MaxCommittedPercentage, incoming.MaxCommittedPercentage),
 		Buckets:                m.mergeBuckets(base.Buckets, latest.Buckets, incoming.Buckets),
 		People:                 m.mergePeople(base.People, latest.People, incoming.People),
-		Version:                uuid.NewString(),
+		Version:                incoming.Version,
 		ParentVersions:         []string{base.Version, latest.Version},
 	}
 }
