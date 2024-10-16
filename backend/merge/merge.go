@@ -128,7 +128,7 @@ func (m *PeriodMerger) MergePeriods(base, latest, incoming *models.Period2) *mod
 		Buckets:                m.mergeBuckets(base.Buckets, latest.Buckets, incoming.Buckets),
 		People:                 m.mergePeople(base.People, latest.People, incoming.People),
 		Version:                incoming.Version,
-		ParentVersions:         []string{base.Version, latest.Version},
+		ParentVersions:         []string{latest.Version, base.Version},
 	}
 }
 

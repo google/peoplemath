@@ -19,7 +19,6 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 const (
@@ -46,11 +45,11 @@ func TestStringMerge(t *testing.T) {
 		// No concurrent change
 		{latest: &base, incoming: &renamed, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v1"}},
 		// Concurrent change but no change on the incoming side
-		{latest: &renamed, incoming: &unrelatedChange, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v1", "v2"}, expectedNotesURL: "foo"},
+		{latest: &renamed, incoming: &unrelatedChange, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v2", "v1"}, expectedNotesURL: "foo"},
 		// Identical rename on both sides
-		{latest: &identicalRename, incoming: &renamed, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v1", "v3"}},
+		{latest: &identicalRename, incoming: &renamed, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v3", "v1"}},
 		// Concurrent change to unrelated field
-		{latest: &unrelatedChange, incoming: &renamed, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v1", "v4"}, expectedNotesURL: "foo"},
+		{latest: &unrelatedChange, incoming: &renamed, expectSuccess: true, expectedDN: "My renamed period", expectedParents: []string{"v4", "v1"}, expectedNotesURL: "foo"},
 		// Conflicting rename
 		{latest: &conflictingChange, incoming: &renamed, expectSuccess: false},
 	} {
@@ -69,7 +68,7 @@ func TestStringMerge(t *testing.T) {
 		if merged.DisplayName != tc.expectedDN {
 			t.Errorf("Case %d: expected DisplayName=%s, found %s", i, tc.expectedDN, merged.DisplayName)
 		}
-		if diff := cmp.Diff(tc.expectedParents, merged.ParentVersions, cmpopts.SortSlices(func(a, b string) bool { return a < b })); diff != "" {
+		if diff := cmp.Diff(tc.expectedParents, merged.ParentVersions); diff != "" {
 			t.Errorf("Case %d: unexpected ParentVersions (-want +got):\n%s", i, diff)
 		}
 		if merged.NotesURL != tc.expectedNotesURL {

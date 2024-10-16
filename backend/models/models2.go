@@ -31,7 +31,9 @@ type Period2 struct {
 	// ParentVersions is the list of Version IDs of period versions from which this period was derived.
 	// Versions coming from the front end should have 0 ParentVersions (for a brand new period)
 	// or 1 ParentVersion (for an update). If there have been concurrent edits, the backend may respond
-	// with a Period with multiple ParentVersions.
+	// with a Period with multiple ParentVersions. In this case, the first element of ParentVersions
+	// must be the latest version at the time of the update (this allows us to examine only the first
+	// ParentVersion when looking for the merge base of two versions).
 	ParentVersions []string `json:"parentVersion"`
 }
 
