@@ -14,8 +14,8 @@
 
 <div class="editor-options">
     <ng-container *ngIf="isEditingEnabled">
-        <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()" matTooltip="Toggle block editing" matTooltipPosition="above"><mat-icon>group_work</mat-icon></button>
-        <button mat-fab (click)="toggleReordering()" [color]="reorderButtonColour()"matTooltip="Toggle reordering" matTooltipPosition="above"><mat-icon>reorder</mat-icon></button>
+        <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()" aria-label="Toggle block editing"><mat-icon>group_work</mat-icon></button>
+        <button mat-fab (click)="toggleReordering()" [color]="reorderButtonColour()"   aria-label="Toggle reordering"><mat-icon>reorder</mat-icon></button>
         <button mat-fab (click)="disableEditing()" color="primary"><mat-icon>done</mat-icon></button>
     </ng-container>
     <ng-container *ngIf="!isEditingEnabled">

@@ -69,7 +69,6 @@ import { GroupblocksPipe } from './bucket/groupblocks.pipe';
 import { BlockplaceholdersPipe } from './bucket/blockplaceholders.pipe';
 import { EditBlockDialogComponent } from './edit-block-dialog/edit-block-dialog.component';
 import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-limit.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -117,7 +116,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     LayoutModule,
-    MatTooltipModule,
     MaterialModule,
     AngularFireModule.initializeApp(firebaseConfig.firebase),
     AngularFireAuthModule,
