@@ -17,7 +17,10 @@ package storage
 import (
 	"context"
 	"peoplemath/models"
+	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -158,7 +161,54 @@ func testPeriods(ctx context.Context, s StorageService2, t *testing.T) {
 		t.Error("UpsertPeriodLatestVersion succeeded with new period with parent versions")
 	}
 
-	// TODO: Test merging logic
+	testPeriodMerging(ctx, s, t)
+}
+
+func testPeriodMerging(ctx context.Context, s StorageService2, t *testing.T) {
+	updatedPeriod := models.Period2{
+		ID:             periodID,
+		DisplayName:    "My updated test period",
+		Unit:           "Updated unit",
+		Version:        "v3",
+		ParentVersions: []string{"v1"},
+	}
+	// Should be safe as it updates an unrelated field
+	savedPeriod, err := s.UpsertPeriodLatestVersion(ctx, teamID, &updatedPeriod)
+	if err != nil {
+		t.Errorf("unexpected upsert failure: %v", err)
+	}
+	expectedPeriod := &models.Period2{
+		ID:             periodID,
+		DisplayName:    "My updated test period",
+		Unit:           "Updated unit",
+		Version:        "v3",
+		ParentVersions: []string{"v2", "v1"},
+	}
+	if diff := cmp.Diff(expectedPeriod, savedPeriod); diff != "" {
+		t.Errorf("unexpected saved period (-want +got):\n%s", diff)
+	}
+
+	conflictingUpdate := models.Period2{
+		ID:             periodID,
+		DisplayName:    "My conflicting display name",
+		Version:        "v4",
+		ParentVersions: []string{"v1"},
+	}
+	_, err = s.UpsertPeriodLatestVersion(ctx, teamID, &conflictingUpdate)
+	if _, ok := err.(ConcurrentModificationError); !ok {
+		t.Errorf("expected ConcurrentModificationError, found %v", err)
+	}
+	if !strings.Contains(err.Error(), "DisplayName: conflicting updates") {
+		t.Errorf("unexpected error message: %v", err)
+	}
+
+	savedPeriod, err = s.GetPeriodLatestVersion(ctx, teamID, periodID)
+	if err != nil {
+		t.Errorf("unexpected get failure: %v", err)
+	}
+	if diff := cmp.Diff(expectedPeriod, savedPeriod); diff != "" {
+		t.Errorf("unexpected saved period (-want +got):\n%s", diff)
+	}
 }
 
 func TestStorageConformance(s StorageService2, t *testing.T) {
