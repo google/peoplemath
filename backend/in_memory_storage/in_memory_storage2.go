@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"peoplemath/merge"
 	"peoplemath/models"
 	"peoplemath/storage"
 	"strings"
@@ -258,6 +259,13 @@ func (s *InMemStore2) GetPeriodLatestVersion(ctx context.Context, teamID, period
 	return s.periodLatestVersion(teamID, periodID)
 }
 
+type inMemPeriodLookup map[string]models.Period2
+
+func (s inMemPeriodLookup) GetPeriodVersion(version string) (*models.Period2, bool) {
+	res, ok := s[version]
+	return &res, ok
+}
+
 func (s *InMemStore2) UpsertPeriodLatestVersion(ctx context.Context, teamID string, period *models.Period2) (*models.Period2, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -283,16 +291,21 @@ func (s *InMemStore2) UpsertPeriodLatestVersion(ctx context.Context, teamID stri
 			return nil, fmt.Errorf("parent version '%s' does not exist", period.ParentVersions[0])
 		}
 
-		if latestVersion.Version == period.ParentVersions[0] {
-			// There have been no concurrent edits: just save this as the new latest
-			s.latestPeriodIDs[teamID][period.ID] = period.Version
-			s.periods[teamID][period.ID][period.Version] = *period
-			return period, nil
-		} else {
-			// There have been concurrent edits.
-			// TODO: Implement merging logic.
-			return nil, storage.ConcurrentModificationError("concurrent modification")
+		base, err := merge.MergeBaseVersion(inMemPeriodLookup(s.periods[teamID][period.ID]), period.ParentVersions[0], latestVersion.Version)
+		if err != nil {
+			return nil, fmt.Errorf("unable to find common parent for versions %s, %s: %v",
+				period.ParentVersions[0], latestVersion.Version, err)
 		}
+		var merger merge.PeriodMerger
+		merged := merger.MergePeriods(base, latestVersion, period)
+		if !merger.MergeSuccessful() {
+			return nil, storage.ConcurrentModificationError(fmt.Sprintf(
+				"unable to merge period into latest %s versus base %s: %s",
+				latestVersion.Version, base.Version, merger.ErrorSummary()))
+		}
+		s.latestPeriodIDs[teamID][period.ID] = merged.Version
+		s.periods[teamID][period.ID][merged.Version] = *merged
+		return merged, nil
 	} else if _, ok := err.(storage.PeriodNotFoundError); ok {
 		if len(period.ParentVersions) != 0 {
 			return nil, fmt.Errorf("unexpected ParentVersions on new period: %s", strings.Join(period.ParentVersions, ", "))
