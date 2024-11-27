@@ -1,4 +1,4 @@
-// Copyright 2019-2020 Google LLC
+// Copyright 2019-2020, 2024 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,11 +58,11 @@ func makeAuth(ctx context.Context, authMode string) (auth.Auth, error) {
 		log.Printf("Using firebase authentication per command-line flag")
 		app, err := firebase.NewApp(ctx, nil)
 		if err != nil {
-			return nil, fmt.Errorf("Could not instantiate Firebase app: %v", err)
+			return nil, fmt.Errorf("could not instantiate Firebase app: %v", err)
 		}
 		firebaseClient, err := app.Auth(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("Could not get Firebase Auth client: %v", err)
+			return nil, fmt.Errorf("could not get Firebase Auth client: %v", err)
 		}
 		firebaseAuth := &auth.FirebaseAuth{
 			FirebaseClient: firebaseClient,
@@ -98,7 +98,7 @@ func main() {
 		return
 	}
 
-	server := controllers.MakeServer(store, defaultStoreTimeout, authProvider)
+	server := controllers.MakeServer(storage.MakeScrubbingWrapper(store), defaultStoreTimeout, authProvider)
 
 	handler := server.MakeHandler()
 	port := os.Getenv("PORT")
