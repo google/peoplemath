@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2024 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -76,7 +76,6 @@ func (s *googleCDSStore) GetAllTeams(ctx context.Context) ([]models.Team, error)
 		if err != nil {
 			return result, err
 		}
-		scrubLoadedTeam(&t)
 		result = append(result, t)
 	}
 	return result, nil
@@ -92,7 +91,6 @@ func (s *googleCDSStore) GetTeam(ctx context.Context, teamID string) (models.Tea
 	if err != nil {
 		return team, true, err
 	}
-	scrubLoadedTeam(&team)
 	return team, true, nil
 }
 
@@ -139,7 +137,6 @@ func (s *googleCDSStore) GetAllPeriods(ctx context.Context, teamID string) ([]mo
 		if err != nil {
 			return result, true, err
 		}
-		scrubLoadedPeriod(&p)
 		result = append(result, p)
 	}
 	return result, true, nil
@@ -153,7 +150,6 @@ func (s *googleCDSStore) GetPeriod(ctx context.Context, teamID, periodID string)
 	if err == datastore.ErrNoSuchEntity {
 		return &period, false, nil
 	}
-	scrubLoadedPeriod(&period)
 	return &period, true, err
 }
 
@@ -220,47 +216,4 @@ func (s *googleCDSStore) GetSettings(ctx context.Context) (models.Settings, erro
 
 func (s *googleCDSStore) Close() error {
 	return s.client.Close()
-}
-
-// Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
-// they may be nil. This function is to avoid clients having to deal with this.
-// TODO(#82) Consider moving this function into the controller so it applies to all storage implementations.
-func scrubLoadedPeriod(period *models.Period) {
-	if period.People == nil {
-		period.People = []models.Person{}
-	}
-	if period.Buckets == nil {
-		period.Buckets = []models.Bucket{}
-	}
-	if period.SecondaryUnits == nil {
-		period.SecondaryUnits = []models.SecondaryUnit{}
-	}
-	for i := range period.Buckets {
-		if period.Buckets[i].Objectives == nil {
-			period.Buckets[i].Objectives = []models.Objective{}
-		}
-		for j := range period.Buckets[i].Objectives {
-			if period.Buckets[i].Objectives[j].Assignments == nil {
-				period.Buckets[i].Objectives[j].Assignments = []models.Assignment{}
-			}
-			if period.Buckets[i].Objectives[j].Groups == nil {
-				period.Buckets[i].Objectives[j].Groups = []models.ObjectiveGroup{}
-			}
-			if period.Buckets[i].Objectives[j].Tags == nil {
-				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
-			}
-		}
-	}
-}
-
-// Cloud Datastore does not save zero-length slices, so when retrieving entities with slice members,
-// they may be nil. This function is to avoid clients having to deal with this.
-// TODO(#82) Consider moving this function into the controller so it applies to all storage implementations.
-func scrubLoadedTeam(team *models.Team) {
-	if team.Permissions.Read.Allow == nil {
-		team.Permissions.Read.Allow = []models.UserMatcher{}
-	}
-	if team.Permissions.Write.Allow == nil {
-		team.Permissions.Write.Allow = []models.UserMatcher{}
-	}
 }
