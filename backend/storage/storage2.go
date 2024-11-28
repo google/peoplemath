@@ -74,3 +74,82 @@ type ConcurrentModificationError string
 func (e ConcurrentModificationError) Error() string {
 	return fmt.Sprintf("Concurrent modification error: %s", string(e))
 }
+
+// scrubbingStorage2 is a wrapper for a StorageService which performs certain
+// scrubbing on the results, to avoid clients having to deal with quirks of
+// individual storage systems, such as Cloud Datastore not saving zero-length
+// slices
+type scrubbingStorage2 struct {
+	StorageService2
+}
+
+// MakeScrubbingWrapper takes a storage service and scrubs its outputs
+func MakeScrubbingWrapper2(s StorageService2) StorageService2 {
+	return &scrubbingStorage2{StorageService2: s}
+}
+
+func (s *scrubbingStorage2) GetAllTeams(ctx context.Context) ([]models.Team, error) {
+	teams, err := s.StorageService2.GetAllTeams(ctx)
+	if err != nil {
+		return teams, err
+	}
+	for i := range teams {
+		scrubLoadedTeam(&teams[i])
+	}
+	return teams, err
+}
+
+func (s *scrubbingStorage2) GetTeam(ctx context.Context, teamID string) (models.Team, error) {
+	team, err := s.StorageService2.GetTeam(ctx, teamID)
+	if err != nil {
+		return team, err
+	}
+	scrubLoadedTeam(&team)
+	return team, err
+}
+
+func (s *scrubbingStorage2) GetPeriodLatestVersion(ctx context.Context, teamID, periodID string) (*models.Period2, error) {
+	period, err := s.StorageService2.GetPeriodLatestVersion(ctx, teamID, periodID)
+	if err != nil {
+		return period, err
+	}
+	scrubLoadedPeriod2(period)
+	return period, err
+}
+
+func (s *scrubbingStorage2) UpsertPeriodLatestVersion(ctx context.Context, teamID string, period *models.Period2) (*models.Period2, error) {
+	period, err := s.StorageService2.UpsertPeriodLatestVersion(ctx, teamID, period)
+	if err != nil {
+		return period, err
+	}
+	scrubLoadedPeriod2(period)
+	return period, err
+}
+
+func scrubLoadedPeriod2(period *models.Period2) {
+	if period.People == nil {
+		period.People = []models.Person{}
+	}
+	if period.Buckets == nil {
+		period.Buckets = []models.Bucket{}
+	}
+	if period.SecondaryUnits == nil {
+		period.SecondaryUnits = []models.SecondaryUnit{}
+	}
+	for i := range period.Buckets {
+		if period.Buckets[i].Objectives == nil {
+			period.Buckets[i].Objectives = []models.Objective{}
+		}
+		for j := range period.Buckets[i].Objectives {
+			if period.Buckets[i].Objectives[j].Assignments == nil {
+				period.Buckets[i].Objectives[j].Assignments = []models.Assignment{}
+			}
+			if period.Buckets[i].Objectives[j].Groups == nil {
+				period.Buckets[i].Objectives[j].Groups = []models.ObjectiveGroup{}
+			}
+			if period.Buckets[i].Objectives[j].Tags == nil {
+				period.Buckets[i].Objectives[j].Tags = []models.ObjectiveTag{}
+			}
+		}
+	}
+}
