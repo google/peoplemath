@@ -24,6 +24,7 @@ jobs:
           cache: 'npm'
       - name: npm ci
         run: npm ci 2>&1 | perl -lpe 'push(@ds, $1) if /deprecated (.*@[^:]*):/; END { for $d (@ds) { print "Import path of deprecated $d:"; system("npm list $d --depth=20") == 0 or die "$!" } }'
+        shell: bash
       - name: ng lint
         run: npx ng lint
       - name: ng test
