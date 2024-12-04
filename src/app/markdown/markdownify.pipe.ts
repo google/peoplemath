@@ -42,12 +42,12 @@ export class MarkdownifyPipe implements PipeTransform {
         }
       }
     });
-     
+
     const result = domPurify.sanitize(snarkdown(markdown), {
       ALLOWED_TAGS: ['a', 'em', 'strong', 'code', 's', 'u'],
       KEEP_CONTENT: true,
     });
-     
+
     domPurify.removeHook('afterSanitizeAttributes');
     return result;
   }

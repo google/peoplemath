@@ -57,7 +57,10 @@ export class GroupSummaryComponent {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    const result: [string, ImmutableObjective[]][] = groupOrder.map((g) => [g, obsByGroup.get(g)!]);
+    const result: [string, ImmutableObjective[]][] = groupOrder.map((g) => [
+      g,
+      obsByGroup.get(g)!,
+    ]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
