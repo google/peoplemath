@@ -189,7 +189,7 @@ export class PeriodComponent implements OnInit {
     objPred: (o: ImmutableObjective) => boolean,
     valFunc: (a: ImmutableAssignment) => number
   ): ReadonlyMap<string, number> {
-    const result: Map<string, number> = new Map();
+    const result = new Map<string, number>();
     this.period!.buckets.forEach((bucket) => {
       bucket.objectives.forEach((objective) => {
         if (objPred(objective)) {

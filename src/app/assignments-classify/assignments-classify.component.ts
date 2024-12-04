@@ -66,9 +66,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  objectivesByGroup(): Array<
-    [string, [ImmutableObjective, ImmutableBucket][]]
-  > {
+  objectivesByGroup(): [string, [ImmutableObjective, ImmutableBucket][]][] {
     const obsByGroup = new Map<
       string,
       [ImmutableObjective, ImmutableBucket][]
@@ -130,7 +128,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     return result;
   }
 
-  objectivesByTag(): Array<[string, [ImmutableObjective, ImmutableBucket][]]> {
+  objectivesByTag(): [string, [ImmutableObjective, ImmutableBucket][]][] {
     const obsByTag = new Map<string, [ImmutableObjective, ImmutableBucket][]>();
     this.period!.buckets.forEach((b) => {
       b.objectives.forEach((o) => {
@@ -153,9 +151,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     return result;
   }
 
-  objectivesByClass(): Array<
-    [string, [ImmutableObjective, ImmutableBucket][]]
-  > {
+  objectivesByClass(): [string, [ImmutableObjective, ImmutableBucket][]][] {
     switch (this.aggregateBy) {
       case AggregateBy.Group:
         return this.objectivesByGroup();

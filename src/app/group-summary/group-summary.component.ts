@@ -34,7 +34,7 @@ export class GroupSummaryComponent {
 
   bucketObjectivesByGroup(
     bucket: ImmutableBucket
-  ): Array<[string, ImmutableObjective[]]> {
+  ): [string, ImmutableObjective[]][] {
     // We order groups by the order the first item from each appears within the bucket
     const groupOrder: string[] = [];
     const obsByGroup = new Map<string, ImmutableObjective[]>();
@@ -57,16 +57,17 @@ export class GroupSummaryComponent {
     // We don't change the sort order of objectives within each group here,
     // as we want objectives to remain in priority order
 
-    const result: Array<
-      [string, ImmutableObjective[]]
-    > = groupOrder.map((g) => [g, obsByGroup.get(g)!]);
+    const result: [string, ImmutableObjective[]][] = groupOrder.map((g) => [
+      g,
+      obsByGroup.get(g)!,
+    ]);
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
     }
     return result;
   }
 
-  allObjectivesByGroup(): Array<[string, ImmutableObjective[]]> {
+  allObjectivesByGroup(): [string, ImmutableObjective[]][] {
     const obsByGroup = new Map<string, ImmutableObjective[]>();
     const noGroup: ImmutableObjective[] = [];
     this.period!.buckets.forEach((b) => {
@@ -91,7 +92,7 @@ export class GroupSummaryComponent {
     }
     noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
-    const result: Array<[string, ImmutableObjective[]]> = Array.from(
+    const result: [string, ImmutableObjective[]][] = Array.from(
       obsByGroup.entries()
     );
     result.sort(
