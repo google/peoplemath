@@ -29,7 +29,7 @@ export class DisplayObjectivesPipe implements PipeTransform {
     objectives: readonly ImmutableObjective[],
     ..._args: unknown[]
   ): DisplayObjective[] {
-    const displayObjectives: Array<DisplayObjective> = [];
+    const displayObjectives: DisplayObjective[] = [];
     let cumulativeSum = 0;
     for (const objective of objectives) {
       cumulativeSum += objective.resourceEstimate;

@@ -42,12 +42,12 @@ export class MarkdownifyPipe implements PipeTransform {
         }
       }
     });
-    /* eslint-disable @typescript-eslint/naming-convention */
+     
     const result = domPurify.sanitize(snarkdown(markdown), {
       ALLOWED_TAGS: ['a', 'em', 'strong', 'code', 's', 'u'],
       KEEP_CONTENT: true,
     });
-    /* eslint-enable @typescript-eslint/naming-convention */
+     
     domPurify.removeHook('afterSanitizeAttributes');
     return result;
   }

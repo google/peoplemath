@@ -26,7 +26,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class PageTitleService {
-  public title$: Subject<string> = new Subject();
+  public title$ = new Subject<string>();
 
   public setPageTitle(newTitle: string): void {
     this.title$.next('PeopleMath: ' + newTitle);
