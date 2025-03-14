@@ -22,8 +22,9 @@ import { firebaseConfig } from '../environments/firebaseConfig';
 import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
+// eslint-disable-next-line @angular-eslint/component-selector
 @Component({ selector: 'router-outlet', template: '' })
-class RouterOutletStub {}
+class RouterOutletStubComponent {}
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -33,7 +34,7 @@ describe('AppComponent', () => {
         MaterialModule,
         AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
         AngularFireAuthModule,
-        RouterOutletStub,
+        RouterOutletStubComponent,
       ],
       providers: [StorageService, provideRouter([])],
     }).compileComponents();
