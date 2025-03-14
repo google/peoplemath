@@ -12,19 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { enableProdMode /*, ApplicationRef*/ } from '@angular/core';
+import { enableProdMode /*, ApplicationRef*/, importProvidersFrom } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { AppModule } from './app/app.module';
+
 import { environment } from './environments/environment';
+import { StorageService } from './app/storage.service';
+import { NotificationService } from './app/services/notification.service';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AuthInterceptor } from './app/services/auth.interceptor';
+import { Title, BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { AppRoutingModule } from './app/app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MaterialModule } from './app/material/material.module';
+import { AngularFireModule } from '@angular/fire/compat';
+import { firebaseConfig } from './environments/firebaseConfig';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AppComponent } from './app/app.component';
 // import { enableDebugTools } from '@angular/platform-browser';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, {
+    providers: [
+        importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, LayoutModule, MaterialModule, AngularFireModule.initializeApp(firebaseConfig.firebase), AngularFireAuthModule),
+        StorageService,
+        NotificationService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+        Title,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideAnimations(),
+    ]
+})
   // Uncomment to enable console debug tools, such as ng.profiler.timeChangeDetection()
   /*.then(moduleRef => {
   const applicationRef = moduleRef.injector.get(ApplicationRef);
