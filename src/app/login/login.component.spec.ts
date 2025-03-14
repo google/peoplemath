@@ -21,7 +21,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { firebaseConfig } from '../../environments/firebaseConfig';
-import { MaterialModule } from '../material/material.module';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -37,7 +36,6 @@ describe('LoginComponent', () => {
             'firebaseApp'
           ),
           AngularFireAuthModule,
-          MaterialModule,
           LoginComponent,
         ],
       }).compileComponents();

@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MaterialModule } from '../material/material.module';
 import { ImmutableObjective } from '../objective';
 
 import {
@@ -44,7 +43,7 @@ describe('EditBlockDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MaterialModule, FormsModule, EditBlockDialogComponent],
+      imports: [FormsModule, EditBlockDialogComponent],
       providers: [
         { provide: MatDialogRef, useValue: dialogSpy },
         { provide: MAT_DIALOG_DATA, useValue: dialogData },

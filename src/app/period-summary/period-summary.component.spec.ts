@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PeriodSummaryComponent } from './period-summary.component';
-import { MaterialModule } from '../material/material.module';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
@@ -75,7 +74,6 @@ describe('PeriodSummaryComponent', () => {
       TestBed.configureTestingModule({
         imports: [
           RouterTestingModule,
-          MaterialModule,
           PeriodSummaryComponent,
           BucketSummaryComponent,
           ObjectiveSummaryComponent,

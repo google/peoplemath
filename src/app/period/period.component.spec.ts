@@ -28,7 +28,6 @@ import { BucketComponent } from '../bucket/bucket.component';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { PeopleComponent } from '../people/people.component';
 import { AssignmentsByPersonComponent } from '../assignments-by-person/assignments-by-person.component';
-import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { Period, ImmutablePeriod } from '../period';
@@ -75,7 +74,6 @@ describe('PeriodComponent', () => {
         imports: [
           RouterTestingModule,
           FormsModule,
-          MaterialModule,
           BrowserAnimationsModule,
           AngularFireModule.initializeApp(
             firebaseConfig.firebase,

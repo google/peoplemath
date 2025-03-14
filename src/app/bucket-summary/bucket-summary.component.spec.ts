@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BucketSummaryComponent } from './bucket-summary.component';
-import { MaterialModule } from '../material/material.module';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
@@ -49,7 +48,6 @@ describe('BucketSummaryComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           BucketSummaryComponent,
           ObjectiveSummaryComponent,
           ResourceQuantityComponent,

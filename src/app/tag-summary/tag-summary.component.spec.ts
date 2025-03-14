@@ -18,7 +18,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TagSummaryComponent } from './tag-summary.component';
 import { Period, ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('TagSummaryComponent', () => {
@@ -39,11 +38,7 @@ describe('TagSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MaterialModule,
-          TagSummaryComponent,
-          ResourceQuantityComponent,
-        ],
+        imports: [TagSummaryComponent, ResourceQuantityComponent],
       }).compileComponents();
     })
   );

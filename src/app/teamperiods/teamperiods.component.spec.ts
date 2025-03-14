@@ -17,7 +17,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TeamPeriodsComponent } from './teamperiods.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from '../storage.service';
-import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { of } from 'rxjs';
@@ -71,7 +70,6 @@ describe('TeamPeriodsComponent', () => {
       TestBed.configureTestingModule({
         imports: [
           RouterTestingModule,
-          MaterialModule,
           AngularFireModule.initializeApp(
             firebaseConfig.firebase,
             'firebaseApp'

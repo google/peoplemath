@@ -19,7 +19,6 @@ import {
   EditPeriodDialogData,
 } from './edit-period-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -48,7 +47,6 @@ describe('EditPeriodDialogComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           FormsModule,
           ReactiveFormsModule,
           BrowserAnimationsModule,

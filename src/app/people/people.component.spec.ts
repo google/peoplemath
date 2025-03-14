@@ -16,7 +16,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PeopleComponent } from './people.component';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '../material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImmutablePerson } from '../person';
 
@@ -27,12 +26,7 @@ describe('PeopleComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          MaterialModule,
-          BrowserAnimationsModule,
-          PeopleComponent,
-        ],
+        imports: [FormsModule, BrowserAnimationsModule, PeopleComponent],
       }).compileComponents();
     })
   );

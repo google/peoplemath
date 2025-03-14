@@ -16,7 +16,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AssignmentsByPersonComponent } from './assignments-by-person.component';
 import { ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 
 describe('AssignmentsByPersonComponent', () => {
   let component: AssignmentsByPersonComponent;
@@ -24,9 +23,7 @@ describe('AssignmentsByPersonComponent', () => {
 
   beforeEach(
     waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MaterialModule, AssignmentsByPersonComponent],
-      }).compileComponents();
+      TestBed.configureTestingModule({}).compileComponents();
     })
   );
 

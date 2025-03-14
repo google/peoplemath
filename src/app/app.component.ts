@@ -20,27 +20,30 @@ import { ModalComponent } from './modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
-import { MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import {
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatButton, MatAnchor } from '@angular/material/button';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    imports: [
-        MatSidenavContainer,
-        MatSidenavContent,
-        MatToolbar,
-        RouterLink,
-        NgIf,
-        MatButton,
-        MatAnchor,
-        RouterOutlet,
-        AsyncPipe,
-    ],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  imports: [
+    MatSidenavContainer,
+    MatSidenavContent,
+    MatToolbar,
+    RouterLink,
+    NgIf,
+    MatButton,
+    MatAnchor,
+    RouterOutlet,
+    AsyncPipe,
+  ],
 })
 export class AppComponent {
   constructor(

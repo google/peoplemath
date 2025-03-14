@@ -17,7 +17,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ObjectiveComponent } from './objective.component';
 import { FormsModule } from '@angular/forms';
 import { CommitmentType, ImmutableObjective } from '../objective';
-import { MaterialModule } from '../material/material.module';
 import { Assignment } from '../assignment';
 import { AssignSummPartsPipe } from './assign-summ-parts.pipe';
 
@@ -33,12 +32,7 @@ describe('ObjectiveComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          MaterialModule,
-          ObjectiveComponent,
-          AssignSummPartsPipe,
-        ],
+        imports: [FormsModule, ObjectiveComponent, AssignSummPartsPipe],
       }).compileComponents();
     })
   );

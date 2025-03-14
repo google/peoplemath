@@ -20,7 +20,6 @@ import {
   AssignmentsClassifyComponent,
   AggregateBy,
 } from './assignments-classify.component';
-import { MaterialModule } from '../material/material.module';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 import { ImmutablePeriod } from '../period';
 
@@ -31,11 +30,7 @@ describe('AssignmentsClassifyComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MaterialModule,
-          AssignmentsClassifyComponent,
-          ResourceQuantityComponent,
-        ],
+        imports: [AssignmentsClassifyComponent, ResourceQuantityComponent],
       }).compileComponents();
     })
   );

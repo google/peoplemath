@@ -18,7 +18,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GroupSummaryComponent } from './group-summary.component';
 import { Period, ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 import { AllocationType } from '../bucket';
@@ -50,7 +49,6 @@ describe('GroupSummaryComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           FormsModule,
           GroupSummaryComponent,
           ResourceQuantityComponent,

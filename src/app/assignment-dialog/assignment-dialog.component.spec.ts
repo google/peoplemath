@@ -18,7 +18,6 @@ import {
   AssignmentDialogComponent,
   AssignmentDialogData,
 } from './assignment-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType } from '../objective';
 
@@ -44,7 +43,6 @@ describe('AssignmentDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MaterialModule, AssignmentDialogComponent],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

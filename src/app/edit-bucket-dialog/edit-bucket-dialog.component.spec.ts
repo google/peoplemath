@@ -18,7 +18,6 @@ import {
   EditBucketDialogComponent,
   EditBucketDialogData,
 } from './edit-bucket-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AllocationType } from '../bucket';
@@ -46,7 +45,6 @@ describe('EditBucketDialogComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           FormsModule,
           BrowserAnimationsModule,
           EditBucketDialogComponent,

@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AssignmentComponent } from './assignment.component';
-import { MaterialModule } from '../material/material.module';
 import { CommitmentType, ImmutableObjective } from '../objective';
 
 describe('AssignmentComponent', () => {
@@ -26,9 +25,7 @@ describe('AssignmentComponent', () => {
 
   beforeEach(
     waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MaterialModule, AssignmentComponent],
-      }).compileComponents();
+      TestBed.configureTestingModule({}).compileComponents();
     })
   );
 

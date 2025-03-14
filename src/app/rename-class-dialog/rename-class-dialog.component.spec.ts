@@ -20,7 +20,6 @@ import {
   RenameClassDialogComponent,
   RenameClassDialogData,
 } from './rename-class-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +37,6 @@ describe('RenameClassDialog', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           FormsModule,
           BrowserAnimationsModule,
           RenameClassDialogComponent,

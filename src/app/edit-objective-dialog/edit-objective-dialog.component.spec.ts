@@ -23,7 +23,6 @@ import {
   EditedObjective,
   SaveAction,
 } from './edit-objective-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType, ImmutableObjective } from '../objective';
@@ -68,7 +67,6 @@ describe('EditObjectiveDialogComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [
-          MaterialModule,
           FormsModule,
           BrowserAnimationsModule,
           EditObjectiveDialogComponent,

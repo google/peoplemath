@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ModalComponent } from './modal.component';
-import { MaterialModule } from '../material/material.module';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ModalComponent', () => {
@@ -27,7 +26,6 @@ describe('ModalComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MaterialModule, ModalComponent],
         providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
       }).compileComponents();
     })

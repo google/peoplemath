@@ -17,7 +17,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TeamsComponent } from './teams.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from '../storage.service';
-import { MaterialModule } from '../material/material.module';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
   provideHttpClient,
@@ -31,7 +30,7 @@ describe('TeamsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule, MaterialModule, TeamsComponent],
+        imports: [RouterTestingModule, TeamsComponent],
         providers: [
           StorageService,
           provideHttpClient(withInterceptorsFromDi()),

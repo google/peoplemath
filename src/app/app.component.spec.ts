@@ -15,7 +15,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { StorageService } from './storage.service';
-import { MaterialModule } from './material/material.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { firebaseConfig } from '../environments/firebaseConfig';
@@ -29,15 +28,14 @@ class RouterOutletStubComponent {}
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        MaterialModule,
+      imports: [
         AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
         AngularFireAuthModule,
         RouterOutletStubComponent,
         AppComponent,
-    ],
-    providers: [StorageService, provideRouter([])],
-}).compileComponents();
+      ],
+      providers: [StorageService, provideRouter([])],
+    }).compileComponents();
   });
 
   it('should create the app', () => {
