@@ -24,6 +24,7 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   styleUrls: ['./tag-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TagSummaryComponent {
   @Input() period?: ImmutablePeriod;

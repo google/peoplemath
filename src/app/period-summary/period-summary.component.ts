@@ -29,6 +29,7 @@ import { PageTitleService } from '../services/pagetitle.service';
   selector: 'app-period-summary',
   templateUrl: './period-summary.component.html',
   styleUrls: ['./period-summary.component.css'],
+  standalone: false,
 })
 export class PeriodSummaryComponent implements OnInit {
   team?: ImmutableTeam;

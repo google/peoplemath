@@ -48,6 +48,7 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   selector: 'app-teamperiods',
   templateUrl: './teamperiods.component.html',
   styleUrls: ['./teamperiods.component.css'],
+  standalone: false,
 })
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;

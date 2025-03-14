@@ -30,6 +30,7 @@ export interface EditBucketDialogData {
   selector: 'app-edit-bucket-dialog',
   templateUrl: './edit-bucket-dialog.component.html',
   styleUrls: ['./edit-bucket-dialog.component.css'],
+  standalone: false,
 })
 export class EditBucketDialogComponent {
   constructor(

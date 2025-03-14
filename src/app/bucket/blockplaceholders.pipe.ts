@@ -24,6 +24,7 @@ import { DisplayObjective } from './bucket.component';
  */
 @Pipe({
   name: 'blockPlaceholders',
+  standalone: false,
 })
 export class BlockplaceholdersPipe implements PipeTransform {
   transform(

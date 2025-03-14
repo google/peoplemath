@@ -21,6 +21,7 @@ import { ImmutableBucket } from '../bucket';
   selector: 'app-bucket-alloc-limit',
   templateUrl: './bucket-alloc-limit.component.html',
   styleUrls: ['./bucket-alloc-limit.component.css'],
+  standalone: false,
 })
 export class BucketAllocLimitComponent {
   @Input() hasError?: boolean;

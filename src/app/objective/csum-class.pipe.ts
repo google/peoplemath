@@ -18,6 +18,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'csumClass',
+  standalone: false,
 })
 export class CsumClassPipe implements PipeTransform {
   transform(

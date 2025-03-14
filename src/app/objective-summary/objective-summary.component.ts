@@ -24,6 +24,7 @@ import { ImmutableSecondaryUnit } from '../period';
   styleUrls: ['./objective-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ObjectiveSummaryComponent {
   @Input() objective?: ImmutableObjective;

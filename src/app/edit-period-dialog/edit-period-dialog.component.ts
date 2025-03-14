@@ -28,6 +28,7 @@ export interface EditPeriodDialogData {
   selector: 'app-edit-period-dialog',
   templateUrl: './edit-period-dialog.component.html',
   styleUrls: ['./edit-period-dialog.component.css'],
+  standalone: false,
 })
 export class EditPeriodDialogComponent {
   periodIdControl: UntypedFormControl;

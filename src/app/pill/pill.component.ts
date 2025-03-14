@@ -20,5 +20,6 @@ import { Component } from '@angular/core';
   selector: 'app-pill',
   template: '<span class="pill pill-primary"><ng-content></ng-content></span>',
   styleUrls: ['./pill.component.css'],
+  standalone: false,
 })
 export class PillComponent {}

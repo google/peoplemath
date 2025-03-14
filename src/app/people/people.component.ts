@@ -56,6 +56,7 @@ class PersonData {
   styleUrls: ['./people.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PeopleComponent {
   @Input() people?: readonly ImmutablePerson[];
@@ -248,6 +249,7 @@ export interface EditPersonDialogData {
 @Component({
   selector: 'app-edit-person-dialog',
   templateUrl: 'edit-person-dialog.html',
+  standalone: false,
 })
 export class EditPersonDialogComponent {
   userIdControl: UntypedFormControl;
