@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalComponent } from '../modal/modal.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  public notification$: Subject<string> = new Subject<string>();
-  public error$: Subject<string> = new Subject<string>();
+  private snackbar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   notifyInfo(message: string): void {
-    this.notification$.next(message);
+    this.snackbar.open(message, '', { duration: 2000 });
   }
 
   notifyError(message: string, error?: unknown): void {
     console.error(message);
     console.error(error);
-    if (error === undefined) {
-      this.error$.next(message);
-    } else {
-      this.error$.next(message + ': ' + JSON.stringify(error));
-    }
+    const displayText =
+      error === undefined ? '' : message + ': ' + JSON.stringify(error);
+    this.dialog.open(ModalComponent, { data: displayText });
   }
 }

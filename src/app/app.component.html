@@ -3,7 +3,9 @@
         <mat-toolbar color="primary">
             <span class="headername"><a routerLink="/teams">PeopleMath</a></span>
             <div class="flex-spacer"></div>
-            <button id="logout-button" mat-raised-button *ngIf="auth.user$ | async" (click)="auth.signOut()">Logout</button>
+            @if (user()) {
+                <button id="logout-button" mat-raised-button (click)="auth.signOut()">Logout</button>
+            }
             <a mat-raised-button href="/improve" target="_blank" rel="noopener noreferrer" color="accent">Improve</a>
         </mat-toolbar>
         <router-outlet></router-outlet>
