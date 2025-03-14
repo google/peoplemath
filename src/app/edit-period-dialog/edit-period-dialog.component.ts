@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,24 @@
 
 import { Component, Inject } from '@angular/core';
 import { Period, SecondaryUnit } from '../period';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
+import {
+  UntypedFormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 
 export interface EditPeriodDialogData {
   period: Period;
@@ -28,7 +44,20 @@ export interface EditPeriodDialogData {
   selector: 'app-edit-period-dialog',
   templateUrl: './edit-period-dialog.component.html',
   styleUrls: ['./edit-period-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    NgIf,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    MatDialogActions,
+    MatButton,
+  ],
 })
 export class EditPeriodDialogComponent {
   periodIdControl: UntypedFormControl;

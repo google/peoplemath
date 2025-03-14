@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2023 Google LLC
+ * Copyright 2020-2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,15 @@ import {
 } from '../rename-class-dialog/rename-class-dialog.component';
 import { ImmutableBucket } from '../bucket';
 import { Subscription } from 'rxjs';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { NgFor, NgIf } from '@angular/common';
+import { AssignmentComponent } from '../assignment/assignment.component';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 export enum AggregateBy {
   Group = 'group',
@@ -47,7 +56,16 @@ export enum AggregateBy {
   styleUrls: ['./assignments-classify.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    NgFor,
+    NgIf,
+    AssignmentComponent,
+    ResourceQuantityComponent,
+  ],
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
   @Input() period?: ImmutablePeriod;

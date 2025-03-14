@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2023 Google LLC
+ * Copyright 2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,19 @@
  */
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { ImmutableObjective } from '../objective';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatSelectionList, MatListOption } from '@angular/material/list';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 export interface EditBlockDialogData {
   blockPlaceholder: ImmutableObjective;
@@ -37,7 +48,18 @@ export interface EditBlockInstruction {
   selector: 'app-edit-block-dialog',
   templateUrl: './edit-block-dialog.component.html',
   styleUrls: ['./edit-block-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatSelectionList,
+    FormsModule,
+    NgFor,
+    MatListOption,
+    MatDialogActions,
+    MatButton,
+    NgIf,
+  ],
 })
 export class EditBlockDialogComponent {
   selected: string[] = [];

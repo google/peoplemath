@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ModalComponent } from './modal.component';
-import { MaterialModule } from '../material/material.module';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ModalComponent', () => {
@@ -27,8 +26,6 @@ describe('ModalComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ModalComponent],
-        imports: [MaterialModule],
         providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
       }).compileComponents();
     })

@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,27 @@
 
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatCardActions,
+    MatButton,
+  ],
 })
 export class LoginComponent {
   constructor(public authService: AuthService) {}

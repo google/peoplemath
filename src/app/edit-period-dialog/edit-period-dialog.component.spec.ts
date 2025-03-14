@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import {
   EditPeriodDialogData,
 } from './edit-period-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -47,12 +46,11 @@ describe('EditPeriodDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditPeriodDialogComponent],
         imports: [
-          MaterialModule,
           FormsModule,
           ReactiveFormsModule,
           BrowserAnimationsModule,
+          EditPeriodDialogComponent,
         ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },

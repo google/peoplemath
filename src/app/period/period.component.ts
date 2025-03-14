@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Google LLC
+// Copyright 2019-2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Period, ImmutablePeriod } from '../period';
@@ -38,12 +38,22 @@ import { combineLatest, of, Subject } from 'rxjs';
 import { ImmutablePerson } from '../person';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { Assignment, ImmutableAssignment } from '../assignment';
-import { AggregateBy } from '../assignments-classify/assignments-classify.component';
+import {
+  AggregateBy,
+  AssignmentsClassifyComponent,
+} from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
+import { NgIf, NgFor, DecimalPipe, PercentPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatAnchor, MatFabButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { BucketComponent } from '../bucket/bucket.component';
+import { PeopleComponent } from '../people/people.component';
+import { AssignmentsByPersonComponent } from '../assignments-by-person/assignments-by-person.component';
 
 @Component({
   selector: 'app-period',
@@ -52,7 +62,22 @@ import { PageTitleService } from '../services/pagetitle.service';
   // Requires manual change detection to be called whenever we change a member without a DOM event
   // This is ugly but it seems to make a HUGE performance difference
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    NgIf,
+    MatProgressSpinner,
+    RouterLink,
+    MatAnchor,
+    MatFabButton,
+    MatIcon,
+    NgFor,
+    BucketComponent,
+    MatButton,
+    PeopleComponent,
+    AssignmentsByPersonComponent,
+    AssignmentsClassifyComponent,
+    DecimalPipe,
+    PercentPipe,
+  ],
 })
 export class PeriodComponent implements OnInit {
   team?: ImmutableTeam;

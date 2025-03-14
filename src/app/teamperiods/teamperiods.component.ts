@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Google LLC
+// Copyright 2019-2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
 import { StorageService } from '../storage.service';
@@ -41,6 +41,22 @@ import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import {
+  MatIconButton,
+  MatIconAnchor,
+  MatButton,
+} from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatNavList, MatListItem } from '@angular/material/list';
 
 const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
 
@@ -48,7 +64,23 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   selector: 'app-teamperiods',
   templateUrl: './teamperiods.component.html',
   styleUrls: ['./teamperiods.component.css'],
-  standalone: false,
+  imports: [
+    NgIf,
+    MatProgressSpinner,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatIconButton,
+    MatIcon,
+    MatCardContent,
+    MatNavList,
+    NgFor,
+    MatListItem,
+    RouterLink,
+    MatCardActions,
+    MatIconAnchor,
+    MatButton,
+  ],
 })
 export class TeamPeriodsComponent implements OnInit {
   team?: ImmutableTeam;

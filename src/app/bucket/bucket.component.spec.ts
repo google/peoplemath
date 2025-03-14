@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import { BucketComponent } from './bucket.component';
 import { FormsModule } from '@angular/forms';
 import { AllocationType, ImmutableBucket } from '../bucket';
 import { ObjectiveComponent } from '../objective/objective.component';
-import { MaterialModule } from '../material/material.module';
 import { DisplayObjectivesPipe } from './displayobjectives.pipe';
 import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
 
@@ -29,13 +28,13 @@ describe('BucketComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          FormsModule,
           BucketComponent,
           ObjectiveComponent,
           BucketAllocLimitComponent,
           DisplayObjectivesPipe,
         ],
-        imports: [FormsModule, MaterialModule],
         providers: [],
       }).compileComponents();
     })

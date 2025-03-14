@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TeamPeriodsComponent } from './teamperiods.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StorageService } from '../storage.service';
-import { MaterialModule } from '../material/material.module';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
 import { of } from 'rxjs';
@@ -69,15 +68,14 @@ describe('TeamPeriodsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TeamPeriodsComponent],
         imports: [
           RouterTestingModule,
-          MaterialModule,
           AngularFireModule.initializeApp(
             firebaseConfig.firebase,
             'firebaseApp'
           ),
           AngularFireAuthModule,
+          TeamPeriodsComponent,
         ],
         providers: [
           { provide: StorageService, useValue: storageServiceSpy },

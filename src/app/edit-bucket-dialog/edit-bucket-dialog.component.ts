@@ -1,4 +1,4 @@
-// Copyright 2019, 2021, 2023 Google LLC
+// Copyright 2019, 2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,23 @@
 
 import { Component, Inject, EventEmitter } from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 export interface EditBucketDialogData {
   bucket: Bucket;
@@ -30,7 +46,24 @@ export interface EditBucketDialogData {
   selector: 'app-edit-bucket-dialog',
   templateUrl: './edit-bucket-dialog.component.html',
   styleUrls: ['./edit-bucket-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatSelect,
+    MatOption,
+    NgIf,
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDialogActions,
+    MatDialogClose,
+  ],
 })
 export class EditBucketDialogComponent {
   constructor(

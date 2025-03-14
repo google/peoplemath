@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ObjectiveComponent } from './objective.component';
 import { FormsModule } from '@angular/forms';
 import { CommitmentType, ImmutableObjective } from '../objective';
-import { MaterialModule } from '../material/material.module';
 import { Assignment } from '../assignment';
 import { AssignSummPartsPipe } from './assign-summ-parts.pipe';
 
@@ -33,8 +32,7 @@ describe('ObjectiveComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ObjectiveComponent, AssignSummPartsPipe],
-        imports: [FormsModule, MaterialModule],
+        imports: [FormsModule, ObjectiveComponent, AssignSummPartsPipe],
       }).compileComponents();
     })
   );

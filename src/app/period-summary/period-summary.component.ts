@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2023 Google LLC
+ * Copyright 2019-2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ImmutablePeriod } from '../period';
 import { catchError } from 'rxjs/operators';
 import { combineLatest, of } from 'rxjs';
@@ -24,12 +24,25 @@ import { ImmutableTeam } from '../team';
 import { ImmutableBucket } from '../bucket';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { GroupSummaryComponent } from '../group-summary/group-summary.component';
+import { TagSummaryComponent } from '../tag-summary/tag-summary.component';
+import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.component';
 
 @Component({
   selector: 'app-period-summary',
   templateUrl: './period-summary.component.html',
   styleUrls: ['./period-summary.component.css'],
-  standalone: false,
+  imports: [
+    NgIf,
+    MatProgressSpinner,
+    RouterLink,
+    NgFor,
+    GroupSummaryComponent,
+    TagSummaryComponent,
+    BucketSummaryComponent,
+  ],
 })
 export class PeriodSummaryComponent implements OnInit {
   team?: ImmutableTeam;

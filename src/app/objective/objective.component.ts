@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Google LLC
+// Copyright 2019-2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,12 @@ import {
   AssignmentDialogData,
 } from '../assignment-dialog/assignment-dialog.component';
 import { ImmutableBucket } from '../bucket';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { PillComponent } from '../pill/pill.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { CsumClassPipe } from './csum-class.pipe';
+import { AssignSummPartsPipe } from './assign-summ-parts.pipe';
+import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
 
 @Component({
   selector: 'app-objective',
@@ -39,7 +45,16 @@ import { ImmutableBucket } from '../bucket';
   styleUrls: ['./objective.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    NgIf,
+    PillComponent,
+    MatTooltip,
+    NgFor,
+    NgClass,
+    CsumClassPipe,
+    AssignSummPartsPipe,
+    MarkdownifyPipe,
+  ],
 })
 export class ObjectiveComponent {
   @Input() objective?: ImmutableObjective;

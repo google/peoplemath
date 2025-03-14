@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
+import { NgIf, NgFor, DecimalPipe, PercentPipe } from '@angular/common';
 
 @Component({
   selector: 'app-resource-quantity',
@@ -23,7 +24,7 @@ import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
   styleUrls: ['./resource-quantity.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [NgIf, NgFor, DecimalPipe, PercentPipe],
 })
 export class ResourceQuantityComponent {
   @Input() quantity?: number;

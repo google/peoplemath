@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,15 +26,42 @@ import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
 } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatFooterCellDef,
+  MatFooterCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatFooterRowDef,
+  MatFooterRow,
+} from '@angular/material/table';
 import {
   UntypedFormControl,
   ValidatorFn,
   AbstractControl,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { PercentPipe, NgIf } from '@angular/common';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 class PersonData {
   constructor(
@@ -56,7 +83,28 @@ class PersonData {
   styleUrls: ['./people.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatFooterCellDef,
+    MatFooterCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatFooterRowDef,
+    MatFooterRow,
+    MatButton,
+    PercentPipe,
+  ],
 })
 export class PeopleComponent {
   @Input() people?: readonly ImmutablePerson[];
@@ -249,7 +297,19 @@ export interface EditPersonDialogData {
 @Component({
   selector: 'app-edit-person-dialog',
   templateUrl: 'edit-person-dialog.html',
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    FormsModule,
+    CdkScrollable,
+    MatDialogContent,
+    NgIf,
+    MatFormField,
+    MatInput,
+    ReactiveFormsModule,
+    MatError,
+    MatDialogActions,
+    MatButton,
+  ],
 })
 export class EditPersonDialogComponent {
   userIdControl: UntypedFormControl;

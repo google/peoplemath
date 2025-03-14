@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020-2021, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TagSummaryComponent } from './tag-summary.component';
 import { Period, ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 describe('TagSummaryComponent', () => {
@@ -39,8 +38,7 @@ describe('TagSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TagSummaryComponent, ResourceQuantityComponent],
-        imports: [MaterialModule],
+        imports: [TagSummaryComponent, ResourceQuantityComponent],
       }).compileComponents();
     })
   );

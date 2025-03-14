@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Google LLC
+// Copyright 2019-2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,14 @@ import {
   EditBucketDialogComponent,
   EditBucketDialogData,
 } from '../edit-bucket-dialog/edit-bucket-dialog.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  CdkDropList,
+  CdkDrag,
+  CdkDragPlaceholder,
+  CdkDragHandle,
+} from '@angular/cdk/drag-drop';
 import { ObjectiveComponent } from '../objective/objective.component';
 import { DisplayObjectivesPipe } from './displayobjectives.pipe';
 import { GroupblocksPipe } from './groupblocks.pipe';
@@ -44,6 +51,23 @@ import {
 } from '../edit-block-dialog/edit-block-dialog.component';
 import { BlockplaceholdersPipe } from './blockplaceholders.pipe';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent,
+} from '@angular/material/card';
+import {
+  NgIf,
+  NgFor,
+  NgTemplateOutlet,
+  DecimalPipe,
+  PercentPipe,
+} from '@angular/common';
+import { MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
 
 @Component({
   selector: 'app-bucket',
@@ -52,7 +76,29 @@ import { v4 as uuidv4 } from 'uuid';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  imports: [
+    MatCard,
+    NgIf,
+    MatMiniFabButton,
+    MatIcon,
+    MatCardHeader,
+    MatCardTitle,
+    BucketAllocLimitComponent,
+    MatCardSubtitle,
+    MatCardContent,
+    NgFor,
+    NgTemplateOutlet,
+    CdkDropList,
+    CdkDrag,
+    CdkDragPlaceholder,
+    CdkDragHandle,
+    ObjectiveComponent,
+    DecimalPipe,
+    PercentPipe,
+    DisplayObjectivesPipe,
+    GroupblocksPipe,
+    BlockplaceholdersPipe,
+  ],
 })
 export class BucketComponent {
   @Input() bucket?: ImmutableBucket;

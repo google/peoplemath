@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,18 @@
  */
 
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 export interface RenameClassDialogData {
   classType: string;
@@ -26,7 +37,16 @@ export interface RenameClassDialogData {
   selector: 'app-rename-class-dialog',
   templateUrl: './rename-class-dialog.component.html',
   styleUrls: ['./rename-class-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    MatDialogActions,
+    MatButton,
+  ],
 })
 export class RenameClassDialogComponent implements OnInit {
   newName = '';

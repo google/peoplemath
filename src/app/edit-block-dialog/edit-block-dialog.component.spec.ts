@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2023 Google LLC
+ * Copyright 2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MaterialModule } from '../material/material.module';
 import { ImmutableObjective } from '../objective';
 
 import {
@@ -44,8 +43,7 @@ describe('EditBlockDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditBlockDialogComponent],
-      imports: [MaterialModule, FormsModule],
+      imports: [FormsModule, EditBlockDialogComponent],
       providers: [
         { provide: MatDialogRef, useValue: dialogSpy },
         { provide: MAT_DIALOG_DATA, useValue: dialogData },

@@ -1,4 +1,4 @@
-// Copyright 2019, 2021-23 Google LLC
+// Copyright 2019, 2021-23, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,30 @@ import { ModalComponent } from './modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
+import {
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { MatToolbar } from '@angular/material/toolbar';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatButton, MatAnchor } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: false,
+  imports: [
+    MatSidenavContainer,
+    MatSidenavContent,
+    MatToolbar,
+    RouterLink,
+    NgIf,
+    MatButton,
+    MatAnchor,
+    RouterOutlet,
+    AsyncPipe,
+  ],
 })
 export class AppComponent {
   constructor(

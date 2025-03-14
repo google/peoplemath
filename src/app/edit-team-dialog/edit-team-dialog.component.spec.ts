@@ -1,4 +1,4 @@
-// Copyright 2019, 2021, 2023 Google LLC
+// Copyright 2019, 2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import {
   EditTeamDialogComponent,
   EditTeamDialogData,
 } from './edit-team-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Team } from '../team';
@@ -39,8 +38,11 @@ describe('EditTeamDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditTeamDialogComponent],
-        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        imports: [
+          FormsModule,
+          BrowserAnimationsModule,
+          EditTeamDialogComponent,
+        ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

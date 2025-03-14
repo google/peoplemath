@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2021, 2023 Google LLC
+ * Copyright 2019-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PeriodSummaryComponent } from './period-summary.component';
-import { MaterialModule } from '../material/material.module';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Team } from '../team';
@@ -73,13 +72,13 @@ describe('PeriodSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          RouterTestingModule,
           PeriodSummaryComponent,
           BucketSummaryComponent,
           ObjectiveSummaryComponent,
           ResourceQuantityComponent,
         ],
-        imports: [RouterTestingModule, MaterialModule],
         providers: [
           { provide: StorageService, useValue: storageServiceSpy },
           {

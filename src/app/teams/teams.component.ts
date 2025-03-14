@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Google LLC
+// Copyright 2019-2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +24,37 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import { MatNavList, MatListItem } from '@angular/material/list';
+import { RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
-  standalone: false,
+  imports: [
+    NgIf,
+    MatProgressSpinner,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatNavList,
+    NgFor,
+    MatListItem,
+    RouterLink,
+    MatCardActions,
+    MatButton,
+  ],
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];

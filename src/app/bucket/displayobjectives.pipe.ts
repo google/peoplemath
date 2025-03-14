@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2023 Google LLC
+ * Copyright 2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,7 @@ import { ImmutableObjective } from '../objective';
 /*
  * Pipe to compute cumulative sums of effort estimates.
  */
-@Pipe({
-  name: 'displayObjectives',
-  standalone: false,
-})
+@Pipe({ name: 'displayObjectives' })
 export class DisplayObjectivesPipe implements PipeTransform {
   transform(
     objectives: readonly ImmutableObjective[],

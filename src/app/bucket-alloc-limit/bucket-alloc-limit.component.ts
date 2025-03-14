@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 
 import { Component, Input } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-bucket-alloc-limit',
   templateUrl: './bucket-alloc-limit.component.html',
   styleUrls: ['./bucket-alloc-limit.component.css'],
-  standalone: false,
+  imports: [NgIf, MatTooltip, DecimalPipe],
 })
 export class BucketAllocLimitComponent {
   @Input() hasError?: boolean;

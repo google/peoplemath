@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
+import { NgIf } from '@angular/common';
+import { PillComponent } from '../pill/pill.component';
+import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
 
 @Component({
   selector: 'app-assignment',
@@ -23,7 +26,7 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   styleUrls: ['./assignment.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [NgIf, PillComponent, MarkdownifyPipe],
 })
 export class AssignmentComponent {
   @Input() objective?: ImmutableObjective;

@@ -1,4 +1,4 @@
-// Copyright 2019, 2021-22, 2025 Google LLC
+// Copyright 2019, 2021-22, 2025, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { StorageService } from './storage.service';
-import { MaterialModule } from './material/material.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { firebaseConfig } from '../environments/firebaseConfig';
@@ -29,12 +28,11 @@ class RouterOutletStubComponent {}
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
       imports: [
-        MaterialModule,
         AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
         AngularFireAuthModule,
         RouterOutletStubComponent,
+        AppComponent,
       ],
       providers: [StorageService, provideRouter([])],
     }).compileComponents();

@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,25 @@
 // limitations under the License.
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { Period, ImmutablePeriod } from '../period';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { NgIf, NgFor } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
 
 export enum CreateMethod {
   Blank = 'blank',
@@ -37,7 +54,25 @@ export interface AddPeriodDialogData {
   selector: 'app-add-period-dialog',
   templateUrl: './add-period-dialog.component.html',
   styleUrls: ['./add-period-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    NgIf,
+    MatSelect,
+    NgFor,
+    MatOption,
+    MatCheckbox,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+  ],
 })
 export class AddPeriodDialogComponent {
   // I'd like to switch this to use reactive forms so you can use validations,

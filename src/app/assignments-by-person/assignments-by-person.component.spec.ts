@@ -1,4 +1,4 @@
-// Copyright 2019-2021 Google LLC
+// Copyright 2019-2021, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AssignmentsByPersonComponent } from './assignments-by-person.component';
 import { ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 
 describe('AssignmentsByPersonComponent', () => {
   let component: AssignmentsByPersonComponent;
@@ -24,10 +23,7 @@ describe('AssignmentsByPersonComponent', () => {
 
   beforeEach(
     waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [AssignmentsByPersonComponent],
-        imports: [MaterialModule],
-      }).compileComponents();
+      TestBed.configureTestingModule({}).compileComponents();
     })
   );
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BucketSummaryComponent } from './bucket-summary.component';
-import { MaterialModule } from '../material/material.module';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { Objective } from '../objective';
 import { Assignment } from '../assignment';
@@ -48,12 +47,11 @@ describe('BucketSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
           BucketSummaryComponent,
           ObjectiveSummaryComponent,
           ResourceQuantityComponent,
         ],
-        imports: [MaterialModule],
       }).compileComponents();
     })
   );

@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021, 2023 Google LLC
+ * Copyright 2020-2021, 2023, 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GroupSummaryComponent } from './group-summary.component';
 import { Period, ImmutablePeriod } from '../period';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 import { AllocationType } from '../bucket';
@@ -49,8 +48,11 @@ describe('GroupSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [GroupSummaryComponent, ResourceQuantityComponent],
-        imports: [MaterialModule, FormsModule],
+        imports: [
+          FormsModule,
+          GroupSummaryComponent,
+          ResourceQuantityComponent,
+        ],
       }).compileComponents();
     })
   );

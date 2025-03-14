@@ -1,4 +1,4 @@
-// Copyright 2019-2021, 2023 Google LLC
+// Copyright 2019-2021, 2023, 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import {
   AssignmentDialogComponent,
   AssignmentDialogData,
 } from './assignment-dialog.component';
-import { MaterialModule } from '../material/material.module';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommitmentType } from '../objective';
 
@@ -44,8 +43,6 @@ describe('AssignmentDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AssignmentDialogComponent],
-        imports: [MaterialModule],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
