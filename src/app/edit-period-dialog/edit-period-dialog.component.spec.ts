@@ -47,12 +47,12 @@ describe('EditPeriodDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditPeriodDialogComponent],
         imports: [
           MaterialModule,
           FormsModule,
           ReactiveFormsModule,
           BrowserAnimationsModule,
+          EditPeriodDialogComponent,
         ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },

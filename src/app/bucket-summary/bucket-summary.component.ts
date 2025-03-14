@@ -17,6 +17,14 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { NgIf, NgFor, PercentPipe } from '@angular/common';
+import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 
 @Component({
   selector: 'app-bucket-summary',
@@ -24,7 +32,16 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   styleUrls: ['./bucket-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    NgIf,
+    NgFor,
+    ObjectiveSummaryComponent,
+    PercentPipe,
+  ],
 })
 export class BucketSummaryComponent {
   @Input() bucket?: ImmutableBucket;

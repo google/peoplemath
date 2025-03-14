@@ -31,8 +31,7 @@ describe('TeamsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TeamsComponent],
-        imports: [RouterTestingModule, MaterialModule],
+        imports: [RouterTestingModule, MaterialModule, TeamsComponent],
         providers: [
           StorageService,
           provideHttpClient(withInterceptorsFromDi()),

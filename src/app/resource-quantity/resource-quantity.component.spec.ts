@@ -26,7 +26,7 @@ describe('ResourceQuantityComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ResourceQuantityComponent],
+        imports: [ResourceQuantityComponent],
       }).compileComponents();
     })
   );

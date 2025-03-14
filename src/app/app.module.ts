@@ -71,8 +71,18 @@ import { EditBlockDialogComponent } from './edit-block-dialog/edit-block-dialog.
 import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-limit.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    LayoutModule,
+    MaterialModule,
+    AngularFireModule.initializeApp(firebaseConfig.firebase),
+    AngularFireAuthModule,
     TeamsComponent,
     TeamPeriodsComponent,
     PeriodComponent,
@@ -107,18 +117,6 @@ import { BucketAllocLimitComponent } from './bucket-alloc-limit/bucket-alloc-lim
     BlockplaceholdersPipe,
     EditBlockDialogComponent,
     BucketAllocLimitComponent,
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    LayoutModule,
-    MaterialModule,
-    AngularFireModule.initializeApp(firebaseConfig.firebase),
-    AngularFireAuthModule,
   ],
   providers: [
     StorageService,

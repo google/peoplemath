@@ -45,8 +45,12 @@ describe('EditBucketDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditBucketDialogComponent],
-        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          BrowserAnimationsModule,
+          EditBucketDialogComponent,
+        ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

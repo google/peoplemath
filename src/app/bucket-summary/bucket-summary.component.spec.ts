@@ -48,12 +48,12 @@ describe('BucketSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          MaterialModule,
           BucketSummaryComponent,
           ObjectiveSummaryComponent,
           ResourceQuantityComponent,
         ],
-        imports: [MaterialModule],
       }).compileComponents();
     })
   );

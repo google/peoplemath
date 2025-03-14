@@ -25,8 +25,7 @@ describe('AssignmentsByPersonComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AssignmentsByPersonComponent],
-        imports: [MaterialModule],
+        imports: [MaterialModule, AssignmentsByPersonComponent],
       }).compileComponents();
     })
   );

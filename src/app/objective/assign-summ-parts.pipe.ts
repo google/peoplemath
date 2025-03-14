@@ -17,10 +17,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ImmutableAssignment } from '../assignment';
 
-@Pipe({
-  name: 'assignSummParts',
-  standalone: false,
-})
+@Pipe({ name: 'assignSummParts' })
 export class AssignSummPartsPipe implements PipeTransform {
   transform(assignments?: readonly ImmutableAssignment[]): [string, number][] {
     return assignments === undefined

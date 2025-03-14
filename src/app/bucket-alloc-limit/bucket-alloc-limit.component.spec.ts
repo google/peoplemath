@@ -31,7 +31,7 @@ describe('BucketAllocLimitComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BucketAllocLimitComponent],
+      imports: [BucketAllocLimitComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BucketAllocLimitComponent);

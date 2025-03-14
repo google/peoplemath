@@ -13,8 +13,29 @@
 // limitations under the License.
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { Objective } from '../objective';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
 
 export interface PersonAssignmentData {
   username: string;
@@ -33,7 +54,24 @@ export interface AssignmentDialogData {
   selector: 'app-assignment-dialog',
   templateUrl: './assignment-dialog.component.html',
   styleUrls: ['./assignment-dialog.component.css'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatButton,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatDialogActions,
+    MatDialogClose,
+  ],
 })
 export class AssignmentDialogComponent {
   constructor(

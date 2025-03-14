@@ -30,7 +30,6 @@ describe('LoginComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [LoginComponent],
         imports: [
           RouterTestingModule.withRoutes([]),
           AngularFireModule.initializeApp(
@@ -39,6 +38,7 @@ describe('LoginComponent', () => {
           ),
           AngularFireAuthModule,
           MaterialModule,
+          LoginComponent,
         ],
       }).compileComponents();
     })

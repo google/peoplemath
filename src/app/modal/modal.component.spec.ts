@@ -27,8 +27,7 @@ describe('ModalComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ModalComponent],
-        imports: [MaterialModule],
+        imports: [MaterialModule, ModalComponent],
         providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
       }).compileComponents();
     })

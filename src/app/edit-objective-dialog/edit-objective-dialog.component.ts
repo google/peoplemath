@@ -18,7 +18,13 @@ import {
   Inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import {
   CommitmentType,
   ObjectiveGroup,
@@ -28,6 +34,18 @@ import {
 } from '../objective';
 import { ImmutableBucket } from '../bucket';
 import { Assignment } from '../assignment';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIconAnchor, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
 
 export interface EditedObjective {
   name: string;
@@ -128,7 +146,28 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   templateUrl: './edit-objective-dialog.component.html',
   styleUrls: ['./edit-objective-dialog.component.css'],
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatCheckbox,
+    MatIconAnchor,
+    MatIcon,
+    NgIf,
+    MatSelect,
+    MatOption,
+    MatDialogActions,
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    NgFor,
+    MarkdownifyPipe,
+  ],
 })
 export class EditObjectiveDialogComponent {
   constructor(

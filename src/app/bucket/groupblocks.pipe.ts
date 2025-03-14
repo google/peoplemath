@@ -17,10 +17,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DisplayObjective } from './bucket.component';
 
-@Pipe({
-  name: 'groupBlocks',
-  standalone: false,
-})
+@Pipe({ name: 'groupBlocks' })
 export class GroupblocksPipe implements PipeTransform {
   transform(
     objectives: readonly DisplayObjective[],

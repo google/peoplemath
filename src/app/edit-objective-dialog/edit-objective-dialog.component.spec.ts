@@ -67,8 +67,12 @@ describe('EditObjectiveDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditObjectiveDialogComponent],
-        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          BrowserAnimationsModule,
+          EditObjectiveDialogComponent,
+        ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

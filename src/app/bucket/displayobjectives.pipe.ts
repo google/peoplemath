@@ -21,10 +21,7 @@ import { ImmutableObjective } from '../objective';
 /*
  * Pipe to compute cumulative sums of effort estimates.
  */
-@Pipe({
-  name: 'displayObjectives',
-  standalone: false,
-})
+@Pipe({ name: 'displayObjectives' })
 export class DisplayObjectivesPipe implements PipeTransform {
   transform(
     objectives: readonly ImmutableObjective[],

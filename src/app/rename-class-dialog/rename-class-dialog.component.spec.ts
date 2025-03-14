@@ -37,8 +37,12 @@ describe('RenameClassDialog', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [RenameClassDialogComponent],
-        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          BrowserAnimationsModule,
+          RenameClassDialogComponent,
+        ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

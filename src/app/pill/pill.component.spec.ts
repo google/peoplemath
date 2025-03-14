@@ -25,7 +25,7 @@ describe('PillComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PillComponent],
+        imports: [PillComponent],
       }).compileComponents();
     })
   );

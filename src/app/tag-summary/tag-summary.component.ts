@@ -17,6 +17,15 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { NgFor } from '@angular/common';
+import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 @Component({
   selector: 'app-tag-summary',
@@ -24,7 +33,15 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   styleUrls: ['./tag-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    NgFor,
+    ObjectiveSummaryComponent,
+    ResourceQuantityComponent,
+  ],
 })
 export class TagSummaryComponent {
   @Input() period?: ImmutablePeriod;

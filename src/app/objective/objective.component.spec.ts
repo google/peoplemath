@@ -33,8 +33,12 @@ describe('ObjectiveComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ObjectiveComponent, AssignSummPartsPipe],
-        imports: [FormsModule, MaterialModule],
+        imports: [
+          FormsModule,
+          MaterialModule,
+          ObjectiveComponent,
+          AssignSummPartsPipe,
+        ],
       }).compileComponents();
     })
   );

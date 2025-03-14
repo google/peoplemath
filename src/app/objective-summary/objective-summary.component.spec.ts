@@ -27,7 +27,7 @@ describe('ObjectiveSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ObjectiveSummaryComponent, ResourceQuantityComponent],
+        imports: [ObjectiveSummaryComponent, ResourceQuantityComponent],
       }).compileComponents();
     })
   );

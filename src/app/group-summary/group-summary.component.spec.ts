@@ -49,8 +49,12 @@ describe('GroupSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [GroupSummaryComponent, ResourceQuantityComponent],
-        imports: [MaterialModule, FormsModule],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          GroupSummaryComponent,
+          ResourceQuantityComponent,
+        ],
       }).compileComponents();
     })
   );

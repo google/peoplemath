@@ -31,8 +31,11 @@ describe('AssignmentsClassifyComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AssignmentsClassifyComponent, ResourceQuantityComponent],
-        imports: [MaterialModule],
+        imports: [
+          MaterialModule,
+          AssignmentsClassifyComponent,
+          ResourceQuantityComponent,
+        ],
       }).compileComponents();
     })
   );

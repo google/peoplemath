@@ -44,8 +44,7 @@ describe('EditBlockDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditBlockDialogComponent],
-      imports: [MaterialModule, FormsModule],
+      imports: [MaterialModule, FormsModule, EditBlockDialogComponent],
       providers: [
         { provide: MatDialogRef, useValue: dialogSpy },
         { provide: MAT_DIALOG_DATA, useValue: dialogData },

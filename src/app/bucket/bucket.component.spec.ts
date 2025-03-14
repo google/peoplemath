@@ -29,13 +29,14 @@ describe('BucketComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          FormsModule,
+          MaterialModule,
           BucketComponent,
           ObjectiveComponent,
           BucketAllocLimitComponent,
           DisplayObjectivesPipe,
         ],
-        imports: [FormsModule, MaterialModule],
         providers: [],
       }).compileComponents();
     })

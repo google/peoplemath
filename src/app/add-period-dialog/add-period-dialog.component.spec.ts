@@ -54,8 +54,12 @@ describe('AddPeriodDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AddPeriodDialogComponent],
-        imports: [MaterialModule, FormsModule, BrowserAnimationsModule],
+        imports: [
+          MaterialModule,
+          FormsModule,
+          BrowserAnimationsModule,
+          AddPeriodDialogComponent,
+        ],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

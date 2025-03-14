@@ -39,8 +39,11 @@ describe('TagSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TagSummaryComponent, ResourceQuantityComponent],
-        imports: [MaterialModule],
+        imports: [
+          MaterialModule,
+          TagSummaryComponent,
+          ResourceQuantityComponent,
+        ],
       }).compileComponents();
     })
   );

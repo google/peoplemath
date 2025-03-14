@@ -27,8 +27,12 @@ describe('PeopleComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PeopleComponent],
-        imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
+        imports: [
+          FormsModule,
+          MaterialModule,
+          BrowserAnimationsModule,
+          PeopleComponent,
+        ],
       }).compileComponents();
     })
   );

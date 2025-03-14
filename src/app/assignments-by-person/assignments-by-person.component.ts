@@ -25,6 +25,14 @@ import { ImmutableAssignment } from '../assignment';
 import { ImmutablePerson } from '../person';
 import { ImmutableBucket } from '../bucket';
 import { MatDialog } from '@angular/material/dialog';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { NgFor, NgIf } from '@angular/common';
+import { AssignmentComponent } from '../assignment/assignment.component';
 
 @Component({
   selector: 'app-assignments-by-person',
@@ -32,7 +40,15 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./assignments-by-person.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    NgFor,
+    NgIf,
+    AssignmentComponent,
+  ],
 })
 export class AssignmentsByPersonComponent {
   @Input() period?: ImmutablePeriod;

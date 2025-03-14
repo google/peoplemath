@@ -18,6 +18,17 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableBucket } from '../bucket';
 import { ImmutableObjective, totalResourcesAllocated } from '../objective';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
+import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
+import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
 @Component({
   selector: 'app-group-summary',
@@ -25,7 +36,18 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   styleUrls: ['./group-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatSlideToggle,
+    FormsModule,
+    NgIf,
+    NgFor,
+    ObjectiveSummaryComponent,
+    ResourceQuantityComponent,
+  ],
 })
 export class GroupSummaryComponent {
   @Input() period?: ImmutablePeriod;

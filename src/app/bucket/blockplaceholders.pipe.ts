@@ -22,10 +22,7 @@ import { DisplayObjective } from './bucket.component';
 /*
  * Pipe to replace each block with a placeholder objective
  */
-@Pipe({
-  name: 'blockPlaceholders',
-  standalone: false,
-})
+@Pipe({ name: 'blockPlaceholders' })
 export class BlockplaceholdersPipe implements PipeTransform {
   transform(
     objectiveBlocks: DisplayObjective[][],

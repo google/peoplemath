@@ -44,8 +44,7 @@ describe('AssignmentDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AssignmentDialogComponent],
-        imports: [MaterialModule],
+        imports: [MaterialModule, AssignmentDialogComponent],
         providers: [
           { provide: MatDialogRef, useValue: dialogSpy },
           { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },

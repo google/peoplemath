@@ -18,10 +18,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import * as domPurify from 'dompurify';
 import snarkdown from 'snarkdown';
 
-@Pipe({
-  name: 'markdownify',
-  standalone: false,
-})
+@Pipe({ name: 'markdownify' })
 export class MarkdownifyPipe implements PipeTransform {
   transform(markdown?: string, mode?: string): string {
     if (markdown === undefined) {

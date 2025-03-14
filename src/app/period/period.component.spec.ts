@@ -72,7 +72,16 @@ describe('PeriodComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          RouterTestingModule,
+          FormsModule,
+          MaterialModule,
+          BrowserAnimationsModule,
+          AngularFireModule.initializeApp(
+            firebaseConfig.firebase,
+            'firebaseApp'
+          ),
+          AngularFireAuthModule,
           PeriodComponent,
           BucketComponent,
           BucketAllocLimitComponent,
@@ -84,17 +93,6 @@ describe('PeriodComponent', () => {
           DisplayObjectivesPipe,
           CsumClassPipe,
           AssignSummPartsPipe,
-        ],
-        imports: [
-          RouterTestingModule,
-          FormsModule,
-          MaterialModule,
-          BrowserAnimationsModule,
-          AngularFireModule.initializeApp(
-            firebaseConfig.firebase,
-            'firebaseApp'
-          ),
-          AngularFireAuthModule,
         ],
         providers: [
           { provide: StorageService, useValue: storageServiceSpy },

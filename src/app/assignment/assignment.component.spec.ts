@@ -27,8 +27,7 @@ describe('AssignmentComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AssignmentComponent],
-        imports: [MaterialModule],
+        imports: [MaterialModule, AssignmentComponent],
       }).compileComponents();
     })
   );

@@ -24,12 +24,37 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import { MatNavList, MatListItem } from '@angular/material/list';
+import { RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
-  standalone: false,
+  imports: [
+    NgIf,
+    MatProgressSpinner,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatNavList,
+    NgFor,
+    MatListItem,
+    RouterLink,
+    MatCardActions,
+    MatButton,
+  ],
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];

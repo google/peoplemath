@@ -69,7 +69,6 @@ describe('TeamPeriodsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TeamPeriodsComponent],
         imports: [
           RouterTestingModule,
           MaterialModule,
@@ -78,6 +77,7 @@ describe('TeamPeriodsComponent', () => {
             'firebaseApp'
           ),
           AngularFireAuthModule,
+          TeamPeriodsComponent,
         ],
         providers: [
           { provide: StorageService, useValue: storageServiceSpy },

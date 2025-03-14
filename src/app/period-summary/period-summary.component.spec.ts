@@ -73,13 +73,14 @@ describe('PeriodSummaryComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
+        imports: [
+          RouterTestingModule,
+          MaterialModule,
           PeriodSummaryComponent,
           BucketSummaryComponent,
           ObjectiveSummaryComponent,
           ResourceQuantityComponent,
         ],
-        imports: [RouterTestingModule, MaterialModule],
         providers: [
           { provide: StorageService, useValue: storageServiceSpy },
           {

@@ -16,10 +16,7 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'csumClass',
-  standalone: false,
-})
+@Pipe({ name: 'csumClass' })
 export class CsumClassPipe implements PipeTransform {
   transform(
     cumulativeSum: number,
