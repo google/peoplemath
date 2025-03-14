@@ -37,6 +37,7 @@ export interface EditBlockInstruction {
   selector: 'app-edit-block-dialog',
   templateUrl: './edit-block-dialog.component.html',
   styleUrls: ['./edit-block-dialog.component.css'],
+  standalone: false,
 })
 export class EditBlockDialogComponent {
   selected: string[] = [];

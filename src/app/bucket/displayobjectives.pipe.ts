@@ -23,6 +23,7 @@ import { ImmutableObjective } from '../objective';
  */
 @Pipe({
   name: 'displayObjectives',
+  standalone: false,
 })
 export class DisplayObjectivesPipe implements PipeTransform {
   transform(

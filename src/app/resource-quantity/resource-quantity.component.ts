@@ -23,6 +23,7 @@ import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
   styleUrls: ['./resource-quantity.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceQuantityComponent {
   @Input() quantity?: number;

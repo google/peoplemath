@@ -38,6 +38,7 @@ module.exports = tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-shadow': 'error',
+      '@angular-eslint/prefer-standalone': 'off',
     },
   },
   {

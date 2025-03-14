@@ -26,6 +26,7 @@ export interface RenameClassDialogData {
   selector: 'app-rename-class-dialog',
   templateUrl: './rename-class-dialog.component.html',
   styleUrls: ['./rename-class-dialog.component.css'],
+  standalone: false,
 })
 export class RenameClassDialogComponent implements OnInit {
   newName = '';

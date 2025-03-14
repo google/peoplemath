@@ -29,6 +29,7 @@ import { PageTitleService } from '../services/pagetitle.service';
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
+  standalone: false,
 })
 export class TeamsComponent implements OnInit {
   teams?: readonly ImmutableTeam[];

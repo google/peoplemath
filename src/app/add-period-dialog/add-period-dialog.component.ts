@@ -37,6 +37,7 @@ export interface AddPeriodDialogData {
   selector: 'app-add-period-dialog',
   templateUrl: './add-period-dialog.component.html',
   styleUrls: ['./add-period-dialog.component.css'],
+  standalone: false,
 })
 export class AddPeriodDialogComponent {
   // I'd like to switch this to use reactive forms so you can use validations,

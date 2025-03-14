@@ -28,6 +28,7 @@ export interface EditTeamDialogData {
   selector: 'app-edit-team-dialog',
   templateUrl: './edit-team-dialog.component.html',
   styleUrls: ['./edit-team-dialog.component.css'],
+  standalone: false,
 })
 export class EditTeamDialogComponent {
   constructor(

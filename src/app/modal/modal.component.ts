@@ -21,6 +21,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css'],
+  standalone: false,
 })
 export class ModalComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: string) {}

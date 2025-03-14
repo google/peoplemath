@@ -33,6 +33,7 @@ export interface AssignmentDialogData {
   selector: 'app-assignment-dialog',
   templateUrl: './assignment-dialog.component.html',
   styleUrls: ['./assignment-dialog.component.css'],
+  standalone: false,
 })
 export class AssignmentDialogComponent {
   constructor(

@@ -52,6 +52,7 @@ import { PageTitleService } from '../services/pagetitle.service';
   // Requires manual change detection to be called whenever we change a member without a DOM event
   // This is ugly but it seems to make a HUGE performance difference
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PeriodComponent implements OnInit {
   team?: ImmutableTeam;

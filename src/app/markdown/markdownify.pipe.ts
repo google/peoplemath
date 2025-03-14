@@ -20,6 +20,7 @@ import snarkdown from 'snarkdown';
 
 @Pipe({
   name: 'markdownify',
+  standalone: false,
 })
 export class MarkdownifyPipe implements PipeTransform {
   transform(markdown?: string, mode?: string): string {

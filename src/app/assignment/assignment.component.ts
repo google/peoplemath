@@ -23,6 +23,7 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   styleUrls: ['./assignment.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AssignmentComponent {
   @Input() objective?: ImmutableObjective;

@@ -39,6 +39,7 @@ import { ImmutableBucket } from '../bucket';
   styleUrls: ['./objective.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ObjectiveComponent {
   @Input() objective?: ImmutableObjective;

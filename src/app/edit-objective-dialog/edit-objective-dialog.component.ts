@@ -128,6 +128,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   templateUrl: './edit-objective-dialog.component.html',
   styleUrls: ['./edit-objective-dialog.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class EditObjectiveDialogComponent {
   constructor(

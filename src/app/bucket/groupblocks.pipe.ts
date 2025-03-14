@@ -19,6 +19,7 @@ import { DisplayObjective } from './bucket.component';
 
 @Pipe({
   name: 'groupBlocks',
+  standalone: false,
 })
 export class GroupblocksPipe implements PipeTransform {
   transform(

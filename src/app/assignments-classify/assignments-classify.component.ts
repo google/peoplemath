@@ -47,6 +47,7 @@ export enum AggregateBy {
   styleUrls: ['./assignments-classify.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
   @Input() period?: ImmutablePeriod;

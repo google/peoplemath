@@ -52,6 +52,7 @@ import { v4 as uuidv4 } from 'uuid';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class BucketComponent {
   @Input() bucket?: ImmutableBucket;

@@ -24,6 +24,7 @@ import { CommitmentType, ImmutableObjective } from '../objective';
   styleUrls: ['./bucket-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BucketSummaryComponent {
   @Input() bucket?: ImmutableBucket;

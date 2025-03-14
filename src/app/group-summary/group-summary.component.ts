@@ -25,6 +25,7 @@ import { ImmutableObjective, totalResourcesAllocated } from '../objective';
   styleUrls: ['./group-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GroupSummaryComponent {
   @Input() period?: ImmutablePeriod;

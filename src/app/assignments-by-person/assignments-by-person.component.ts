@@ -32,6 +32,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./assignments-by-person.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AssignmentsByPersonComponent {
   @Input() period?: ImmutablePeriod;

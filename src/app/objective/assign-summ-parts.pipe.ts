@@ -19,6 +19,7 @@ import { ImmutableAssignment } from '../assignment';
 
 @Pipe({
   name: 'assignSummParts',
+  standalone: false,
 })
 export class AssignSummPartsPipe implements PipeTransform {
   transform(assignments?: readonly ImmutableAssignment[]): [string, number][] {
