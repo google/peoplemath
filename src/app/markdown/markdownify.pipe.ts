@@ -15,7 +15,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import * as domPurify from 'dompurify';
+import domPurify from 'dompurify';
 import snarkdown from 'snarkdown';
 
 @Pipe({ name: 'markdownify' })

@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { NotificationService } from './services/notification.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ModalComponent } from './modal/modal.component';
-import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
 import {
@@ -26,8 +22,8 @@ import {
 } from '@angular/material/sidenav';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { NgIf, AsyncPipe } from '@angular/common';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -38,28 +34,18 @@ import { MatButton, MatAnchor } from '@angular/material/button';
     MatSidenavContent,
     MatToolbar,
     RouterLink,
-    NgIf,
     MatButton,
     MatAnchor,
     RouterOutlet,
-    AsyncPipe,
   ],
 })
 export class AppComponent {
-  constructor(
-    public auth: AuthService,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private titleService: Title,
-    private pageTitleService: PageTitleService
-  ) {
-    this.notificationService.notification$.subscribe((message) => {
-      this.snackBar.open(message, '', { duration: 2000 });
-    });
-    this.notificationService.error$.subscribe((message) => {
-      this.dialog.open(ModalComponent, { data: message });
-    });
+  private titleService = inject(Title);
+  private pageTitleService = inject(PageTitleService);
+  public auth = inject(AuthService);
+  public user = toSignal(this.auth.user$);
+
+  constructor() {
     this.pageTitleService.title$.subscribe((title) =>
       this.titleService.setTitle(title)
     );
