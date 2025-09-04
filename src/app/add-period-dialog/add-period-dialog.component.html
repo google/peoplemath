@@ -26,9 +26,7 @@
         }
       </mat-select>
     </mat-form-field>
-  }
 
-  @if (isCopy()) {
     <div class="checkboxes">
       <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Units and Limits</mat-checkbox>
       <mat-checkbox [(ngModel)]="data.copyPeople" class="selector-series">Copy People</mat-checkbox>
@@ -43,8 +41,6 @@
       <mat-label>Unit</mat-label>
       <input matInput [(ngModel)]="data.period.unit">
     </mat-form-field>
-  }
-  @if (isUnitRequired()) {
     <mat-form-field>
       <mat-label>Unit abbreviation</mat-label>
       <input matInput [(ngModel)]="data.period.unitAbbrev">

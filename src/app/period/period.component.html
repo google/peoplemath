@@ -1,6 +1,3 @@
-@if (!isLoaded()) {
-  <mat-spinner class="centered"></mat-spinner>
-}
 @if (isLoaded()) {
   <div class="grid-container">
     <div class="header">
@@ -20,8 +17,7 @@
         <button mat-fab (click)="toggleBlockEditing()" [color]="blockEditButtonColour()"><mat-icon>group_work</mat-icon></button>
         <button mat-fab (click)="toggleReordering()" [color]="reorderButtonColour()"><mat-icon>reorder</mat-icon></button>
         <button mat-fab (click)="disableEditing()" color="primary"><mat-icon>done</mat-icon></button>
-      }
-      @if (!isEditingEnabled) {
+      } @else {
         <button mat-fab [disabled]="!userHasEditPermissions" (click)="enableEditing()" color="primary"><mat-icon>edit</mat-icon></button>
       }
     </div>
@@ -86,4 +82,6 @@
       </div>
     </div>
   </div>
+} @else {
+    <mat-spinner class="centered"></mat-spinner>
 }

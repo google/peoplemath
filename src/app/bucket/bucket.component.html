@@ -2,8 +2,6 @@
   <div class="top-buttons">
     @if (showOrderButtons) {
       <button mat-mini-fab (click)="onMoveBucketUp()" color="primary"><mat-icon>arrow_upward</mat-icon></button>
-    }
-    @if (showOrderButtons) {
       <button mat-mini-fab (click)="onMoveBucketDown()" color="primary"><mat-icon>arrow_downward</mat-icon></button>
     }
     @if (isEditingEnabled) {
@@ -37,8 +35,6 @@
           </div>
         }
       </div>
-    }
-    @if (showOrderButtons) {
       <div class="objective-list" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
         @for (displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; track displayObjective; let isLast = $last; let idx = $index) {
           <div

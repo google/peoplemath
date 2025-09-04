@@ -1,1 +1,1 @@
-@if (isCommitted()) {<app-pill>C</app-pill>}@if (objective?.displayOptions?.enableMarkdown) {<span [innerHTML]="objective?.name | markdownify"></span>}@if (!objective?.displayOptions?.enableMarkdown) {<span>{{objective?.name}}</span>}: {{assignedResources}} {{unit}}
+@if (isCommitted()) {<app-pill>C</app-pill>}@if (objective?.displayOptions?.enableMarkdown) {<span [innerHTML]="objective?.name | markdownify"></span>}@else {<span>{{objective?.name}}</span>}: {{assignedResources}} {{unit}}

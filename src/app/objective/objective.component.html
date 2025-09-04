@@ -5,7 +5,7 @@
         <app-pill>C</app-pill>
         }@if (objective?.displayOptions?.enableMarkdown) {
         <span [innerHTML]="objective?.name | markdownify: (isEditingEnabled ? 'nolinks' : '')"></span>
-        }@if (!objective?.displayOptions?.enableMarkdown) {
+        }@else {
         <span>{{objective?.name}}</span>
       }
       <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>

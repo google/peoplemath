@@ -1,6 +1,3 @@
-@if (!isLoaded()) {
-  <mat-spinner class="centered" color="accent"></mat-spinner>
-}
 @if (isLoaded()) {
   <div class="grid-container">
     <mat-card appearance="outlined">
@@ -19,4 +16,6 @@
       </mat-card-actions>
     </mat-card>
   </div>
+} @else {
+    <mat-spinner class="centered" color="accent"></mat-spinner>
 }
