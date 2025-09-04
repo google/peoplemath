@@ -1,24 +1,29 @@
-<mat-spinner class="centered" *ngIf="!isLoaded()"></mat-spinner>
-<div *ngIf="isLoaded()" class="grid-container">
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>
-        {{team?.displayName}}: Periods
-        <button type="button" mat-icon-button aria-label="Edit Team" (click)="editTeam()">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-nav-list>
-        <a mat-list-item *ngFor="let period of sortedPeriods()" routerLink="/team/{{team!.id}}/period/{{period!.id}}">{{period?.displayName}}</a>
-      </mat-nav-list>
-    </mat-card-content>
-    <mat-card-actions>
-      <a routerLink="/teams" aria-label="Go back to the teams page" mat-icon-button>
-        <mat-icon>navigate_before</mat-icon>
-      </a>
-      <button mat-button [disabled]="!userHasEditPermissions" (click)="addPeriod()" color="primary">Add Period</button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+@if (isLoaded()) {
+  <div class="grid-container">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>
+          {{team?.displayName}}: Periods
+          <button type="button" mat-icon-button aria-label="Edit Team" (click)="editTeam()">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-nav-list>
+          @for (period of sortedPeriods(); track period) {
+            <a mat-list-item routerLink="/team/{{team!.id}}/period/{{period!.id}}">{{period?.displayName}}</a>
+          }
+        </mat-nav-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <a routerLink="/teams" aria-label="Go back to the teams page" mat-icon-button>
+          <mat-icon>navigate_before</mat-icon>
+        </a>
+        <button mat-button [disabled]="!userHasEditPermissions" (click)="addPeriod()" color="primary">Add Period</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+} @else {
+    <mat-spinner class="centered"></mat-spinner>
+}

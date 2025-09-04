@@ -1,61 +1,74 @@
 <mat-card appearance="outlined">
   <div class="top-buttons">
-    <button mat-mini-fab *ngIf="showOrderButtons" (click)="onMoveBucketUp()" color="primary"><mat-icon>arrow_upward</mat-icon></button>
-    <button mat-mini-fab *ngIf="showOrderButtons" (click)="onMoveBucketDown()" color="primary"><mat-icon>arrow_downward</mat-icon></button>
-    <button mat-mini-fab *ngIf="isEditingEnabled" (click)="addObjective()" color="primary" aria-label="Add objective"><mat-icon>add</mat-icon></button>
+    @if (showOrderButtons) {
+      <button mat-mini-fab (click)="onMoveBucketUp()" color="primary"><mat-icon>arrow_upward</mat-icon></button>
+      <button mat-mini-fab (click)="onMoveBucketDown()" color="primary"><mat-icon>arrow_downward</mat-icon></button>
+    }
+    @if (isEditingEnabled) {
+      <button mat-mini-fab (click)="addObjective()" color="primary" aria-label="Add objective"><mat-icon>add</mat-icon></button>
+    }
   </div>
-<mat-card-header>
-<mat-card-title>
-  <span (click)="edit()">{{bucket?.displayName}} (<app-bucket-alloc-limit
-    [hasError]="isOverOrUnderAllocated()"
-    [bucket]="bucket"
-    [percentOfTotal]="getAllocationPctOfTotal()"
-    [unit]="unitAbbrev"></app-bucket-alloc-limit>)</span>
-</mat-card-title>
-<mat-card-subtitle>
-  <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
-    {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
-  </span>
-  <span [class.warning]="isOverCommitted()">
-    ({{commitRatio() | percent}} committed)
-  </span>
-</mat-card-subtitle>
-</mat-card-header>
-<mat-card-content>
-<div *ngIf="!showOrderButtons" class="objective-list">
-  <div *ngFor="let displayObjective of bucket!.objectives | displayObjectives" class="objective-list-item">
-    <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
-    </ng-container>
-  </div>
-</div>
-<div *ngIf="showOrderButtons" class="objective-list" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
-  <div *ngFor="let displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; last as isLast; index as idx"
-      class="objective-list-item"
-      cdkDrag
-      [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']">
-    <div *cdkDragPlaceholder></div>
-    <mat-icon class="objective-button" cdkDragHandle>reorder</mat-icon>
-    <mat-icon *ngIf="isBlockEditingEnabled" (click)="editBlock(idx)" class="objective-button" [class.disabled-side-icon]="isLast && !displayObjective.objective.blockID">group_work</mat-icon>
-    <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
-    </ng-container>
-  </div>
-</div>
-</mat-card-content>
+  <mat-card-header>
+    <mat-card-title>
+      <span (click)="edit()">{{bucket?.displayName}} (<app-bucket-alloc-limit
+        [hasError]="isOverOrUnderAllocated()"
+        [bucket]="bucket"
+        [percentOfTotal]="getAllocationPctOfTotal()"
+      [unit]="unitAbbrev"></app-bucket-alloc-limit>)</span>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span [class.warning]="resourcesAllocated() > bucketAllocationLimit()">
+        {{resourcesAllocated()}} of {{bucketAllocationLimit() | number:'1.1-1'}} {{unit}}
+      </span>
+      <span [class.warning]="isOverCommitted()">
+        ({{commitRatio() | percent}} committed)
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    @if (!showOrderButtons) {
+      <div class="objective-list">
+        @for (displayObjective of bucket!.objectives | displayObjectives; track displayObjective) {
+          <div class="objective-list-item">
+            <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
+            </ng-container>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="objective-list" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
+        @for (displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; track displayObjective; let isLast = $last; let idx = $index) {
+          <div
+            class="objective-list-item"
+            cdkDrag
+            [cdkDragPreviewClass]="['cdk-drag-preview-app-bucket', 'mat-elevation-z1']">
+            <div *cdkDragPlaceholder></div>
+            <mat-icon class="objective-button" cdkDragHandle>reorder</mat-icon>
+            @if (isBlockEditingEnabled) {
+              <mat-icon (click)="editBlock(idx)" class="objective-button" [class.disabled-side-icon]="isLast && !displayObjective.objective.blockID">group_work</mat-icon>
+            }
+            <ng-container *ngTemplateOutlet="objective; context: {$implicit: displayObjective}">
+            </ng-container>
+          </div>
+        }
+      </div>
+    }
+  </mat-card-content>
 </mat-card>
 
 <!-- Reusable template for <app-objective> -->
 <ng-template #objective let-displayObjective>
   <app-objective
-      [objective]="displayObjective.objective"
-      [unit]="unit"
-      [unallocatedTime]="unallocatedTime"
-      [isEditingEnabled]="isEditingEnabled && !showOrderButtons"
-      [currentBucket]="bucket"
-      [otherBuckets]="otherBuckets"
-      [resourcesCumulativeSum]="displayObjective.cumulativeSum"
-      [bucketAllocationLimit]="bucketAllocationLimit()"
-      (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
-      (changed)="onObjectiveChanged($event[0], $event[1])"
-      (bucketChanged)="onBucketChanged($event[0], $event[1])">
+    [objective]="displayObjective.objective"
+    [unit]="unit"
+    [unallocatedTime]="unallocatedTime"
+    [isEditingEnabled]="isEditingEnabled && !showOrderButtons"
+    [currentBucket]="bucket"
+    [otherBuckets]="otherBuckets"
+    [resourcesCumulativeSum]="displayObjective.cumulativeSum"
+    [bucketAllocationLimit]="bucketAllocationLimit()"
+    (moveBucket)="moveObjective($event[0], $event[1], $event[2])"
+    (changed)="onObjectiveChanged($event[0], $event[1])"
+    (bucketChanged)="onBucketChanged($event[0], $event[1])">
   </app-objective>
 </ng-template>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogTitle,
@@ -39,5 +39,5 @@ import { MatButton } from '@angular/material/button';
   ],
 })
 export class ModalComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) {}
+  data = inject(MAT_DIALOG_DATA);
 }

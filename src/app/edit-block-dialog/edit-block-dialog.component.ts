@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -26,7 +26,7 @@ import { ImmutableObjective } from '../objective';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatSelectionList, MatListOption } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 export interface EditBlockDialogData {
@@ -54,23 +54,18 @@ export interface EditBlockInstruction {
     MatDialogContent,
     MatSelectionList,
     FormsModule,
-    NgFor,
     MatListOption,
     MatDialogActions,
     MatButton,
-    NgIf,
   ],
 })
 export class EditBlockDialogComponent {
-  selected: string[] = [];
+  dialogRef = inject<
+    MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>
+  >(MatDialogRef);
+  data = inject<EditBlockDialogData>(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<
-      EditBlockDialogComponent,
-      EditBlockInstruction
-    >,
-    @Inject(MAT_DIALOG_DATA) public data: EditBlockDialogData
-  ) {}
+  selected: string[] = [];
 
   createBlock(): void {
     if (this.selected.length === 0) {

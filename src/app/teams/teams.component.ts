@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Team, ImmutableTeam, TeamList } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   MatCard,
@@ -42,14 +42,12 @@ import { MatButton } from '@angular/material/button';
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
   imports: [
-    NgIf,
     MatProgressSpinner,
     MatCard,
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
     MatNavList,
-    NgFor,
     MatListItem,
     RouterLink,
     MatCardActions,
@@ -57,15 +55,13 @@ import { MatButton } from '@angular/material/button';
   ],
 })
 export class TeamsComponent implements OnInit {
+  private storage = inject(StorageService);
+  private dialog = inject(MatDialog);
+  private notification = inject(NotificationService);
+  private pageTitle = inject(PageTitleService);
+
   teams?: readonly ImmutableTeam[];
   addTeamDisabled = false;
-
-  constructor(
-    private storage: StorageService,
-    private dialog: MatDialog,
-    private notification: NotificationService,
-    private pageTitle: PageTitleService
-  ) {}
 
   ngOnInit(): void {
     this.loadData();

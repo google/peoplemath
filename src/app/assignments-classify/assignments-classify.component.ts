@@ -21,6 +21,7 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import {
@@ -41,7 +42,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgFor, NgIf } from '@angular/common';
+
 import { AssignmentComponent } from '../assignment/assignment.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -61,13 +62,13 @@ export enum AggregateBy {
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgFor,
-    NgIf,
     AssignmentComponent,
     ResourceQuantityComponent,
   ],
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
+  private dialog = inject(MatDialog);
+
   @Input() period?: ImmutablePeriod;
   @Input() aggregateBy?: AggregateBy;
   @Input() groupType?: string;
@@ -78,8 +79,6 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     [ImmutableBucket, ImmutableBucket]
   >();
   subscriptions: Subscription[] = [];
-
-  constructor(private dialog: MatDialog) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());

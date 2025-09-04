@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -23,7 +23,7 @@ import {
 } from '@angular/material/dialog';
 import { Team } from '../team';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf } from '@angular/common';
+
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +45,6 @@ export interface EditTeamDialogData {
     MatDialogTitle,
     CdkScrollable,
     MatDialogContent,
-    NgIf,
     MatFormField,
     MatInput,
     FormsModule,
@@ -55,10 +54,8 @@ export interface EditTeamDialogData {
   ],
 })
 export class EditTeamDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<EditTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTeamDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<EditTeamDialogComponent>>(MatDialogRef);
+  data = inject<EditTeamDialogData>(MAT_DIALOG_DATA);
 
   onCancel(): void {
     this.dialogRef.close();

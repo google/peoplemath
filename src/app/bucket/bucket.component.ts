@@ -19,6 +19,7 @@ import {
   Input,
   Output,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
@@ -58,13 +59,7 @@ import {
   MatCardSubtitle,
   MatCardContent,
 } from '@angular/material/card';
-import {
-  NgIf,
-  NgFor,
-  NgTemplateOutlet,
-  DecimalPipe,
-  PercentPipe,
-} from '@angular/common';
+import { NgTemplateOutlet, DecimalPipe, PercentPipe } from '@angular/common';
 import { MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
@@ -78,7 +73,6 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
   encapsulation: ViewEncapsulation.None,
   imports: [
     MatCard,
-    NgIf,
     MatMiniFabButton,
     MatIcon,
     MatCardHeader,
@@ -86,7 +80,6 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
     BucketAllocLimitComponent,
     MatCardSubtitle,
     MatCardContent,
-    NgFor,
     NgTemplateOutlet,
     CdkDropList,
     CdkDrag,
@@ -101,6 +94,8 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
   ],
 })
 export class BucketComponent {
+  dialog = inject(MatDialog);
+
   @Input() bucket?: ImmutableBucket;
   @Input() unit?: string;
   @Input() unitAbbrev?: string;
@@ -120,8 +115,6 @@ export class BucketComponent {
   >();
   @Output() changed = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() delete = new EventEmitter<ImmutableBucket>();
-
-  constructor(public dialog: MatDialog) {}
 
   /**
    * Limit of resources expected to be allocated to the given bucket in this period,

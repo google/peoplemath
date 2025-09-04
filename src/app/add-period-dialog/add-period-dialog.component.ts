@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -27,7 +27,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -64,9 +64,7 @@ export interface AddPeriodDialogData {
     FormsModule,
     MatRadioGroup,
     MatRadioButton,
-    NgIf,
     MatSelect,
-    NgFor,
     MatOption,
     MatCheckbox,
     MatDialogActions,
@@ -79,10 +77,9 @@ export class AddPeriodDialogComponent {
   // but then you lose the ability to disable controls via data-driven methods,
   // which seems like a net usability loss. :-(
   // https://github.com/angular/angular/issues/11271
-  constructor(
-    public dialogRef: MatDialogRef<AddPeriodDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
-  ) {}
+
+  dialogRef = inject<MatDialogRef<AddPeriodDialogComponent>>(MatDialogRef);
+  data = inject<AddPeriodDialogData>(MAT_DIALOG_DATA);
 
   onCancel(): void {
     this.dialogRef.close();

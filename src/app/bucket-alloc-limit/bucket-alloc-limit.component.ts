@@ -16,14 +16,14 @@
 
 import { Component, Input } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
-import { NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-bucket-alloc-limit',
   templateUrl: './bucket-alloc-limit.component.html',
   styleUrls: ['./bucket-alloc-limit.component.css'],
-  imports: [NgIf, MatTooltip, DecimalPipe],
+  imports: [MatTooltip, DecimalPipe],
 })
 export class BucketAllocLimitComponent {
   @Input() hasError?: boolean;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import {
   MatCard,
@@ -39,5 +39,5 @@ import { MatButton } from '@angular/material/button';
   ],
 })
 export class LoginComponent {
-  constructor(public authService: AuthService) {}
+  authService = inject(AuthService);
 }

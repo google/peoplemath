@@ -1,17 +1,23 @@
-<mat-spinner class="centered" *ngIf="!isLoaded()"></mat-spinner>
-<div *ngIf="isLoaded()" class="grid-container">
+@if (isLoaded()) {
+  <div class="grid-container">
     <h1 mat-h1>{{team?.displayName}} {{period?.displayName}} (<a routerLink="/team/{{team!.id}}/period/{{period!.id}}">Full report</a>)</h1>
-
     <div class="panels">
-        <app-group-summary *ngFor="let groupType of allGroupTypes()"
-            [period]="period" [groupType]="groupType"></app-group-summary>
-
-        <app-tag-summary *ngFor="let tag of allTags()"
-            [period]="period" [tag]="tag"></app-tag-summary>
-
-        <app-bucket-summary *ngFor="let bucket of period!.buckets"
-            [bucket]="bucket"
-            [bucketAllocationFraction]="bucketAllocationFraction(bucket)"
-            [unit]="period?.unit"></app-bucket-summary>
+      @for (groupType of allGroupTypes(); track groupType) {
+        <app-group-summary
+        [period]="period" [groupType]="groupType"></app-group-summary>
+      }
+      @for (tag of allTags(); track tag) {
+        <app-tag-summary
+        [period]="period" [tag]="tag"></app-tag-summary>
+      }
+      @for (bucket of period!.buckets; track bucket) {
+        <app-bucket-summary
+          [bucket]="bucket"
+          [bucketAllocationFraction]="bucketAllocationFraction(bucket)"
+        [unit]="period?.unit"></app-bucket-summary>
+      }
     </div>
-</div>
+  </div>
+} @else {
+    <mat-spinner class="centered"></mat-spinner>
+}

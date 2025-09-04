@@ -1,9 +1,15 @@
-<app-pill *ngIf="isCommittedAndFullyAllocated()">C</app-pill><span *ngIf="objective?.displayOptions?.enableMarkdown" [innerHTML]="objective?.name | markdownify"></span><span *ngIf="!objective?.displayOptions?.enableMarkdown">{{objective?.name}}</span>
+@if (isCommittedAndFullyAllocated()) {
+  <app-pill>C</app-pill>
+  }@if (objective?.displayOptions?.enableMarkdown) {
+  <span [innerHTML]="objective?.name | markdownify"></span>
+  }@else {
+  <span>{{objective?.name}}</span>
+}
 <span class="resources" [class.rejected]="isRejected()" [class.partialalloc]="isPartiallyAllocated()">
-    <app-resource-quantity
-        [quantity]="allocatedResources()"
-        [ofQuantity]="objective?.resourceEstimate"
-        [primaryUnit]="unit"
-        [secondaryUnits]="secondaryUnits"
-        [fraction]="fraction"></app-resource-quantity>
+  <app-resource-quantity
+    [quantity]="allocatedResources()"
+    [ofQuantity]="objective?.resourceEstimate"
+    [primaryUnit]="unit"
+    [secondaryUnits]="secondaryUnits"
+  [fraction]="fraction"></app-resource-quantity>
 </span>

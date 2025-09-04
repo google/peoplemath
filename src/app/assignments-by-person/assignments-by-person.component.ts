@@ -18,6 +18,7 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
+  inject,
 } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, editObjective } from '../objective';
@@ -31,7 +32,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgFor, NgIf } from '@angular/common';
+
 import { AssignmentComponent } from '../assignment/assignment.component';
 
 @Component({
@@ -45,19 +46,17 @@ import { AssignmentComponent } from '../assignment/assignment.component';
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgFor,
-    NgIf,
     AssignmentComponent,
   ],
 })
 export class AssignmentsByPersonComponent {
+  private dialog = inject(MatDialog);
+
   @Input() period?: ImmutablePeriod;
   @Input() isEditingEnabled?: boolean;
   @Output() bucketChanged = new EventEmitter<
     [ImmutableBucket, ImmutableBucket]
   >();
-
-  constructor(private dialog: MatDialog) {}
 
   hasAssignments(person: ImmutablePerson): boolean {
     for (const bucket of this.period!.buckets) {

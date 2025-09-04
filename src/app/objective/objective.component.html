@@ -1,19 +1,35 @@
 <div class="objective-all">
-<div class="objective">
-<span (click)="edit()" [class.unassigned]="!objective?.assignments?.length">
-    <app-pill *ngIf="isCommitted()">C</app-pill><span *ngIf="objective?.displayOptions?.enableMarkdown" [innerHTML]="objective?.name | markdownify: (isEditingEnabled ? 'nolinks' : '')"></span><span *ngIf="!objective?.displayOptions?.enableMarkdown">{{objective?.name}}</span>
-    <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>
-</span>
-<span *ngIf="objective?.notes" class="icons"><i (click)="edit()" matTooltip="{{objective?.notes}}" matTooltipShowDelay="200" matTooltipHideDelay="2000" class="material-icons notes-icon">note</i></span>
-<span (click)="assign()" class="assignments"
-    [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
-    [class.warning]="!isFullyAllocated()"
-    [class.error]="isOverAllocated()"><span *ngFor="let assignment of objective?.assignments | assignSummParts; last as isLast">{{assignment[0]}}:&nbsp;{{assignment[1]}}<span *ngIf="!isLast">, </span></span></span>
-<span *ngIf="showAssignButton()" class="assign-button"
-    [class.assign-button-enabled]="enableAssignButton()"
-    [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
-</div>
-<div *ngIf="resourcesCumulativeSum !== undefined && bucketAllocationLimit !== undefined && objective?.resourceEstimate !== undefined" class="resource-csum">
-    <span [ngClass]="resourcesCumulativeSum | csumClass: bucketAllocationLimit: objective?.resourceEstimate!">{{resourcesCumulativeSum}}</span>
-</div>
-</div>
+  <div class="objective">
+    <span (click)="edit()" [class.unassigned]="!objective?.assignments?.length">
+      @if (isCommitted()) {
+        <app-pill>C</app-pill>
+        }@if (objective?.displayOptions?.enableMarkdown) {
+        <span [innerHTML]="objective?.name | markdownify: (isEditingEnabled ? 'nolinks' : '')"></span>
+        }@else {
+        <span>{{objective?.name}}</span>
+      }
+      <span class="resource-estimate"> ({{objective?.resourceEstimate}} {{unit}})</span>
+    </span>
+    @if (objective?.notes) {
+      <span class="icons"><i (click)="edit()" matTooltip="{{objective?.notes}}" matTooltipShowDelay="200" matTooltipHideDelay="2000" class="material-icons notes-icon">note</i></span>
+    }
+    <span (click)="assign()" class="assignments"
+      [class.fully-allocated]="isFullyAllocated() && !isOverAllocated()"
+      [class.warning]="!isFullyAllocated()"
+      [class.error]="isOverAllocated()">@for (assignment of objective?.assignments | assignSummParts; track assignment; let isLast = $last) {
+      <span>{{assignment[0]}}:&nbsp;{{assignment[1]}}@if (!isLast) {
+        <span>, </span>
+      }</span>
+    }</span>
+    @if (showAssignButton()) {
+      <span class="assign-button"
+        [class.assign-button-enabled]="enableAssignButton()"
+        [class.assign-button-disabled]="!enableAssignButton()"><a (click)="assign()">Assign</a></span>
+      }
+    </div>
+    @if (resourcesCumulativeSum !== undefined && bucketAllocationLimit !== undefined && objective?.resourceEstimate !== undefined) {
+      <div class="resource-csum">
+        <span [ngClass]="resourcesCumulativeSum | csumClass: bucketAllocationLimit: objective?.resourceEstimate!">{{resourcesCumulativeSum}}</span>
+      </div>
+    }
+  </div>

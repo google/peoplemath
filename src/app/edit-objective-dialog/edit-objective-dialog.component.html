@@ -12,23 +12,25 @@
           Enable Markdown
         </mat-checkbox>
         <a mat-icon-button
-            href="https://guides.github.com/features/mastering-markdown/#examples"
-            target="_blank"
-            rel="noopener noreferrer">
+          href="https://guides.github.com/features/mastering-markdown/#examples"
+          target="_blank"
+          rel="noopener noreferrer">
           <mat-icon>help_outline</mat-icon>
         </a>
       </div>
     </div>
-    <div *ngIf="data.objective.displayOptions.enableMarkdown" class="markdown-preview">
-      Preview:
-      <p [innerHTML]="data.objective.name | markdownify"></p>
-    </div>
+    @if (data.objective.displayOptions.enableMarkdown) {
+      <div class="markdown-preview">
+        Preview:
+        <p [innerHTML]="data.objective.name | markdownify"></p>
+      </div>
+    }
     <div class="props-row">
       <mat-form-field appearance="fill" class="props-field">
         <mat-label>Commitment type</mat-label>
         <mat-select [(ngModel)]="data.objective.commitmentType">
-            <mat-option value="Aspirational">Aspirational</mat-option>
-            <mat-option value="Committed">Committed</mat-option>
+          <mat-option value="Aspirational">Aspirational</mat-option>
+          <mat-option value="Committed">Committed</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field hintLabel="({{data.unit}})" appearance="fill" class="props-field">
@@ -54,23 +56,29 @@
 </div>
 
 <div mat-dialog-actions>
-  <ng-container *ngIf="data.saveAction === 'new'">
+  @if (data.saveAction === 'new') {
     <button mat-raised-button (click)="onAddToTop()" [disabled]="!isDataValid()" color="primary">Add To Top</button>
     <button mat-raised-button (click)="onAddToBottom()" [disabled]="!isDataValid()" color="primary">Add To Bottom</button>
-  </ng-container>
-  <ng-container *ngIf="data.saveAction === 'edit'">
+  }
+  @if (data.saveAction === 'edit') {
     <button mat-raised-button (click)="onSaveExisting()" [disabled]="!isDataValid()" color="primary">Save</button>
     <button mat-button [matMenuTriggerFor]="moveBucketMenu">Move</button>
     <mat-menu #moveBucketMenu="matMenu">
       <button mat-menu-item (click)="moveToTopOfCurrentBucket()">Top of {{data.currentBucket.displayName}}</button>
       <button mat-menu-item (click)="moveToBottomOfCurrentBucket()">Bottom of {{data.currentBucket.displayName}}</button>
-      <button mat-menu-item *ngFor="let bucket of data.otherBuckets" (click)="onMove(bucket)">
-        {{bucket.displayName}}
-      </button>
+      @for (bucket of data.otherBuckets; track bucket) {
+        <button mat-menu-item (click)="onMove(bucket)">
+          {{bucket.displayName}}
+        </button>
+      }
     </mat-menu>
-  </ng-container>
+  }
   <button mat-button (click)="onCancel()" color="warn">Cancel</button>
-  <button *ngIf="data.saveAction === 'edit' && !showDeleteConfirm" mat-button (click)="onDelete()" color="warn">Delete</button>
-  <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onCancelDelete()">Cancel Delete</button>
-  <button *ngIf="showDeleteConfirm" mat-raised-button (click)="onConfirmDelete()" color="warn">Confirm Delete</button>
+  @if (data.saveAction === 'edit' && !showDeleteConfirm) {
+    <button mat-button (click)="onDelete()" color="warn">Delete</button>
+  }
+  @if (showDeleteConfirm) {
+    <button mat-raised-button (click)="onCancelDelete()">Cancel Delete</button>
+    <button mat-raised-button (click)="onConfirmDelete()" color="warn">Confirm Delete</button>
+  }
 </div>

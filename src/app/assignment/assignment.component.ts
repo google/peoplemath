@@ -16,7 +16,7 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
-import { NgIf } from '@angular/common';
+
 import { PillComponent } from '../pill/pill.component';
 import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
 
@@ -26,7 +26,7 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
   styleUrls: ['./assignment.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, PillComponent, MarkdownifyPipe],
+  imports: [PillComponent, MarkdownifyPipe],
 })
 export class AssignmentComponent {
   @Input() objective?: ImmutableObjective;

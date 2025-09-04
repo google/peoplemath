@@ -15,11 +15,11 @@
 import {
   Component,
   Input,
-  Inject,
   EventEmitter,
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import { Person, ImmutablePerson } from '../person';
 import {
@@ -58,7 +58,7 @@ import {
 } from '@angular/forms';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
-import { PercentPipe, NgIf } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -107,6 +107,8 @@ class PersonData {
   ],
 })
 export class PeopleComponent {
+  dialog = inject(MatDialog);
+
   @Input() people?: readonly ImmutablePerson[];
   @Input() peopleAllocations?: ReadonlyMap<string, number>;
   @Input() peopleCommittedAllocations?: ReadonlyMap<string, number>;
@@ -121,8 +123,6 @@ export class PeopleComponent {
   @Output() changed = new EventEmitter<[ImmutablePerson, ImmutablePerson]>();
   @Output() delete = new EventEmitter<ImmutablePerson>();
   @ViewChild(MatSort) sort?: MatSort;
-
-  constructor(public dialog: MatDialog) {}
 
   displayedColumns(): string[] {
     const columnLabels = ['personDesc'];
@@ -302,7 +302,6 @@ export interface EditPersonDialogData {
     FormsModule,
     CdkScrollable,
     MatDialogContent,
-    NgIf,
     MatFormField,
     MatInput,
     ReactiveFormsModule,
@@ -312,15 +311,17 @@ export interface EditPersonDialogData {
   ],
 })
 export class EditPersonDialogComponent {
+  dialogRef = inject<MatDialogRef<EditPersonDialogComponent>>(MatDialogRef);
+  data = inject<EditPersonDialogData>(MAT_DIALOG_DATA);
+
   userIdControl: UntypedFormControl;
   locationControl: UntypedFormControl;
   displayNameControl: UntypedFormControl;
   availabilityControl: UntypedFormControl;
 
-  constructor(
-    public dialogRef: MatDialogRef<EditPersonDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.userIdControl = new UntypedFormControl(data.person.id, [
       this.validateUserId,
       Validators.required,

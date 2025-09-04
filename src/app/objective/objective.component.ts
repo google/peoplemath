@@ -18,6 +18,7 @@ import {
   EventEmitter,
   Output,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import {
   CommitmentType,
@@ -32,7 +33,7 @@ import {
   AssignmentDialogData,
 } from '../assignment-dialog/assignment-dialog.component';
 import { ImmutableBucket } from '../bucket';
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { PillComponent } from '../pill/pill.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { CsumClassPipe } from './csum-class.pipe';
@@ -46,10 +47,8 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     PillComponent,
     MatTooltip,
-    NgFor,
     NgClass,
     CsumClassPipe,
     AssignSummPartsPipe,
@@ -57,6 +56,8 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
   ],
 })
 export class ObjectiveComponent {
+  dialog = inject(MatDialog);
+
   @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
@@ -74,8 +75,6 @@ export class ObjectiveComponent {
   @Output() bucketChanged = new EventEmitter<
     [ImmutableBucket, ImmutableBucket]
   >();
-
-  constructor(public dialog: MatDialog) {}
 
   hasPeopleAvailable(): boolean {
     return (

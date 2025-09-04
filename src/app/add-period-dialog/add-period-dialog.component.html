@@ -15,43 +15,51 @@
     <mat-radio-button value="copy" class="selector-series">Copy Existing Period</mat-radio-button>
   </mat-radio-group>
 
-  <mat-form-field *ngIf="isCopy()">
-    <mat-label>Copy from</mat-label>
-    <mat-select [(value)]="data.copyFromPeriodID">
-      <mat-option *ngFor="let period of data.existingPeriods" [value]="period.id">
-        {{period.displayName}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  @if (isCopy()) {
+    <mat-form-field>
+      <mat-label>Copy from</mat-label>
+      <mat-select [(value)]="data.copyFromPeriodID">
+        @for (period of data.existingPeriods; track period) {
+          <mat-option [value]="period.id">
+            {{period.displayName}}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-  <div class="checkboxes" *ngIf="isCopy()">
-    <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Units and Limits</mat-checkbox>
-    <mat-checkbox [(ngModel)]="data.copyPeople" class="selector-series">Copy People</mat-checkbox>
-    <mat-checkbox [(ngModel)]="data.copyBuckets" class="selector-series">Copy Buckets</mat-checkbox>
-    <mat-checkbox [(ngModel)]="data.copyObjectives" [disabled]="!data.copyBuckets" class="selector-series">Copy Objectives</mat-checkbox>
-    <mat-checkbox [(ngModel)]="data.copyAssignments" [disabled]="!data.copyObjectives" class="selector-series">Copy Assignments</mat-checkbox>
-  </div>
+    <div class="checkboxes">
+      <mat-checkbox [(ngModel)]="data.copyUnit" class="selector-series">Copy Units and Limits</mat-checkbox>
+      <mat-checkbox [(ngModel)]="data.copyPeople" class="selector-series">Copy People</mat-checkbox>
+      <mat-checkbox [(ngModel)]="data.copyBuckets" class="selector-series">Copy Buckets</mat-checkbox>
+      <mat-checkbox [(ngModel)]="data.copyObjectives" [disabled]="!data.copyBuckets" class="selector-series">Copy Objectives</mat-checkbox>
+      <mat-checkbox [(ngModel)]="data.copyAssignments" [disabled]="!data.copyObjectives" class="selector-series">Copy Assignments</mat-checkbox>
+    </div>
+  }
 
-  <mat-form-field *ngIf="isUnitRequired()">
-    <mat-label>Unit</mat-label>
-    <input matInput [(ngModel)]="data.period.unit">
-  </mat-form-field>
-  <mat-form-field *ngIf="isUnitRequired()">
-    <mat-label>Unit abbreviation</mat-label>
-    <input matInput [(ngModel)]="data.period.unitAbbrev">
-  </mat-form-field>
+  @if (isUnitRequired()) {
+    <mat-form-field>
+      <mat-label>Unit</mat-label>
+      <input matInput [(ngModel)]="data.period.unit">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Unit abbreviation</mat-label>
+      <input matInput [(ngModel)]="data.period.unitAbbrev">
+    </mat-form-field>
+  }
 
   <mat-form-field>
     <mat-label>Notes URL</mat-label>
     <input matInput [(ngModel)]="data.period.notesURL">
   </mat-form-field>
 
-  <div *ngIf="isMaxCommittedPercentageRequired()">
-    <mat-form-field>
-      <mat-label>Max % for committed objectives</mat-label>
-      <input matInput [(ngModel)]="data.period.maxCommittedPercentage" type="number">
-    </mat-form-field>
-  </div>
+  @if (isMaxCommittedPercentageRequired()) {
+    <div>
+      <mat-form-field>
+        <mat-label>Max % for committed objectives</mat-label>
+        <input matInput [(ngModel)]="data.period.maxCommittedPercentage" type="number">
+      </mat-form-field>
+    </div>
+  }
 </div>
 
 <div mat-dialog-actions>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -27,13 +27,15 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
+  private router = inject(Router);
+  private notificationService = inject(NotificationService);
+  angularFireAuth = inject(AngularFireAuth);
+
   readonly user$ = new BehaviorSubject<User | null | undefined>(undefined);
 
-  constructor(
-    private router: Router,
-    private notificationService: NotificationService,
-    public angularFireAuth: AngularFireAuth
-  ) {
+  constructor() {
+    const angularFireAuth = this.angularFireAuth;
+
     if (environment.requireAuth) {
       angularFireAuth.onAuthStateChanged(
         (firebaseUser: firebase.User | null) => {

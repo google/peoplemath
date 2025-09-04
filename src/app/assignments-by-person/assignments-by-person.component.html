@@ -1,20 +1,28 @@
 <mat-card appearance="outlined">
-<mat-card-header>
-<mat-card-title>Assignments by person</mat-card-title>
-</mat-card-header>
-<mat-card-content>
-  <div *ngFor="let person of period!.people; trackBy: personTrackBy" class="personassignment">
-    <h3>{{personDisplayNameWithUsername(person)}}</h3>
-    <ul *ngIf="hasAssignments(person)">
-      <li *ngFor="let oa of assignmentsFor(person); trackBy: assignmentsTrackBy">
-        <app-assignment
-          [objective]="oa.objective"
-          [assignedResources]="oa.assignment.commitment"
-          [unit]="period?.unit"
-          (click)="editObjective(oa.objective, oa.bucket)"></app-assignment>
-      </li>
-    </ul>
-    <p *ngIf="!hasAssignments(person)" class="noassignments">No assignments</p>
-  </div>
-</mat-card-content>
+  <mat-card-header>
+    <mat-card-title>Assignments by person</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @for (person of period!.people; track personTrackBy($index, person)) {
+      <div class="personassignment">
+        <h3>{{personDisplayNameWithUsername(person)}}</h3>
+        @if (hasAssignments(person)) {
+          <ul>
+            @for (oa of assignmentsFor(person); track assignmentsTrackBy($index, oa)) {
+              <li>
+                <app-assignment
+                  [objective]="oa.objective"
+                  [assignedResources]="oa.assignment.commitment"
+                  [unit]="period?.unit"
+                (click)="editObjective(oa.objective, oa.bucket)"></app-assignment>
+              </li>
+            }
+          </ul>
+        }
+        @else {
+          <p class="noassignments">No assignments</p>
+        }
+      </div>
+    }
+  </mat-card-content>
 </mat-card>

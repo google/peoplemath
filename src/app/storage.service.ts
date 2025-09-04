@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Team, TeamList } from './team';
 import { Period } from './period';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ import { ObjectUpdateResponse } from './objectupdateresponse';
 
 @Injectable()
 export class StorageService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getTeams(): Observable<TeamList> {
     return this.http.get<TeamList>('/api/team/');
