@@ -25,7 +25,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgFor, NgIf } from '@angular/common';
+
 import { AssignmentComponent } from '../assignment/assignment.component';
 
 @Component({
@@ -39,10 +39,8 @@ import { AssignmentComponent } from '../assignment/assignment.component';
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgFor,
-    NgIf,
-    AssignmentComponent,
-  ],
+    AssignmentComponent
+],
 })
 export class AssignmentsByPersonComponent {
   private dialog = inject(MatDialog);

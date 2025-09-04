@@ -1,10 +1,12 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
 <div mat-dialog-content class="fields">
-  <mat-form-field *ngIf="data.allowEditID">
-    <mat-label>Period ID</mat-label>
-    <input matInput [formControl]="periodIdControl">
-  </mat-form-field>
+  @if (data.allowEditID) {
+    <mat-form-field>
+      <mat-label>Period ID</mat-label>
+      <input matInput [formControl]="periodIdControl">
+    </mat-form-field>
+  }
   <mat-form-field>
     <mat-label>Display name</mat-label>
     <input matInput [formControl]="displayNameControl">
@@ -28,8 +30,12 @@
   <mat-form-field>
     <mat-label>Max % for committed objectives</mat-label>
     <input matInput [formControl]="maxCommitPctControl" type="number">
-    <mat-error *ngIf="maxCommitPctControl.hasError('min')">Cannot be negative</mat-error>
-    <mat-error *ngIf="maxCommitPctControl.hasError('max')">Cannot be more than 100%</mat-error>
+    @if (maxCommitPctControl.hasError('min')) {
+      <mat-error>Cannot be negative</mat-error>
+    }
+    @if (maxCommitPctControl.hasError('max')) {
+      <mat-error>Cannot be more than 100%</mat-error>
+    }
   </mat-form-field>
 </div>
 

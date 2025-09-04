@@ -16,7 +16,7 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SecondaryUnit, ImmutableSecondaryUnit } from '../period';
-import { NgIf, NgFor, DecimalPipe, PercentPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 
 @Component({
   selector: 'app-resource-quantity',
@@ -24,7 +24,7 @@ import { NgIf, NgFor, DecimalPipe, PercentPipe } from '@angular/common';
   styleUrls: ['./resource-quantity.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor, DecimalPipe, PercentPipe],
+  imports: [DecimalPipe, PercentPipe],
 })
 export class ResourceQuantityComponent {
   @Input() quantity?: number;

@@ -23,7 +23,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgFor } from '@angular/common';
+
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -38,10 +38,9 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgFor,
     ObjectiveSummaryComponent,
-    ResourceQuantityComponent,
-  ],
+    ResourceQuantityComponent
+],
 })
 export class TagSummaryComponent {
   @Input() period?: ImmutablePeriod;

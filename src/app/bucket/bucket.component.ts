@@ -51,13 +51,7 @@ import {
   MatCardSubtitle,
   MatCardContent,
 } from '@angular/material/card';
-import {
-  NgIf,
-  NgFor,
-  NgTemplateOutlet,
-  DecimalPipe,
-  PercentPipe,
-} from '@angular/common';
+import { NgTemplateOutlet, DecimalPipe, PercentPipe } from '@angular/common';
 import { MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-limit.component';
@@ -71,7 +65,6 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
   encapsulation: ViewEncapsulation.None,
   imports: [
     MatCard,
-    NgIf,
     MatMiniFabButton,
     MatIcon,
     MatCardHeader,
@@ -79,7 +72,6 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
     BucketAllocLimitComponent,
     MatCardSubtitle,
     MatCardContent,
-    NgFor,
     NgTemplateOutlet,
     CdkDropList,
     CdkDrag,
@@ -90,8 +82,8 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
     PercentPipe,
     DisplayObjectivesPipe,
     GroupblocksPipe,
-    BlockplaceholdersPipe,
-  ],
+    BlockplaceholdersPipe
+],
 })
 export class BucketComponent {
   dialog = inject(MatDialog);

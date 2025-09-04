@@ -17,7 +17,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { ImmutableSecondaryUnit } from '../period';
-import { NgIf } from '@angular/common';
+
 import { PillComponent } from '../pill/pill.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
@@ -28,7 +28,7 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
   styleUrls: ['./objective-summary.component.css'],
   // Requires all inputs to be immutable
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, PillComponent, ResourceQuantityComponent, MarkdownifyPipe],
+  imports: [PillComponent, ResourceQuantityComponent, MarkdownifyPipe],
 })
 export class ObjectiveSummaryComponent {
   @Input() objective?: ImmutableObjective;

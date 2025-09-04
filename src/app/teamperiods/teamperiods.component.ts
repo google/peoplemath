@@ -41,7 +41,7 @@ import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   MatCard,
@@ -65,7 +65,6 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   templateUrl: './teamperiods.component.html',
   styleUrls: ['./teamperiods.component.css'],
   imports: [
-    NgIf,
     MatProgressSpinner,
     MatCard,
     MatCardHeader,
@@ -74,13 +73,12 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
     MatIcon,
     MatCardContent,
     MatNavList,
-    NgFor,
     MatListItem,
     RouterLink,
     MatCardActions,
     MatIconAnchor,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class TeamPeriodsComponent implements OnInit {
   private storage = inject(StorageService);

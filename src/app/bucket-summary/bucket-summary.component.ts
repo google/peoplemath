@@ -23,7 +23,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgIf, NgFor, PercentPipe } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 
 @Component({
@@ -37,11 +37,9 @@ import { ObjectiveSummaryComponent } from '../objective-summary/objective-summar
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgIf,
-    NgFor,
     ObjectiveSummaryComponent,
-    PercentPipe,
-  ],
+    PercentPipe
+],
 })
 export class BucketSummaryComponent {
   @Input() bucket?: ImmutableBucket;

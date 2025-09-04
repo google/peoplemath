@@ -1,43 +1,55 @@
 <mat-card appearance="outlined">
-    <mat-card-header>
-        <mat-card-title>{{title}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div class="assignments">
-            <div *ngFor="let classObjBuckets of objectivesByClass(); trackBy: classTrackBy">
-                <h3>{{classObjBuckets[0]}}<span *ngIf="isEditingEnabled"> (<span class="rename-button"><a (click)="renameClass(classObjBuckets[0])">Rename</a></span>)</span></h3>
-                <ul>
-                    <li *ngFor="let objectiveAndBucket of classObjBuckets[1]">
-                        <app-assignment
-                            [objective]="objectiveAndBucket[0]"
-                            [assignedResources]="assignedResources(objectiveAndBucket[0])"
-                            [unit]="period?.unit"
-                            [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
-                            (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
-                        </app-assignment>
-                    </li>
-                    <li *ngIf="classObjBuckets[1].length > 1">
-                        <b>Total:</b> <app-resource-quantity
-                            [quantity]="totalAssignedResources(classObjBuckets[1])"
-                            [primaryUnit]="period?.unit"
-                            [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity>
-                    </li>
-                </ul>
-            </div>
-            <div *ngIf="hasUngroupedObjectives()">
-                <h3>No {{groupType}}</h3>
-                <ul>
-                    <li *ngFor="let objectiveAndBucket of ungroupedObjectives()">
-                        <app-assignment
-                            [objective]="objectiveAndBucket[0]"
-                            [assignedResources]="assignedResources(objectiveAndBucket[0])"
-                            [unit]="period?.unit"
-                            [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
-                            (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
-                        </app-assignment>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </mat-card-content>
+  <mat-card-header>
+    <mat-card-title>{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="assignments">
+      @for (classObjBuckets of objectivesByClass(); track classTrackBy($index, classObjBuckets)) {
+        <div>
+          <h3>{{classObjBuckets[0]}}@if (isEditingEnabled) {
+            <span> (<span class="rename-button"><a (click)="renameClass(classObjBuckets[0])">Rename</a></span>)</span>
+          }</h3>
+          <ul>
+            @for (objectiveAndBucket of classObjBuckets[1]; track objectiveAndBucket) {
+              <li>
+                <app-assignment
+                  [objective]="objectiveAndBucket[0]"
+                  [assignedResources]="assignedResources(objectiveAndBucket[0])"
+                  [unit]="period?.unit"
+                  [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
+                  (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
+                </app-assignment>
+              </li>
+            }
+            @if (classObjBuckets[1].length > 1) {
+              <li>
+                <b>Total:</b> <app-resource-quantity
+                [quantity]="totalAssignedResources(classObjBuckets[1])"
+                [primaryUnit]="period?.unit"
+              [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @if (hasUngroupedObjectives()) {
+      <div>
+        <h3>No {{groupType}}</h3>
+        <ul>
+          @for (objectiveAndBucket of ungroupedObjectives(); track objectiveAndBucket) {
+            <li>
+              <app-assignment
+                [objective]="objectiveAndBucket[0]"
+                [assignedResources]="assignedResources(objectiveAndBucket[0])"
+                [unit]="period?.unit"
+                [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
+                (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
+              </app-assignment>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</mat-card-content>
 </mat-card>

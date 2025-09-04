@@ -24,7 +24,7 @@ import { ImmutableTeam } from '../team';
 import { ImmutableBucket } from '../bucket';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { GroupSummaryComponent } from '../group-summary/group-summary.component';
 import { TagSummaryComponent } from '../tag-summary/tag-summary.component';
@@ -35,14 +35,12 @@ import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.compone
   templateUrl: './period-summary.component.html',
   styleUrls: ['./period-summary.component.css'],
   imports: [
-    NgIf,
     MatProgressSpinner,
     RouterLink,
-    NgFor,
     GroupSummaryComponent,
     TagSummaryComponent,
-    BucketSummaryComponent,
-  ],
+    BucketSummaryComponent
+],
 })
 export class PeriodSummaryComponent implements OnInit {
   private storage = inject(StorageService);

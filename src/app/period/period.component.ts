@@ -42,7 +42,7 @@ import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
-import { NgIf, NgFor, DecimalPipe, PercentPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatAnchor, MatFabButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -58,21 +58,19 @@ import { AssignmentsByPersonComponent } from '../assignments-by-person/assignmen
   // This is ugly but it seems to make a HUGE performance difference
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     MatProgressSpinner,
     RouterLink,
     MatAnchor,
     MatFabButton,
     MatIcon,
-    NgFor,
     BucketComponent,
     MatButton,
     PeopleComponent,
     AssignmentsByPersonComponent,
     AssignmentsClassifyComponent,
     DecimalPipe,
-    PercentPipe,
-  ],
+    PercentPipe
+],
 })
 export class PeriodComponent implements OnInit {
   private storage = inject(StorageService);

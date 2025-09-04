@@ -36,7 +36,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIconAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
@@ -152,7 +152,6 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     MatCheckbox,
     MatIconAnchor,
     MatIcon,
-    NgIf,
     MatSelect,
     MatOption,
     MatDialogActions,
@@ -160,9 +159,8 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
     MatMenuTrigger,
     MatMenu,
     MatMenuItem,
-    NgFor,
-    MarkdownifyPipe,
-  ],
+    MarkdownifyPipe
+],
 })
 export class EditObjectiveDialogComponent {
   dialogRef = inject<MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>>(MatDialogRef);

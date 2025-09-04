@@ -1,55 +1,73 @@
 <mat-card appearance="outlined">
-    <mat-card-header>
-        <mat-card-title>Summary by {{groupType}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div class="viewoptions">
-            <mat-slide-toggle [(ngModel)]="showByBucket">Stack rank by bucket</mat-slide-toggle>
-            <mat-slide-toggle [(ngModel)]="showObjectives">Show objectives</mat-slide-toggle>
-        </div>
-        <div *ngIf="showByBucket">
-            <div *ngFor="let bucket of period!.buckets">
-                <h3>{{bucket.displayName}}</h3>
-                <ul>
-                    <li *ngFor="let groupobs of bucketObjectivesByGroup(bucket)">
-                        <app-objective-summary
-                            [objective]="summaryObjective(groupobs[0], groupobs[1])"
-                            [unit]="period?.unit"
-                            [secondaryUnits]="period?.secondaryUnits"
-                            [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
-                        <ul *ngIf="showObjectives">
-                            <li *ngFor="let ob of groupobs[1]">
-                                <app-objective-summary
-                                    [objective]="ob"
-                                    [unit]="period?.unit"></app-objective-summary>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="total"><b>Total:</b> <app-resource-quantity
-                        [quantity]="totalResourcesAllocated(bucket.objectives)"
-                        [primaryUnit]="period?.unit"
-                        [secondaryUnits]="period?.secondaryUnits"
-                        [fraction]="fractionResourcesAllocated(bucket.objectives)"></app-resource-quantity></li>
-                </ul>
-            </div>
-        </div>
-        <div *ngIf="!showByBucket">
+  <mat-card-header>
+    <mat-card-title>Summary by {{groupType}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="viewoptions">
+      <mat-slide-toggle [(ngModel)]="showByBucket">Stack rank by bucket</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="showObjectives">Show objectives</mat-slide-toggle>
+    </div>
+    @if (showByBucket) {
+      <div>
+        @for (bucket of period!.buckets; track bucket) {
+          <div>
+            <h3>{{bucket.displayName}}</h3>
             <ul>
-                <li *ngFor="let groupobs of allObjectivesByGroup()">
-                    <app-objective-summary
-                        [objective]="summaryObjective(groupobs[0], groupobs[1])"
-                        [unit]="period?.unit"
-                        [secondaryUnits]="period?.secondaryUnits"
-                        [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
-                    <ul *ngIf="showObjectives">
-                        <li *ngFor="let ob of groupobs[1]">
-                            <app-objective-summary
-                                [objective]="ob"
-                                [unit]="period?.unit"></app-objective-summary>
+              @for (groupobs of bucketObjectivesByGroup(bucket); track groupobs) {
+                <li>
+                  <app-objective-summary
+                    [objective]="summaryObjective(groupobs[0], groupobs[1])"
+                    [unit]="period?.unit"
+                    [secondaryUnits]="period?.secondaryUnits"
+                  [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
+                  @if (showObjectives) {
+                    <ul>
+                      @for (ob of groupobs[1]; track ob) {
+                        <li>
+                          <app-objective-summary
+                            [objective]="ob"
+                          [unit]="period?.unit"></app-objective-summary>
                         </li>
+                      }
                     </ul>
+                  }
                 </li>
-            </ul>
+              }
+              <li class="total"><b>Total:</b> <app-resource-quantity
+              [quantity]="totalResourcesAllocated(bucket.objectives)"
+              [primaryUnit]="period?.unit"
+              [secondaryUnits]="period?.secondaryUnits"
+            [fraction]="fractionResourcesAllocated(bucket.objectives)"></app-resource-quantity></li>
+          </ul>
         </div>
-    </mat-card-content>
+      }
+    </div>
+  }
+  @if (!showByBucket) {
+    <div>
+      <ul>
+        @for (groupobs of allObjectivesByGroup(); track groupobs) {
+          <li>
+            <app-objective-summary
+              [objective]="summaryObjective(groupobs[0], groupobs[1])"
+              [unit]="period?.unit"
+              [secondaryUnits]="period?.secondaryUnits"
+            [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
+            @if (showObjectives) {
+              <ul>
+                @for (ob of groupobs[1]; track ob) {
+                  <li>
+                    <app-objective-summary
+                      [objective]="ob"
+                    [unit]="period?.unit"></app-objective-summary>
+                  </li>
+                }
+              </ul>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</mat-card-content>
 </mat-card>

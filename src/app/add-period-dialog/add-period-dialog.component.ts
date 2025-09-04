@@ -27,7 +27,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -64,15 +64,13 @@ export interface AddPeriodDialogData {
     FormsModule,
     MatRadioGroup,
     MatRadioButton,
-    NgIf,
     MatSelect,
-    NgFor,
     MatOption,
     MatCheckbox,
     MatDialogActions,
     MatButton,
-    MatDialogClose,
-  ],
+    MatDialogClose
+],
 })
 export class AddPeriodDialogComponent {
   dialogRef = inject<MatDialogRef<AddPeriodDialogComponent>>(MatDialogRef);

@@ -28,7 +28,7 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
@@ -56,14 +56,13 @@ export interface EditBucketDialogData {
     FormsModule,
     MatSelect,
     MatOption,
-    NgIf,
     MatButton,
     MatMenuTrigger,
     MatMenu,
     MatMenuItem,
     MatDialogActions,
-    MatDialogClose,
-  ],
+    MatDialogClose
+],
 })
 export class EditBucketDialogComponent {
   dialogRef = inject<MatDialogRef<EditBucketDialogComponent>>(MatDialogRef);

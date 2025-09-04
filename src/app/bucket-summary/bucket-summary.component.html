@@ -1,33 +1,45 @@
 <mat-card appearance="outlined">
-    <mat-card-header>
-        <mat-card-title>Objectives: {{bucket?.displayName}} ({{bucketAllocationFraction | percent}})</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div *ngIf="hasCommittedObjectives()">
+  <mat-card-header>
+    <mat-card-title>Objectives: {{bucket?.displayName}} ({{bucketAllocationFraction | percent}})</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (hasCommittedObjectives()) {
+      <div>
         <h3>Committed</h3>
         <ul>
-            <li *ngFor="let objective of committedObjectives()">
-                <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
+          @for (objective of committedObjectives(); track objective) {
+            <li>
+              <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
             </li>
+          }
         </ul>
-        </div>
+      </div>
+    }
 
-        <div *ngIf="hasAspirationalObjectives()">
+    @if (hasAspirationalObjectives()) {
+      <div>
         <h3>Aspirational (descending priority)</h3>
         <ul>
-            <li *ngFor="let objective of aspirationalObjectives()">
-                <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
+          @for (objective of aspirationalObjectives(); track objective) {
+            <li>
+              <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
             </li>
+          }
         </ul>
-        </div>
+      </div>
+    }
 
-        <div *ngIf="hasRejectedObjectives()">
+    @if (hasRejectedObjectives()) {
+      <div>
         <h3>Rejected</h3>
         <ul>
-            <li *ngFor="let objective of rejectedObjectives()">
-                <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
+          @for (objective of rejectedObjectives(); track objective) {
+            <li>
+              <app-objective-summary [objective]="objective" [unit]="unit"></app-objective-summary>
             </li>
+          }
         </ul>
-        </div>
-    </mat-card-content>
+      </div>
+    }
+  </mat-card-content>
 </mat-card>

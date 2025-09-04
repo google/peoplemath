@@ -34,7 +34,7 @@ import {
   MatCardTitle,
   MatCardContent,
 } from '@angular/material/card';
-import { NgFor, NgIf } from '@angular/common';
+
 import { AssignmentComponent } from '../assignment/assignment.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -54,11 +54,9 @@ export enum AggregateBy {
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    NgFor,
-    NgIf,
     AssignmentComponent,
-    ResourceQuantityComponent,
-  ],
+    ResourceQuantityComponent
+],
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
   private dialog = inject(MatDialog);

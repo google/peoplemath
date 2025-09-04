@@ -23,7 +23,7 @@ import {
 } from '@angular/material/dialog';
 import { Team } from '../team';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf } from '@angular/common';
+
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -45,14 +45,13 @@ export interface EditTeamDialogData {
     MatDialogTitle,
     CdkScrollable,
     MatDialogContent,
-    NgIf,
     MatFormField,
     MatInput,
     FormsModule,
     MatDialogActions,
     MatButton,
-    MatDialogClose,
-  ],
+    MatDialogClose
+],
 })
 export class EditTeamDialogComponent {
   dialogRef = inject<MatDialogRef<EditTeamDialogComponent>>(MatDialogRef);

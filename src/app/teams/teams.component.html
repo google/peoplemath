@@ -1,16 +1,22 @@
-<mat-spinner class="centered" *ngIf="!isLoaded()" color="accent"></mat-spinner>
-<div *ngIf="isLoaded()" class="grid-container">
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Teams</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-nav-list>
-        <a mat-list-item *ngFor="let team of teams" routerLink="/team/{{team.id}}">{{team.displayName}}</a>
-      </mat-nav-list>
-    </mat-card-content>
-    <mat-card-actions>
-      <button [disabled]="addTeamDisabled" mat-button (click)="addTeam()" color="primary">Add Team</button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+@if (!isLoaded()) {
+  <mat-spinner class="centered" color="accent"></mat-spinner>
+}
+@if (isLoaded()) {
+  <div class="grid-container">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Teams</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-nav-list>
+          @for (team of teams; track team) {
+            <a mat-list-item routerLink="/team/{{team.id}}">{{team.displayName}}</a>
+          }
+        </mat-nav-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <button [disabled]="addTeamDisabled" mat-button (click)="addTeam()" color="primary">Add Team</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+}

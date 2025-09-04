@@ -26,7 +26,7 @@ import {
 } from '@angular/material/card';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
+
 import { ObjectiveSummaryComponent } from '../objective-summary/objective-summary.component';
 import { ResourceQuantityComponent } from '../resource-quantity/resource-quantity.component';
 
@@ -43,11 +43,9 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
     MatCardContent,
     MatSlideToggle,
     FormsModule,
-    NgIf,
-    NgFor,
     ObjectiveSummaryComponent,
-    ResourceQuantityComponent,
-  ],
+    ResourceQuantityComponent
+],
 })
 export class GroupSummaryComponent {
   @Input() period?: ImmutablePeriod;

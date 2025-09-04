@@ -50,7 +50,7 @@ import {
 } from '@angular/forms';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
-import { PercentPipe, NgIf } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -294,14 +294,13 @@ export interface EditPersonDialogData {
     FormsModule,
     CdkScrollable,
     MatDialogContent,
-    NgIf,
     MatFormField,
     MatInput,
     ReactiveFormsModule,
     MatError,
     MatDialogActions,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class EditPersonDialogComponent {
   dialogRef = inject<MatDialogRef<EditPersonDialogComponent>>(MatDialogRef);

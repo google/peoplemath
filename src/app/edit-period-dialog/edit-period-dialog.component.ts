@@ -28,7 +28,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf } from '@angular/common';
+
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -48,7 +48,6 @@ export interface EditPeriodDialogData {
     MatDialogTitle,
     CdkScrollable,
     MatDialogContent,
-    NgIf,
     MatFormField,
     MatLabel,
     MatInput,
@@ -56,8 +55,8 @@ export interface EditPeriodDialogData {
     ReactiveFormsModule,
     MatError,
     MatDialogActions,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class EditPeriodDialogComponent {
   dialogRef = inject<MatDialogRef<EditPeriodDialogComponent>>(MatDialogRef);

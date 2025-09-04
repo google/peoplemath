@@ -1,17 +1,23 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 <form>
-<div mat-dialog-content>
-    <div *ngIf="data.allowUsernameEdit">
+  <div mat-dialog-content>
+    @if (data.allowUsernameEdit) {
+      <div>
         <p>Username</p>
         <mat-form-field>
-            <input matInput [formControl]="userIdControl">
-            <mat-error *ngIf="userIdControl.hasError('required')">Username is required</mat-error>
-            <mat-error *ngIf="userIdControl.hasError('nonunique')">Person with ID "{{userIdControl.value}}" already exists!</mat-error>
+          <input matInput [formControl]="userIdControl">
+          @if (userIdControl.hasError('required')) {
+            <mat-error>Username is required</mat-error>
+          }
+          @if (userIdControl.hasError('nonunique')) {
+            <mat-error>Person with ID "{{userIdControl.value}}" already exists!</mat-error>
+          }
         </mat-form-field>
-    </div>
+      </div>
+    }
     <p>Display name (optional)</p>
     <mat-form-field>
-        <input matInput [formControl]="displayNameControl">
+      <input matInput [formControl]="displayNameControl">
     </mat-form-field>
     <p>Location (optional)</p>
     <mat-form-field>
@@ -19,14 +25,20 @@
     </mat-form-field>
     <p>Availability ({{data.unit}})</p>
     <mat-form-field>
-        <input matInput [formControl]="availabilityControl" type="number">
+      <input matInput [formControl]="availabilityControl" type="number">
     </mat-form-field>
-</div>
-<div mat-dialog-actions>
+  </div>
+  <div mat-dialog-actions>
     <button mat-raised-button (click)="onOK()" [disabled]="!isDataValid()" color="primary">{{data.okAction}}</button>
     <button mat-button (click)="onCancel()" color="warn">Cancel</button>
-    <button *ngIf="data.allowDelete" mat-button (click)="delete()" color="warn">Delete</button>
-    <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="cancelDelete()">Cancel Delete</button>
-    <button *ngIf="data.showDeleteConfirm" mat-raised-button (click)="confirmDelete()" color="warn">Confirm Delete</button>
-</div>
+    @if (data.allowDelete) {
+      <button mat-button (click)="delete()" color="warn">Delete</button>
+    }
+    @if (data.showDeleteConfirm) {
+      <button mat-raised-button (click)="cancelDelete()">Cancel Delete</button>
+    }
+    @if (data.showDeleteConfirm) {
+      <button mat-raised-button (click)="confirmDelete()" color="warn">Confirm Delete</button>
+    }
+  </div>
 </form>

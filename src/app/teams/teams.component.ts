@@ -24,7 +24,7 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   MatCard,
@@ -42,19 +42,17 @@ import { MatButton } from '@angular/material/button';
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
   imports: [
-    NgIf,
     MatProgressSpinner,
     MatCard,
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
     MatNavList,
-    NgFor,
     MatListItem,
     RouterLink,
     MatCardActions,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class TeamsComponent implements OnInit {
   private storage = inject(StorageService);
