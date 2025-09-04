@@ -60,10 +60,9 @@ export interface EditBlockInstruction {
   ],
 })
 export class EditBlockDialogComponent {
-  dialogRef =
-    inject<MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>>(
-      MatDialogRef
-    );
+  dialogRef = inject<
+    MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>
+  >(MatDialogRef);
   data = inject<EditBlockDialogData>(MAT_DIALOG_DATA);
 
   selected: string[] = [];

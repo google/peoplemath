@@ -21,26 +21,30 @@ describe('AssignmentsByPersonComponent', () => {
   let component: AssignmentsByPersonComponent;
   let fixture: ComponentFixture<AssignmentsByPersonComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({}).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({}).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(AssignmentsByPersonComponent);
-    component = fixture.componentInstance;
-    component.period = ImmutablePeriod.fromPeriod({
-      id: 'test',
-      displayName: 'Test Period',
-      unit: 'person weeks',
-      secondaryUnits: [],
-      notesURL: '',
-      maxCommittedPercentage: 0,
-      buckets: [],
-      people: [],
-      lastUpdateUUID: '',
-    });
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(AssignmentsByPersonComponent);
+      component = fixture.componentInstance;
+      component.period = ImmutablePeriod.fromPeriod({
+        id: 'test',
+        displayName: 'Test Period',
+        unit: 'person weeks',
+        secondaryUnits: [],
+        notesURL: '',
+        maxCommittedPercentage: 0,
+        buckets: [],
+        people: [],
+        lastUpdateUUID: '',
+      });
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

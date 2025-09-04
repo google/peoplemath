@@ -44,24 +44,28 @@ describe('BucketSummaryComponent', () => {
     objectives: [NO_COMMITMENTTYPE_OBJECTIVE],
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        BucketSummaryComponent,
-        ObjectiveSummaryComponent,
-        ResourceQuantityComponent,
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          BucketSummaryComponent,
+          ObjectiveSummaryComponent,
+          ResourceQuantityComponent,
+        ],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(BucketSummaryComponent);
-    component = fixture.componentInstance;
-    component.bucket = ImmutableBucket.fromBucket(BUCKET);
-    component.bucketAllocationFraction = 50;
-    component.unit = 'things';
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(BucketSummaryComponent);
+      component = fixture.componentInstance;
+      component.bucket = ImmutableBucket.fromBucket(BUCKET);
+      component.bucketAllocationFraction = 50;
+      component.unit = 'things';
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

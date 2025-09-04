@@ -35,21 +35,29 @@ describe('EditTeamDialogComponent', () => {
     allowEditID: false,
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, BrowserAnimationsModule, EditTeamDialogComponent],
-      providers: [
-        { provide: MatDialogRef, useValue: dialogSpy },
-        { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          BrowserAnimationsModule,
+          EditTeamDialogComponent,
+        ],
+        providers: [
+          { provide: MatDialogRef, useValue: dialogSpy },
+          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+        ],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(EditTeamDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(EditTeamDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

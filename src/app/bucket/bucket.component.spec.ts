@@ -25,31 +25,35 @@ describe('BucketComponent', () => {
   let component: BucketComponent;
   let fixture: ComponentFixture<BucketComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        BucketComponent,
-        ObjectiveComponent,
-        BucketAllocLimitComponent,
-        DisplayObjectivesPipe,
-      ],
-      providers: [],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          BucketComponent,
+          ObjectiveComponent,
+          BucketAllocLimitComponent,
+          DisplayObjectivesPipe,
+        ],
+        providers: [],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(BucketComponent);
-    component = fixture.componentInstance;
-    component.bucket = ImmutableBucket.fromBucket({
-      displayName: 'test bucket',
-      allocationType: AllocationType.Percentage,
-      allocationPercentage: 100,
-      allocationAbsolute: 0,
-      objectives: [],
-    });
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(BucketComponent);
+      component = fixture.componentInstance;
+      component.bucket = ImmutableBucket.fromBucket({
+        displayName: 'test bucket',
+        allocationType: AllocationType.Percentage,
+        allocationPercentage: 100,
+        allocationAbsolute: 0,
+        objectives: [],
+      });
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

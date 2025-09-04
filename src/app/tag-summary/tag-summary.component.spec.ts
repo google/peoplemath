@@ -35,18 +35,22 @@ describe('TagSummaryComponent', () => {
     lastUpdateUUID: '',
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TagSummaryComponent, ResourceQuantityComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [TagSummaryComponent, ResourceQuantityComponent],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(TagSummaryComponent);
-    component = fixture.componentInstance;
-    component.period = ImmutablePeriod.fromPeriod(PERIOD);
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(TagSummaryComponent);
+      component = fixture.componentInstance;
+      component.period = ImmutablePeriod.fromPeriod(PERIOD);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

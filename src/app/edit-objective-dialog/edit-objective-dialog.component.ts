@@ -168,10 +168,9 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   ],
 })
 export class EditObjectiveDialogComponent {
-  dialogRef =
-    inject<MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>>(
-      MatDialogRef
-    );
+  dialogRef = inject<
+    MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>
+  >(MatDialogRef);
   data = inject<EditObjectiveDialogData>(MAT_DIALOG_DATA);
 
   showDeleteConfirm = false;

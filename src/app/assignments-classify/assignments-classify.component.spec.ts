@@ -27,29 +27,33 @@ describe('AssignmentsClassifyComponent', () => {
   let component: AssignmentsClassifyComponent;
   let fixture: ComponentFixture<AssignmentsClassifyComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [AssignmentsClassifyComponent, ResourceQuantityComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [AssignmentsClassifyComponent, ResourceQuantityComponent],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(AssignmentsClassifyComponent);
-    component = fixture.componentInstance;
-    component.aggregateBy = AggregateBy.Group;
-    component.period = ImmutablePeriod.fromPeriod({
-      id: 'test',
-      displayName: 'Test Period',
-      unit: 'things',
-      secondaryUnits: [],
-      notesURL: '',
-      maxCommittedPercentage: 10,
-      buckets: [],
-      people: [],
-      lastUpdateUUID: '',
-    });
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(AssignmentsClassifyComponent);
+      component = fixture.componentInstance;
+      component.aggregateBy = AggregateBy.Group;
+      component.period = ImmutablePeriod.fromPeriod({
+        id: 'test',
+        displayName: 'Test Period',
+        unit: 'things',
+        secondaryUnits: [],
+        notesURL: '',
+        maxCommittedPercentage: 10,
+        buckets: [],
+        people: [],
+        lastUpdateUUID: '',
+      });
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

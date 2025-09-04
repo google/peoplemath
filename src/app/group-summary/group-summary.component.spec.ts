@@ -45,18 +45,26 @@ describe('GroupSummaryComponent', () => {
     lastUpdateUUID: '',
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, GroupSummaryComponent, ResourceQuantityComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          GroupSummaryComponent,
+          ResourceQuantityComponent,
+        ],
+      }).compileComponents();
+    })
+  );
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(GroupSummaryComponent);
-    component = fixture.componentInstance;
-    component.period = ImmutablePeriod.fromPeriod(PERIOD);
-    fixture.detectChanges();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(GroupSummaryComponent);
+      component = fixture.componentInstance;
+      component.period = ImmutablePeriod.fromPeriod(PERIOD);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
