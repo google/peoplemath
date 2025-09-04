@@ -12,7 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+  inject,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, editObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
@@ -39,8 +46,8 @@ import { AssignmentComponent } from '../assignment/assignment.component';
     MatCardHeader,
     MatCardTitle,
     MatCardContent,
-    AssignmentComponent
-],
+    AssignmentComponent,
+  ],
 })
 export class AssignmentsByPersonComponent {
   private dialog = inject(MatDialog);

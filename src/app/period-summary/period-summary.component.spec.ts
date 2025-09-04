@@ -69,43 +69,39 @@ describe('PeriodSummaryComponent', () => {
   let component: PeriodSummaryComponent;
   let fixture: ComponentFixture<PeriodSummaryComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          PeriodSummaryComponent,
-          BucketSummaryComponent,
-          ObjectiveSummaryComponent,
-          ResourceQuantityComponent,
-        ],
-        providers: [
-          { provide: StorageService, useValue: storageServiceSpy },
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              paramMap: of(
-                convertToParamMap({
-                  team: TEST_TEAM.id,
-                  period: TEST_PERIOD.id,
-                })
-              ),
-            },
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        PeriodSummaryComponent,
+        BucketSummaryComponent,
+        ObjectiveSummaryComponent,
+        ResourceQuantityComponent,
+      ],
+      providers: [
+        { provide: StorageService, useValue: storageServiceSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(
+              convertToParamMap({
+                team: TEST_TEAM.id,
+                period: TEST_PERIOD.id,
+              })
+            ),
           },
-        ],
-      }).compileComponents();
-      storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
-      storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
-    })
-  );
+        },
+      ],
+    }).compileComponents();
+    storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
+    storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(PeriodSummaryComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(PeriodSummaryComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

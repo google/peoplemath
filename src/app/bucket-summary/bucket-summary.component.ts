@@ -38,8 +38,8 @@ import { ObjectiveSummaryComponent } from '../objective-summary/objective-summar
     MatCardTitle,
     MatCardContent,
     ObjectiveSummaryComponent,
-    PercentPipe
-],
+    PercentPipe,
+  ],
 })
 export class BucketSummaryComponent {
   @Input() bucket?: ImmutableBucket;

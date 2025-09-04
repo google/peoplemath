@@ -39,8 +39,8 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
     MatCardTitle,
     MatCardContent,
     ObjectiveSummaryComponent,
-    ResourceQuantityComponent
-],
+    ResourceQuantityComponent,
+  ],
 })
 export class TagSummaryComponent {
   @Input() period?: ImmutablePeriod;

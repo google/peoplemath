@@ -29,13 +29,11 @@ describe('ObjectiveComponent', () => {
   let component: ObjectiveComponent;
   let fixture: ComponentFixture<ObjectiveComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ObjectiveComponent, AssignSummPartsPipe],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ObjectiveComponent, AssignSummPartsPipe],
+    }).compileComponents();
+  }));
 
   const makeComponent = (
     resourceEstimate: number,
@@ -62,13 +60,11 @@ describe('ObjectiveComponent', () => {
     return result;
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(ObjectiveComponent);
-      component = makeComponent(6, DEFAULT_ASSIGNMENTS);
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(ObjectiveComponent);
+    component = makeComponent(6, DEFAULT_ASSIGNMENTS);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

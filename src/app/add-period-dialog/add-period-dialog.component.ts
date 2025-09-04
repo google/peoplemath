@@ -69,13 +69,12 @@ export interface AddPeriodDialogData {
     MatCheckbox,
     MatDialogActions,
     MatButton,
-    MatDialogClose
-],
+    MatDialogClose,
+  ],
 })
 export class AddPeriodDialogComponent {
   dialogRef = inject<MatDialogRef<AddPeriodDialogComponent>>(MatDialogRef);
   data = inject<AddPeriodDialogData>(MAT_DIALOG_DATA);
-
 
   onCancel(): void {
     this.dialogRef.close();

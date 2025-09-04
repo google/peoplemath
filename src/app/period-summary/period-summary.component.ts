@@ -39,8 +39,8 @@ import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.compone
     RouterLink,
     GroupSummaryComponent,
     TagSummaryComponent,
-    BucketSummaryComponent
-],
+    BucketSummaryComponent,
+  ],
 })
 export class PeriodSummaryComponent implements OnInit {
   private storage = inject(StorageService);

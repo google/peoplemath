@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -82,8 +90,8 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
     PercentPipe,
     DisplayObjectivesPipe,
     GroupblocksPipe,
-    BlockplaceholdersPipe
-],
+    BlockplaceholdersPipe,
+  ],
 })
 export class BucketComponent {
   dialog = inject(MatDialog);

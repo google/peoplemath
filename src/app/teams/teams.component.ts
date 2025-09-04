@@ -51,8 +51,8 @@ import { MatButton } from '@angular/material/button';
     MatListItem,
     RouterLink,
     MatCardActions,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class TeamsComponent implements OnInit {
   private storage = inject(StorageService);

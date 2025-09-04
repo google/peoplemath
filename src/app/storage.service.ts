@@ -23,7 +23,6 @@ import { ObjectUpdateResponse } from './objectupdateresponse';
 export class StorageService {
   private http = inject(HttpClient);
 
-
   getTeams(): Observable<TeamList> {
     return this.http.get<TeamList>('/api/team/');
   }

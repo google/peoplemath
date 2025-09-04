@@ -33,7 +33,6 @@ export class AuthGuard {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-
   canActivate(
     _next: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot

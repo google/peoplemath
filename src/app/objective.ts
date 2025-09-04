@@ -273,12 +273,10 @@ export function editObjective(
     otherBuckets: otherBuckets,
     onMoveBucket: onMoveBucket,
   };
-  const dialogRef: MatDialogRef<
-    EditObjectiveDialogComponent,
-    ImmutableBucket
-  > = dialog.open(EditObjectiveDialogComponent, {
-    data: dialogData,
-  });
+  const dialogRef: MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket> =
+    dialog.open(EditObjectiveDialogComponent, {
+      data: dialogData,
+    });
   dialogRef.afterClosed().subscribe((newBucket) => {
     if (newBucket) {
       onBucketChanged.emit([currentBucket, newBucket]);

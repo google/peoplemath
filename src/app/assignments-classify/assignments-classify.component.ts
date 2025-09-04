@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import {
   editObjective,
@@ -55,8 +63,8 @@ export enum AggregateBy {
     MatCardTitle,
     MatCardContent,
     AssignmentComponent,
-    ResourceQuantityComponent
-],
+    ResourceQuantityComponent,
+  ],
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
   private dialog = inject(MatDialog);

@@ -43,30 +43,26 @@ describe('EditPeriodDialogComponent', () => {
     allowEditID: false,
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          ReactiveFormsModule,
-          BrowserAnimationsModule,
-          EditPeriodDialogComponent,
-        ],
-        providers: [
-          { provide: MatDialogRef, useValue: dialogSpy },
-          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
-        ],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        EditPeriodDialogComponent,
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: dialogSpy },
+        { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+      ],
+    }).compileComponents();
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(EditPeriodDialogComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(EditPeriodDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

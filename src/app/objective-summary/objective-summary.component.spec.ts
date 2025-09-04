@@ -24,31 +24,27 @@ describe('ObjectiveSummaryComponent', () => {
   let component: ObjectiveSummaryComponent;
   let fixture: ComponentFixture<ObjectiveSummaryComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ObjectiveSummaryComponent, ResourceQuantityComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [ObjectiveSummaryComponent, ResourceQuantityComponent],
+    }).compileComponents();
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(ObjectiveSummaryComponent);
-      component = fixture.componentInstance;
-      component.objective = ImmutableObjective.fromObjective({
-        name: '',
-        resourceEstimate: 0,
-        commitmentType: CommitmentType.Aspirational,
-        groups: [],
-        tags: [],
-        notes: '',
-        assignments: [],
-      });
-      component.unit = '';
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(ObjectiveSummaryComponent);
+    component = fixture.componentInstance;
+    component.objective = ImmutableObjective.fromObjective({
+      name: '',
+      resourceEstimate: 0,
+      commitmentType: CommitmentType.Aspirational,
+      groups: [],
+      tags: [],
+      notes: '',
+      assignments: [],
+    });
+    component.unit = '';
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

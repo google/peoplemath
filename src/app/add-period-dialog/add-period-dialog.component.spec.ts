@@ -50,29 +50,21 @@ describe('AddPeriodDialogComponent', () => {
     copyAssignments: false,
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          BrowserAnimationsModule,
-          AddPeriodDialogComponent,
-        ],
-        providers: [
-          { provide: MatDialogRef, useValue: dialogSpy },
-          { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
-        ],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, BrowserAnimationsModule, AddPeriodDialogComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: dialogSpy },
+        { provide: MAT_DIALOG_DATA, useValue: DIALOG_DATA },
+      ],
+    }).compileComponents();
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(AddPeriodDialogComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(AddPeriodDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

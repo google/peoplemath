@@ -50,13 +50,12 @@ export interface EditTeamDialogData {
     FormsModule,
     MatDialogActions,
     MatButton,
-    MatDialogClose
-],
+    MatDialogClose,
+  ],
 })
 export class EditTeamDialogComponent {
   dialogRef = inject<MatDialogRef<EditTeamDialogComponent>>(MatDialogRef);
   data = inject<EditTeamDialogData>(MAT_DIALOG_DATA);
-
 
   onCancel(): void {
     this.dialogRef.close();

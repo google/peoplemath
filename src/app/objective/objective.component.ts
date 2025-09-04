@@ -12,7 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  EventEmitter,
+  Output,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import {
   CommitmentType,
   editObjective,
@@ -45,8 +52,8 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
     NgClass,
     CsumClassPipe,
     AssignSummPartsPipe,
-    MarkdownifyPipe
-],
+    MarkdownifyPipe,
+  ],
 })
 export class ObjectiveComponent {
   dialog = inject(MatDialog);

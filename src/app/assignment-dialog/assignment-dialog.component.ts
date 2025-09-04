@@ -77,7 +77,6 @@ export class AssignmentDialogComponent {
   dialogRef = inject<MatDialogRef<AssignmentDialogComponent>>(MatDialogRef);
   data = inject<AssignmentDialogData>(MAT_DIALOG_DATA);
 
-
   onCancel(): void {
     this.dialogRef.close();
   }

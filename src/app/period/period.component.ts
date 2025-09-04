@@ -12,7 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
@@ -69,8 +75,8 @@ import { AssignmentsByPersonComponent } from '../assignments-by-person/assignmen
     AssignmentsByPersonComponent,
     AssignmentsClassifyComponent,
     DecimalPipe,
-    PercentPipe
-],
+    PercentPipe,
+  ],
 })
 export class PeriodComponent implements OnInit {
   private storage = inject(StorageService);

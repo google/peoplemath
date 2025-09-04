@@ -44,8 +44,8 @@ import { ResourceQuantityComponent } from '../resource-quantity/resource-quantit
     MatSlideToggle,
     FormsModule,
     ObjectiveSummaryComponent,
-    ResourceQuantityComponent
-],
+    ResourceQuantityComponent,
+  ],
 })
 export class GroupSummaryComponent {
   @Input() period?: ImmutablePeriod;

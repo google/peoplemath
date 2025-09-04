@@ -55,8 +55,8 @@ export interface EditPeriodDialogData {
     ReactiveFormsModule,
     MatError,
     MatDialogActions,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class EditPeriodDialogComponent {
   dialogRef = inject<MatDialogRef<EditPeriodDialogComponent>>(MatDialogRef);

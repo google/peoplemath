@@ -35,7 +35,6 @@ export class AuthInterceptor implements HttpInterceptor {
   private router = inject(Router);
   private notificationService = inject(NotificationService);
 
-
   intercept(
     req: HttpRequest<unknown>,
     next: HttpHandler

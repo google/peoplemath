@@ -61,13 +61,12 @@ export interface EditBucketDialogData {
     MatMenu,
     MatMenuItem,
     MatDialogActions,
-    MatDialogClose
-],
+    MatDialogClose,
+  ],
 })
 export class EditBucketDialogComponent {
   dialogRef = inject<MatDialogRef<EditBucketDialogComponent>>(MatDialogRef);
   data = inject<EditBucketDialogData>(MAT_DIALOG_DATA);
-
 
   showDeleteConfirm = false;
 

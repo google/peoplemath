@@ -65,41 +65,34 @@ describe('TeamPeriodsComponent', () => {
   const dialogMock = new MockDialog();
   const TEST_TEAM = new Team('testTeam', 'My test team');
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          AngularFireModule.initializeApp(
-            firebaseConfig.firebase,
-            'firebaseApp'
-          ),
-          AngularFireAuthModule,
-          TeamPeriodsComponent,
-        ],
-        providers: [
-          { provide: StorageService, useValue: storageServiceSpy },
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              paramMap: of(convertToParamMap({ team: TEST_TEAM.id })),
-            },
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule,
+        TeamPeriodsComponent,
+      ],
+      providers: [
+        { provide: StorageService, useValue: storageServiceSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({ team: TEST_TEAM.id })),
           },
-          { provide: MatDialog, useValue: dialogMock },
-        ],
-      }).compileComponents();
-      storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
-      storageServiceSpy.getPeriods.and.returnValue(of([]));
-    })
-  );
+        },
+        { provide: MatDialog, useValue: dialogMock },
+      ],
+    }).compileComponents();
+    storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
+    storageServiceSpy.getPeriods.and.returnValue(of([]));
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(TeamPeriodsComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(TeamPeriodsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

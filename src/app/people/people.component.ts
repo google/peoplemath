@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Input, EventEmitter, Output, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import { Person, ImmutablePerson } from '../person';
 import {
   MatDialog,
@@ -299,8 +307,8 @@ export interface EditPersonDialogData {
     ReactiveFormsModule,
     MatError,
     MatDialogActions,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class EditPersonDialogComponent {
   dialogRef = inject<MatDialogRef<EditPersonDialogComponent>>(MatDialogRef);

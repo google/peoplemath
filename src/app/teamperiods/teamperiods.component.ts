@@ -77,8 +77,8 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
     RouterLink,
     MatCardActions,
     MatIconAnchor,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class TeamPeriodsComponent implements OnInit {
   private storage = inject(StorageService);
