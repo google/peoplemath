@@ -43,7 +43,7 @@
       }
     </div>
   }
-  @if (!showByBucket) {
+  @else {
     <div>
       <ul>
         @for (groupobs of allObjectivesByGroup(); track groupobs) {
