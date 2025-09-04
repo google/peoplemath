@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, EventEmitter, ViewEncapsulation, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -170,13 +165,9 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   ],
 })
 export class EditObjectiveDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<
-      EditObjectiveDialogComponent,
-      ImmutableBucket
-    >,
-    @Inject(MAT_DIALOG_DATA) public data: EditObjectiveDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>>(MatDialogRef);
+  data = inject<EditObjectiveDialogData>(MAT_DIALOG_DATA);
+
 
   showDeleteConfirm = false;
 

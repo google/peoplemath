@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Period, SecondaryUnit } from '../period';
 import {
   MatDialogRef,
@@ -60,6 +60,9 @@ export interface EditPeriodDialogData {
   ],
 })
 export class EditPeriodDialogComponent {
+  dialogRef = inject<MatDialogRef<EditPeriodDialogComponent>>(MatDialogRef);
+  data = inject<EditPeriodDialogData>(MAT_DIALOG_DATA);
+
   periodIdControl: UntypedFormControl;
   displayNameControl: UntypedFormControl;
   unitControl: UntypedFormControl;
@@ -68,10 +71,9 @@ export class EditPeriodDialogComponent {
   notesUrlControl: UntypedFormControl;
   maxCommitPctControl: UntypedFormControl;
 
-  constructor(
-    public dialogRef: MatDialogRef<EditPeriodDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPeriodDialogData
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.periodIdControl = new UntypedFormControl(
       data.period.id,
       Validators.required

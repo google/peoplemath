@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import {
   editObjective,
@@ -68,6 +61,8 @@ export enum AggregateBy {
   ],
 })
 export class AssignmentsClassifyComponent implements OnDestroy {
+  private dialog = inject(MatDialog);
+
   @Input() period?: ImmutablePeriod;
   @Input() aggregateBy?: AggregateBy;
   @Input() groupType?: string;
@@ -78,8 +73,6 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     [ImmutableBucket, ImmutableBucket]
   >();
   subscriptions: Subscription[] = [];
-
-  constructor(private dialog: MatDialog) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());

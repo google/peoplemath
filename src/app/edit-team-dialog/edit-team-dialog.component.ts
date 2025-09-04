@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -55,10 +55,9 @@ export interface EditTeamDialogData {
   ],
 })
 export class EditTeamDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<EditTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTeamDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<EditTeamDialogComponent>>(MatDialogRef);
+  data = inject<EditTeamDialogData>(MAT_DIALOG_DATA);
+
 
   onCancel(): void {
     this.dialogRef.close();

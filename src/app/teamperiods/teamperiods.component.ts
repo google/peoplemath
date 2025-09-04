@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
@@ -83,18 +83,16 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   ],
 })
 export class TeamPeriodsComponent implements OnInit {
+  private storage = inject(StorageService);
+  private route = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
+  private notificationService = inject(NotificationService);
+  authService = inject(AuthService);
+  private pageTitle = inject(PageTitleService);
+
   team?: ImmutableTeam;
   periods?: readonly ImmutablePeriod[];
   userHasEditPermissions = true;
-
-  constructor(
-    private storage: StorageService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private notificationService: NotificationService,
-    public authService: AuthService,
-    private pageTitle: PageTitleService
-  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((m) => {

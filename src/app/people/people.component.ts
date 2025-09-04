@@ -12,15 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  Input,
-  Inject,
-  EventEmitter,
-  Output,
-  ViewChild,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, EventEmitter, Output, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Person, ImmutablePerson } from '../person';
 import {
   MatDialog,
@@ -107,6 +99,8 @@ class PersonData {
   ],
 })
 export class PeopleComponent {
+  dialog = inject(MatDialog);
+
   @Input() people?: readonly ImmutablePerson[];
   @Input() peopleAllocations?: ReadonlyMap<string, number>;
   @Input() peopleCommittedAllocations?: ReadonlyMap<string, number>;
@@ -121,8 +115,6 @@ export class PeopleComponent {
   @Output() changed = new EventEmitter<[ImmutablePerson, ImmutablePerson]>();
   @Output() delete = new EventEmitter<ImmutablePerson>();
   @ViewChild(MatSort) sort?: MatSort;
-
-  constructor(public dialog: MatDialog) {}
 
   displayedColumns(): string[] {
     const columnLabels = ['personDesc'];
@@ -312,15 +304,17 @@ export interface EditPersonDialogData {
   ],
 })
 export class EditPersonDialogComponent {
+  dialogRef = inject<MatDialogRef<EditPersonDialogComponent>>(MatDialogRef);
+  data = inject<EditPersonDialogData>(MAT_DIALOG_DATA);
+
   userIdControl: UntypedFormControl;
   locationControl: UntypedFormControl;
   displayNameControl: UntypedFormControl;
   availabilityControl: UntypedFormControl;
 
-  constructor(
-    public dialogRef: MatDialogRef<EditPersonDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPersonDialogData
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.userIdControl = new UntypedFormControl(data.person.id, [
       this.validateUserId,
       Validators.required,

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, inject } from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import {
   MatDialogRef,
@@ -66,10 +66,9 @@ export interface EditBucketDialogData {
   ],
 })
 export class EditBucketDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<EditBucketDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditBucketDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<EditBucketDialogComponent>>(MatDialogRef);
+  data = inject<EditBucketDialogData>(MAT_DIALOG_DATA);
+
 
   showDeleteConfirm = false;
 

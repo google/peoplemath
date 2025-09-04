@@ -12,13 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  Input,
-  EventEmitter,
-  Output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Input, EventEmitter, Output, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   CommitmentType,
   editObjective,
@@ -57,6 +51,8 @@ import { MarkdownifyPipe } from '../markdown/markdownify.pipe';
   ],
 })
 export class ObjectiveComponent {
+  dialog = inject(MatDialog);
+
   @Input() objective?: ImmutableObjective;
   @Input() unit?: string;
   @Input() unallocatedTime?: ReadonlyMap<string, number>;
@@ -74,8 +70,6 @@ export class ObjectiveComponent {
   @Output() bucketChanged = new EventEmitter<
     [ImmutableBucket, ImmutableBucket]
   >();
-
-  constructor(public dialog: MatDialog) {}
 
   hasPeopleAvailable(): boolean {
     return (

@@ -21,7 +21,7 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -31,11 +31,10 @@ import { NotificationService } from './notification.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private notificationService: NotificationService
-  ) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private notificationService = inject(NotificationService);
+
 
   intercept(
     req: HttpRequest<unknown>,

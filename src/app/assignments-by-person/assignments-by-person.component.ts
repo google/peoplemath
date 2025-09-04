@@ -12,13 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  Input,
-  ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, inject } from '@angular/core';
 import { ImmutablePeriod } from '../period';
 import { ImmutableObjective, editObjective } from '../objective';
 import { ImmutableAssignment } from '../assignment';
@@ -51,13 +45,13 @@ import { AssignmentComponent } from '../assignment/assignment.component';
   ],
 })
 export class AssignmentsByPersonComponent {
+  private dialog = inject(MatDialog);
+
   @Input() period?: ImmutablePeriod;
   @Input() isEditingEnabled?: boolean;
   @Output() bucketChanged = new EventEmitter<
     [ImmutableBucket, ImmutableBucket]
   >();
-
-  constructor(private dialog: MatDialog) {}
 
   hasAssignments(person: ImmutablePerson): boolean {
     for (const bucket of this.period!.buckets) {

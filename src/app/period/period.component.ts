@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
@@ -80,6 +75,14 @@ import { AssignmentsByPersonComponent } from '../assignments-by-person/assignmen
   ],
 })
 export class PeriodComponent implements OnInit {
+  private storage = inject(StorageService);
+  private route = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
+  private changeDet = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
+  private pageTitle = inject(PageTitleService);
+
   team?: ImmutableTeam;
   period?: ImmutablePeriod;
   isEditingEnabled = false;
@@ -89,16 +92,6 @@ export class PeriodComponent implements OnInit {
   readonly eventsRequiringSave = new Subject<unknown>();
   // To enable access to this enum from the template
   readonly AggregateBy = AggregateBy;
-
-  constructor(
-    private storage: StorageService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private changeDet: ChangeDetectorRef,
-    private authService: AuthService,
-    private notificationService: NotificationService,
-    private pageTitle: PageTitleService
-  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((m) => {

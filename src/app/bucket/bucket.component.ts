@@ -12,14 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation, inject } from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import { CommitmentType, ImmutableObjective } from '../objective';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -101,6 +94,8 @@ import { BucketAllocLimitComponent } from '../bucket-alloc-limit/bucket-alloc-li
   ],
 })
 export class BucketComponent {
+  dialog = inject(MatDialog);
+
   @Input() bucket?: ImmutableBucket;
   @Input() unit?: string;
   @Input() unitAbbrev?: string;
@@ -120,8 +115,6 @@ export class BucketComponent {
   >();
   @Output() changed = new EventEmitter<[ImmutableBucket, ImmutableBucket]>();
   @Output() delete = new EventEmitter<ImmutableBucket>();
-
-  constructor(public dialog: MatDialog) {}
 
   /**
    * Limit of resources expected to be allocated to the given bucket in this period,

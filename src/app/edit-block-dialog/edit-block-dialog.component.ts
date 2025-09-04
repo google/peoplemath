@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -62,15 +62,10 @@ export interface EditBlockInstruction {
   ],
 })
 export class EditBlockDialogComponent {
-  selected: string[] = [];
+  dialogRef = inject<MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>>(MatDialogRef);
+  data = inject<EditBlockDialogData>(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<
-      EditBlockDialogComponent,
-      EditBlockInstruction
-    >,
-    @Inject(MAT_DIALOG_DATA) public data: EditBlockDialogData
-  ) {}
+  selected: string[] = [];
 
   createBlock(): void {
     if (this.selected.length === 0) {

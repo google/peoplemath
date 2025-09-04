@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -49,12 +49,10 @@ export interface RenameClassDialogData {
   ],
 })
 export class RenameClassDialogComponent implements OnInit {
-  newName = '';
+  dialogRef = inject<MatDialogRef<RenameClassDialogComponent>>(MatDialogRef);
+  data = inject<RenameClassDialogData>(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<RenameClassDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: RenameClassDialogData
-  ) {}
+  newName = '';
 
   ngOnInit(): void {
     this.newName = this.data.currentName;

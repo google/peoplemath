@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -75,14 +75,9 @@ export interface AddPeriodDialogData {
   ],
 })
 export class AddPeriodDialogComponent {
-  // I'd like to switch this to use reactive forms so you can use validations,
-  // but then you lose the ability to disable controls via data-driven methods,
-  // which seems like a net usability loss. :-(
-  // https://github.com/angular/angular/issues/11271
-  constructor(
-    public dialogRef: MatDialogRef<AddPeriodDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AddPeriodDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<AddPeriodDialogComponent>>(MatDialogRef);
+  data = inject<AddPeriodDialogData>(MAT_DIALOG_DATA);
+
 
   onCancel(): void {
     this.dialogRef.close();

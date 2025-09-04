@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ImmutablePeriod } from '../period';
@@ -45,15 +45,13 @@ import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.compone
   ],
 })
 export class PeriodSummaryComponent implements OnInit {
+  private storage = inject(StorageService);
+  private route = inject(ActivatedRoute);
+  private notificationService = inject(NotificationService);
+  private pageTitle = inject(PageTitleService);
+
   team?: ImmutableTeam;
   period?: ImmutablePeriod;
-
-  constructor(
-    private storage: StorageService,
-    private route: ActivatedRoute,
-    private notificationService: NotificationService,
-    private pageTitle: PageTitleService
-  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((m) => {
