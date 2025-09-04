@@ -35,6 +35,7 @@
           </div>
         }
       </div>
+    } @else {
       <div class="objective-list" cdkDropList (cdkDropListDropped)="reorderDrop($event)">
         @for (displayObjective of bucket!.objectives | displayObjectives | groupBlocks | blockPlaceholders; track displayObjective; let isLast = $last; let idx = $index) {
           <div
