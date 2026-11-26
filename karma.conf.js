@@ -21,6 +21,9 @@ module.exports = function (config) {
         timeoutInterval: 30000,
       },
     },
+    // Must exceed jasmine.timeoutInterval so Jasmine reports spec timeouts
+    // rather than Karma disconnecting the browser first.
+    browserNoActivityTimeout: 60000,
     jasmineHtmlReporter: {
       suppressAll: true, // removes the duplicated traces
     },

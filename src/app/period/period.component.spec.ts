@@ -17,7 +17,6 @@ import {
   fakeAsync,
   TestBed,
   tick,
-  waitForAsync,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -68,8 +67,8 @@ describe('PeriodComponent', () => {
   };
   const UPDATE_RESPONSE: ObjectUpdateResponse = { lastUpdateUUID: 'abcd' };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
         FormsModule,
@@ -106,13 +105,13 @@ describe('PeriodComponent', () => {
     storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
     storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
     storageServiceSpy.updatePeriod.and.returnValue(of(UPDATE_RESPONSE));
-  }));
+  });
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(PeriodComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
