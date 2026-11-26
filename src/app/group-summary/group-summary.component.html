@@ -17,8 +17,8 @@
                 <li>
                   <app-objective-summary
                     [objective]="summaryObjective(groupobs[0], groupobs[1])"
-                    [unit]="period?.unit"
-                    [secondaryUnits]="period?.secondaryUnits"
+                    [unit]="$safeNavigationMigration(period?.unit)"
+                    [secondaryUnits]="$safeNavigationMigration(period?.secondaryUnits)"
                   [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
                   @if (showObjectives) {
                     <ul>
@@ -26,7 +26,7 @@
                         <li>
                           <app-objective-summary
                             [objective]="ob"
-                          [unit]="period?.unit"></app-objective-summary>
+                          [unit]="$safeNavigationMigration(period?.unit)"></app-objective-summary>
                         </li>
                       }
                     </ul>
@@ -35,8 +35,8 @@
               }
               <li class="total"><b>Total:</b> <app-resource-quantity
               [quantity]="totalResourcesAllocated(bucket.objectives)"
-              [primaryUnit]="period?.unit"
-              [secondaryUnits]="period?.secondaryUnits"
+              [primaryUnit]="$safeNavigationMigration(period?.unit)"
+              [secondaryUnits]="$safeNavigationMigration(period?.secondaryUnits)"
             [fraction]="fractionResourcesAllocated(bucket.objectives)"></app-resource-quantity></li>
           </ul>
         </div>
@@ -50,8 +50,8 @@
           <li>
             <app-objective-summary
               [objective]="summaryObjective(groupobs[0], groupobs[1])"
-              [unit]="period?.unit"
-              [secondaryUnits]="period?.secondaryUnits"
+              [unit]="$safeNavigationMigration(period?.unit)"
+              [secondaryUnits]="$safeNavigationMigration(period?.secondaryUnits)"
             [fraction]="fractionResourcesAllocated(groupobs[1])"></app-objective-summary>
             @if (showObjectives) {
               <ul>
@@ -59,7 +59,7 @@
                   <li>
                     <app-objective-summary
                       [objective]="ob"
-                    [unit]="period?.unit"></app-objective-summary>
+                    [unit]="$safeNavigationMigration(period?.unit)"></app-objective-summary>
                   </li>
                 }
               </ul>

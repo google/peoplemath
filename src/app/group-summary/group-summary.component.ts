@@ -54,7 +54,7 @@ export class GroupSummaryComponent {
   showByBucket = true;
 
   bucketObjectivesByGroup(
-    bucket: ImmutableBucket
+    bucket: ImmutableBucket,
   ): [string, ImmutableObjective[]][] {
     // We order groups by the order the first item from each appears within the bucket
     const groupOrder: string[] = [];
@@ -114,12 +114,12 @@ export class GroupSummaryComponent {
     noGroup.sort((o1, o2) => o2.resourcesAllocated() - o1.resourcesAllocated());
 
     const result: [string, ImmutableObjective[]][] = Array.from(
-      obsByGroup.entries()
+      obsByGroup.entries(),
     );
     result.sort(
       ([g1, obs1], [g2, obs2]) =>
         totalResourcesAllocated(obs2) - totalResourcesAllocated(obs1) ||
-        g1.localeCompare(g2)
+        g1.localeCompare(g2),
     );
     if (noGroup.length > 0) {
       result.push(['No ' + this.groupType, noGroup]);
@@ -130,14 +130,14 @@ export class GroupSummaryComponent {
 
   summaryObjective(
     groupName: string,
-    objectives: ImmutableObjective[]
+    objectives: ImmutableObjective[],
   ): ImmutableObjective {
     return ImmutableObjective.fromObjective({
       name: groupName,
       commitmentType: undefined,
       resourceEstimate: objectives.reduce(
         (sum, ob) => sum + ob.resourceEstimate,
-        0
+        0,
       ),
       assignments: [
         { personId: '', commitment: totalResourcesAllocated(objectives) },
@@ -157,7 +157,7 @@ export class GroupSummaryComponent {
    * particular set of objectives.
    */
   fractionResourcesAllocated(
-    objectives: readonly ImmutableObjective[]
+    objectives: readonly ImmutableObjective[],
   ): number {
     return (
       this.totalResourcesAllocated(objectives) /

@@ -30,7 +30,7 @@ describe('MarkdownifyPipe', () => {
   it('should support bold', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('**some bold**')).toEqual(
-      '<strong>some bold</strong>'
+      '<strong>some bold</strong>',
     );
   });
 
@@ -47,37 +47,37 @@ describe('MarkdownifyPipe', () => {
   it('should support links', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('[a link](http://thetarget/)')).toEqual(
-      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a link</a>'
+      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a link</a>',
     );
   });
 
   it('should underline links in nolinks mode', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('[a link](http://thetarget/)', 'nolinks')).toEqual(
-      '<u>a link</u>'
+      '<u>a link</u>',
     );
   });
 
   it('should support formatting inside links', () => {
     const pipe = new MarkdownifyPipe();
     expect(pipe.transform('[a **formatted** link](http://thetarget/)')).toEqual(
-      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a <strong>formatted</strong> link</a>'
+      '<a href="http://thetarget/" target="_blank" rel="noopener noreferrer">a <strong>formatted</strong> link</a>',
     );
   });
 
   it('should support formatting inside links in nolinks mode', () => {
     const pipe = new MarkdownifyPipe();
     expect(
-      pipe.transform('[a **formatted** link](http://thetarget/)', 'nolinks')
+      pipe.transform('[a **formatted** link](http://thetarget/)', 'nolinks'),
     ).toEqual('<u>a <strong>formatted</strong> link</u>');
   });
 
   it('should handle unsupported tags inside links', () => {
     const pipe = new MarkdownifyPipe();
     expect(
-      pipe.transform('[an <blink>unsupported</blink> tag](http://target/)')
+      pipe.transform('[an <blink>unsupported</blink> tag](http://target/)'),
     ).toEqual(
-      '<a href="http://target/" target="_blank" rel="noopener noreferrer">an unsupported tag</a>'
+      '<a href="http://target/" target="_blank" rel="noopener noreferrer">an unsupported tag</a>',
     );
   });
 
@@ -86,8 +86,8 @@ describe('MarkdownifyPipe', () => {
     expect(
       pipe.transform(
         '[an <blink>unsupported</blink> tag](http://target/)',
-        'nolinks'
-      )
+        'nolinks',
+      ),
     ).toEqual('<u>an unsupported tag</u>');
   });
 });

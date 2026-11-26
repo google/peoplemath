@@ -15,7 +15,7 @@
                 <app-assignment
                   [objective]="objectiveAndBucket[0]"
                   [assignedResources]="assignedResources(objectiveAndBucket[0])"
-                  [unit]="period?.unit"
+                  [unit]="$safeNavigationMigration(period?.unit)"
                   [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
                   (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
                 </app-assignment>
@@ -25,8 +25,8 @@
               <li>
                 <b>Total:</b> <app-resource-quantity
                 [quantity]="totalAssignedResources(classObjBuckets[1])"
-                [primaryUnit]="period?.unit"
-              [secondaryUnits]="period?.secondaryUnits"></app-resource-quantity>
+                [primaryUnit]="$safeNavigationMigration(period?.unit)"
+              [secondaryUnits]="$safeNavigationMigration(period?.secondaryUnits)"></app-resource-quantity>
             </li>
           }
         </ul>
@@ -41,7 +41,7 @@
               <app-assignment
                 [objective]="objectiveAndBucket[0]"
                 [assignedResources]="assignedResources(objectiveAndBucket[0])"
-                [unit]="period?.unit"
+                [unit]="$safeNavigationMigration(period?.unit)"
                 [class.no-resources-assigned]="assignedResources(objectiveAndBucket[0]) <= 0"
                 (click)="editObjective(objectiveAndBucket[0], objectiveAndBucket[1])">
               </app-assignment>

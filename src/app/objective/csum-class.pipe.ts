@@ -21,7 +21,7 @@ export class CsumClassPipe implements PipeTransform {
   transform(
     cumulativeSum: number,
     bucketLimit: number,
-    resourceEstimate: number
+    resourceEstimate: number,
   ): string {
     if (cumulativeSum <= bucketLimit) {
       return 'resource-csum-ok';

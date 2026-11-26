@@ -97,7 +97,7 @@ export class ObjectiveComponent {
   totalAssignedResources(): number {
     return this.objective!.assignments.map((a) => a.commitment).reduce(
       (sum, current) => sum + current,
-      0
+      0,
     );
   }
 
@@ -144,7 +144,7 @@ export class ObjectiveComponent {
         .filter((pad: PersonAssignmentData) => pad.assign > 0)
         .map(
           (pad: PersonAssignmentData) =>
-            new ImmutableAssignment(new Assignment(pad.username, pad.assign))
+            new ImmutableAssignment(new Assignment(pad.username, pad.assign)),
         );
       const newObjective = this.objective!.withAssignments(newAssignments);
       this.changed.emit([this.objective!, newObjective]);
@@ -162,7 +162,7 @@ export class ObjectiveComponent {
       this.otherBuckets!,
       this.moveBucket,
       this.bucketChanged,
-      this.dialog
+      this.dialog,
     );
   }
 

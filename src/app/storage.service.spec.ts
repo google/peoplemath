@@ -26,6 +26,7 @@ import {
   HttpErrorResponse,
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr,
 } from '@angular/common/http';
 
 describe('StorageService', () => {
@@ -49,7 +50,7 @@ describe('StorageService', () => {
       imports: [],
       providers: [
         StorageService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ],
     });
@@ -141,7 +142,7 @@ describe('StorageService', () => {
       .subscribe((data) => expect(data).toEqual(response));
 
     const req = httpTestingController.expectOne(
-      '/api/period/testteam/testperiod'
+      '/api/period/testteam/testperiod',
     );
 
     expect(req.request.method).toEqual('PUT');
@@ -157,7 +158,7 @@ describe('StorageService', () => {
       .subscribe((data) => expect(data).toEqual(PERIOD));
 
     const req = httpTestingController.expectOne(
-      '/api/period/testteam/testperiod'
+      '/api/period/testteam/testperiod',
     );
 
     expect(req.request.method).toEqual('GET');
@@ -197,11 +198,11 @@ describe('StorageService', () => {
       (error: HttpErrorResponse) => {
         expect(error.status).toEqual(404, 'status');
         expect(error.error).toEqual(message, 'message');
-      }
+      },
     );
 
     const req = httpTestingController.expectOne(
-      '/api/period/testteam/testperiod'
+      '/api/period/testteam/testperiod',
     );
 
     req.flush(message, { status: 404, statusText: 'Not Found' });

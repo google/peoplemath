@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Team, ImmutableTeam, TeamList } from '../team';
 import { StorageService } from '../storage.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,6 +46,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressSpinner,
     MatCard,
@@ -75,7 +81,7 @@ export class TeamsComponent implements OnInit {
         catchError((error) => {
           this.notification.notifyError('Could not load teams', error);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((teamList?: TeamList) => {
         if (teamList?.teams) {
@@ -112,7 +118,7 @@ export class TeamsComponent implements OnInit {
           catchError((error) => {
             this.notification.notifyError('Could not save new team', error);
             return of('error');
-          })
+          }),
         )
         .subscribe((res) => {
           if (res !== 'error') {

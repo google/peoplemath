@@ -42,7 +42,7 @@ export class ImmutableBucket {
     allocationType: AllocationType,
     allocationPercentage: number,
     allocationAbsolute: number,
-    objectives: readonly ImmutableObjective[]
+    objectives: readonly ImmutableObjective[],
   ) {
     this.displayName = displayName;
     this.allocationType = allocationType;
@@ -57,7 +57,7 @@ export class ImmutableBucket {
       bucket.allocationType || AllocationType.Percentage,
       bucket.allocationPercentage,
       bucket.allocationAbsolute || 0,
-      bucket.objectives.map((o) => ImmutableObjective.fromObjective(o))
+      bucket.objectives.map((o) => ImmutableObjective.fromObjective(o)),
     );
   }
 
@@ -72,14 +72,14 @@ export class ImmutableBucket {
   }
 
   withNewObjectives(
-    newObjectives: readonly ImmutableObjective[]
+    newObjectives: readonly ImmutableObjective[],
   ): ImmutableBucket {
     return new ImmutableBucket(
       this.displayName,
       this.allocationType,
       this.allocationPercentage,
       this.allocationAbsolute,
-      newObjectives
+      newObjectives,
     );
   }
 
@@ -107,7 +107,7 @@ export class ImmutableBucket {
 
   withObjectiveChanged(
     original: ImmutableObjective,
-    newObjective: ImmutableObjective
+    newObjective: ImmutableObjective,
   ): ImmutableBucket {
     const index = this.objectiveIndex(original);
     if (index < 0) {
@@ -120,7 +120,7 @@ export class ImmutableBucket {
 
   withPersonDeleted(person: ImmutablePerson): ImmutableBucket {
     const newObjectives = this.objectives.map((o) =>
-      o.withPersonDeleted(person)
+      o.withPersonDeleted(person),
     );
     return this.withNewObjectives(newObjectives);
   }
@@ -128,17 +128,17 @@ export class ImmutableBucket {
   withGroupRenamed(
     groupType: string,
     oldName: string,
-    newName: string
+    newName: string,
   ): ImmutableBucket {
     const newObjectives = this.objectives.map((o) =>
-      o.withGroupRenamed(groupType, oldName, newName)
+      o.withGroupRenamed(groupType, oldName, newName),
     );
     return this.withNewObjectives(newObjectives);
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutableBucket {
     const newObjectives = this.objectives.map((o) =>
-      o.withTagRenamed(oldName, newName)
+      o.withTagRenamed(oldName, newName),
     );
     return this.withNewObjectives(newObjectives);
   }
@@ -170,7 +170,7 @@ export class ImmutableBucket {
    */
   allocationPercentageOfTotal(
     totalResourcesForPercent: number,
-    totalResources: number
+    totalResources: number,
   ): number {
     switch (this.allocationType) {
       case AllocationType.Percentage:

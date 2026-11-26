@@ -6,14 +6,14 @@
     <ul>
       @for (objective of taggedObjectives(); track objective) {
         <li>
-          <app-objective-summary [objective]="objective" [unit]="period?.unit">
+          <app-objective-summary [objective]="objective" [unit]="$safeNavigationMigration(period?.unit)">
           </app-objective-summary>
         </li>
       }
       <li><b>Total:</b> <app-resource-quantity
       [quantity]="totalAllocationsForTag()"
-      [primaryUnit]="period?.unit"
-      [secondaryUnits]="period?.secondaryUnits"
+      [primaryUnit]="$safeNavigationMigration(period?.unit)"
+      [secondaryUnits]="$safeNavigationMigration(period?.secondaryUnits)"
     [fraction]="allocationsFractionForTag()"></app-resource-quantity></li>
   </ul>
 </mat-card-content>

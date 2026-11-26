@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, EventEmitter, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { AllocationType, Bucket, ImmutableBucket } from '../bucket';
 import {
   MatDialogRef,
@@ -46,6 +51,7 @@ export interface EditBucketDialogData {
   selector: 'app-edit-bucket-dialog',
   templateUrl: './edit-bucket-dialog.component.html',
   styleUrls: ['./edit-bucket-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,
@@ -127,7 +133,7 @@ export class EditBucketDialogComponent {
       .map((o) =>
         o.assignments
           .map((a) => a.commitment)
-          .reduce((sum, current) => sum + current, 0)
+          .reduce((sum, current) => sum + current, 0),
       )
       .reduce((sum, current) => sum + current, 0);
   }

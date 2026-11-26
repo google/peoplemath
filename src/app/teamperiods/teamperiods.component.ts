@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Period, ImmutablePeriod } from '../period';
 import { Team, ImmutableTeam } from '../team';
@@ -38,7 +43,7 @@ import { Person } from '../person';
 import { Assignment } from '../assignment';
 import { Objective } from '../objective';
 import { AuthService } from '../services/auth.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
 
@@ -64,6 +69,7 @@ const DEFAULT_MAX_COMMITTED_PERCENTAGE = 50;
   selector: 'app-teamperiods',
   templateUrl: './teamperiods.component.html',
   styleUrls: ['./teamperiods.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressSpinner,
     MatCard,
@@ -110,10 +116,10 @@ export class TeamPeriodsComponent implements OnInit {
         catchError((error) => {
           this.notificationService.notifyError(
             'Could not load team "' + teamId + '": ',
-            error
+            error,
           );
           return of(undefined);
-        })
+        }),
       )
       .subscribe((team?: Team) => {
         if (team) {
@@ -149,7 +155,7 @@ export class TeamPeriodsComponent implements OnInit {
         catchError((error) => {
           this.notificationService.notifyError('Could not load periods', error);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((periods?: Period[]) => {
         if (periods) {
@@ -167,7 +173,11 @@ export class TeamPeriodsComponent implements OnInit {
   sortedPeriods(): ImmutablePeriod[] {
     const result = this.periods!.slice();
     result.sort((a, b) =>
-      a.displayName < b.displayName ? 1 : a.displayName > b.displayName ? -1 : 0
+      a.displayName < b.displayName
+        ? 1
+        : a.displayName > b.displayName
+          ? -1
+          : 0,
     );
     return result;
   }
@@ -211,11 +221,11 @@ export class TeamPeriodsComponent implements OnInit {
         newPeriod = data.period;
       } else if (data.createMethod === CreateMethod.Copy) {
         const copiedPeriod = this.periods!.find(
-          (p) => p.id === data.copyFromPeriodID
+          (p) => p.id === data.copyFromPeriodID,
         );
         if (!copiedPeriod) {
           this.notificationService.notifyError(
-            'Cannot find period with ID "' + data.copyFromPeriodID + '"'
+            'Cannot find period with ID "' + data.copyFromPeriodID + '"',
           );
           return;
         }
@@ -237,7 +247,7 @@ export class TeamPeriodsComponent implements OnInit {
             ? this.copyBuckets(
                 copiedPeriod.buckets,
                 data.copyObjectives,
-                data.copyAssignments
+                data.copyAssignments,
               )
             : [],
           people: data.copyPeople
@@ -247,7 +257,7 @@ export class TeamPeriodsComponent implements OnInit {
         };
       } else {
         this.notificationService.notifyError(
-          'Unexpected createMethod "' + data.createMethod + '"'
+          'Unexpected createMethod "' + data.createMethod + '"',
         );
         return;
       }
@@ -266,7 +276,7 @@ export class TeamPeriodsComponent implements OnInit {
   copyBuckets(
     orig: readonly ImmutableBucket[],
     copyObjectives: boolean,
-    copyAssignments: boolean
+    copyAssignments: boolean,
   ): Bucket[] {
     const result: Bucket[] = [];
     for (const b of orig) {
@@ -335,10 +345,10 @@ export class TeamPeriodsComponent implements OnInit {
         catchError((error) => {
           this.notificationService.notifyError(
             'Could not save new period',
-            error
+            error,
           );
           return of(undefined);
-        })
+        }),
       )
       .subscribe((updateResponse) => {
         if (updateResponse) {
@@ -368,7 +378,7 @@ export class TeamPeriodsComponent implements OnInit {
           catchError((error) => {
             this.notificationService.notifyError('Could not save team', error);
             return of('error');
-          })
+          }),
         )
         .subscribe((res) => {
           if (res !== 'error') {

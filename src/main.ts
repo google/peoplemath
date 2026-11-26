@@ -26,6 +26,7 @@ import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr,
 } from '@angular/common/http';
 import { AuthInterceptor } from './app/services/auth.interceptor';
 import {
@@ -59,7 +60,7 @@ bootstrapApplication(AppComponent, {
       ReactiveFormsModule,
       LayoutModule,
       AngularFireModule.initializeApp(firebaseConfig.firebase),
-      AngularFireAuthModule
+      AngularFireAuthModule,
     ),
     StorageService,
     NotificationService,
@@ -82,7 +83,7 @@ bootstrapApplication(AppComponent, {
       useValue: { duration: 2500 },
     },
     Title,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideAnimations(),
   ],
 })

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { Title } from '@angular/platform-browser';
 import { PageTitleService } from './services/pagetitle.service';
@@ -29,6 +29,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenavContainer,
     MatSidenavContent,
@@ -47,7 +48,7 @@ export class AppComponent {
 
   constructor() {
     this.pageTitleService.title$.subscribe((title) =>
-      this.titleService.setTitle(title)
+      this.titleService.setTitle(title),
     );
   }
 }

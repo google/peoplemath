@@ -110,7 +110,7 @@ export class AssignmentsByPersonComponent {
       [], // Don't allow moving between buckets via this path - it's not really important
       undefined,
       this.bucketChanged!,
-      this.dialog
+      this.dialog,
     );
   }
 }

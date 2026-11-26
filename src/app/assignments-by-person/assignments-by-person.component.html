@@ -13,7 +13,7 @@
                 <app-assignment
                   [objective]="oa.objective"
                   [assignedResources]="oa.assignment.commitment"
-                  [unit]="period?.unit"
+                  [unit]="$safeNavigationMigration(period?.unit)"
                 (click)="editObjective(oa.objective, oa.bucket)"></app-assignment>
               </li>
             }

@@ -104,7 +104,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     });
     for (const [_g, obsBuckets] of obsByGroup) {
       obsBuckets.sort(
-        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated()
+        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated(),
       );
     }
     const result = Array.from(obsByGroup.entries());
@@ -123,7 +123,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     for (const bucket of this.period!.buckets) {
       for (const objective of bucket.objectives) {
         const mgs = objective.groups.filter(
-          (g) => g.groupType === this.groupType
+          (g) => g.groupType === this.groupType,
         );
         if (mgs.length === 0) {
           return true;
@@ -161,7 +161,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
     });
     for (const [_g, obsBuckets] of obsByTag) {
       obsBuckets.sort(
-        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated()
+        (ob1, ob2) => ob2[0].resourcesAllocated() - ob1[0].resourcesAllocated(),
       );
     }
     const result = Array.from(obsByTag.entries());
@@ -182,7 +182,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
 
   classTrackBy(
     _index: number,
-    classObjBuckets: [string, [ImmutableObjective, ImmutableBucket][]]
+    classObjBuckets: [string, [ImmutableObjective, ImmutableBucket][]],
   ): string {
     return classObjBuckets[0];
   }
@@ -192,7 +192,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
   }
 
   totalAssignedResources(
-    objBuckets: readonly [ImmutableObjective, ImmutableBucket][]
+    objBuckets: readonly [ImmutableObjective, ImmutableBucket][],
   ): number {
     return totalResourcesAllocated(objBuckets.map((ob) => ob[0]));
   }
@@ -221,7 +221,7 @@ export class AssignmentsClassifyComponent implements OnDestroy {
       [], // Don't allow moving between buckets via this path - it's not really important
       undefined,
       this.bucketChanged!,
-      this.dialog
+      this.dialog,
     );
   }
 }

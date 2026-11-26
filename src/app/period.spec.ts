@@ -154,7 +154,7 @@ describe('ImmutablePeriod', () => {
     const expected: Period = { ..._mut, buckets: [_mut.buckets[0], newBucket] };
     const updated = period.withBucketChanged(
       period.buckets[1],
-      ImmutableBucket.fromBucket(newBucket)
+      ImmutableBucket.fromBucket(newBucket),
     );
     expect(updated.toOriginal()).toEqual(expected);
   });
@@ -175,7 +175,7 @@ describe('ImmutablePeriod', () => {
         allocationPercentage: 0,
         allocationAbsolute: 0,
         objectives: [],
-      })
+      }),
     );
     expect(updated).toEqual(period);
   });
@@ -184,7 +184,7 @@ describe('ImmutablePeriod', () => {
     const newPerson = new Person('person1', 'Person Number One', 'LOC', 8);
     const updated = period.withPersonChanged(
       period.people[0],
-      new ImmutablePerson(newPerson)
+      new ImmutablePerson(newPerson),
     );
     const expected: Period = { ..._mut, people: [newPerson, _mut.people[1]] };
     expect(updated.toOriginal()).toEqual(expected);
@@ -192,10 +192,10 @@ describe('ImmutablePeriod', () => {
 
   it('should not allow person ID change', () => {
     const idChanged = new ImmutablePerson(
-      new Person('person3', 'Person 1', 'LOC', 6)
+      new Person('person3', 'Person 1', 'LOC', 6),
     );
     expect(() =>
-      period.withPersonChanged(period.people[0], idChanged)
+      period.withPersonChanged(period.people[0], idChanged),
     ).toThrowError(/Cannot change person id/);
   });
 
@@ -211,10 +211,10 @@ describe('ImmutablePeriod', () => {
 
   it('should not allow new person with existing ID', () => {
     const newPerson = new ImmutablePerson(
-      new Person('person1', 'A different person 1', 'LOC', 9)
+      new Person('person1', 'A different person 1', 'LOC', 9),
     );
     expect(() => period.withNewPerson(newPerson)).toThrowError(
-      /id person1 already exists/
+      /id person1 already exists/,
     );
   });
 
@@ -226,18 +226,18 @@ describe('ImmutablePeriod', () => {
 
   it('should be unaffected by changing nonexistent person', () => {
     const nonExistent = new ImmutablePerson(
-      new Person('nonexistent', 'Does not exist', '', 0)
+      new Person('nonexistent', 'Does not exist', '', 0),
     );
     const updated = period.withPersonChanged(
       nonExistent,
-      new ImmutablePerson(new Person('nonexistent', 'na', '', 1))
+      new ImmutablePerson(new Person('nonexistent', 'na', '', 1)),
     );
     expect(updated).toEqual(period);
   });
 
   it('should be unaffected by deleting nonexistent person', () => {
     const nonExistent = new ImmutablePerson(
-      new Person('nonexistent', 'Does not exist', '', 0)
+      new Person('nonexistent', 'Does not exist', '', 0),
     );
     const updated = period.withPersonDeleted(nonExistent);
     expect(updated).toEqual(period);
@@ -270,7 +270,7 @@ describe('ImmutablePeriod', () => {
       obj,
       period.buckets[1],
       obj,
-      period.buckets[0]
+      period.buckets[0],
     );
     expect(updated.buckets[1].objectives).toEqual([]);
     expect(updated.buckets[0].objectives).toEqual([obj]);

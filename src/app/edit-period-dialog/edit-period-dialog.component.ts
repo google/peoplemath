@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Period, SecondaryUnit } from '../period';
 import {
   MatDialogRef,
@@ -44,6 +44,7 @@ export interface EditPeriodDialogData {
   selector: 'app-edit-period-dialog',
   templateUrl: './edit-period-dialog.component.html',
   styleUrls: ['./edit-period-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,
@@ -75,26 +76,26 @@ export class EditPeriodDialogComponent {
 
     this.periodIdControl = new UntypedFormControl(
       data.period.id,
-      Validators.required
+      Validators.required,
     );
     this.displayNameControl = new UntypedFormControl(
       data.period.displayName,
-      Validators.required
+      Validators.required,
     );
     this.unitControl = new UntypedFormControl(
       data.period.unit,
-      Validators.required
+      Validators.required,
     );
     this.unitAbbrevControl = new UntypedFormControl(data.period.unitAbbrev);
     this.secondaryUnitsControl = new UntypedFormControl(
       data.period.secondaryUnits
         .map((su) => su.name + ':' + su.conversionFactor)
-        .join(',')
+        .join(','),
     );
     this.notesUrlControl = new UntypedFormControl(data.period.notesURL);
     this.maxCommitPctControl = new UntypedFormControl(
       data.period.maxCommittedPercentage,
-      [Validators.min(0), Validators.max(100)]
+      [Validators.min(0), Validators.max(100)],
     );
   }
 

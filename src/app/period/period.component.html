@@ -25,12 +25,12 @@
       <div class="col buckets-col">
         @for (bucket of period!.buckets; track bucket) {
           <app-bucket [bucket]="bucket"
-            [unit]="period?.unit"
+            [unit]="$safeNavigationMigration(period?.unit)"
             [unitAbbrev]="period?.unitAbbrev || period?.unit"
             [totalAllocationPercentage]="totalAllocationPercentage()"
             [globalResourcesAvailable]="totalAvailable()"
             [globalResourcesAvailableForPct]="totalAvailableForPercentAlloc()"
-            [maxCommittedPercentage]="period?.maxCommittedPercentage"
+            [maxCommittedPercentage]="$safeNavigationMigration(period?.maxCommittedPercentage)"
             [unallocatedTime]="unallocatedTime()"
             [showOrderButtons]="showOrderButtons && isEditingEnabled"
             [isEditingEnabled]="isEditingEnabled"
@@ -45,7 +45,7 @@
         <div><button (click)="addBucket()" mat-button [disabled]="!isEditingEnabled" color="primary">Add Bucket</button></div>
       </div>
       <div class="col resources-col">
-        <app-people [people]="period?.people"
+        <app-people [people]="$safeNavigationMigration(period?.people)"
           [peopleAllocations]="peopleAllocations()"
           [peopleCommittedAllocations]="peopleCommittedAllocations()"
           [peopleAssignmentCounts]="peopleAssignmentCounts()"
@@ -53,7 +53,7 @@
           [totalAllocated]="totalAllocated()"
           [totalUnallocated]="totalUnallocated()"
           [totalAssignmentCount]="totalAssignmentCount()"
-          [unit]="period?.unit"
+          [unit]="$safeNavigationMigration(period?.unit)"
           [isEditingEnabled]="isEditingEnabled"
           (newPerson)="onNewPerson($event)"
           (changed)="onChangedPerson($event[0], $event[1])"

@@ -17,7 +17,7 @@ export class Person {
     public id: string,
     public displayName: string,
     public location: string,
-    public availability: number
+    public availability: number,
   ) {}
 }
 
@@ -52,7 +52,7 @@ export class ImmutablePerson {
       this.id,
       this.displayName,
       this.location,
-      this.availability
+      this.availability,
     );
   }
 

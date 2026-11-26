@@ -16,12 +16,15 @@ export class Team {
   constructor(
     public id: string,
     public displayName: string,
-    public teamPermissions?: TeamPermissions
+    public teamPermissions?: TeamPermissions,
   ) {}
 }
 
 export class TeamList {
-  constructor(public teams: Team[], public canAddTeam: boolean) {}
+  constructor(
+    public teams: Team[],
+    public canAddTeam: boolean,
+  ) {}
 }
 
 export class TeamPermissions {
@@ -29,7 +32,7 @@ export class TeamPermissions {
     public read: Permission,
     public write: Permission,
     public readAllTeams: Permission,
-    public addTeam: Permission
+    public addTeam: Permission,
   ) {}
 }
 
@@ -38,7 +41,10 @@ export class Permission {
 }
 
 export class UserMatcher {
-  constructor(public type: string, public id: string) {}
+  constructor(
+    public type: string,
+    public id: string,
+  ) {}
 }
 
 export class ImmutableTeam {

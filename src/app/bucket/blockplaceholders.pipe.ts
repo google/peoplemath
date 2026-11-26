@@ -46,7 +46,7 @@ export class BlockplaceholdersPipe implements PipeTransform {
           groups: [],
           tags: [],
           assignments: sumAssignments(
-            objectiveBlock.map((o) => o.objective.assignments)
+            objectiveBlock.map((o) => o.objective.assignments),
           ),
           blockID: first.blockID,
           displayOptions: first.displayOptions,

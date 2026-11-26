@@ -13,7 +13,10 @@
 // limitations under the License.
 
 export class Assignment {
-  constructor(public personId: string, public commitment: number) {}
+  constructor(
+    public personId: string,
+    public commitment: number,
+  ) {}
 }
 
 export class ImmutableAssignment {
@@ -38,7 +41,7 @@ export class ImmutableAssignment {
 }
 
 export function sumAssignments(
-  assignments: (readonly ImmutableAssignment[])[]
+  assignments: (readonly ImmutableAssignment[])[],
 ): Assignment[] {
   const byPerson = new Map();
   for (const as of assignments) {

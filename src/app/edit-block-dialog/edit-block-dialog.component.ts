@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -48,6 +48,7 @@ export interface EditBlockInstruction {
   selector: 'app-edit-block-dialog',
   templateUrl: './edit-block-dialog.component.html',
   styleUrls: ['./edit-block-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,
@@ -60,9 +61,10 @@ export interface EditBlockInstruction {
   ],
 })
 export class EditBlockDialogComponent {
-  dialogRef = inject<
-    MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>
-  >(MatDialogRef);
+  dialogRef =
+    inject<MatDialogRef<EditBlockDialogComponent, EditBlockInstruction>>(
+      MatDialogRef,
+    );
   data = inject<EditBlockDialogData>(MAT_DIALOG_DATA);
 
   selected: string[] = [];

@@ -73,7 +73,7 @@ class PersonData {
     public assignmentCount: number,
     public commitFraction: number,
     public isOverallocated: boolean,
-    public person: Person
+    public person: Person,
   ) {}
 }
 
@@ -134,7 +134,7 @@ export class PeopleComponent {
       'allocated',
       'unallocated',
       'assignmentCount',
-      'commitFraction'
+      'commitFraction',
     );
     return columnLabels;
   }
@@ -151,8 +151,8 @@ export class PeopleComponent {
           this.personAssignmentCount(p),
           this.personCommitFraction(p),
           this.isPersonOverallocated(p),
-          p
-        )
+          p,
+        ),
     );
     const result = new MatTableDataSource(data);
     result.sort = this.sort!;
@@ -297,6 +297,7 @@ export interface EditPersonDialogData {
 @Component({
   selector: 'app-edit-person-dialog',
   templateUrl: 'edit-person-dialog.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     FormsModule,

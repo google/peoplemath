@@ -39,6 +39,7 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-shadow': 'error',
       '@angular-eslint/prefer-standalone': 'off',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
     },
   },
   {
@@ -48,5 +49,5 @@ module.exports = tseslint.config(
       //   ...angular.configs.templateAccessibility,
     ],
     rules: {},
-  }
+  },
 );

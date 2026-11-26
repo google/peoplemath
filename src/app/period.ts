@@ -106,7 +106,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
       buckets: period.buckets.map((b) => ImmutableBucket.fromBucket(b)),
       people: period.people.map((p) => new ImmutablePerson(p)),
       secondaryUnits: period.secondaryUnits.map(
-        (su) => new ImmutableSecondaryUnit(su)
+        (su) => new ImmutableSecondaryUnit(su),
       ),
       lastUpdateUUID: period.lastUpdateUUID,
     });
@@ -132,7 +132,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   }
 
   private withNewBuckets(
-    newBuckets: readonly ImmutableBucket[]
+    newBuckets: readonly ImmutableBucket[],
   ): ImmutablePeriod {
     return new ImmutablePeriod({ ...this, buckets: newBuckets });
   }
@@ -166,7 +166,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
 
   withBucketChanged(
     from: ImmutableBucket,
-    to: ImmutableBucket
+    to: ImmutableBucket,
   ): ImmutablePeriod {
     const index = this.buckets.findIndex((b) => b === from);
     if (index < 0) {
@@ -200,7 +200,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     oldObj: ImmutableObjective,
     from: ImmutableBucket,
     newObj: ImmutableObjective,
-    to: ImmutableBucket
+    to: ImmutableBucket,
   ): ImmutablePeriod {
     const newBuckets = [...this.buckets];
     const fromIdx = newBuckets.findIndex((b) => b === from);
@@ -218,7 +218,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
 
   withPersonChanged(
     oldPerson: ImmutablePerson,
-    newPerson: ImmutablePerson
+    newPerson: ImmutablePerson,
   ): ImmutablePeriod {
     if (oldPerson.id !== newPerson.id) {
       // We aren't doing the assignment updates etc that would be necessary for this
@@ -251,7 +251,7 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
     newPeople.splice(index, 1);
     // Deleting a person requires ensuring their assignments are deleted as well
     const newBuckets: ImmutableBucket[] = this.buckets.map((b) =>
-      b.withPersonDeleted(person)
+      b.withPersonDeleted(person),
     );
     return new ImmutablePeriod({
       ...this,
@@ -263,17 +263,17 @@ export class ImmutablePeriod implements ImmutablePeriodIF {
   withGroupRenamed(
     groupType: string,
     oldName: string,
-    newName: string
+    newName: string,
   ): ImmutablePeriod {
     const newBuckets = this.buckets.map((b) =>
-      b.withGroupRenamed(groupType, oldName, newName)
+      b.withGroupRenamed(groupType, oldName, newName),
     );
     return this.withNewBuckets(newBuckets);
   }
 
   withTagRenamed(oldName: string, newName: string): ImmutablePeriod {
     const newBuckets = this.buckets.map((b) =>
-      b.withTagRenamed(oldName, newName)
+      b.withTagRenamed(oldName, newName),
     );
     return this.withNewBuckets(newBuckets);
   }

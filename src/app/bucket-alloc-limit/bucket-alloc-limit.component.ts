@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ImmutableBucket } from '../bucket';
 import { DecimalPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -23,6 +23,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'app-bucket-alloc-limit',
   templateUrl: './bucket-alloc-limit.component.html',
   styleUrls: ['./bucket-alloc-limit.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatTooltip, DecimalPipe],
 })
 export class BucketAllocLimitComponent {

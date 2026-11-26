@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-pill',
   template: '<span class="pill pill-primary"><ng-content></ng-content></span>',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./pill.component.css'],
 })
 export class PillComponent {}

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -54,6 +54,7 @@ export interface AddPeriodDialogData {
   selector: 'app-add-period-dialog',
   templateUrl: './add-period-dialog.component.html',
   styleUrls: ['./add-period-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,
@@ -122,7 +123,7 @@ export class AddPeriodDialogComponent {
       }
       if (
         !this.data.existingPeriods.find(
-          (p) => p.id === this.data.copyFromPeriodID
+          (p) => p.id === this.data.copyFromPeriodID,
         )
       ) {
         return false;
