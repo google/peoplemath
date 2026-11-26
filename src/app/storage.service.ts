@@ -60,13 +60,13 @@ export class StorageService {
     return this.http.post<ObjectUpdateResponse>(
       '/api/period/' + teamId + '/',
       period,
-      options
+      options,
     );
   }
 
   updatePeriod(
     teamId: string,
-    period: Period
+    period: Period,
   ): Observable<ObjectUpdateResponse> {
     const options = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -74,7 +74,7 @@ export class StorageService {
     return this.http.put<ObjectUpdateResponse>(
       '/api/period/' + teamId + '/' + period.id,
       period,
-      options
+      options,
     );
   }
 }

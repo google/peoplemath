@@ -4,13 +4,12 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma'),
     ],
     client: {
       jasmine: {
@@ -21,6 +20,9 @@ module.exports = function (config) {
         timeoutInterval: 30000,
       },
     },
+    // Must exceed jasmine.timeoutInterval so Jasmine reports spec timeouts
+    // rather than Karma disconnecting the browser first.
+    browserNoActivityTimeout: 60000,
     jasmineHtmlReporter: {
       suppressAll: true, // removes the duplicated traces
     },

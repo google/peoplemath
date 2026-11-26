@@ -23,43 +23,39 @@ describe('PeopleComponent', () => {
   let component: PeopleComponent;
   let fixture: ComponentFixture<PeopleComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, BrowserAnimationsModule, PeopleComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, BrowserAnimationsModule, PeopleComponent],
+    }).compileComponents();
+  }));
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(PeopleComponent);
-      component = fixture.componentInstance;
-      component.people = [
-        {
-          id: 'p1',
-          displayName: 'Person 1',
-          location: 'ABC',
-          availability: 6,
-        },
-        {
-          id: 'p2',
-          displayName: 'Person 2',
-          location: 'DEF',
-          availability: 5,
-        },
-        {
-          id: 'p3',
-          displayName: 'Person 3',
-          location: 'GHI',
-          availability: 6,
-        },
-      ].map((p) => new ImmutablePerson(p));
-      component.peopleAllocations = new Map();
-      component.peopleAssignmentCounts = new Map();
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(PeopleComponent);
+    component = fixture.componentInstance;
+    component.people = [
+      {
+        id: 'p1',
+        displayName: 'Person 1',
+        location: 'ABC',
+        availability: 6,
+      },
+      {
+        id: 'p2',
+        displayName: 'Person 2',
+        location: 'DEF',
+        availability: 5,
+      },
+      {
+        id: 'p3',
+        displayName: 'Person 3',
+        location: 'GHI',
+        availability: 6,
+      },
+    ].map((p) => new ImmutablePerson(p));
+    component.peopleAllocations = new Map();
+    component.peopleAssignmentCounts = new Map();
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -35,7 +35,7 @@ export class AuthGuard {
 
   canActivate(
     _next: ActivatedRouteSnapshot,
-    _state: RouterStateSnapshot
+    _state: RouterStateSnapshot,
   ): Observable<boolean> | boolean {
     if (environment.requireAuth) {
       return this.auth.angularFireAuth.authState.pipe(
@@ -45,7 +45,7 @@ export class AuthGuard {
           if (!loggedIn) {
             this.router.navigate(['unauthenticated']);
           }
-        })
+        }),
       );
     } else {
       return true;

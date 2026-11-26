@@ -45,7 +45,7 @@ import {
 } from '../assignments-classify/assignments-classify.component';
 import { ThemePalette } from '@angular/material/core';
 import { AuthService } from '../services/auth.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { NotificationService } from '../services/notification.service';
 import { PageTitleService } from '../services/pagetitle.service';
 import { DecimalPipe, PercentPipe } from '@angular/common';
@@ -159,7 +159,7 @@ export class PeriodComponent implements OnInit {
   totalAvailable(): number {
     return this.period!.people.map((person) => person.availability).reduce(
       (sum, current) => sum + current,
-      0
+      0,
     );
   }
 
@@ -170,7 +170,7 @@ export class PeriodComponent implements OnInit {
     return (
       this.totalAvailable() -
       this.period!.buckets.filter(
-        (b) => b.allocationType === AllocationType.Absolute
+        (b) => b.allocationType === AllocationType.Absolute,
       )
         .map((b) => b.allocationAbsolute)
         .reduce((sum, current) => sum + current, 0)
@@ -194,7 +194,7 @@ export class PeriodComponent implements OnInit {
    */
   totalAllocationPercentage(): number {
     return this.period!.buckets.filter(
-      (b) => b.allocationType === AllocationType.Percentage
+      (b) => b.allocationType === AllocationType.Percentage,
     )
       .map((bucket) => bucket.allocationPercentage)
       .reduce((sum, current) => sum + current, 0);
@@ -204,13 +204,13 @@ export class PeriodComponent implements OnInit {
     return this.period!.buckets.map((bucket) =>
       bucket.objectives
         .map((objective) => objective.assignments.length)
-        .reduce((sum, current) => sum + current, 0)
+        .reduce((sum, current) => sum + current, 0),
     ).reduce((sum, current) => sum + current, 0);
   }
 
   sumAssignmentValByPerson(
     objPred: (o: ImmutableObjective) => boolean,
-    valFunc: (a: ImmutableAssignment) => number
+    valFunc: (a: ImmutableAssignment) => number,
   ): ReadonlyMap<string, number> {
     const result = new Map<string, number>();
     this.period!.buckets.forEach((bucket) => {
@@ -232,21 +232,21 @@ export class PeriodComponent implements OnInit {
   peopleAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
       (_o) => true,
-      (a: Assignment) => a.commitment
+      (a: Assignment) => a.commitment,
     );
   }
 
   peopleCommittedAllocations(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
       (o: ImmutableObjective) => o.commitmentType === CommitmentType.Committed,
-      (a: ImmutableAssignment) => a.commitment
+      (a: ImmutableAssignment) => a.commitment,
     );
   }
 
   peopleAssignmentCounts(): ReadonlyMap<string, number> {
     return this.sumAssignmentValByPerson(
       (_o) => true,
-      (_a) => 1
+      (_a) => 1,
     );
   }
 
@@ -332,7 +332,7 @@ export class PeriodComponent implements OnInit {
     const newPeriod = this.period!.withGroupRenamed(
       groupType,
       oldName,
-      newName
+      newName,
     );
     if (newPeriod !== this.period) {
       this.setPeriod(newPeriod);
@@ -357,7 +357,7 @@ export class PeriodComponent implements OnInit {
         catchError((error) => {
           this.notificationService.notifyError('Could not load team', error);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((team?: Team) => {
         if (team) {
@@ -392,7 +392,7 @@ export class PeriodComponent implements OnInit {
         catchError((error) => {
           this.notificationService.notifyError('Could not load period', error);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((period?: Period) => {
         if (period) {
@@ -425,7 +425,7 @@ export class PeriodComponent implements OnInit {
 
   onChangedPerson(
     oldPerson: ImmutablePerson,
-    newPerson: ImmutablePerson
+    newPerson: ImmutablePerson,
   ): void {
     this.setPeriod(this.period!.withPersonChanged(oldPerson, newPerson));
     this.save();
@@ -442,7 +442,7 @@ export class PeriodComponent implements OnInit {
         'performSave() called with team=' +
           this.team +
           ', period=' +
-          this.period
+          this.period,
       );
       return;
     }
@@ -452,22 +452,22 @@ export class PeriodComponent implements OnInit {
         catchError((error) => {
           if (error.status === 409) {
             this.notificationService.notifyError(
-              'This period was modified in another session. Try reloading the page and reapplying your edit.'
+              'This period was modified in another session. Try reloading the page and reapplying your edit.',
             );
           } else {
             this.notificationService.notifyError(
               'Failed to save period',
-              error
+              error,
             );
           }
           return of(undefined);
-        })
+        }),
       )
       .subscribe((updateResponse) => {
         if (updateResponse) {
           this.notificationService.notifyInfo('Saved');
           this.setPeriod(
-            this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID)
+            this.period!.withNewLastUpdateUUID(updateResponse.lastUpdateUUID),
           );
         }
       });
@@ -521,7 +521,7 @@ export class PeriodComponent implements OnInit {
         return;
       }
       this.setPeriod(
-        this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket))
+        this.period!.withNewBucket(ImmutableBucket.fromBucket(bucket)),
       );
       this.save();
     });
@@ -546,7 +546,7 @@ export class PeriodComponent implements OnInit {
     oldObj: ImmutableObjective,
     from: ImmutableBucket,
     newObj: ImmutableObjective,
-    to: ImmutableBucket
+    to: ImmutableBucket,
   ): void {
     this.setPeriod(this.period!.withObjectiveMoved(oldObj, from, newObj, to));
     this.save();

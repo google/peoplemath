@@ -18,11 +18,15 @@ import { StorageService } from './storage.service';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { firebaseConfig } from '../environments/firebaseConfig';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-// eslint-disable-next-line @angular-eslint/component-selector
-@Component({ selector: 'router-outlet', template: '' })
+@Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'router-outlet',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '',
+})
 class RouterOutletStubComponent {}
 
 describe('AppComponent', () => {
@@ -49,7 +53,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('.headername').textContent).toContain(
-      'PeopleMath'
+      'PeopleMath',
     );
   });
 });

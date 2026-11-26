@@ -40,7 +40,7 @@ export class AuthService {
       angularFireAuth.onAuthStateChanged(
         (firebaseUser: firebase.User | null) => {
           this.updateUserData(firebaseUser);
-        }
+        },
       );
     }
   }
@@ -57,7 +57,7 @@ export class AuthService {
       .then((result: firebase.auth.UserCredential) => {
         const user = result.user;
         this.notificationService.notifyInfo(
-          'Signed in as ' + user?.displayName
+          'Signed in as ' + user?.displayName,
         );
         this.router.navigate(['/']);
         return this.updateUserData(user);

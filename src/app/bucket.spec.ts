@@ -70,7 +70,7 @@ describe('ImmutableBucket', () => {
 
   it('should support new objective at bottom', () => {
     const newBucket = bucket.withNewObjectiveAtBottom(
-      ImmutableObjective.fromObjective(obj2)
+      ImmutableObjective.fromObjective(obj2),
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
@@ -84,7 +84,7 @@ describe('ImmutableBucket', () => {
 
   it('should support new objective at top', () => {
     const newBucket = bucket.withNewObjectiveAtTop(
-      ImmutableObjective.fromObjective(obj2)
+      ImmutableObjective.fromObjective(obj2),
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
@@ -116,7 +116,7 @@ describe('ImmutableBucket', () => {
   it('should support changing an objective', () => {
     const newBucket = bucket.withObjectiveChanged(
       bucket.objectives[0],
-      ImmutableObjective.fromObjective(obj2)
+      ImmutableObjective.fromObjective(obj2),
     );
     const expected: Bucket = {
       displayName: _mut.displayName,
@@ -131,7 +131,7 @@ describe('ImmutableBucket', () => {
   it('should be unaffected by changing a nonexistent objective', () => {
     const newBucket = bucket.withObjectiveChanged(
       nonExistentObjective,
-      ImmutableObjective.fromObjective(obj2)
+      ImmutableObjective.fromObjective(obj2),
     );
     expect(newBucket).toEqual(bucket);
   });

@@ -21,7 +21,7 @@ import { GroupblocksPipe } from './groupblocks.pipe';
 function objt(
   name: string,
   resourceEstimate: number,
-  blockID?: string
+  blockID?: string,
 ): ImmutableObjective {
   return ImmutableObjective.fromObjective({
     name: name,
@@ -38,7 +38,7 @@ function dobjt(
   name: string,
   resourceEstimate: number,
   csum: number,
-  blockID?: string
+  blockID?: string,
 ): DisplayObjective {
   return {
     objective: objt(name, resourceEstimate, blockID),

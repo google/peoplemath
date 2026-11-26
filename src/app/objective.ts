@@ -186,24 +186,24 @@ export class ImmutableObjective {
   }
 
   withAssignments(
-    newAssignments: readonly ImmutableAssignment[]
+    newAssignments: readonly ImmutableAssignment[],
   ): ImmutableObjective {
     return new ImmutableObjective({ ...this, assignments: newAssignments });
   }
 
   withPersonDeleted(person: ImmutablePerson): ImmutableObjective {
     return this.withAssignments(
-      this.assignments.filter((a) => a.personId !== person.id)
+      this.assignments.filter((a) => a.personId !== person.id),
     );
   }
 
   withGroupRenamed(
     groupType: string,
     oldName: string,
-    newName: string
+    newName: string,
   ): ImmutableObjective {
     const index = this.groups.findIndex(
-      (g) => g.groupType === groupType && g.groupName === oldName
+      (g) => g.groupType === groupType && g.groupName === oldName,
     );
     if (index < 0) {
       return this;
@@ -249,7 +249,7 @@ export class ImmutableObjective {
  * Sum of resources allocated to a number of objectives.
  */
 export const totalResourcesAllocated = (
-  objectives: readonly ImmutableObjective[]
+  objectives: readonly ImmutableObjective[],
 ): number => objectives.reduce((sum, ob) => sum + ob.resourcesAllocated(), 0);
 
 export function editObjective(
@@ -261,7 +261,7 @@ export function editObjective(
     | EventEmitter<[ImmutableObjective, ImmutableObjective, ImmutableBucket]>
     | undefined,
   onBucketChanged: EventEmitter<[ImmutableBucket, ImmutableBucket]>,
-  dialog: MatDialog
+  dialog: MatDialog,
 ): void {
   const dialogData: EditObjectiveDialogData = {
     objective: makeEditedObjective(objective),
@@ -273,12 +273,10 @@ export function editObjective(
     otherBuckets: otherBuckets,
     onMoveBucket: onMoveBucket,
   };
-  const dialogRef: MatDialogRef<
-    EditObjectiveDialogComponent,
-    ImmutableBucket
-  > = dialog.open(EditObjectiveDialogComponent, {
-    data: dialogData,
-  });
+  const dialogRef: MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket> =
+    dialog.open(EditObjectiveDialogComponent, {
+      data: dialogData,
+    });
   dialogRef.afterClosed().subscribe((newBucket) => {
     if (newBucket) {
       onBucketChanged.emit([currentBucket, newBucket]);

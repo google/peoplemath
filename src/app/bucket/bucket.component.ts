@@ -122,14 +122,14 @@ export class BucketComponent {
    */
   bucketAllocationLimit(): number {
     return this.bucket!.getAllocationAbsolute(
-      this.globalResourcesAvailableForPct!
+      this.globalResourcesAvailableForPct!,
     );
   }
 
   getAllocationPctOfTotal(): number {
     return this.bucket!.allocationPercentageOfTotal(
       this.globalResourcesAvailableForPct!,
-      this.globalResourcesAvailable!
+      this.globalResourcesAvailable!,
     );
   }
 
@@ -167,7 +167,7 @@ export class BucketComponent {
       return;
     }
     const displayObjectives = new DisplayObjectivesPipe().transform(
-      this.bucket!.objectives
+      this.bucket!.objectives,
     );
     const blocks = new GroupblocksPipe().transform(displayObjectives);
     // If we're talking about the bottom block and it's not part of an existing block,
@@ -197,7 +197,7 @@ export class BucketComponent {
       if (instruction.action == BlockAction.Split) {
         this.splitBlock(
           blocks.map((a) => a.map((o) => o.objective)),
-          blockIdx
+          blockIdx,
         );
       } else if (
         instruction.action == BlockAction.Create &&
@@ -206,7 +206,7 @@ export class BucketComponent {
         this.createBlock(
           blocks.map((a) => a.map((o) => o.objective)),
           blockIdx,
-          instruction.downToIdx + blockIdx + 1
+          instruction.downToIdx + blockIdx + 1,
         );
       } else {
         console.error('Unsupported block instruction:', instruction);
@@ -234,7 +234,7 @@ export class BucketComponent {
   createBlock(
     oldBlocks: ImmutableObjective[][],
     fromIdx: number,
-    toIdx: number
+    toIdx: number,
   ): void {
     const blockID = uuidv4();
     const newObjectives: ImmutableObjective[] = [];
@@ -293,7 +293,7 @@ export class BucketComponent {
   moveObjective(
     original: ImmutableObjective,
     newObjective: ImmutableObjective,
-    newBucket: ImmutableBucket
+    newBucket: ImmutableBucket,
   ): void {
     // Needs to be done in a single operation. Doing a delete in one bucket followed by an
     // add in the other bucket changes this component in between and doesn't work.
@@ -307,7 +307,7 @@ export class BucketComponent {
 
   reorderDrop(event: CdkDragDrop<ObjectiveComponent[]>): void {
     const displayObjectives = new DisplayObjectivesPipe().transform(
-      this.bucket!.objectives
+      this.bucket!.objectives,
     );
     const objectiveBlocks = new GroupblocksPipe().transform(displayObjectives);
     moveItemInArray(objectiveBlocks, event.previousIndex, event.currentIndex);
@@ -335,7 +335,7 @@ export class BucketComponent {
 
   onObjectiveChanged(
     original: ImmutableObjective,
-    newObjective: ImmutableObjective
+    newObjective: ImmutableObjective,
   ): void {
     this.changed.emit([
       this.bucket!,

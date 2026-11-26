@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(
     req: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     if (environment.requireAuth) {
       return this.authService.getIdToken().pipe(
@@ -54,17 +54,17 @@ export class AuthInterceptor implements HttpInterceptor {
                   } else if (cloned.method === 'GET' && err.status === 403) {
                     this.notificationService.notifyError(
                       'Unauthorised',
-                      err.error
+                      err.error,
                     );
                   }
                 }
                 return of(err);
-              })
+              }),
             );
           } else {
             return next.handle(req);
           }
-        })
+        }),
       );
     } else {
       return next.handle(req);

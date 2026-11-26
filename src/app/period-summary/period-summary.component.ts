@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { StorageService } from '../storage.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ImmutablePeriod } from '../period';
@@ -34,6 +39,7 @@ import { BucketSummaryComponent } from '../bucket-summary/bucket-summary.compone
   selector: 'app-period-summary',
   templateUrl: './period-summary.component.html',
   styleUrls: ['./period-summary.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressSpinner,
     RouterLink,
@@ -101,7 +107,7 @@ export class PeriodSummaryComponent implements OnInit {
         catchError((err) => {
           this.notificationService.notifyError('Could not load team', err);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((team) => {
         if (team) {
@@ -117,7 +123,7 @@ export class PeriodSummaryComponent implements OnInit {
         catchError((err) => {
           this.notificationService.notifyError('Could not load period', err);
           return of(undefined);
-        })
+        }),
       )
       .subscribe((period) => {
         if (period) {
@@ -130,7 +136,7 @@ export class PeriodSummaryComponent implements OnInit {
     combineLatest([teamObs, periodObs]).subscribe(([t, p]) => {
       if (t && p) {
         this.pageTitle.setPageTitle(
-          t.displayName + ': ' + p.displayName + ' summary'
+          t.displayName + ': ' + p.displayName + ' summary',
         );
       }
     });

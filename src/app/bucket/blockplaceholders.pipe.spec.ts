@@ -23,7 +23,7 @@ function objt(
   name: string,
   resourceEstimate: number,
   assignments?: Assignment[],
-  blockID?: string
+  blockID?: string,
 ): ImmutableObjective {
   return ImmutableObjective.fromObjective({
     name: name,
@@ -41,7 +41,7 @@ function dobjt(
   resourceEstimate: number,
   csum: number,
   assignments?: Assignment[],
-  blockID?: string
+  blockID?: string,
 ): DisplayObjective {
   return {
     objective: objt(name, resourceEstimate, assignments, blockID),

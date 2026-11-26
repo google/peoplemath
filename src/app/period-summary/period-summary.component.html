@@ -14,7 +14,7 @@
         <app-bucket-summary
           [bucket]="bucket"
           [bucketAllocationFraction]="bucketAllocationFraction(bucket)"
-        [unit]="period?.unit"></app-bucket-summary>
+        [unit]="$safeNavigationMigration(period?.unit)"></app-bucket-summary>
       }
     </div>
   </div>

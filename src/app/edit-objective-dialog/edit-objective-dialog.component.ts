@@ -17,6 +17,7 @@ import {
   EventEmitter,
   ViewEncapsulation,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   MatDialogRef,
@@ -78,7 +79,7 @@ export interface EditObjectiveDialogData {
 }
 
 export const makeEditedObjective = (
-  objective: ImmutableObjective
+  objective: ImmutableObjective,
 ): EditedObjective => {
   const groupsStr = objective.groups
     .map((g) => g.groupType + ':' + g.groupName)
@@ -146,6 +147,7 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   templateUrl: './edit-objective-dialog.component.html',
   styleUrls: ['./edit-objective-dialog.component.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,
@@ -168,9 +170,10 @@ const makeObjective = (edited: EditedObjective): ImmutableObjective =>
   ],
 })
 export class EditObjectiveDialogComponent {
-  dialogRef = inject<
-    MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>
-  >(MatDialogRef);
+  dialogRef =
+    inject<MatDialogRef<EditObjectiveDialogComponent, ImmutableBucket>>(
+      MatDialogRef,
+    );
   data = inject<EditObjectiveDialogData>(MAT_DIALOG_DATA);
 
   showDeleteConfirm = false;
@@ -184,16 +187,16 @@ export class EditObjectiveDialogComponent {
   onAddToTop(): void {
     this.dialogRef.close(
       this.data.currentBucket.withNewObjectiveAtTop(
-        makeObjective(this.data.objective)
-      )
+        makeObjective(this.data.objective),
+      ),
     );
   }
 
   onAddToBottom(): void {
     this.dialogRef.close(
       this.data.currentBucket.withNewObjectiveAtBottom(
-        makeObjective(this.data.objective)
-      )
+        makeObjective(this.data.objective),
+      ),
     );
   }
 
@@ -201,8 +204,8 @@ export class EditObjectiveDialogComponent {
     this.dialogRef.close(
       this.data.currentBucket.withObjectiveChanged(
         this.data.original!,
-        makeObjective(this.data.objective)
-      )
+        makeObjective(this.data.objective),
+      ),
     );
   }
 
@@ -245,7 +248,7 @@ export class EditObjectiveDialogComponent {
 
   onConfirmDelete(): void {
     this.dialogRef.close(
-      this.data.currentBucket.withObjectiveDeleted(this.data.original!)
+      this.data.currentBucket.withObjectiveDeleted(this.data.original!),
     );
   }
 

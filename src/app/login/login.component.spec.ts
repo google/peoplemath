@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -26,29 +26,22 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([]),
-          AngularFireModule.initializeApp(
-            firebaseConfig.firebase,
-            'firebaseApp'
-          ),
-          AngularFireAuthModule,
-          LoginComponent,
-        ],
-      }).compileComponents();
-    })
-  );
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule,
+        LoginComponent,
+      ],
+    }).compileComponents();
+  });
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(LoginComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamPeriodsComponent } from './teamperiods.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -40,7 +40,7 @@ class MockDialog {
 
   open(
     component: ComponentType<AddPeriodDialogComponent>,
-    config?: MatDialogConfig<AddPeriodDialogData>
+    config?: MatDialogConfig<AddPeriodDialogData>,
   ) {
     return {
       afterClosed: () => {
@@ -65,41 +65,34 @@ describe('TeamPeriodsComponent', () => {
   const dialogMock = new MockDialog();
   const TEST_TEAM = new Team('testTeam', 'My test team');
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          AngularFireModule.initializeApp(
-            firebaseConfig.firebase,
-            'firebaseApp'
-          ),
-          AngularFireAuthModule,
-          TeamPeriodsComponent,
-        ],
-        providers: [
-          { provide: StorageService, useValue: storageServiceSpy },
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              paramMap: of(convertToParamMap({ team: TEST_TEAM.id })),
-            },
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule,
+        TeamPeriodsComponent,
+      ],
+      providers: [
+        { provide: StorageService, useValue: storageServiceSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({ team: TEST_TEAM.id })),
           },
-          { provide: MatDialog, useValue: dialogMock },
-        ],
-      }).compileComponents();
-      storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
-      storageServiceSpy.getPeriods.and.returnValue(of([]));
-    })
-  );
+        },
+        { provide: MatDialog, useValue: dialogMock },
+      ],
+    }).compileComponents();
+    storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
+    storageServiceSpy.getPeriods.and.returnValue(of([]));
+  });
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(TeamPeriodsComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TeamPeriodsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -172,7 +165,7 @@ describe('TeamPeriodsComponent', () => {
     };
     expect(storageServiceSpy.addPeriod).toHaveBeenCalledOnceWith(
       TEST_TEAM.id,
-      expectedPeriod
+      expectedPeriod,
     );
   });
 });

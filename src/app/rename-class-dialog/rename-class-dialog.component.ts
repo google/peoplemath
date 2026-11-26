@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -37,6 +42,7 @@ export interface RenameClassDialogData {
   selector: 'app-rename-class-dialog',
   templateUrl: './rename-class-dialog.component.html',
   styleUrls: ['./rename-class-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,

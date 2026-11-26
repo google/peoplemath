@@ -17,7 +17,6 @@ import {
   fakeAsync,
   TestBed,
   tick,
-  waitForAsync,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -68,58 +67,51 @@ describe('PeriodComponent', () => {
   };
   const UPDATE_RESPONSE: ObjectUpdateResponse = { lastUpdateUUID: 'abcd' };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          FormsModule,
-          BrowserAnimationsModule,
-          AngularFireModule.initializeApp(
-            firebaseConfig.firebase,
-            'firebaseApp'
-          ),
-          AngularFireAuthModule,
-          PeriodComponent,
-          BucketComponent,
-          BucketAllocLimitComponent,
-          ObjectiveComponent,
-          PeopleComponent,
-          AssignmentsByPersonComponent,
-          AssignmentsClassifyComponent,
-          AssignmentComponent,
-          DisplayObjectivesPipe,
-          CsumClassPipe,
-          AssignSummPartsPipe,
-        ],
-        providers: [
-          { provide: StorageService, useValue: storageServiceSpy },
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              paramMap: of(
-                convertToParamMap({
-                  team: TEST_TEAM.id,
-                  period: TEST_PERIOD.id,
-                })
-              ),
-            },
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        AngularFireModule.initializeApp(firebaseConfig.firebase, 'firebaseApp'),
+        AngularFireAuthModule,
+        PeriodComponent,
+        BucketComponent,
+        BucketAllocLimitComponent,
+        ObjectiveComponent,
+        PeopleComponent,
+        AssignmentsByPersonComponent,
+        AssignmentsClassifyComponent,
+        AssignmentComponent,
+        DisplayObjectivesPipe,
+        CsumClassPipe,
+        AssignSummPartsPipe,
+      ],
+      providers: [
+        { provide: StorageService, useValue: storageServiceSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(
+              convertToParamMap({
+                team: TEST_TEAM.id,
+                period: TEST_PERIOD.id,
+              }),
+            ),
           },
-        ],
-      }).compileComponents();
-      storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
-      storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
-      storageServiceSpy.updatePeriod.and.returnValue(of(UPDATE_RESPONSE));
-    })
-  );
+        },
+      ],
+    }).compileComponents();
+    storageServiceSpy.getTeam.and.returnValue(of(TEST_TEAM));
+    storageServiceSpy.getPeriod.and.returnValue(of(TEST_PERIOD));
+    storageServiceSpy.updatePeriod.and.returnValue(of(UPDATE_RESPONSE));
+  });
 
-  beforeEach(
-    waitForAsync(() => {
-      fixture = TestBed.createComponent(PeriodComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PeriodComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

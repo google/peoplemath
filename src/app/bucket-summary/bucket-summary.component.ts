@@ -54,7 +54,7 @@ export class BucketSummaryComponent {
     return this.bucket!.objectives.filter(
       (o) =>
         o.commitmentType === CommitmentType.Committed &&
-        o.resourcesAllocated() > 0
+        o.resourcesAllocated() > 0,
     );
   }
 
@@ -66,7 +66,7 @@ export class BucketSummaryComponent {
     return this.bucket!.objectives.filter(
       (o) =>
         o.commitmentType !== CommitmentType.Committed &&
-        o.resourcesAllocated() > 0
+        o.resourcesAllocated() > 0,
     );
   }
 
